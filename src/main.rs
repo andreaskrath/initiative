@@ -5,6 +5,7 @@ use iced::{
 use message::Message;
 use screen::Screen;
 
+mod condition;
 mod message;
 mod screen;
 
