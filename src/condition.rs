@@ -1,3 +1,7 @@
+pub const NEW_CONDITION_TABLE: ConditionTable = [false; 15];
+
+pub type ConditionTable = [bool; 15];
+
 pub enum Condition {
     Blinded,
     Charmed,
