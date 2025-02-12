@@ -1,12 +1,14 @@
-use entity::EntityTable;
+use create_new_enemy::CreateNewEnemy;
+use entity::{Entity, EntityTable};
 use iced::{
     widget::{button, text},
-    Element,
+    Element, Task,
 };
 use message::Message;
 use screen::Screen;
 
 mod condition;
+mod create_new_enemy;
 mod damage;
 mod enemy;
 mod entity;
@@ -24,12 +26,12 @@ fn main() {
     .expect("could not start combat tracker");
 }
 
-struct CombatTracker<'a> {
+struct CombatTracker {
     screen: Screen,
-    entities: EntityTable<'a>,
+    entities: EntityTable,
 }
 
-impl<'a> Default for CombatTracker<'a> {
+impl Default for CombatTracker {
     fn default() -> Self {
         Self {
             screen: Default::default(),
@@ -38,19 +40,48 @@ impl<'a> Default for CombatTracker<'a> {
     }
 }
 
-impl<'a> CombatTracker<'a> {
-    fn update(&mut self, msg: Message) {
+impl CombatTracker {
+    fn update(&mut self, msg: Message) -> Task<Message> {
         match msg {
-            Message::NewEncounter => self.screen = Screen::Encounter,
+            Message::NewEncounter => {
+                self.screen = Screen::Encounter;
+
+                Task::none()
+            }
+            Message::CreateNewEnemy => {
+                self.screen = Screen::CreateNewEnemy(CreateNewEnemy::new());
+
+                Task::none()
+            }
+            Message::UpdateNewEnemy(message) => {
+                if let Screen::CreateNewEnemy(screen) = &mut self.screen {
+                    screen.update(message)
+                } else {
+                    Task::none()
+                }
+            }
+            Message::SubmitNewEnemy(enemy) => {
+                self.entities.push(Entity::Enemy(enemy));
+                self.screen = Screen::NoEncounter;
+
+                Task::none()
+            }
+            Message::CreateNewPlayer => {
+                self.screen = Screen::CreateNewPlayer;
+
+                Task::none()
+            }
         }
     }
 
     fn view(&self) -> Element<Message> {
-        match self.screen {
+        match &self.screen {
             Screen::Encounter => text("no encounter data").into(),
-            Screen::NoEncounter => button("New Encounter")
-                .on_press(Message::NewEncounter)
-                .into(),
+            Screen::NoEncounter => button("New Enemy").on_press(Message::CreateNewEnemy).into(),
+            Screen::CreateNewEnemy(create_new_enemy) => {
+                create_new_enemy.view().map(Message::UpdateNewEnemy)
+            }
+            Screen::CreateNewPlayer => todo!(),
         }
     }
 }

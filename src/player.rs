@@ -1,16 +1,17 @@
 use crate::condition::{ConditionTable, NEW_CONDITION_TABLE};
 
-pub struct Player<'a> {
-    name: &'a str,
-    initiative: Option<i8>,
+#[derive(Debug, Clone)]
+pub struct Player {
+    name: String,
+    initiative: i8,
     conditions: ConditionTable,
 }
 
-impl<'a> Player<'a> {
-    pub fn new(name: &'a str) -> Self {
+impl Player {
+    pub fn new(name: String, initiative: i8) -> Self {
         Self {
             name,
-            initiative: None,
+            initiative,
             conditions: NEW_CONDITION_TABLE,
         }
     }

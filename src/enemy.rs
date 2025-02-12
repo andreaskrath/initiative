@@ -3,22 +3,29 @@ use crate::{
     damage::{DamageTable, NEW_DAMAGE_TABLE},
 };
 
-pub struct Enemy<'a> {
-    pub name: &'a str,
-    pub initiative: Option<i8>,
+#[derive(Debug, Clone)]
+pub struct Enemy {
+    pub name: String,
+    pub initiative: i8,
     pub conditions: ConditionTable,
     pub vulnerabilies: DamageTable,
     pub immunities: DamageTable,
+    pub max_hp: u16,
+    pub current_hp: u16,
+    pub temp_hp: u16,
 }
 
-impl<'a> Enemy<'a> {
-    pub fn new(name: &'a str) -> Self {
+impl Enemy {
+    pub fn new(name: String, initiative: i8, max_hp: u16) -> Self {
         Self {
             name,
-            initiative: None,
+            initiative,
             conditions: NEW_CONDITION_TABLE,
             vulnerabilies: NEW_DAMAGE_TABLE,
             immunities: NEW_DAMAGE_TABLE,
+            max_hp,
+            current_hp: max_hp,
+            temp_hp: 0,
         }
     }
 }

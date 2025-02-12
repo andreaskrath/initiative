@@ -1,8 +1,9 @@
 use crate::{enemy::Enemy, player::Player};
 
-pub type EntityTable<'a> = Vec<Entity<'a>>;
+pub type EntityTable = Vec<Entity>;
 
-pub enum Entity<'a> {
-    Player(Player<'a>),
-    Enemy(Enemy<'a>),
+#[derive(Debug, Clone)]
+pub enum Entity {
+    Player(Player),
+    Enemy(Enemy),
 }
