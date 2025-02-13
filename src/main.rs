@@ -60,12 +60,21 @@ impl CombatTracker {
                     Task::none()
                 }
             }
-            Message::SubmitNewEnemy(enemy) => {
-                self.entities.push(Entity::Enemy(enemy));
-                self.screen = Screen::NoEncounter;
+            Message::SubmitNewEnemy(enemy) => match enemy {
+                Ok(enemy) => {
+                    self.entities.push(Entity::Enemy(enemy));
+                    self.screen = Screen::NoEncounter;
 
-                Task::none()
-            }
+                    Task::none()
+                }
+                Err(err) => {
+                    if let Screen::CreateNewEnemy(screen) = &mut self.screen {
+                        screen.update(create_new_enemy::Action::SetError(err))
+                    } else {
+                        Task::none()
+                    }
+                }
+            },
             Message::CreateNewPlayer => {
                 self.screen = Screen::CreateNewPlayer;
 

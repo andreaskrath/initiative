@@ -1,14 +1,14 @@
 use crate::{enemy::Enemy, message::Message};
 use iced::{
     widget::{button, column, row, text, text_input},
-    Element, Task,
+    Color, Element, Task,
 };
 use rand::Rng;
 use thiserror::Error;
 
-#[derive(Debug, Error, PartialEq)]
-enum CreateNewPlayerError {
-    #[error("the provided initiative value could not be parsed to a valid value")]
+#[derive(Debug, Error, PartialEq, Clone)]
+pub enum CreateNewEnemyError {
+    #[error("The provided initiative value could not be parsed to a valid value.")]
     InvalidInitiative,
 }
 
@@ -18,12 +18,14 @@ pub enum Action {
     InitiativeMod(String),
     HitPoints(String),
     Submit,
+    SetError(CreateNewEnemyError),
 }
 
 pub struct CreateNewEnemy {
     name: String,
     initiative_mod: String,
     hp: String,
+    error: Option<CreateNewEnemyError>,
 }
 
 impl CreateNewEnemy {
@@ -32,6 +34,7 @@ impl CreateNewEnemy {
             name: String::new(),
             initiative_mod: String::new(),
             hp: String::new(),
+            error: None,
         }
     }
 
@@ -60,6 +63,11 @@ impl CreateNewEnemy {
                 ),
                 Message::SubmitNewEnemy,
             ),
+            Action::SetError(error) => {
+                self.error = Some(error);
+
+                Task::none()
+            }
         }
     }
 
@@ -75,26 +83,36 @@ impl CreateNewEnemy {
 
         let submit = button("Submit").on_press(Action::Submit);
 
+        let error = match &self.error {
+            Some(err) => text(err.to_string()).color(Color::from_rgb8(255, 0, 0)),
+            None => text(""),
+        };
+
         column![
             row![name_label, name_input],
             row![initiative_label, initiative_input],
             row![hp_label, hp_input],
             row![submit],
+            row![error],
         ]
         .into()
     }
 }
 
-async fn submit_new_enemy(name: String, initiative_mod: String, hp: String) -> Enemy {
-    let initiative = 0;
+async fn submit_new_enemy(
+    name: String,
+    initiative: String,
+    hp: String,
+) -> Result<Enemy, CreateNewEnemyError> {
+    let initiative = parse_initiative(initiative)?;
     let max_hp = 0;
-    Enemy::new(name, initiative, max_hp)
+    Ok(Enemy::new(name, initiative, max_hp))
 }
 
-fn parse_initiative(initiative_mod: String) -> Result<i8, CreateNewPlayerError> {
+fn parse_initiative(initiative_mod: String) -> Result<i8, CreateNewEnemyError> {
     let parsed = initiative_mod
         .parse::<i8>()
-        .map_err(|_| CreateNewPlayerError::InvalidInitiative)?;
+        .map_err(|_| CreateNewEnemyError::InvalidInitiative)?;
     let mut rng = rand::rng();
 
     if initiative_mod
@@ -110,7 +128,7 @@ fn parse_initiative(initiative_mod: String) -> Result<i8, CreateNewPlayerError> 
 
 #[cfg(test)]
 mod parse_initiative {
-    use super::{parse_initiative, CreateNewPlayerError};
+    use super::{parse_initiative, CreateNewEnemyError};
 
     #[test]
     fn plus_prefix() {
@@ -137,9 +155,9 @@ mod parse_initiative {
     }
 
     #[test]
-    fn invalid_format() -> Result<(), CreateNewPlayerError> {
+    fn invalid_format() -> Result<(), CreateNewEnemyError> {
         let initiative = String::from("2d4");
-        let expected = Err(CreateNewPlayerError::InvalidInitiative);
+        let expected = Err(CreateNewEnemyError::InvalidInitiative);
         let actual = parse_initiative(initiative);
 
         assert_eq!(actual, expected);

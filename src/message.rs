@@ -1,10 +1,13 @@
-use crate::{create_new_enemy, enemy::Enemy};
+use crate::{
+    create_new_enemy::{self, CreateNewEnemyError},
+    enemy::Enemy,
+};
 
 #[derive(Debug, Clone)]
 pub enum Message {
     NewEncounter,
     CreateNewEnemy,
     UpdateNewEnemy(create_new_enemy::Action),
-    SubmitNewEnemy(Enemy),
+    SubmitNewEnemy(Result<Enemy, CreateNewEnemyError>),
     CreateNewPlayer,
 }
