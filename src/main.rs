@@ -10,6 +10,7 @@ use screen::Screen;
 mod condition;
 mod create_new_enemy;
 mod damage;
+mod dice;
 mod enemy;
 mod entity;
 mod message;
