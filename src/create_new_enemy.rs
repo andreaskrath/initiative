@@ -1,4 +1,8 @@
-use crate::{enemy::Enemy, message::Message};
+use crate::{
+    dice::{d10, d12, d20, d4, d6, d8},
+    enemy::Enemy,
+    message::Message,
+};
 use iced::{
     widget::{button, column, row, text, text_input},
     Color, Element, Task,
@@ -10,6 +14,8 @@ use thiserror::Error;
 pub enum CreateNewEnemyError {
     #[error("The provided initiative value could not be parsed to a valid value.")]
     InvalidInitiative,
+    #[error("The provided hit points value could not be parsed to a valid valie.")]
+    InvalidHitPoints,
 }
 
 #[derive(Debug, Clone)]
@@ -105,7 +111,7 @@ async fn submit_new_enemy(
     hp: String,
 ) -> Result<Enemy, CreateNewEnemyError> {
     let initiative = parse_initiative(initiative)?;
-    let max_hp = 0;
+    let max_hp = parse_hit_points(hp)?;
     Ok(Enemy::new(name, initiative, max_hp))
 }
 
@@ -113,16 +119,49 @@ fn parse_initiative(initiative_mod: String) -> Result<i8, CreateNewEnemyError> {
     let parsed = initiative_mod
         .parse::<i8>()
         .map_err(|_| CreateNewEnemyError::InvalidInitiative)?;
-    let mut rng = rand::rng();
-
     if initiative_mod
         .chars()
         .next()
         .is_some_and(|c| c == '-' || c == '+')
     {
-        Ok(rng.random_range(1..=20) + parsed)
+        // Safe cast cause 1-20 range is always valid i8.
+        Ok(d20(1) as i8 + parsed)
     } else {
         Ok(parsed)
+    }
+}
+
+fn parse_hit_points(hp: String) -> Result<u16, CreateNewEnemyError> {
+    // This handles the straight hit points being supplied.
+    if let Ok(hit_points) = hp.parse::<u16>() {
+        return Ok(hit_points);
+    }
+
+    // Everything below here handles hit point calculator being supplied.
+
+    let (count, rest) = hp
+        .split_once('d')
+        .ok_or(CreateNewEnemyError::InvalidHitPoints)?;
+
+    let (dice, bonus) = rest
+        .split_once('+')
+        .ok_or(CreateNewEnemyError::InvalidHitPoints)?;
+
+    let count = count
+        .parse()
+        .map_err(|_| CreateNewEnemyError::InvalidHitPoints)?;
+    let bonus = bonus
+        .parse::<u16>()
+        .map_err(|_| CreateNewEnemyError::InvalidHitPoints)?;
+
+    match dice.trim() {
+        "4" => Ok(d4(count) + bonus),
+        "6" => Ok(d6(count) + bonus),
+        "8" => Ok(d8(count) + bonus),
+        "10" => Ok(d10(count) + bonus),
+        "12" => Ok(d12(count) + bonus),
+        "20" => Ok(d20(count) + bonus),
+        _ => Err(CreateNewEnemyError::InvalidHitPoints),
     }
 }
 
