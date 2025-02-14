@@ -143,26 +143,39 @@ fn parse_hit_points(hp: String) -> Result<u16, CreateNewEnemyError> {
         .split_once('d')
         .ok_or(CreateNewEnemyError::InvalidHitPoints)?;
 
-    let (dice, bonus) = rest
-        .split_once('+')
-        .ok_or(CreateNewEnemyError::InvalidHitPoints)?;
+    let (dice, bonus) = match (rest.split_once('+'), rest.split_once('-')) {
+        (None, None) | (Some(_), Some(_)) => return Err(CreateNewEnemyError::InvalidHitPoints),
+
+        // Bonus is negative.
+        (None, Some((a, b))) => (a, String::from("-") + b),
+
+        // Bonus is positive.
+        (Some((a, b)), None) => (a, String::from(b)),
+    };
+
+    //let (dice, bonus) = rest
+    //    .split_once('+')
+    //    .ok_or(CreateNewEnemyError::InvalidHitPoints)?;
 
     let count = count
         .parse()
         .map_err(|_| CreateNewEnemyError::InvalidHitPoints)?;
     let bonus = bonus
-        .parse::<u16>()
+        .parse::<i16>()
         .map_err(|_| CreateNewEnemyError::InvalidHitPoints)?;
 
-    match dice.trim() {
-        "4" => Ok(d4(count) + bonus),
-        "6" => Ok(d6(count) + bonus),
-        "8" => Ok(d8(count) + bonus),
-        "10" => Ok(d10(count) + bonus),
-        "12" => Ok(d12(count) + bonus),
-        "20" => Ok(d20(count) + bonus),
-        _ => Err(CreateNewEnemyError::InvalidHitPoints),
-    }
+    let result = match dice.trim() {
+        "4" => d4(count) + bonus,
+        "6" => d6(count) + bonus,
+        "8" => d8(count) + bonus,
+        "10" => d10(count) + bonus,
+        "12" => d12(count) + bonus,
+        "20" => d20(count) + bonus,
+        _ => return Err(CreateNewEnemyError::InvalidHitPoints),
+    };
+
+    // Ensures that cases like a rat (1d4 - 1) always end up being at least 1 hit points.
+    Ok(result.max(1) as u16)
 }
 
 #[cfg(test)]

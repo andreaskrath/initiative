@@ -1,6 +1,6 @@
 use rand::distr::{Distribution, Uniform};
 
-fn dice(head: u16, count: usize) -> u16 {
+fn dice(head: i16, count: usize) -> i16 {
     let mut rng = rand::rng();
     let uniform = Uniform::new_inclusive(1, head).expect("should never fail");
 
@@ -12,27 +12,27 @@ fn dice(head: u16, count: usize) -> u16 {
     sum
 }
 
-pub fn d4(count: usize) -> u16 {
+pub fn d4(count: usize) -> i16 {
     dice(4, count)
 }
 
-pub fn d6(count: usize) -> u16 {
+pub fn d6(count: usize) -> i16 {
     dice(6, count)
 }
 
-pub fn d8(count: usize) -> u16 {
+pub fn d8(count: usize) -> i16 {
     dice(8, count)
 }
 
-pub fn d10(count: usize) -> u16 {
+pub fn d10(count: usize) -> i16 {
     dice(10, count)
 }
 
-pub fn d12(count: usize) -> u16 {
+pub fn d12(count: usize) -> i16 {
     dice(12, count)
 }
 
-pub fn d20(count: usize) -> u16 {
+pub fn d20(count: usize) -> i16 {
     dice(20, count)
 }
 
