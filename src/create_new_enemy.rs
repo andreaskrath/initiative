@@ -7,15 +7,27 @@ use iced::{
     widget::{button, column, row, text, text_input},
     Color, Element, Task,
 };
-use rand::Rng;
 use thiserror::Error;
 
 #[derive(Debug, Error, PartialEq, Clone)]
 pub enum CreateNewEnemyError {
-    #[error("The provided initiative value could not be parsed to a valid value.")]
-    InvalidInitiative,
-    #[error("The provided hit points value could not be parsed to a valid valie.")]
-    InvalidHitPoints,
+    #[error("Could not be parse '{0}' as a valid initiative value or modifier.")]
+    InvalidInitiative(String),
+
+    #[error("Could not parse '{0}' as flat nor rollable hit point value.")]
+    HitPointsFormat(String),
+
+    #[error("Both '+' and '-' are defined in the hit points; use only one or neither.")]
+    BonusHitPointsFormat,
+
+    #[error("Could not parse '{0}' as a valid dice count value.")]
+    DiceCount(String),
+
+    #[error("Could not parse '{0}' as a valid bonus hit point value.")]
+    BonusHitPointsValue(String),
+
+    #[error("Could not parse '{0}' as a valid dice head value.")]
+    DiceHead(String),
 }
 
 #[derive(Debug, Clone)]
@@ -118,7 +130,7 @@ async fn submit_new_enemy(
 fn parse_initiative(initiative_mod: String) -> Result<i8, CreateNewEnemyError> {
     let parsed = initiative_mod
         .parse::<i8>()
-        .map_err(|_| CreateNewEnemyError::InvalidInitiative)?;
+        .map_err(|_| CreateNewEnemyError::InvalidInitiative(initiative_mod.clone()))?;
     if initiative_mod
         .chars()
         .next()
@@ -139,12 +151,29 @@ fn parse_hit_points(hp: String) -> Result<u16, CreateNewEnemyError> {
 
     // Everything below here handles hit point calculator being supplied.
 
-    let (count, rest) = hp
-        .split_once('d')
-        .ok_or(CreateNewEnemyError::InvalidHitPoints)?;
+    let (count, rest) = match hp.split_once('d') {
+        Some((a, b)) => {
+            let count_first = a.chars().next().is_some_and(|c| c.is_ascii_digit());
+            let head_first = b.chars().next().is_some_and(|c| c.is_ascii_digit());
+
+            match (count_first, head_first) {
+                (true, true) => (a, b),
+
+                // Neither of these scenarios are valid; but better error information is provided
+                // further down in the function.
+                (true, false) | (false, true) => (a, b),
+
+                (false, false) => return Err(CreateNewEnemyError::HitPointsFormat(hp.clone())),
+            }
+        }
+        None => return Err(CreateNewEnemyError::HitPointsFormat(hp.clone())),
+    };
 
     let (dice, bonus) = match (rest.split_once('+'), rest.split_once('-')) {
-        (None, None) | (Some(_), Some(_)) => return Err(CreateNewEnemyError::InvalidHitPoints),
+        (Some(_), Some(_)) => return Err(CreateNewEnemyError::BonusHitPointsFormat),
+
+        // There is no bonus defined.
+        (None, None) => (rest, String::from("0")),
 
         // Bonus is negative.
         (None, Some((a, b))) => (a, String::from("-") + b),
@@ -153,16 +182,12 @@ fn parse_hit_points(hp: String) -> Result<u16, CreateNewEnemyError> {
         (Some((a, b)), None) => (a, String::from(b)),
     };
 
-    //let (dice, bonus) = rest
-    //    .split_once('+')
-    //    .ok_or(CreateNewEnemyError::InvalidHitPoints)?;
-
     let count = count
         .parse()
-        .map_err(|_| CreateNewEnemyError::InvalidHitPoints)?;
+        .map_err(|_| CreateNewEnemyError::DiceCount(count.to_string()))?;
     let bonus = bonus
         .parse::<i16>()
-        .map_err(|_| CreateNewEnemyError::InvalidHitPoints)?;
+        .map_err(|_| CreateNewEnemyError::BonusHitPointsValue(bonus))?;
 
     let result = match dice.trim() {
         "4" => d4(count) + bonus,
@@ -171,7 +196,7 @@ fn parse_hit_points(hp: String) -> Result<u16, CreateNewEnemyError> {
         "10" => d10(count) + bonus,
         "12" => d12(count) + bonus,
         "20" => d20(count) + bonus,
-        _ => return Err(CreateNewEnemyError::InvalidHitPoints),
+        unknown => return Err(CreateNewEnemyError::DiceHead(unknown.to_string())),
     };
 
     // Ensures that cases like a rat (1d4 - 1) always end up being at least 1 hit points.
@@ -209,10 +234,92 @@ mod parse_initiative {
     #[test]
     fn invalid_format() -> Result<(), CreateNewEnemyError> {
         let initiative = String::from("2d4");
-        let expected = Err(CreateNewEnemyError::InvalidInitiative);
+        let expected = Err(CreateNewEnemyError::InvalidInitiative(initiative.clone()));
         let actual = parse_initiative(initiative);
 
         assert_eq!(actual, expected);
         Ok(())
+    }
+}
+
+#[cfg(test)]
+mod parse_hit_points {
+    use super::{parse_hit_points, CreateNewEnemyError};
+
+    #[test]
+    fn flat_value() -> Result<(), CreateNewEnemyError> {
+        let hp = String::from("65");
+        let expected = 65;
+        let actual = parse_hit_points(hp)?;
+
+        assert_eq!(actual, expected);
+        Ok(())
+    }
+
+    #[test]
+    fn rollable_value_without_bonus() -> Result<(), CreateNewEnemyError> {
+        let hp = String::from("2d10");
+        let lower = 2;
+        let upper = 20;
+        let actual = parse_hit_points(hp)?;
+
+        assert!(lower <= actual && actual <= upper);
+        Ok(())
+    }
+
+    #[test]
+    fn rollable_value_with_bonus() -> Result<(), CreateNewEnemyError> {
+        let hp = String::from("2d10+8");
+        let lower = 10;
+        let upper = 28;
+        let actual = parse_hit_points(hp)?;
+
+        assert!(lower <= actual && actual <= upper);
+        Ok(())
+    }
+
+    #[test]
+    fn hit_points_format_err() {
+        let hp = String::from("Hello, world!");
+        let expected = Err(CreateNewEnemyError::HitPointsFormat(hp.clone()));
+        let actual = parse_hit_points(hp);
+
+        assert_eq!(actual, expected);
+    }
+
+    #[test]
+    fn bonus_hit_point_format_err() {
+        let hp = String::from("2d10+-5");
+        let expected = Err(CreateNewEnemyError::BonusHitPointsFormat);
+        let actual = parse_hit_points(hp);
+
+        assert_eq!(actual, expected);
+    }
+
+    #[test]
+    fn dice_count_err() {
+        let hp = String::from("ad10-5");
+        let expected = Err(CreateNewEnemyError::DiceCount(String::from("a")));
+        let actual = parse_hit_points(hp);
+
+        assert_eq!(actual, expected);
+    }
+
+    #[test]
+    fn bonus_hit_point_value_err() {
+        let hp = String::from("2d10-a");
+        let expected = Err(CreateNewEnemyError::BonusHitPointsValue(String::from("-a")));
+        let actual = parse_hit_points(hp);
+
+        assert_eq!(actual, expected);
+    }
+
+    #[test]
+    fn dice_head_err() {
+        let hp = String::from("2d13");
+        let expected = Err(CreateNewEnemyError::DiceHead(String::from("13")));
+        let actual = parse_hit_points(hp);
+
+        assert_eq!(actual, expected);
     }
 }
