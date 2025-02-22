@@ -24,6 +24,7 @@
               rust-bin.stable.latest.default
               rust-analyzer
               taplo
+              vscode-extensions.vadimcn.vscode-lldb.adapter
 
               pkg-config
               libxkbcommon
