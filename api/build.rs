@@ -4,6 +4,8 @@ const NPM: &str = "npm";
 const VIEW_PATH: &str = "../view";
 
 fn main() {
+    println!("cargo::rerun-if-changed=view/dist");
+
     let npm_install = Command::new(NPM)
         .current_dir(VIEW_PATH)
         .arg("install")
