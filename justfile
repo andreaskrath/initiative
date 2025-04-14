@@ -2,10 +2,10 @@
 default:
     @just --list
 
-# Runs the project in debug mode.
+# Runs the frontend with hot reload.
 dev:
-    @cargo run
+    @npm run dev --prefix view
 
-# Runs the project in release mode.
+# Runs the project with the backend.
 run:
-    @cargo run --release
+    @cargo run
