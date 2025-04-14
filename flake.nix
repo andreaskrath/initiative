@@ -17,6 +17,15 @@
         pkgs = import nixpkgs {
           inherit system overlays;
         };
+        node_modules = with pkgs.nodePackages; [
+          npm
+          svelte-check
+          svelte-language-server
+          typescript
+          typescript-language-server
+          prettier
+          eslint
+        ];
       in {
         devShells.default = with pkgs;
           mkShell {
@@ -25,6 +34,9 @@
               rust-analyzer
               taplo
               vscode-extensions.vadimcn.vscode-lldb.adapter
+
+              nodejs
+              node_modules
             ];
           };
       }
