@@ -23,7 +23,6 @@
           svelte-language-server
           typescript
           typescript-language-server
-          prettier
           eslint
         ];
       in {
