@@ -22,12 +22,12 @@ async fn async_main() {
         .route("/", get(index))
         .route("/assets/{*path}", get(assets));
 
-    let listener = TcpListener::bind("127.0.0.1:8080")
+    let listener = TcpListener::bind("127.0.0.1:5173")
         .await
         .expect("failed to bind to port 8080");
     axum::serve(listener, app)
         .await
-        .expect("failed to start server on port 8080");
+        .expect("failed to start server on port 5173");
 }
 
 async fn index() -> Html<&'static str> {
