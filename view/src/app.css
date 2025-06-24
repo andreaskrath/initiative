@@ -1,1 +1,13 @@
 @import "tailwindcss";
+
+@font-face {
+    font-family: "Nodesto";
+    src: url("/fonts/Nodesto Caps Condensed.otf") format("opentype");
+    font-weight: normal;
+    font-display: swap;
+}
+
+.title {
+    font-family: "Nodesto";
+    @apply text-5xl text-rose-800;
+}

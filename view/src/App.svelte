@@ -1,22 +1,18 @@
 <script lang="ts">
-  import Counter from "./lib/Counter.svelte";
   import "./app.css";
+  import Monsters from "./lib/Monsters.svelte";
+  import Encounters from "./lib/Encounters.svelte";
+  import NotFound from "./lib/NotFound.svelte";
+  import Navbar from "./lib/components/Navbar.svelte";
+
+  const pages = [Monsters, Encounters];
+  let currentPage: number = $state(0);
+  const PageComponent = $derived(pages[currentPage] || NotFound);
 </script>
 
 <main>
-  <h1>Combat Tracker</h1>
-
+  <Navbar bind:item={currentPage} />
   <div class="flex content-center items-center place-content-center">
-    <Counter />
+    <PageComponent />
   </div>
-
-  <p>
-    Check out <a
-      href="https://github.com/sveltejs/kit#readme"
-      target="_blank"
-      rel="noreferrer">SvelteKit</a
-    >, the official Svelte app framework powered by Vite!
-  </p>
-
-  <p class="read-the-docs">Click on the Vite and Svelte logos to learn more</p>
 </main>
