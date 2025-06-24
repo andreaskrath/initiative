@@ -7,7 +7,22 @@
     font-display: swap;
 }
 
-.title {
+body {
+  @apply bg-amber-100;
+}
+
+.dnd-font {
     font-family: "Nodesto";
-    @apply text-5xl text-rose-800;
+}
+
+.color-text {
+    @apply text-rose-800;
+}
+
+.title {
+    @apply text-5xl;
+}
+
+.clickable {
+    @apply text-rose-800 hover:text-amber-600;
 }

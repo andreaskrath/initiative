@@ -1,1 +1,1 @@
-<h1 class="title">Monsters</h1>
+<h1 class="dnd-font color-text title">Monsters</h1>

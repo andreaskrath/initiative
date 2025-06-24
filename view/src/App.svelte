@@ -10,8 +10,8 @@
   const PageComponent = $derived(pages[currentPage] || NotFound);
 </script>
 
+<Navbar bind:item={currentPage} />
 <main>
-  <Navbar bind:item={currentPage} />
   <div class="flex content-center items-center place-content-center">
     <PageComponent />
   </div>
