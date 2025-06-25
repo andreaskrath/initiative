@@ -31,4 +31,12 @@
   ul#navbar li {
     display: inline;
   }
+
+  .navbar-item {
+    text-shadow:
+      -0.5px -0.5px 0 #000,
+      0.5px -0.5px 0 #000,
+      -0.5px 0.5px 0 #000,
+      0.5px 0.5px 0 #000;
+  }
 </style>
