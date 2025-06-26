@@ -1,28 +1,7 @@
-@import "tailwindcss";
+@import 'tailwindcss';
 
-@font-face {
-    font-family: "Nodesto";
-    src: url("/fonts/Nodesto Caps Condensed.otf") format("opentype");
-    font-weight: normal;
-    font-display: swap;
-}
+@import '@skeletonlabs/skeleton';
+@import '@skeletonlabs/skeleton/optional/presets';
+@import '@skeletonlabs/skeleton/themes/cerberus';
 
-body {
-  @apply bg-amber-100;
-}
-
-.dnd-font {
-    font-family: "Nodesto";
-}
-
-.color-text {
-    @apply text-rose-800;
-}
-
-.title {
-    @apply text-5xl;
-}
-
-.clickable {
-    @apply text-rose-800 hover:text-amber-600;
-}
+@source '../node_modules/@skeletonlabs/skeleton-svelte/dist';

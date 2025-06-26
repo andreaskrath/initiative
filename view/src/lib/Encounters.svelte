@@ -1,1 +1,1 @@
-<h1 class="dnd-font color-text title">Encounters</h1>
+<h1>Encounters</h1>

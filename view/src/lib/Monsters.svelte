@@ -8,7 +8,7 @@
 </script>
 
 <div>
-  <h1 class="dnd-font color-text title">Monsters</h1>
+  <h1>Monsters</h1>
 
   <Button title="Create New Monster" onClick={handleButtonClick} />
 </div>
