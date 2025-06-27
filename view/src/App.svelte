@@ -1,12 +1,13 @@
 <script lang="ts">
   import "./app.css";
-  import Monsters from "./lib/Monsters.svelte";
-  import Encounters from "./lib/Encounters.svelte";
+  import Monsters from "./lib/monsters/Monsters.svelte";
+  import Encounters from "./lib/encounters/Encounters.svelte";
   import NotFound from "./lib/NotFound.svelte";
-  import Settings from "./lib/Settings.svelte";
+  import Settings from "./lib/settings/Settings.svelte";
   import Navbar from "./lib/components/Navbar.svelte";
+  import type { Component } from "svelte";
 
-  const pages = [Monsters, Encounters, Settings];
+  const pages: Component[] = [Monsters, Encounters, Settings];
   let currentPage: number = $state(0);
   const PageComponent = $derived(pages[currentPage] || NotFound);
 </script>

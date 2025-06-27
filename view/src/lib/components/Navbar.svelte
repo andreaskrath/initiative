@@ -28,7 +28,7 @@
 </script>
 
 <div class="preset-filled-surface-100-900 flex justify-center">
-  <div class="card flex gap-3 p-3 h-[100px] w-1/2">
+  <div class="card flex gap-3 p-3 h-[100px] w-[1200px]">
     {#each navbarItems as navbarItem, index}
       <Navigation.Tile
         label={navbarItem.title}
