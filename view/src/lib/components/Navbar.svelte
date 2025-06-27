@@ -1,42 +1,41 @@
 <script lang="ts">
+  import { Navigation } from "@skeletonlabs/skeleton-svelte";
+  import Swords from "@lucide/svelte/icons/swords";
+  import Settings from "@lucide/svelte/icons/settings";
+  import Panda from "@lucide/svelte/icons/panda";
+  import type { Component } from "svelte";
+
   let { item = $bindable() }: { item: number } = $props();
 
-  const navbarItems = ["Monsters", "Encounters"];
+  const navbarItems: { title: string; icon: Component }[] = [
+    {
+      title: "Monsters",
+      icon: Panda,
+    },
+    {
+      title: "Encounters",
+      icon: Swords,
+    },
+    {
+      title: "Settings",
+      icon: Settings,
+    },
+  ];
 
-  function updateItem(newItem: number) {
-    return (event: MouseEvent) => {
-      event.preventDefault();
-      item = newItem;
-    };
+  function updateItem(id: string) {
+    item = navbarItems.findIndex((navItem) => navItem.title === id);
   }
 </script>
 
-<div class="flex justify-center bg-stone-700 py-4 border-b border-amber-200">
-  <ul id="navbar" class="flex gap-8">
-    {#each navbarItems as title, index}
-      <li>
-        <a
-          class="navbar-item dnd-font text-3xl {index === item
-            ? 'text-amber-300'
-            : 'clickable'}"
-          href="/"
-          onclick={updateItem(index)}>{title}</a
-        >
-      </li>
+<div class="preset-filled-surface-100-900 flex justify-center">
+  <div class="card flex gap-3 p-3 h-[100px] w-1/2">
+    {#each navbarItems as navbarItem, index}
+      <Navigation.Tile
+        label={navbarItem.title}
+        selected={item === index}
+        id={navbarItem.title}
+        onclick={updateItem}><navbarItem.icon size={48} /></Navigation.Tile
+      >
     {/each}
-  </ul>
+  </div>
 </div>
-
-<style>
-  ul#navbar li {
-    display: inline;
-  }
-
-  .navbar-item {
-    text-shadow:
-      -0.5px -0.5px 0 #000,
-      0.5px -0.5px 0 #000,
-      -0.5px 0.5px 0 #000,
-      0.5px 0.5px 0 #000;
-  }
-</style>
