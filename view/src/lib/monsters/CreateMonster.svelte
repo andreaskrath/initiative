@@ -1,5 +1,7 @@
 <script lang="ts">
   import Dices from "@lucide/svelte/icons/dices";
+  import CircleX from "@lucide/svelte/icons/circle-x";
+  import CirclePlus from "@lucide/svelte/icons/circle-plus";
   import { DamageType, DamageTypes } from "../types/DamageType";
   import { Size, Sizes } from "../types/Size";
   import { MonsterType, MonsterTypes } from "../types/MonsterType";
@@ -8,15 +10,34 @@
   import { Language, Languages } from "../types/Language";
   import { Skill, Skills } from "../types/Skill";
 
-  let visions: { type: Sight; range: number }[] = [];
+  let traits: { name: string | null; description: string | null }[] = [];
 
-  function addVision() {
-    visions = [...visions, { type: Sight.Darkvision, range: 0 }];
+  function addTrait(event: MouseEvent) {
+    traits = [...traits, { name: null, description: null }];
   }
 
-  // Fix this shit cause its wonky as hell when deleting in random orders.
-  function removeVision(index: number) {
-    visions = visions.filter((_, i) => i !== index);
+  function removeTrait(traitToRemove: {
+    name: string | null;
+    description: string | null;
+  }) {
+    traits = traits.filter((trait) => trait !== traitToRemove);
+
+    return function (event: MouseEvent) {
+      event.preventDefault();
+    };
+  }
+
+  let visions: { type: Sight; range: number }[] = [];
+
+  function addVision(event: MouseEvent) {
+    visions = [...visions, { type: Sight.Darkvision, range: 0 }];
+
+    event.preventDefault();
+  }
+
+  function removeVision(visionToRemove: { type: Sight; range: number }) {
+    // This comparison is by reference, ensuring it removes the correct entry.
+    visions = visions.filter((vision) => vision !== visionToRemove);
 
     return function (event: MouseEvent) {
       event.preventDefault();
@@ -219,34 +240,40 @@
   </div>
 
   <hr class="hr" />
-  <h2 class="h2">Senses</h2>
+  <div class="flex justify-between">
+    <h2 class="h2">Senses</h2>
+    <button
+      type="button"
+      class="btn border-none text-success-300"
+      onclick={addVision}><CirclePlus /></button
+    >
+  </div>
 
   <!-- Vision & Perception -->
-  <div class="input-group grid-cols-3">
-    <div class="ig-cell preset-tonal col-span-1">Passive Perception</div>
+  <div class="input-group grid-cols-6">
+    <div class="ig-cell preset-tonal col-span-3">Passive Perception</div>
     <input
-      class="ig-input text-center col-span-1"
+      class="ig-input text-center col-span-3"
       type="number"
       placeholder="10"
     />
-    <Button classes="col-span-1" title="Add New Vision" onClick={addVision} />
 
-    {#each visions as vision, index}
+    {#each visions as vision}
       <input
         class="ig-input text-center col-span-1"
         type="number"
         placeholder="60"
         bind:value={vision.range}
       />
-      <select class="ig-select col-span-1" bind:value={vision.type}>
+      <select class="ig-select text-center col-span-4" bind:value={vision.type}>
         {#each Sights as sight}
           <option>{sight}</option>
         {/each}
       </select>
       <button
         type="button"
-        class="btn preset-filled-secondary col-span-1"
-        onclick={removeVision(index)}>Remove Vision</button
+        class="btn preset-tonal text-error-300 col-span-1"
+        onclick={removeVision(vision)}><CircleX /></button
       >
     {/each}
   </div>
@@ -273,6 +300,44 @@
     {#each Skills as skill}
       <div class="ig-cell preset-tonal col-span-1">{skill}</div>
       <input class="ig-input text-center col-span-1" type="number" />
+    {/each}
+  </div>
+
+  <div class="flex justify-between">
+    <h2 class="h2">Traits</h2>
+    <button
+      type="button"
+      class="btn border-none text-success-500"
+      onclick={addTrait}><CirclePlus /></button
+    >
+  </div>
+
+  <!-- Traits -->
+  <div class="input-group grid-cols-8">
+    {#each traits as trait}
+      <!-- Name -->
+      <div class="ig-cell preset-tonal col-span-1">Name</div>
+      <input
+        bind:value={trait.name}
+        class="ig-input col-span-6"
+        type="text"
+        placeholder="Martial Advantage"
+      />
+      <button
+        type="button"
+        class="btn preset-tonal text-error-300 col-span-1"
+        onclick={removeTrait(trait)}><CircleX /></button
+      >
+
+      <!-- Description -->
+      <div class="ig-cell preset-tonal h-8 col-span-8">Description</div>
+      <textarea
+        bind:value={trait.description}
+        class="ig-input text-area col-span-8"
+        rows="4"
+        placeholder="Once per turn, the hobgoblin can deal an extra 7 (2d6) damage to a creature it hits with a weapon attack if that creature is within 5 feet of an ally of the hobgoblin that isn't incapacitated"
+      ></textarea>
+      <hr class="col-span-8" />
     {/each}
   </div>
 
