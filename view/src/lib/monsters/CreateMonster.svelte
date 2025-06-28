@@ -6,6 +6,7 @@
   import { Alignment, Alignments } from "../types/Alignment";
   import { Sight, Sights } from "../types/Sight";
   import { Language, Languages } from "../types/Language";
+  import { Skill, Skills } from "../types/Skill";
 
   let visions: { type: Sight; range: number }[] = [];
 
@@ -13,8 +14,13 @@
     visions = [...visions, { type: Sight.Darkvision, range: 0 }];
   }
 
+  // Fix this shit cause its wonky as hell when deleting in random orders.
   function removeVision(index: number) {
     visions = visions.filter((_, i) => i !== index);
+
+    return function (event: MouseEvent) {
+      event.preventDefault();
+    };
   }
 
   // Leave for now - just an example of how to pre-select default in select inputs.
@@ -157,6 +163,33 @@
     />
   </div>
 
+  <h6 class="h6">Saving Throws</h6>
+  <div class="input-group grid-cols-18">
+    <!-- Strength -->
+    <div class="ig-cell preset-tonal col-span-2">Strength</div>
+    <input class="ig-input text-center" type="number" placeholder="3" />
+
+    <!-- Dexterity -->
+    <div class="ig-cell preset-tonal col-span-2">Dexterity</div>
+    <input class="ig-input text-center" type="number" placeholder="2" />
+
+    <!-- Constitution -->
+    <div class="ig-cell preset-tonal col-span-2">Constitution</div>
+    <input class="ig-input text-center" type="number" placeholder="" />
+
+    <!-- Intelligence -->
+    <div class="ig-cell preset-tonal col-span-2">Intelligence</div>
+    <input class="ig-input text-center" type="number" placeholder="" />
+
+    <!-- Wisdom -->
+    <div class="ig-cell preset-tonal col-span-2">Wisdom</div>
+    <input class="ig-input text-center" type="number" placeholder="" />
+
+    <!-- Charisma -->
+    <div class="ig-cell preset-tonal col-span-2">Charisma</div>
+    <input class="ig-input text-center" type="number" placeholder="" />
+  </div>
+
   <h6 class="h6">Damage Resistances</h6>
 
   <!-- Damage Resistances -->
@@ -189,16 +222,33 @@
   <h2 class="h2">Senses</h2>
 
   <!-- Vision & Perception -->
-  <div class="input-group grid-cols-5">
-    <div class="ig-cell preset-tonal">Vision</div>
-    <input class="ig-input" type="number" placeholder="60" />
-    <select class="ig-select">
-      {#each Sights as sight}
-        <option>{sight}</option>
-      {/each}
-    </select>
-    <div class="ig-cell preset-tonal">Passive Perception</div>
-    <input class="ig-input" type="number" placeholder="10" />
+  <div class="input-group grid-cols-3">
+    <div class="ig-cell preset-tonal col-span-1">Passive Perception</div>
+    <input
+      class="ig-input text-center col-span-1"
+      type="number"
+      placeholder="10"
+    />
+    <Button classes="col-span-1" title="Add New Vision" onClick={addVision} />
+
+    {#each visions as vision, index}
+      <input
+        class="ig-input text-center col-span-1"
+        type="number"
+        placeholder="60"
+        bind:value={vision.range}
+      />
+      <select class="ig-select col-span-1" bind:value={vision.type}>
+        {#each Sights as sight}
+          <option>{sight}</option>
+        {/each}
+      </select>
+      <button
+        type="button"
+        class="btn preset-filled-secondary col-span-1"
+        onclick={removeVision(index)}>Remove Vision</button
+      >
+    {/each}
   </div>
 
   <hr class="hr" />
@@ -215,4 +265,16 @@
       </label>
     {/each}
   </div>
+
+  <h2 class="h2">Skills</h2>
+
+  <!-- Skills -->
+  <div class="input-group gap-y-1 px-1 py-1 grid-cols-6">
+    {#each Skills as skill}
+      <div class="ig-cell preset-tonal col-span-1">{skill}</div>
+      <input class="ig-input text-center col-span-1" type="number" />
+    {/each}
+  </div>
+
+  <div class="h-[100px]"></div>
 </form>
