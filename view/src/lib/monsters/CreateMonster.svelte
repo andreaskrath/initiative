@@ -277,7 +277,6 @@
 
   <!-- Damage Resistances -->
   <h6 class="h6">Damage Resistances</h6>
-
   <div class="input-group grid-cols-4 border-none outline-none py-2 px-2">
     {#each DamageTypes as damageType}
       <label
@@ -293,9 +292,8 @@
     {/each}
   </div>
 
-  <h6 class="h6">Damage Immunities</h6>
-
   <!-- Damage Immunities -->
+  <h6 class="h6">Damage Immunities</h6>
   <div class="input-group grid-cols-4 border-none outline-none py-2 px-2">
     {#each DamageTypes as damageType}
       <label
