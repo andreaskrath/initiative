@@ -33,6 +33,16 @@
     );
   }
 
+  function ConditionsFactory() {
+    return Conditions.reduce(
+      (record, condition) => {
+        record[condition] = false;
+        return record;
+      },
+      {} as Record<Condition, boolean>,
+    );
+  }
+
   function LanguagesFactory() {
     return Languages.reduce(
       (record, language) => {
@@ -71,6 +81,7 @@
     savingThrows: AttributesFactory(),
     damageResistances: DamageTypesFactory(),
     damageImmunities: DamageTypesFactory(),
+    conditionImmunities: ConditionsFactory(),
     visions: [] as { type: Sight; range: number | null }[],
     languages: LanguagesFactory(),
     skills: SkillsFactory(),
@@ -305,6 +316,23 @@
           bind:checked={monster.damageImmunities[damageType]}
         />
         <p>{damageType}</p>
+      </label>
+    {/each}
+  </div>
+
+  <!-- Condition Immunities -->
+  <h6 class="h6">Condition Immunities</h6>
+  <div class="input-group grid-cols-5 border-none outline-none py-2 px-2">
+    {#each Conditions as condition}
+      <label
+        class="flex items-center space-x-2 space-y-2 border-none outline-none"
+      >
+        <input
+          class="checkbox"
+          type="checkbox"
+          bind:checked={monster.conditionImmunities[condition]}
+        />
+        <p>{condition}</p>
       </label>
     {/each}
   </div>
