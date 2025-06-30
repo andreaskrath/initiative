@@ -1,15 +1,17 @@
 <script lang="ts">
-  import Dices from "@lucide/svelte/icons/dices";
-  import CircleX from "@lucide/svelte/icons/circle-x";
   import CirclePlus from "@lucide/svelte/icons/circle-plus";
-  import { DamageType, DamageTypes } from "../types/DamageType";
-  import { Size, Sizes } from "../types/Size";
-  import { MonsterType, MonsterTypes } from "../types/MonsterType";
+  import CircleX from "@lucide/svelte/icons/circle-x";
+  import Dices from "@lucide/svelte/icons/dices";
+
   import { Alignment, Alignments } from "../types/Alignment";
-  import { Sight, Sights } from "../types/Sight";
-  import { Language, Languages } from "../types/Language";
-  import { Skill, Skills } from "../types/Skill";
   import { Attribute, Attributes } from "../types/Attribute";
+  import { Condition, Conditions } from "../types/Condition";
+  import { DamageType, DamageTypes } from "../types/DamageType";
+  import { Language, Languages } from "../types/Language";
+  import { MonsterType, MonsterTypes } from "../types/MonsterType";
+  import { Sight, Sights } from "../types/Sight";
+  import { Size, Sizes } from "../types/Size";
+  import { Skill, Skills } from "../types/Skill";
 
   function AttributesFactory() {
     return Attributes.reduce(
