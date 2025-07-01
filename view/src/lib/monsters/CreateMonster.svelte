@@ -476,6 +476,88 @@
       <hr class="hr" />
     {/if}
   {/each}
+
+  <!-- Ranged Attack Actions -->
+  <div class="flex justify-between">
+    <h6 class="h6">Ranged Attack Actions</h6>
+    <button
+      type="button"
+      class="btn border-none text-success-500"
+      onclick={(event) => monster.AddRangedAttackAction(event)}
+      ><CirclePlus /></button
+    >
+  </div>
+  {#each monster.rangedAttackActions as rangedAttackAction}
+    <div class="input-group grid-cols-16">
+      <!-- Name -->
+      <div class="ig-cell preset-tonal col-span-1">Name</div>
+      <input
+        bind:value={rangedAttackAction.name}
+        class="ig-input col-span-11"
+        type="text"
+        placeholder="Longsword"
+      />
+
+      <!-- Bonus to Hit -->
+      <div class="ig-cell preset-tonal col-span-2">Bonus to Hit</div>
+      <input
+        bind:value={rangedAttackAction.hitBonus}
+        class="ig-input text-center col-span-1"
+        type="number"
+        placeholder="3"
+      />
+
+      <!-- Remove Melee Attack Action -->
+      <button
+        type="button"
+        class="btn preset-tonal text-error-300 col-span-1"
+        onclick={(_) => monster.RemoveRangedAttackAction(rangedAttackAction)}
+        ><CircleX /></button
+      >
+
+      <hr class="hr col-span-16" />
+
+      <!-- Normal Range -->
+      <div class="ig-cell preset-tonal col-span-2">Normal Range</div>
+      <input
+        bind:value={rangedAttackAction.normalRange}
+        class="ig-input text-center col-span-1"
+        type="number"
+        placeholder="5"
+      />
+
+      <div class="ig-cell preset-tonal col-span-2">Long Range</div>
+      <input
+        bind:value={rangedAttackAction.longRange}
+        class="ig-input text-center col-span-1"
+        type="number"
+        placeholder="5"
+      />
+
+      <!-- Attack -->
+      <div class="ig-cell preset-tonal col-span-2">Attack</div>
+      <input
+        bind:value={rangedAttackAction.attack}
+        class="ig-input text-center col-span-2"
+        type="number"
+        placeholder="1d8 + 1"
+      />
+
+      <!-- Damage Type -->
+      <div class="ig-cell preset-tonal col-span-2">Damage Type</div>
+      <select
+        bind:value={rangedAttackAction.damageType}
+        class="ig-select col-span-4"
+      >
+        {#each DamageTypes as damageType}
+          <option>
+            {damageType}
+          </option>
+        {/each}
+      </select>
+    </div>
+  {/each}
+
   <!-- Recharge Actions -->
   <div class="flex justify-between">
     <h6 class="h6">Recharge Actions</h6>
