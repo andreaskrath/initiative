@@ -477,6 +477,61 @@
     {/if}
   {/each}
   <!-- Recharge Actions -->
+  <div class="flex justify-between">
+    <h6 class="h6">Recharge Actions</h6>
+    <button
+      type="button"
+      class="btn border-none text-success-500"
+      onclick={(event) => monster.AddRechargeAction(event)}
+      ><CirclePlus /></button
+    >
+  </div>
+  {#each monster.rechargeActions as rechargeAction}
+    <div class="input-group grid-cols-16">
+      <!-- Name -->
+      <div class="ig-cell preset-tonal col-span-1">Name</div>
+      <input
+        bind:value={rechargeAction.name}
+        class="ig-input col-span-10"
+        type="text"
+        placeholder="Longsword"
+      />
+
+      <!-- Recharge dice -->
+      <div class="ig-cell preset-tonal col-span-2">Recharge Dice</div>
+      <select
+        bind:value={rechargeAction.rechargeDice}
+        class="ig-select text-center col-span-2"
+      >
+        {#each Recharges as recharge}
+          <option>
+            {recharge}
+          </option>
+        {/each}
+      </select>
+
+      <!-- Remove Recharge Attack Action -->
+      <button
+        type="button"
+        class="btn preset-tonal text-error-300 col-span-1"
+        onclick={(_) => monster.RemoveRechargeAction(rechargeAction)}
+        ><CircleX /></button
+      >
+
+      <hr class="hr col-span-16" />
+
+      <!-- Description -->
+      <div class="ig-cell preset-tonal h-8 col-span-16">Description</div>
+      <hr class="hr col-span-8" />
+      <textarea
+        bind:value={rechargeAction.description}
+        class="ig-input text-area col-span-16"
+        rows="4"
+        placeholder="Once per turn, the hobgoblin can deal an extra 7 (2d6) damage to a creature it hits with a weapon attack if that creature is within 5 feet of an ally of the hobgoblin that isn't incapacitated"
+      ></textarea>
+    </div>
+  {/each}
+
   <!-- Bonus Actions -->
   <!-- Reaction Actions -->
   <!-- Legendary Actions -->
