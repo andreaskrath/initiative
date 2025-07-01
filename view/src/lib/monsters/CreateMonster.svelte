@@ -289,7 +289,7 @@
   <hr class="hr" />
   <h2 class="h2">Skills</h2>
 
-  <div class="input-group gap-y-1 px-1 py-1 grid-cols-6">
+  <div class="input-group grid-cols-6">
     {#each Skills as skill, index}
       <div class="ig-cell preset-tonal col-span-1">{skill}</div>
       <input
@@ -331,8 +331,11 @@
         onclick={(_) => monster.RemoveTrait(trait)}><CircleX /></button
       >
 
+      <hr class="hr col-span-8" />
+
       <!-- Description -->
       <div class="ig-cell preset-tonal h-8 col-span-8">Description</div>
+      <hr class="hr col-span-8" />
       <textarea
         bind:value={trait.description}
         class="ig-input text-area col-span-8"
