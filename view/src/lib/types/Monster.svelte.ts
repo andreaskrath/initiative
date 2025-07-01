@@ -30,6 +30,23 @@ export class Monster {
   languages: Record<Language, boolean>;
   skills: Record<Skill, number | null>;
   traits: { name: string | null; description: string | null }[];
+  regularActions: { name: string | null; description: string | null }[];
+  meleeAttackActions: {
+    name: string | null;
+    hitBonus: number | null;
+    reach: number | null;
+    oneHandedAttack: string | null;
+    twoHandedAttack: string | null;
+    damageType: DamageType | null;
+  }[];
+  rangedAttackActions: {
+    name: string | null;
+    hitBonus: number | null;
+    normalRange: number | null;
+    longRange: number | null;
+    attack: string | null;
+    damageType: DamageType | null;
+  }[];
 
   constructor() {
     this.name = $state(null);
@@ -53,6 +70,9 @@ export class Monster {
     this.languages = $state(Monster.LanguagesFactory());
     this.skills = $state(Monster.SkillsFactory());
     this.traits = $state([]);
+    this.regularActions = $state([]);
+    this.meleeAttackActions = $state([]);
+    this.rangedAttackActions = $state([]);
   }
 
   public AddVision(event: MouseEvent) {
@@ -80,6 +100,92 @@ export class Monster {
     description: string | null;
   }) {
     this.traits = this.traits.filter((trait) => trait !== traitToRemove);
+    return function (event: MouseEvent) {
+      event.preventDefault();
+    };
+  }
+
+  public AddRegularAction(event: MouseEvent) {
+    this.regularActions = [
+      ...this.regularActions,
+      { name: null, description: null },
+    ];
+
+    event.preventDefault();
+  }
+
+  public RemoveRegularAction(regularActionToRemove: {
+    name: string | null;
+    description: string | null;
+  }) {
+    this.regularActions = this.regularActions.filter(
+      (regularAction) => regularAction !== regularActionToRemove,
+    );
+
+    return function (event: MouseEvent) {
+      event.preventDefault();
+    };
+  }
+
+  public AddMeleeAttackAction(event: MouseEvent) {
+    this.meleeAttackActions = [
+      ...this.meleeAttackActions,
+      {
+        name: null,
+        hitBonus: null,
+        reach: null,
+        oneHandedAttack: null,
+        twoHandedAttack: null,
+        damageType: null,
+      },
+    ];
+
+    event.preventDefault();
+  }
+
+  public RemoveMeleeAttackAction(meleeAttackActionToRemove: {
+    name: null;
+    hitBonus: null;
+    reach: null;
+    oneHandedAttack: null;
+    twoHandedAttack: null;
+    damageType: null;
+  }) {
+    this.meleeAttackActions = this.meleeAttackActions.filter(
+      (meleeAttackAction) => meleeAttackAction !== meleeAttackActionToRemove,
+    );
+    return function (event: MouseEvent) {
+      event.preventDefault();
+    };
+  }
+
+  public AddRangedAttackAction(event: MouseEvent) {
+    this.rangedAttackActions = [
+      ...this.rangedAttackActions,
+      {
+        name: null,
+        hitBonus: null,
+        normalRange: null,
+        longRange: null,
+        attack: null,
+        damageType: null,
+      },
+    ];
+
+    event.preventDefault();
+  }
+
+  public RemoveRangedAttackAction(rangedAttackActionToRemove: {
+    name: null;
+    hitBonus: null;
+    normalRange: null;
+    longRange: null;
+    attack: null;
+    damageType: null;
+  }) {
+    this.rangedAttackActions = this.rangedAttackActions.filter(
+      (rangedAttackAction) => rangedAttackAction !== rangedAttackActionToRemove,
+    );
     return function (event: MouseEvent) {
       event.preventDefault();
     };
