@@ -3,128 +3,18 @@
   import CircleX from "@lucide/svelte/icons/circle-x";
   import Dices from "@lucide/svelte/icons/dices";
 
-  import { Alignment, Alignments } from "../types/Alignment";
-  import { Attribute, Attributes } from "../types/Attribute";
-  import { Condition, Conditions } from "../types/Condition";
-  import { DamageType, DamageTypes } from "../types/DamageType";
-  import { Language, Languages } from "../types/Language";
-  import { MonsterType, MonsterTypes } from "../types/MonsterType";
-  import { Sight, Sights } from "../types/Sight";
-  import { Size, Sizes } from "../types/Size";
-  import { Skill, Skills } from "../types/Skill";
+  import { Alignments } from "../types/Alignment";
+  import { Attributes } from "../types/Attribute";
+  import { Conditions } from "../types/Condition";
+  import { DamageTypes } from "../types/DamageType";
+  import { Languages } from "../types/Language";
+  import { MonsterTypes } from "../types/MonsterType";
+  import { Sights } from "../types/Sight";
+  import { Sizes } from "../types/Size";
+  import { Skills } from "../types/Skill";
+  import { Monster } from "../types/Monster.svelte";
 
-  function AttributesFactory() {
-    return Attributes.reduce(
-      (record, attribute) => {
-        record[attribute] = null;
-        return record;
-      },
-      {} as Record<Attribute, number | null>,
-    );
-  }
-
-  function DamageTypesFactory() {
-    return DamageTypes.reduce(
-      (record, damageType) => {
-        record[damageType] = false;
-        return record;
-      },
-      {} as Record<DamageType, boolean>,
-    );
-  }
-
-  function ConditionsFactory() {
-    return Conditions.reduce(
-      (record, condition) => {
-        record[condition] = false;
-        return record;
-      },
-      {} as Record<Condition, boolean>,
-    );
-  }
-
-  function LanguagesFactory() {
-    return Languages.reduce(
-      (record, language) => {
-        record[language] = false;
-        return record;
-      },
-      {} as Record<Language, boolean>,
-    );
-  }
-
-  function SkillsFactory() {
-    return Skills.reduce(
-      (record, skill) => {
-        record[skill] = null;
-        return record;
-      },
-      {} as Record<Skill, number | null>,
-    );
-  }
-
-  // Need to use a inline object, because classes are broken as reactive components.
-  let monster = $state({
-    name: null as string | null,
-    challengeRating: null as number | null,
-    xp: null as number | null,
-    proficiencyBonus: null as number | null,
-    size: Size.Medium,
-    monsterType: MonsterType.Beast,
-    species: null as string | null,
-    alignment: Alignment.Any,
-    attributes: AttributesFactory(),
-    hitPoints: null as number | null,
-    rollableHitPoints: null as string | null,
-    armorClass: null as number | null,
-    armorType: null as string | null,
-    savingThrows: AttributesFactory(),
-    damageResistances: DamageTypesFactory(),
-    damageImmunities: DamageTypesFactory(),
-    conditionImmunities: ConditionsFactory(),
-    visions: [] as { type: Sight; range: number | null }[],
-    languages: LanguagesFactory(),
-    skills: SkillsFactory(),
-    traits: [] as { name: string | null; description: string | null }[],
-  });
-
-  function addVision(event: MouseEvent) {
-    monster.visions = [
-      ...monster.visions,
-      { type: Sight.Darkvision, range: null },
-    ];
-    event.preventDefault();
-  }
-
-  function removeVision(visionToRemove: { type: Sight; range: number | null }) {
-    return function (event: MouseEvent) {
-      monster.visions = monster.visions.filter(
-        (vision) => vision !== visionToRemove,
-      );
-      event.preventDefault();
-    };
-  }
-
-  function addTrait(event: MouseEvent) {
-    monster.traits = [...monster.traits, { name: null, description: null }];
-
-    event.preventDefault();
-  }
-
-  function removeTrait(traitToRemove: {
-    name: string | null;
-    description: string | null;
-  }) {
-    return function (event: MouseEvent) {
-      monster.traits = monster.traits.filter(
-        (trait) => trait !== traitToRemove,
-      );
-      event.preventDefault();
-    };
-  }
-
-  // Comment in for console.logs of each state update.
-  // $inspect(monster);
+  let monster = new Monster();
 </script>
 
 <div class="py-2"></div>
@@ -344,7 +234,7 @@
     <button
       type="button"
       class="btn border-none text-success-300"
-      onclick={addVision}><CirclePlus /></button
+      onclick={(event) => monster.AddVision(event)}><CirclePlus /></button
     >
   </div>
 
@@ -371,7 +261,7 @@
       <button
         type="button"
         class="btn preset-tonal text-error-300 col-span-1"
-        onclick={removeVision(vision)}><CircleX /></button
+        onclick={(_) => monster.RemoveVision(vision)}><CircleX /></button
       >
     {/each}
   </div>
@@ -421,7 +311,7 @@
     <button
       type="button"
       class="btn border-none text-success-500"
-      onclick={addTrait}><CirclePlus /></button
+      onclick={(event) => monster.AddTrait(event)}><CirclePlus /></button
     >
   </div>
 
@@ -438,7 +328,7 @@
       <button
         type="button"
         class="btn preset-tonal text-error-300 col-span-1"
-        onclick={removeTrait(trait)}><CircleX /></button
+        onclick={(_) => monster.RemoveTrait(trait)}><CircleX /></button
       >
 
       <!-- Description -->
