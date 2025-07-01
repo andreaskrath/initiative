@@ -346,22 +346,144 @@
     {/each}
   </div>
 
+  <!-- Actions -->
   <hr class="hr" />
   <h2 class="h2">Actions</h2>
 
-  <!-- Actions -->
-  <div class="input-group grid-cols-8">
-    <!-- Regular Actions -->
-    <!-- Attack Actions -->
-    <!-- Recharge Actions -->
-    <!-- Bonus Actions -->
-    <!-- Reaction Actions -->
-    <!-- Legendary Actions -->
+  <!-- Regular Actions -->
+  <div class="flex justify-between">
+    <h6 class="h6">Regular Actions</h6>
+    <button
+      type="button"
+      class="btn border-none text-success-500"
+      onclick={(event) => monster.AddRegularAction(event)}
+      ><CirclePlus /></button
+    >
   </div>
+  <div class="input-group grid-cols-8">
+    {#each monster.regularActions as regularAction}
+      <!-- Name -->
+      <div class="ig-cell preset-tonal col-span-1">Name</div>
+      <input
+        bind:value={regularAction.name}
+        class="ig-input col-span-6"
+        type="text"
+        placeholder="Martial Advantage"
+      />
+      <button
+        type="button"
+        class="btn preset-tonal text-error-300 col-span-1"
+        onclick={(_) => monster.RemoveRegularAction(regularAction)}
+        ><CircleX /></button
+      >
+
+      <hr class="hr col-span-8" />
+
+      <!-- Description -->
+      <div class="ig-cell preset-tonal h-8 col-span-8">Description</div>
+      <hr class="hr col-span-8" />
+      <textarea
+        bind:value={regularAction.description}
+        class="ig-input text-area col-span-8"
+        rows="4"
+        placeholder="Once per turn, the hobgoblin can deal an extra 7 (2d6) damage to a creature it hits with a weapon attack if that creature is within 5 feet of an ally of the hobgoblin that isn't incapacitated"
+      ></textarea>
+      <hr class="col-span-8" />
+    {/each}
+  </div>
+
+  <!-- Melee Attack Actions -->
+  <div class="flex justify-between">
+    <h6 class="h6">Melee Attack Actions</h6>
+    <button
+      type="button"
+      class="btn border-none text-success-500"
+      onclick={(event) => monster.AddMeleeAttackAction(event)}
+      ><CirclePlus /></button
+    >
+  </div>
+  {#each monster.meleeAttackActions as meleeAttackAction, index}
+    <div class="input-group grid-cols-16">
+      <!-- Name -->
+      <div class="ig-cell preset-tonal col-span-1">Name</div>
+      <input
+        bind:value={meleeAttackAction.name}
+        class="ig-input col-span-8"
+        type="text"
+        placeholder="Longsword"
+      />
+
+      <!-- Bonus to Hit -->
+      <div class="ig-cell preset-tonal col-span-2">Bonus to Hit</div>
+      <input
+        bind:value={meleeAttackAction.hitBonus}
+        class="ig-input text-center col-span-1"
+        type="number"
+        placeholder="3"
+      />
+
+      <!-- Reach -->
+      <div class="ig-cell preset-tonal col-span-2">Reach</div>
+      <input
+        bind:value={meleeAttackAction.reach}
+        class="ig-input text-center col-span-1"
+        type="number"
+        placeholder="5"
+      />
+
+      <!-- Remove Melee Attack Action -->
+      <button
+        type="button"
+        class="btn preset-tonal text-error-300 col-span-1"
+        onclick={(_) => monster.RemoveMeleeAttackAction(meleeAttackAction)}
+        ><CircleX /></button
+      >
+
+      <hr class="hr col-span-16" />
+
+      <!-- One-Handed Attack -->
+      <div class="ig-cell preset-tonal col-span-3">One-Handed Attack</div>
+      <input
+        bind:value={meleeAttackAction.oneHandedAttack}
+        class="ig-input text-center col-span-2"
+        type="number"
+        placeholder="1d8 + 1"
+      />
+
+      <!-- Two-Handed Attack -->
+      <div class="ig-cell preset-tonal col-span-3">Two-Handed Attack</div>
+      <input
+        bind:value={meleeAttackAction.twoHandedAttack}
+        class="ig-input text-center col-span-2"
+        type="number"
+        placeholder="1d10 + 1"
+      />
+
+      <!-- Damage Type -->
+      <div class="ig-cell preset-tonal col-span-2">Damage Type</div>
+      <select
+        bind:value={meleeAttackAction.damageType}
+        class="ig-select col-span-4"
+      >
+        {#each DamageTypes as damageType}
+          <option>
+            {damageType}
+          </option>
+        {/each}
+      </select>
+    </div>
+    {#if index !== monster.meleeAttackActions.length - 1}
+      <hr class="hr" />
+    {/if}
+  {/each}
+  <!-- Recharge Actions -->
+  <!-- Bonus Actions -->
+  <!-- Reaction Actions -->
+  <!-- Legendary Actions -->
 
   <!-- <button type="button" class="btn" onclick={(e) => $inspect(monster)} -->
   <!--   >Save Monster</button -->
   <!-- > -->
 
-  <div class="h-[100px]"></div>
+  <div class="h-[500px]"></div>
 </form>
