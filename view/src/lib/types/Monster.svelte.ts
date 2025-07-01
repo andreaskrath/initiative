@@ -4,6 +4,7 @@ import { Condition, Conditions } from "./Condition";
 import { DamageType, DamageTypes } from "./DamageType";
 import { Language, Languages } from "./Language";
 import { MonsterType } from "./MonsterType";
+import { Recharge } from "./Recharge";
 import { Sight } from "./Sight";
 import { Size } from "./Size";
 import { Skill, Skills } from "./Skill";
@@ -47,6 +48,15 @@ export class Monster {
     attack: string | null;
     damageType: DamageType | null;
   }[];
+  rechargeActions: {
+    name: string | null;
+    rechargeDice: Recharge | null;
+    description: string | null;
+  }[];
+
+  // <!-- Bonus Actions -->
+  // <!-- Reaction Actions -->
+  // <!-- Legendary Actions -->
 
   constructor() {
     this.name = $state(null);
@@ -73,6 +83,7 @@ export class Monster {
     this.regularActions = $state([]);
     this.meleeAttackActions = $state([]);
     this.rangedAttackActions = $state([]);
+    this.rechargeActions = $state([]);
   }
 
   public AddVision(event: MouseEvent) {
@@ -144,12 +155,12 @@ export class Monster {
   }
 
   public RemoveMeleeAttackAction(meleeAttackActionToRemove: {
-    name: null;
-    hitBonus: null;
-    reach: null;
-    oneHandedAttack: null;
-    twoHandedAttack: null;
-    damageType: null;
+    name: string | null;
+    hitBonus: number | null;
+    reach: number | null;
+    oneHandedAttack: string | null;
+    twoHandedAttack: string | null;
+    damageType: DamageType | null;
   }) {
     this.meleeAttackActions = this.meleeAttackActions.filter(
       (meleeAttackAction) => meleeAttackAction !== meleeAttackActionToRemove,
@@ -176,15 +187,41 @@ export class Monster {
   }
 
   public RemoveRangedAttackAction(rangedAttackActionToRemove: {
-    name: null;
-    hitBonus: null;
-    normalRange: null;
-    longRange: null;
-    attack: null;
-    damageType: null;
+    name: string | null;
+    hitBonus: number | null;
+    normalRange: number | null;
+    longRange: number | null;
+    attack: string | null;
+    damageType: DamageType | null;
   }) {
     this.rangedAttackActions = this.rangedAttackActions.filter(
       (rangedAttackAction) => rangedAttackAction !== rangedAttackActionToRemove,
+    );
+    return function (event: MouseEvent) {
+      event.preventDefault();
+    };
+  }
+
+  public AddRechargeAction(event: MouseEvent) {
+    this.rechargeActions = [
+      ...this.rechargeActions,
+      {
+        name: null,
+        rechargeDice: null,
+        description: null,
+      },
+    ];
+
+    event.preventDefault();
+  }
+
+  public RemoveRechargeAction(rechargeActionToRemove: {
+    name: string | null;
+    rechargeDice: Recharge | null;
+    description: string | null;
+  }) {
+    this.rechargeActions = this.rechargeActions.filter(
+      (rechargeAction) => rechargeAction !== rechargeActionToRemove,
     );
     return function (event: MouseEvent) {
       event.preventDefault();
