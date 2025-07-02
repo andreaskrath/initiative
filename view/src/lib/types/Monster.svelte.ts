@@ -53,10 +53,17 @@ export class Monster {
     rechargeDice: Recharge | null;
     description: string | null;
   }[];
+  bonusActions: {
+    name: string | null;
+    description: string | null;
+  }[];
+  reactions: {
+    name: string | null;
+    description: string | null;
+  }[];
 
-  // <!-- Bonus Actions -->
-  // <!-- Reaction Actions -->
   // <!-- Legendary Actions -->
+  // <!-- Lair Actions -->
 
   constructor() {
     this.name = $state(null);
@@ -84,6 +91,8 @@ export class Monster {
     this.meleeAttackActions = $state([]);
     this.rangedAttackActions = $state([]);
     this.rechargeActions = $state([]);
+    this.bonusActions = $state([]);
+    this.reactions = $state([]);
   }
 
   public AddVision(event: MouseEvent) {
@@ -223,6 +232,47 @@ export class Monster {
     this.rechargeActions = this.rechargeActions.filter(
       (rechargeAction) => rechargeAction !== rechargeActionToRemove,
     );
+    return function (event: MouseEvent) {
+      event.preventDefault();
+    };
+  }
+
+  public AddBonusAction(event: MouseEvent) {
+    this.bonusActions = [
+      ...this.bonusActions,
+      { name: null, description: null },
+    ];
+
+    event.preventDefault();
+  }
+
+  public RemoveBonusAction(bonusActionToRemove: {
+    name: string | null;
+    description: string | null;
+  }) {
+    this.bonusActions = this.bonusActions.filter(
+      (bonusAction) => bonusAction !== bonusActionToRemove,
+    );
+
+    return function (event: MouseEvent) {
+      event.preventDefault();
+    };
+  }
+
+  public AddReaction(event: MouseEvent) {
+    this.reactions = [...this.reactions, { name: null, description: null }];
+
+    event.preventDefault();
+  }
+
+  public RemoveReaction(reactionToRemove: {
+    name: string | null;
+    description: string | null;
+  }) {
+    this.reactions = this.reactions.filter(
+      (reaction) => reaction !== reactionToRemove,
+    );
+
     return function (event: MouseEvent) {
       event.preventDefault();
     };

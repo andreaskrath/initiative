@@ -600,7 +600,7 @@
 
       <!-- Description -->
       <div class="ig-cell preset-tonal h-8 col-span-16">Description</div>
-      <hr class="hr col-span-8" />
+      <hr class="hr col-span-16" />
       <textarea
         bind:value={rechargeAction.description}
         class="ig-input text-area col-span-16"
@@ -611,6 +611,88 @@
   {/each}
 
   <!-- Bonus Actions -->
+  <div class="flex justify-between">
+    <h6 class="h6">Bonus Actions</h6>
+    <button
+      type="button"
+      class="btn border-none text-success-500"
+      onclick={(event) => monster.AddBonusAction(event)}><CirclePlus /></button
+    >
+  </div>
+  {#each monster.bonusActions as bonusAction}
+    <div class="input-group grid-cols-16">
+      <!-- Name -->
+      <div class="ig-cell preset-tonal col-span-1">Name</div>
+      <input
+        bind:value={bonusAction.name}
+        class="ig-input col-span-14"
+        type="text"
+        placeholder="Longsword"
+      />
+
+      <!-- Remove Bonus Attack Action -->
+      <button
+        type="button"
+        class="btn preset-tonal text-error-300 col-span-1"
+        onclick={(_) => monster.RemoveBonusAction(bonusAction)}
+        ><CircleX /></button
+      >
+
+      <hr class="hr col-span-16" />
+
+      <!-- Description -->
+      <div class="ig-cell preset-tonal h-8 col-span-16">Description</div>
+      <hr class="hr col-span-16" />
+      <textarea
+        bind:value={bonusAction.description}
+        class="ig-input text-area col-span-16"
+        rows="4"
+        placeholder="Once per turn, the hobgoblin can deal an extra 7 (2d6) damage to a creature it hits with a weapon attack if that creature is within 5 feet of an ally of the hobgoblin that isn't incapacitated"
+      ></textarea>
+    </div>
+  {/each}
+
+  <!-- Reactions -->
+  <div class="flex justify-between">
+    <h6 class="h6">Reactions</h6>
+    <button
+      type="button"
+      class="btn border-none text-success-500"
+      onclick={(event) => monster.AddReaction(event)}><CirclePlus /></button
+    >
+  </div>
+  {#each monster.reactions as reaction}
+    <div class="input-group grid-cols-16">
+      <!-- Name -->
+      <div class="ig-cell preset-tonal col-span-1">Name</div>
+      <input
+        bind:value={reaction.name}
+        class="ig-input col-span-14"
+        type="text"
+        placeholder="Parry"
+      />
+
+      <!-- Remove Reaction -->
+      <button
+        type="button"
+        class="btn preset-tonal text-error-300 col-span-1"
+        onclick={(_) => monster.RemoveReaction(reaction)}><CircleX /></button
+      >
+
+      <hr class="hr col-span-16" />
+
+      <!-- Description -->
+      <div class="ig-cell preset-tonal h-8 col-span-16">Description</div>
+      <hr class="hr col-span-16" />
+      <textarea
+        bind:value={reaction.description}
+        class="ig-input text-area col-span-16"
+        rows="4"
+        placeholder="The captain adds 2 to its AC against one melee attack that would hit it. To do so, the captain must see the attacker and be wielding a melee weapon."
+      ></textarea>
+    </div>
+  {/each}
+
   <!-- Reaction Actions -->
   <!-- Legendary Actions -->
 
