@@ -1,9 +1,3 @@
-[package]
-name = "combat-tracker"
-version = "0.1.0"
-edition = "2021"
-
-[dependencies]
-iced = { version = "0.13.1", features = ["tokio", "debug"] }
-rand = "0.9.0"
-thiserror = "2.0.11"
+[workspace]
+members = ["api"]
+exclude = ["view"]

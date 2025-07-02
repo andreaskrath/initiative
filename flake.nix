@@ -17,28 +17,26 @@
         pkgs = import nixpkgs {
           inherit system overlays;
         };
+        node_modules = with pkgs.nodePackages; [
+          npm
+          svelte-check
+          svelte-language-server
+          typescript
+          typescript-language-server
+          eslint
+        ];
       in {
         devShells.default = with pkgs;
-          mkShell rec {
+          mkShell {
             buildInputs = [
               rust-bin.stable.latest.default
               rust-analyzer
               taplo
               vscode-extensions.vadimcn.vscode-lldb.adapter
 
-              pkg-config
-              libxkbcommon
-              vulkan-loader
-              xorg.libX11
-              xorg.libXcursor
-              xorg.libXrandr
-              xorg.libXi
-              xorg.libXinerama
-
-              mesa.dev
-              glxinfo
+              nodejs
+              node_modules
             ];
-            LD_LIBRARY_PATH = "${pkgs.lib.makeLibraryPath buildInputs}";
           };
       }
     );
