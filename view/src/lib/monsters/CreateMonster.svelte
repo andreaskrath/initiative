@@ -316,12 +316,12 @@
     >
   </div>
   {#each monster.traits as trait}
-    <div class="input-group grid-cols-8">
+    <div class="input-group grid-cols-16">
       <!-- Name -->
       <div class="ig-cell preset-tonal col-span-1">Name</div>
       <input
         bind:value={trait.name}
-        class="ig-input col-span-6"
+        class="ig-input col-span-14"
         type="text"
         placeholder="Martial Advantage"
       />
@@ -331,14 +331,14 @@
         onclick={(_) => monster.RemoveTrait(trait)}><CircleX /></button
       >
 
-      <hr class="hr col-span-8" />
+      <hr class="hr col-span-16" />
 
       <!-- Description -->
-      <div class="ig-cell preset-tonal h-8 col-span-8">Description</div>
-      <hr class="hr col-span-8" />
+      <div class="ig-cell preset-tonal h-8 col-span-16">Description</div>
+      <hr class="hr col-span-16" />
       <textarea
         bind:value={trait.description}
-        class="ig-input text-area col-span-8"
+        class="ig-input text-area col-span-16"
         rows="4"
         placeholder="Once per turn, the hobgoblin can deal an extra 7 (2d6) damage to a creature it hits with a weapon attack if that creature is within 5 feet of an ally of the hobgoblin that isn't incapacitated"
       ></textarea>
@@ -361,12 +361,12 @@
     >
   </div>
   {#each monster.regularActions as regularAction}
-    <div class="input-group grid-cols-8">
+    <div class="input-group grid-cols-16">
       <!-- Name -->
       <div class="ig-cell preset-tonal col-span-1">Name</div>
       <input
         bind:value={regularAction.name}
-        class="ig-input col-span-6"
+        class="ig-input col-span-14"
         type="text"
         placeholder="Martial Advantage"
       />
@@ -377,14 +377,14 @@
         ><CircleX /></button
       >
 
-      <hr class="hr col-span-8" />
+      <hr class="hr col-span-16" />
 
       <!-- Description -->
-      <div class="ig-cell preset-tonal h-8 col-span-8">Description</div>
-      <hr class="hr col-span-8" />
+      <div class="ig-cell preset-tonal h-8 col-span-16">Description</div>
+      <hr class="hr col-span-16" />
       <textarea
         bind:value={regularAction.description}
-        class="ig-input text-area col-span-8"
+        class="ig-input text-area col-span-16"
         rows="4"
         placeholder="Once per turn, the hobgoblin can deal an extra 7 (2d6) damage to a creature it hits with a weapon attack if that creature is within 5 feet of an ally of the hobgoblin that isn't incapacitated"
       ></textarea>
