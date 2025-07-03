@@ -74,6 +74,7 @@ export class Monster {
   reactions: NamedDescription[];
   availableLegendaryActionsPerTurn: number | null;
   legendaryActions: LegendaryAction[];
+  lairActions: NamedDescription[];
 
   constructor() {
     this.name = $state(null);
@@ -106,6 +107,7 @@ export class Monster {
     this.reactions = $state([]);
     this.availableLegendaryActionsPerTurn = $state(null);
     this.legendaryActions = $state([]);
+    this.lairActions = $state([]);
   }
 
   public AddVision(event: MouseEvent) {
@@ -319,11 +321,23 @@ export class Monster {
     };
   }
 
+  public AddLairAction(event: MouseEvent) {
+    this.lairActions = [...this.lairActions, { name: null, description: null }];
 
+    event.preventDefault();
   }
 
+  public RemoveLairAction(lairActionToRemove: {
+    name: string | null;
+    description: string | null;
+  }) {
+    this.lairActions = this.lairActions.filter(
+      (lairAction) => lairAction !== lairActionToRemove,
     );
 
+    return function (event: MouseEvent) {
+      event.preventDefault();
+    };
   }
 
   /**
