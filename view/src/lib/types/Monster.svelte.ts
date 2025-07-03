@@ -9,6 +9,40 @@ import { Sight } from "./Sight";
 import { Size } from "./Size";
 import { Skill, Skills } from "./Skill";
 
+type NamedDescription = { name: string | null; description: string | null };
+
+type Vision = { type: Sight; range: number | null };
+
+type MeleeAttack = {
+  name: string | null;
+  hitBonus: number | null;
+  reach: number | null;
+  oneHandedAttack: string | null;
+  twoHandedAttack: string | null;
+  damageType: DamageType | null;
+};
+
+type RangedAttack = {
+  name: string | null;
+  hitBonus: number | null;
+  normalRange: number | null;
+  longRange: number | null;
+  attack: string | null;
+  damageType: DamageType | null;
+};
+
+type RechargeAction = {
+  name: string | null;
+  rechargeDice: Recharge | null;
+  description: string | null;
+};
+
+type LegendaryAction = {
+  name: string | null;
+  cost: number | null;
+  description: string | null;
+};
+
 export class Monster {
   name: string | null;
   challengeRating: number | null;
@@ -27,50 +61,19 @@ export class Monster {
   damageResistances: Record<DamageType, boolean>;
   damageImmunities: Record<DamageType, boolean>;
   conditionImmunities: Record<Condition, boolean>;
-  visions: { type: Sight; range: number | null }[];
+  visions: Vision[];
   passivePerception: number | null;
   languages: Record<Language, boolean>;
   skills: Record<Skill, number | null>;
-  traits: { name: string | null; description: string | null }[];
-  regularActions: { name: string | null; description: string | null }[];
-  meleeAttackActions: {
-    name: string | null;
-    hitBonus: number | null;
-    reach: number | null;
-    oneHandedAttack: string | null;
-    twoHandedAttack: string | null;
-    damageType: DamageType | null;
-  }[];
-  rangedAttackActions: {
-    name: string | null;
-    hitBonus: number | null;
-    normalRange: number | null;
-    longRange: number | null;
-    attack: string | null;
-    damageType: DamageType | null;
-  }[];
-  rechargeActions: {
-    name: string | null;
-    rechargeDice: Recharge | null;
-    description: string | null;
-  }[];
-  bonusActions: {
-    name: string | null;
-    description: string | null;
-  }[];
-  reactions: {
-    name: string | null;
-    description: string | null;
-  }[];
+  traits: NamedDescription[];
+  regularActions: NamedDescription[];
+  meleeAttackActions: MeleeAttack[];
+  rangedAttackActions: RangedAttack[];
+  rechargeActions: RechargeAction[];
+  bonusActions: NamedDescription[];
+  reactions: NamedDescription[];
   availableLegendaryActionsPerTurn: number | null;
-  legendaryActions: {
-    name: string | null;
-    cost: number | null;
-    description: string | null;
-  }[];
-
-  // <!-- Legendary Actions -->
-  // <!-- Lair Actions -->
+  legendaryActions: LegendaryAction[];
 
   constructor() {
     this.name = $state(null);
@@ -81,19 +84,19 @@ export class Monster {
     this.monsterType = $state(null);
     this.species = $state(null);
     this.alignment = $state(null);
-    this.attributes = $state(Monster.AttributesFactory());
+    this.attributes = $state(Monster.RecordFactory(Attributes, null));
     this.hitPoints = $state(null);
     this.rollableHitPoints = $state(null);
     this.armorClass = $state(null);
     this.armorType = $state(null);
-    this.savingThrows = $state(Monster.AttributesFactory());
-    this.damageResistances = $state(Monster.DamageTypesFactory());
-    this.damageImmunities = $state(Monster.DamageTypesFactory());
-    this.conditionImmunities = $state(Monster.ConditionsFactory());
+    this.savingThrows = $state(Monster.RecordFactory(Attributes, null));
+    this.damageResistances = $state(Monster.RecordFactory(DamageTypes, false));
+    this.damageImmunities = $state(Monster.RecordFactory(DamageTypes, false));
+    this.conditionImmunities = $state(Monster.RecordFactory(Conditions, false));
     this.visions = $state([]);
     this.passivePerception = $state(null);
-    this.languages = $state(Monster.LanguagesFactory());
-    this.skills = $state(Monster.SkillsFactory());
+    this.languages = $state(Monster.RecordFactory(Languages, false));
+    this.skills = $state(Monster.RecordFactory(Skills, null));
     this.traits = $state([]);
     this.regularActions = $state([]);
     this.meleeAttackActions = $state([]);
@@ -316,53 +319,26 @@ export class Monster {
     };
   }
 
-  private static AttributesFactory() {
-    return Attributes.reduce(
-      (record, attribute) => {
-        record[attribute] = null;
-        return record;
-      },
-      {} as Record<Attribute, number | null>,
-    );
+
   }
 
-  private static DamageTypesFactory() {
-    return DamageTypes.reduce(
-      (record, damageType) => {
-        record[damageType] = false;
-        return record;
-      },
-      {} as Record<DamageType, boolean>,
     );
+
   }
 
-  private static ConditionsFactory() {
-    return Conditions.reduce(
-      (record, condition) => {
-        record[condition] = false;
+  /**
+   * Generic factory helper for creating Records.
+   */
+  private static RecordFactory<T extends string | number | symbol, V>(
+    items: readonly T[],
+    defaultValue: V,
+  ): Record<T, V> {
+    return items.reduce(
+      (record, item) => {
+        record[item] = defaultValue;
         return record;
       },
-      {} as Record<Condition, boolean>,
-    );
-  }
-
-  private static LanguagesFactory() {
-    return Languages.reduce(
-      (record, language) => {
-        record[language] = false;
-        return record;
-      },
-      {} as Record<Language, boolean>,
-    );
-  }
-
-  private static SkillsFactory() {
-    return Skills.reduce(
-      (record, skill) => {
-        record[skill] = null;
-        return record;
-      },
-      {} as Record<Skill, number | null>,
+      {} as Record<T, V>,
     );
   }
 }
