@@ -28,6 +28,7 @@ export class Monster {
   damageImmunities: Record<DamageType, boolean>;
   conditionImmunities: Record<Condition, boolean>;
   visions: { type: Sight; range: number | null }[];
+  passivePerception: number | null;
   languages: Record<Language, boolean>;
   skills: Record<Skill, number | null>;
   traits: { name: string | null; description: string | null }[];
@@ -84,6 +85,7 @@ export class Monster {
     this.damageImmunities = $state(Monster.DamageTypesFactory());
     this.conditionImmunities = $state(Monster.ConditionsFactory());
     this.visions = $state([]);
+    this.passivePerception = $state(null);
     this.languages = $state(Monster.LanguagesFactory());
     this.skills = $state(Monster.SkillsFactory());
     this.traits = $state([]);
