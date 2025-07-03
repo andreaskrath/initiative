@@ -801,6 +801,47 @@
   {/each}
 
   <!-- Spellcasting -->
+  <hr class="hr" />
+  <h2 class="h2">Spellcasting</h2>
+  <div class="input-group grid-cols-12">
+    <!-- Level -->
+    <Input
+      label="Level"
+      bind:value={monster.spellcastingLevel}
+      type="number"
+      placeholder="12"
+      labelSize={1}
+      inputSize={1}
+    />
+
+    <!-- Attribute -->
+    <SelectInput
+      title="Attribute"
+      bind:value={monster.spellcastingAttribute}
+      items={Attributes}
+      labelSize={2}
+      inputSize={3}
+    />
+
+    <!-- DC -->
+    <Input
+      label="DC"
+      bind:value={monster.spellcastingDC}
+      type="number"
+      placeholder="15"
+      labelSize={1}
+      inputSize={1}
+    />
+
+    <Input
+      label="Attack Bonus"
+      bind:value={monster.spellcastingAttackBonus}
+      type="number"
+      placeholder="7"
+      labelSize={2}
+      inputSize={1}
+    />
+  </div>
 
   <!-- <button type="button" class="btn" onclick={(e) => $inspect(monster)} -->
   <!--   >Save Monster</button -->
