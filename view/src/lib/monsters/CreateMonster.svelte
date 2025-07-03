@@ -1,7 +1,6 @@
 <script lang="ts">
   import CirclePlus from "@lucide/svelte/icons/circle-plus";
   import CircleX from "@lucide/svelte/icons/circle-x";
-  import Dices from "@lucide/svelte/icons/dices";
 
   import { Alignments } from "../types/Alignment";
   import { Attributes } from "../types/Attribute";
@@ -15,6 +14,10 @@
   import { Monster } from "../types/Monster.svelte";
   import { Recharges } from "../types/Recharge";
 
+  import CheckboxGroup from "../components/CheckboxGroup.svelte";
+  import Input from "../components/Input.svelte";
+  import SelectInput from "../components/SelectInput.svelte";
+
   let monster = new Monster();
 </script>
 
@@ -22,86 +25,86 @@
 <form class="w-[1200px] mx-auto space-y-2 px-2">
   <!-- Basic Information -->
   <h2 class="h2">Basic Information</h2>
-
-  <!-- Name, Challenge, XP & Proficiency-->
-  <div class="input-group grid-cols-16">
+  <div class="input-group grid-cols-32">
     <!-- Name -->
-    <div class="ig-cell preset-tonal col-span-1">Name</div>
-    <input
-      class="ig-input col-span-6"
+    <Input
+      label="Name"
+      bind:value={monster.name}
       type="text"
       placeholder="Goblin"
-      bind:value={monster.name}
+      labelSize={2}
+      inputSize={16}
     />
 
     <!-- Challenge Rating -->
-    <div class="ig-cell preset-tonal col-span-2">Challenge</div>
-    <input
-      class="ig-input col-span-1 text-center no-spinner"
+    <Input
+      label="Challenge"
+      bind:value={monster.challengeRating}
       type="number"
       placeholder="0.5"
-      bind:value={monster.challengeRating}
+      labelSize={3}
+      inputSize={2}
     />
 
     <!-- Experience Points -->
-    <div class="ig-cell preset-tonal col-span-1">XP</div>
-    <input
-      class="ig-input col-span-2 text-center"
+    <Input
+      label="XP"
+      bind:value={monster.xp}
       type="number"
       placeholder="100"
-      bind:value={monster.xp}
+      labelSize={1}
+      inputSize={3}
     />
 
     <!-- Proficiency Bonus -->
-    <div class="ig-cell preset-tonal col-span-2">Proficiency</div>
-    <input
-      class="ig-input col-span-1 text-center"
+    <Input
+      label="Proficiency"
+      bind:value={monster.proficiencyBonus}
       type="number"
       placeholder="2"
-      bind:value={monster.proficiencyBonus}
+      labelSize={3}
+      inputSize={2}
     />
-  </div>
 
-  <!-- Size, Type, Species & Alignment -->
-  <div class="input-group grid-cols-32">
+    <!-- New Row -->
+    <hr class="hr col-span-32" />
+
     <!-- Size -->
-    <div class="ig-cell preset-tonal col-span-2">Size</div>
-    <select class="ig-select col-span-5 text-center" bind:value={monster.size}>
-      {#each Sizes as size}
-        <option>{size}</option>
-      {/each}
-    </select>
+    <SelectInput
+      title="Size"
+      bind:value={monster.size}
+      items={Sizes}
+      labelSize={2}
+      inputSize={5}
+    />
 
     <!-- Monster Type -->
-    <div class="ig-cell preset-tonal col-span-2">Type</div>
-    <select
-      class="ig-select col-span-6 text-center"
+    <SelectInput
+      title="Type"
       bind:value={monster.monsterType}
-    >
-      {#each MonsterTypes as monsterType}
-        <option>{monsterType}</option>
-      {/each}
-    </select>
+      items={MonsterTypes}
+      labelSize={2}
+      inputSize={6}
+    />
 
     <!-- Species -->
-    <div class="ig-cell preset-tonal col-span-2">Species</div>
-    <input
-      class="ig-input col-span-6"
+    <Input
+      label="Species"
+      bind:value={monster.species}
       type="text"
       placeholder="Goblinoid"
-      bind:value={monster.species}
+      labelSize={2}
+      inputSize={6}
     />
 
     <!-- Alignment -->
-    <div class="ig-cell preset-tonal col-span-3">Alignment</div>
-    <select
-      class="ig-select col-span-6 text-center"
+    <SelectInput
+      title="Alignment"
       bind:value={monster.alignment}
-    >
-      {#each Alignments as alignment}
-        <option>{alignment}</option>
-      {/each}
-    </select>
+      items={Alignments}
+      labelSize={3}
+      inputSize={6}
+    />
   </div>
 
   <!-- Attributes -->
@@ -110,12 +113,13 @@
 
   <div class="input-group grid-cols-18">
     {#each Attributes as attribute}
-      <div class="ig-cell preset-tonal col-span-2">{attribute}</div>
-      <input
-        class="ig-input text-center"
-        type="number"
-        placeholder="13"
+      <Input
+        label={attribute}
         bind:value={monster.attributes[attribute]}
+        type="number"
+        placeholder=""
+        labelSize={2}
+        inputSize={1}
       />
     {/each}
   </div>
@@ -126,41 +130,44 @@
 
   <div class="input-group grid-cols-16">
     <!-- Hit Points -->
-    <div class="ig-cell preset-tonal col-span-2">Hit Points</div>
-    <input
-      class="ig-input col-span-1 text-center"
+    <Input
+      label="Hit Points"
+      bind:value={monster.hitPoints}
       type="number"
       placeholder="11"
-      bind:value={monster.hitPoints}
+      labelSize={2}
+      inputSize={1}
     />
 
     <!-- Rollable Hit Points -->
-    <div class="ig-cell preset-tonal col-span-1" title="Rollable Hit Points">
-      <Dices />
-    </div>
-    <input
-      class="ig-input text-center col-span-2"
-      type="text"
-      placeholder="2d8 +2"
+    <Input
+      label="Rollable"
       bind:value={monster.rollableHitPoints}
+      type="text"
+      placeholder="2d8 + 2"
+      labelSize={2}
+      inputSize={2}
+      center={true}
     />
 
     <!-- Armor Class -->
-    <div class="ig-cell preset-tonal col-span-2">Armor Class</div>
-    <input
-      class="ig-input text-center col-span-1"
+    <Input
+      label="Armor Class"
+      bind:value={monster.armorClass}
       type="number"
       placeholder="18"
-      bind:value={monster.armorClass}
+      labelSize={2}
+      inputSize={1}
     />
 
     <!-- Armor Type -->
-    <div class="ig-cell preset-tonal col-span-2">Armor Type</div>
-    <input
-      class="ig-input col-span-5"
+    <Input
+      label="Armor Type"
+      bind:value={monster.armorType}
       type="text"
       placeholder="chain mail, shield"
-      bind:value={monster.armorType}
+      labelSize={2}
+      inputSize={4}
     />
   </div>
 
@@ -168,67 +175,42 @@
   <h6 class="h6">Saving Throws</h6>
   <div class="input-group grid-cols-18">
     {#each Attributes as attribute}
-      <div class="ig-cell preset-tonal col-span-2">{attribute}</div>
-      <input
-        class="ig-input text-center"
-        type="number"
+      <Input
+        label={attribute}
         bind:value={monster.savingThrows[attribute]}
+        type="number"
+        placeholder=""
+        labelSize={2}
+        inputSize={1}
       />
     {/each}
   </div>
 
   <!-- Damage Resistances -->
   <h6 class="h6">Damage Resistances</h6>
-  <div class="input-group grid-cols-4 border-none outline-none py-2 px-2">
-    {#each DamageTypes as damageType}
-      <label
-        class="flex items-center space-x-2 space-y-2 border-none outline-none"
-      >
-        <input
-          class="checkbox"
-          type="checkbox"
-          bind:checked={monster.damageResistances[damageType]}
-        />
-        <p>{damageType}</p>
-      </label>
-    {/each}
-  </div>
+  <CheckboxGroup
+    items={DamageTypes}
+    bind:checkedItems={monster.damageResistances}
+    columns={4}
+  />
 
   <!-- Damage Immunities -->
   <h6 class="h6">Damage Immunities</h6>
-  <div class="input-group grid-cols-4 border-none outline-none py-2 px-2">
-    {#each DamageTypes as damageType}
-      <label
-        class="flex items-center space-x-2 space-y-2 border-none outline-none"
-      >
-        <input
-          class="checkbox"
-          type="checkbox"
-          bind:checked={monster.damageImmunities[damageType]}
-        />
-        <p>{damageType}</p>
-      </label>
-    {/each}
-  </div>
+  <CheckboxGroup
+    items={DamageTypes}
+    bind:checkedItems={monster.damageImmunities}
+    columns={4}
+  />
 
   <!-- Condition Immunities -->
   <h6 class="h6">Condition Immunities</h6>
-  <div class="input-group grid-cols-5 border-none outline-none py-2 px-2">
-    {#each Conditions as condition}
-      <label
-        class="flex items-center space-x-2 space-y-2 border-none outline-none"
-      >
-        <input
-          class="checkbox"
-          type="checkbox"
-          bind:checked={monster.conditionImmunities[condition]}
-        />
-        <p>{condition}</p>
-      </label>
-    {/each}
-  </div>
+  <CheckboxGroup
+    items={Conditions}
+    bind:checkedItems={monster.conditionImmunities}
+    columns={5}
+  />
 
-  <!-- Vision & Perception -->
+  <!-- Senses -->
   <hr class="hr" />
   <div class="flex justify-between">
     <h2 class="h2">Senses</h2>
@@ -239,52 +221,55 @@
     >
   </div>
 
-  <div class="input-group grid-cols-6">
-    <div class="ig-cell preset-tonal col-span-3">Passive Perception</div>
-    <input
-      class="ig-input text-center col-span-3"
+  <div class="input-group grid-cols-2">
+    <Input
+      label="Passive Perception"
+      bind:value={monster.passivePerception}
       type="number"
       placeholder="10"
+      labelSize={1}
+      inputSize={1}
     />
+  </div>
 
-    {#each monster.visions as vision}
-      <input
-        class="ig-input text-center col-span-1"
+  {#each monster.visions as vision}
+    <div class="input-group grid-cols-16">
+      <!-- Sight Type -->
+      <SelectInput
+        title="Sight"
+        bind:value={vision.type}
+        items={Sights}
+        labelSize={2}
+        inputSize={10}
+      />
+
+      <!-- Range -->
+      <Input
+        label="Range"
+        bind:value={vision.range}
         type="number"
         placeholder="60"
-        bind:value={vision.range}
+        labelSize={2}
+        inputSize={1}
       />
-      <select class="ig-select text-center col-span-4" bind:value={vision.type}>
-        {#each Sights as sight}
-          <option>{sight}</option>
-        {/each}
-      </select>
+
+      <!-- Remove Sight -->
       <button
         type="button"
         class="btn preset-tonal text-error-300 col-span-1"
         onclick={(_) => monster.RemoveVision(vision)}><CircleX /></button
       >
-    {/each}
-  </div>
+    </div>
+  {/each}
 
   <!-- Languages -->
   <hr class="hr" />
   <h2 class="h2">Languages</h2>
-
-  <div class="input-group grid-cols-4 border-none outline-none py-2 px-2">
-    {#each Languages as language}
-      <label
-        class="flex items-center space-x-2 space-y-2 border-none outline-none"
-      >
-        <input
-          class="checkbox"
-          type="checkbox"
-          bind:checked={monster.languages[language]}
-        />
-        <p>{language}</p>
-      </label>
-    {/each}
-  </div>
+  <CheckboxGroup
+    items={Languages}
+    bind:checkedItems={monster.languages}
+    columns={4}
+  />
 
   <!-- Skills -->
   <hr class="hr" />
@@ -292,12 +277,15 @@
 
   <div class="input-group grid-cols-6">
     {#each Skills as skill, index}
-      <div class="ig-cell preset-tonal col-span-1">{skill}</div>
-      <input
-        class="ig-input text-center col-span-1"
-        type="number"
+      <Input
+        label={skill}
         bind:value={monster.skills[skill]}
+        type="text"
+        placeholder=""
+        labelSize={1}
+        inputSize={1}
       />
+
       <!-- This is nasty, but draws the horizontal rulers correctly. -->
       {#if index !== 0 && index !== Skills.length - 1 && index % 3 === 2}
         <hr class="hr col-span-6" />
@@ -318,13 +306,16 @@
   {#each monster.traits as trait}
     <div class="input-group grid-cols-16">
       <!-- Name -->
-      <div class="ig-cell preset-tonal col-span-1">Name</div>
-      <input
+      <Input
+        label="Name"
         bind:value={trait.name}
-        class="ig-input col-span-14"
         type="text"
         placeholder="Martial Advantage"
+        labelSize={1}
+        inputSize={14}
       />
+
+      <!-- Remove Trait Button -->
       <button
         type="button"
         class="btn preset-tonal text-error-300 col-span-1"
@@ -363,13 +354,16 @@
   {#each monster.regularActions as regularAction}
     <div class="input-group grid-cols-16">
       <!-- Name -->
-      <div class="ig-cell preset-tonal col-span-1">Name</div>
-      <input
+      <Input
+        label="Name"
         bind:value={regularAction.name}
-        class="ig-input col-span-14"
         type="text"
         placeholder="Martial Advantage"
+        labelSize={1}
+        inputSize={14}
       />
+
+      <!-- Remove Regular Action Button -->
       <button
         type="button"
         class="btn preset-tonal text-error-300 col-span-1"
@@ -404,30 +398,33 @@
   {#each monster.meleeAttackActions as meleeAttackAction}
     <div class="input-group grid-cols-16">
       <!-- Name -->
-      <div class="ig-cell preset-tonal col-span-1">Name</div>
-      <input
+      <Input
+        label="Name"
         bind:value={meleeAttackAction.name}
-        class="ig-input col-span-8"
         type="text"
         placeholder="Longsword"
+        labelSize={1}
+        inputSize={8}
       />
 
       <!-- Bonus to Hit -->
-      <div class="ig-cell preset-tonal col-span-2">Bonus to Hit</div>
-      <input
+      <Input
+        label="Bonus to Hit"
         bind:value={meleeAttackAction.hitBonus}
-        class="ig-input text-center col-span-1"
         type="number"
         placeholder="3"
+        labelSize={2}
+        inputSize={1}
       />
 
       <!-- Reach -->
-      <div class="ig-cell preset-tonal col-span-2">Reach</div>
-      <input
+      <Input
+        label="Reach"
         bind:value={meleeAttackAction.reach}
-        class="ig-input text-center col-span-1"
         type="number"
         placeholder="5"
+        labelSize={2}
+        inputSize={1}
       />
 
       <!-- Remove Melee Attack Action -->
@@ -441,35 +438,35 @@
       <hr class="hr col-span-16" />
 
       <!-- One-Handed Attack -->
-      <div class="ig-cell preset-tonal col-span-3">One-Handed Attack</div>
-      <input
+      <Input
+        label="One-Handed Attack"
         bind:value={meleeAttackAction.oneHandedAttack}
-        class="ig-input text-center col-span-2"
-        type="number"
+        type="text"
         placeholder="1d8 + 1"
+        labelSize={3}
+        inputSize={2}
+        center={true}
       />
 
       <!-- Two-Handed Attack -->
-      <div class="ig-cell preset-tonal col-span-3">Two-Handed Attack</div>
-      <input
+      <Input
+        label="Two-Handed Attack"
         bind:value={meleeAttackAction.twoHandedAttack}
-        class="ig-input text-center col-span-2"
-        type="number"
+        type="text"
         placeholder="1d10 + 1"
+        labelSize={3}
+        inputSize={2}
+        center={true}
       />
 
       <!-- Damage Type -->
-      <div class="ig-cell preset-tonal col-span-2">Damage Type</div>
-      <select
+      <SelectInput
+        title="Damage Type"
         bind:value={meleeAttackAction.damageType}
-        class="ig-select col-span-4"
-      >
-        {#each DamageTypes as damageType}
-          <option>
-            {damageType}
-          </option>
-        {/each}
-      </select>
+        items={DamageTypes}
+        labelSize={2}
+        inputSize={4}
+      />
     </div>
   {/each}
 
@@ -486,24 +483,26 @@
   {#each monster.rangedAttackActions as rangedAttackAction}
     <div class="input-group grid-cols-16">
       <!-- Name -->
-      <div class="ig-cell preset-tonal col-span-1">Name</div>
-      <input
+      <Input
+        label="Name"
         bind:value={rangedAttackAction.name}
-        class="ig-input col-span-11"
         type="text"
-        placeholder="Longsword"
+        placeholder="Light Crossbow"
+        labelSize={1}
+        inputSize={11}
       />
 
       <!-- Bonus to Hit -->
-      <div class="ig-cell preset-tonal col-span-2">Bonus to Hit</div>
-      <input
+      <Input
+        label="Bonus to Hit"
         bind:value={rangedAttackAction.hitBonus}
-        class="ig-input text-center col-span-1"
         type="number"
         placeholder="3"
+        labelSize={2}
+        inputSize={1}
       />
 
-      <!-- Remove Melee Attack Action -->
+      <!-- Remove Ranged Attack Action -->
       <button
         type="button"
         class="btn preset-tonal text-error-300 col-span-1"
@@ -514,43 +513,44 @@
       <hr class="hr col-span-16" />
 
       <!-- Normal Range -->
-      <div class="ig-cell preset-tonal col-span-2">Normal Range</div>
-      <input
+      <Input
+        label="Normal Range"
         bind:value={rangedAttackAction.normalRange}
-        class="ig-input text-center col-span-1"
         type="number"
-        placeholder="5"
+        placeholder="80"
+        labelSize={2}
+        inputSize={1}
       />
 
-      <div class="ig-cell preset-tonal col-span-2">Long Range</div>
-      <input
+      <!-- Long Range -->
+      <Input
+        label="Long Range"
         bind:value={rangedAttackAction.longRange}
-        class="ig-input text-center col-span-1"
         type="number"
-        placeholder="5"
+        placeholder="320"
+        labelSize={2}
+        inputSize={1}
       />
 
       <!-- Attack -->
-      <div class="ig-cell preset-tonal col-span-2">Attack</div>
-      <input
+      <Input
+        label="Attack"
         bind:value={rangedAttackAction.attack}
-        class="ig-input text-center col-span-2"
-        type="number"
+        type="text"
         placeholder="1d8 + 1"
+        labelSize={2}
+        inputSize={2}
+        center={true}
       />
 
       <!-- Damage Type -->
-      <div class="ig-cell preset-tonal col-span-2">Damage Type</div>
-      <select
+      <SelectInput
+        title="Damage Type"
         bind:value={rangedAttackAction.damageType}
-        class="ig-select col-span-4"
-      >
-        {#each DamageTypes as damageType}
-          <option>
-            {damageType}
-          </option>
-        {/each}
-      </select>
+        items={DamageTypes}
+        labelSize={2}
+        inputSize={4}
+      />
     </div>
   {/each}
 
@@ -567,28 +567,25 @@
   {#each monster.rechargeActions as rechargeAction}
     <div class="input-group grid-cols-16">
       <!-- Name -->
-      <div class="ig-cell preset-tonal col-span-1">Name</div>
-      <input
+      <Input
+        label="Name"
         bind:value={rechargeAction.name}
-        class="ig-input col-span-10"
         type="text"
-        placeholder="Longsword"
+        placeholder="Light Crossbow"
+        labelSize={1}
+        inputSize={10}
       />
 
-      <!-- Recharge dice -->
-      <div class="ig-cell preset-tonal col-span-2">Recharge Dice</div>
-      <select
+      <!-- Recharge Dice -->
+      <SelectInput
+        title="Recharge Dice"
         bind:value={rechargeAction.rechargeDice}
-        class="ig-select text-center col-span-2"
-      >
-        {#each Recharges as recharge}
-          <option>
-            {recharge}
-          </option>
-        {/each}
-      </select>
+        items={Recharges}
+        labelSize={2}
+        inputSize={2}
+      />
 
-      <!-- Remove Recharge Attack Action -->
+      <!-- Remove Recharge Action -->
       <button
         type="button"
         class="btn preset-tonal text-error-300 col-span-1"
@@ -622,15 +619,16 @@
   {#each monster.bonusActions as bonusAction}
     <div class="input-group grid-cols-16">
       <!-- Name -->
-      <div class="ig-cell preset-tonal col-span-1">Name</div>
-      <input
+      <Input
+        label="Name"
         bind:value={bonusAction.name}
-        class="ig-input col-span-14"
         type="text"
-        placeholder="Longsword"
+        placeholder="Light Crossbow"
+        labelSize={1}
+        inputSize={14}
       />
 
-      <!-- Remove Bonus Attack Action -->
+      <!-- Remove Bonus Action -->
       <button
         type="button"
         class="btn preset-tonal text-error-300 col-span-1"
@@ -664,12 +662,13 @@
   {#each monster.reactions as reaction}
     <div class="input-group grid-cols-16">
       <!-- Name -->
-      <div class="ig-cell preset-tonal col-span-1">Name</div>
-      <input
+      <Input
+        label="Name"
         bind:value={reaction.name}
-        class="ig-input col-span-14"
         type="text"
-        placeholder="Parry"
+        placeholder="Light Crossbow"
+        labelSize={1}
+        inputSize={14}
       />
 
       <!-- Remove Reaction -->
