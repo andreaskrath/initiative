@@ -692,8 +692,74 @@
     </div>
   {/each}
 
-  <!-- Reaction Actions -->
-  <!-- Legendary Actions -->
+  <div class="flex justify-between">
+    <h6 class="h6">Legendary Actions</h6>
+    <button
+      type="button"
+      class="btn border-none text-success-500"
+      onclick={(event) => monster.AddLegendaryAction(event)}
+      ><CirclePlus /></button
+    >
+  </div>
+  {#if monster.legendaryActions.length > 0}
+    <div class="input-group grid-cols-3">
+      <Input
+        label="Available Legendary Actions per Turn"
+        bind:value={monster.availableLegendaryActionsPerTurn}
+        type="number"
+        placeholder="3"
+        labelSize={2}
+        inputSize={1}
+      />
+    </div>
+  {/if}
+  {#each monster.legendaryActions as legendaryAction}
+    <div class="input-group grid-cols-16">
+      <!-- Name -->
+      <Input
+        label="Name"
+        bind:value={legendaryAction.name}
+        type="text"
+        placeholder="Light Crossbow"
+        labelSize={1}
+        inputSize={12}
+      />
+
+      <!-- Cost -->
+      <Input
+        label="Cost"
+        bind:value={legendaryAction.cost}
+        type="number"
+        placeholder="1"
+        labelSize={1}
+        inputSize={1}
+      />
+
+      <!-- Remove Legendary Action -->
+      <button
+        type="button"
+        class="btn preset-tonal text-error-300 col-span-1"
+        onclick={(_) => monster.RemoveLegendaryAction(legendaryAction)}
+        ><CircleX /></button
+      >
+
+      <hr class="hr col-span-16" />
+
+      <!-- Description -->
+      <div class="ig-cell preset-tonal h-8 col-span-16">Description</div>
+      <hr class="hr col-span-16" />
+      <textarea
+        bind:value={legendaryAction.description}
+        class="ig-input text-area col-span-16"
+        rows="4"
+        placeholder="The captain adds 2 to its AC against one melee attack that would hit it. To do so, the captain must see the attacker and be wielding a melee weapon."
+      ></textarea>
+    </div>
+  {/each}
+
+  <!-- Lair Actions -->
+
+  <!-- Spellcasting -->
 
   <!-- <button type="button" class="btn" onclick={(e) => $inspect(monster)} -->
   <!--   >Save Monster</button -->
