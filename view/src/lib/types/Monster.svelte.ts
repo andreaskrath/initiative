@@ -62,6 +62,12 @@ export class Monster {
     name: string | null;
     description: string | null;
   }[];
+  availableLegendaryActionsPerTurn: number | null;
+  legendaryActions: {
+    name: string | null;
+    cost: number | null;
+    description: string | null;
+  }[];
 
   // <!-- Legendary Actions -->
   // <!-- Lair Actions -->
@@ -95,6 +101,8 @@ export class Monster {
     this.rechargeActions = $state([]);
     this.bonusActions = $state([]);
     this.reactions = $state([]);
+    this.availableLegendaryActionsPerTurn = $state(null);
+    this.legendaryActions = $state([]);
   }
 
   public AddVision(event: MouseEvent) {
@@ -274,6 +282,34 @@ export class Monster {
     this.reactions = this.reactions.filter(
       (reaction) => reaction !== reactionToRemove,
     );
+
+    return function (event: MouseEvent) {
+      event.preventDefault();
+    };
+  }
+
+  public AddLegendaryAction(event: MouseEvent) {
+    this.legendaryActions = [
+      ...this.legendaryActions,
+      { name: null, cost: null, description: null },
+    ];
+
+    event.preventDefault();
+  }
+
+  public RemoveLegendaryAction(legendaryActionToRemove: {
+    name: string | null;
+    cost: number | null;
+    description: string | null;
+  }) {
+    this.legendaryActions = this.legendaryActions.filter(
+      (legendaryAction) => legendaryAction !== legendaryActionToRemove,
+    );
+
+    // Clear available legendary actions if all legendary actions are removed
+    if (this.legendaryActions.length === 0) {
+      this.availableLegendaryActionsPerTurn = null;
+    }
 
     return function (event: MouseEvent) {
       event.preventDefault();
