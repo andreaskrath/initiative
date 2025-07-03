@@ -75,6 +75,10 @@ export class Monster {
   availableLegendaryActionsPerTurn: number | null;
   legendaryActions: LegendaryAction[];
   lairActions: NamedDescription[];
+  spellcastingLevel: number | null;
+  spellcastingAttribute: Attribute | null;
+  spellcastingDC: number | null;
+  spellcastingAttackBonus: number | null;
 
   constructor() {
     this.name = $state(null);
@@ -108,6 +112,10 @@ export class Monster {
     this.availableLegendaryActionsPerTurn = $state(null);
     this.legendaryActions = $state([]);
     this.lairActions = $state([]);
+    this.spellcastingLevel = $state(null);
+    this.spellcastingAttribute = $state(null);
+    this.spellcastingDC = $state(null);
+    this.spellcastingAttackBonus = $state(null);
   }
 
   public AddVision(event: MouseEvent) {
