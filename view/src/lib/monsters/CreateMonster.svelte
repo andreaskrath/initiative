@@ -2,21 +2,21 @@
   import CirclePlus from "@lucide/svelte/icons/circle-plus";
   import CircleX from "@lucide/svelte/icons/circle-x";
 
-  import { Alignments } from "../types/Alignment";
-  import { Attributes } from "../types/Attribute";
-  import { Conditions } from "../types/Condition";
-  import { DamageTypes } from "../types/DamageType";
-  import { Languages } from "../types/Language";
-  import { MonsterTypes } from "../types/MonsterType";
-  import { Sights } from "../types/Sight";
-  import { Sizes } from "../types/Size";
-  import { Skills } from "../types/Skill";
-  import { Monster } from "../types/Monster.svelte";
-  import { Recharges } from "../types/Recharge";
+  import { Alignments } from "$types/Alignment";
+  import { Attributes } from "$types/Attribute";
+  import { Conditions } from "$types/Condition";
+  import { DamageTypes } from "$types/DamageType";
+  import { Languages } from "$types/Language";
+  import { MonsterTypes } from "$types/MonsterType";
+  import { Sights } from "$types/Sight";
+  import { Sizes } from "$types/Size";
+  import { Skills } from "$types/Skill";
+  import { Monster } from "$types/Monster.svelte";
+  import { Recharges } from "$types/Recharge";
 
-  import CheckboxGroup from "../components/CheckboxGroup.svelte";
-  import Input from "../components/Input.svelte";
-  import SelectInput from "../components/SelectInput.svelte";
+  import CheckboxGroup from "$components/CheckboxGroup.svelte";
+  import Input from "$components/Input.svelte";
+  import SelectInput from "$components/SelectInput.svelte";
 
   let monster = new Monster();
 </script>

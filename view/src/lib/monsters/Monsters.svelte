@@ -1,5 +1,5 @@
 <script lang="ts">
-  import Button from "../components/Button.svelte";
+  import Button from "$components/Button.svelte";
   import CreateMonster from "./CreateMonster.svelte";
   import NotFound from "../NotFound.svelte";
   import ViewMonster from "./ViewMonster.svelte";

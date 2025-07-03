@@ -4,7 +4,7 @@
   import Encounters from "./lib/encounters/Encounters.svelte";
   import NotFound from "./lib/NotFound.svelte";
   import Settings from "./lib/settings/Settings.svelte";
-  import Navbar from "./lib/components/Navbar.svelte";
+  import Navbar from "$components/Navbar.svelte";
   import type { Component } from "svelte";
 
   const pages: Component[] = [Monsters, Encounters, Settings];

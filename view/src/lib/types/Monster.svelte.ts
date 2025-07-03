@@ -1,13 +1,13 @@
-import { Alignment } from "./Alignment";
-import { Attribute, Attributes } from "./Attribute";
-import { Condition, Conditions } from "./Condition";
-import { DamageType, DamageTypes } from "./DamageType";
-import { Language, Languages } from "./Language";
-import { MonsterType } from "./MonsterType";
-import { Recharge } from "./Recharge";
-import { Sight } from "./Sight";
-import { Size } from "./Size";
-import { Skill, Skills } from "./Skill";
+import { Alignment } from "$types/Alignment";
+import { Attribute, Attributes } from "$types/Attribute";
+import { Condition, Conditions } from "$types/Condition";
+import { DamageType, DamageTypes } from "$types/DamageType";
+import { Language, Languages } from "$types/Language";
+import { MonsterType } from "$types/MonsterType";
+import { Recharge } from "$types/Recharge";
+import { Sight } from "$types/Sight";
+import { Size } from "$types/Size";
+import { Skill, Skills } from "$types/Skill";
 
 type NamedDescription = { name: string | null; description: string | null };
 
