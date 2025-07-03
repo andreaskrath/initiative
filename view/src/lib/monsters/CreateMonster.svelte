@@ -758,6 +758,47 @@
   {/each}
 
   <!-- Lair Actions -->
+  <div class="flex justify-between">
+    <h6 class="h6">Lair Actions</h6>
+    <button
+      type="button"
+      class="btn border-none text-success-500"
+      onclick={(event) => monster.AddLairAction(event)}><CirclePlus /></button
+    >
+  </div>
+  {#each monster.lairActions as lairAction}
+    <div class="input-group grid-cols-16">
+      <!-- Name -->
+      <Input
+        label="Name"
+        bind:value={lairAction.name}
+        type="text"
+        placeholder="Light Crossbow"
+        labelSize={1}
+        inputSize={14}
+      />
+
+      <!-- Remove Lair Action -->
+      <button
+        type="button"
+        class="btn preset-tonal text-error-300 col-span-1"
+        onclick={(_) => monster.RemoveLairAction(lairAction)}
+        ><CircleX /></button
+      >
+
+      <hr class="hr col-span-16" />
+
+      <!-- Description -->
+      <div class="ig-cell preset-tonal h-8 col-span-16">Description</div>
+      <hr class="hr col-span-16" />
+      <textarea
+        bind:value={lairAction.description}
+        class="ig-input text-area col-span-16"
+        rows="4"
+        placeholder="The captain adds 2 to its AC against one melee attack that would hit it. To do so, the captain must see the attacker and be wielding a melee weapon."
+      ></textarea>
+    </div>
+  {/each}
 
   <!-- Spellcasting -->
 
