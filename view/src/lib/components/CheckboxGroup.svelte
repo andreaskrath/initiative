@@ -10,7 +10,12 @@
   } = $props();
 </script>
 
-<div class="input-group grid-cols-{columns} border-none outline-none py-2 px-2">
+<!-- Have to use inline CSS because dynamic tailwind classes are not picked up by compiler -->
+
+<div
+  class="input-group border-none outline-none py-2 px-2"
+  style="grid-template-columns: repeat({columns}, minmax(0, 1fr))"
+>
   {#each items as item}
     <label
       class="flex items-center space-x-2 space-y-2 border-none outline-none col-span-1"

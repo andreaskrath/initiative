@@ -18,11 +18,16 @@
   } = $props();
 </script>
 
-<div class="ig-cell preset-tonal col-span-{labelSize}">{label}</div>
+<!-- Have to use inline CSS because dynamic tailwind classes are not picked up by compiler -->
+
+<div class="ig-cell preset-tonal" style="grid-column: span {labelSize}">
+  {label}
+</div>
 <input
-  class="ig-input col-span-{inputSize} {type === 'number'
-    ? 'text-center no-spinner'
-    : ''} {center ? 'text-center' : ''}"
+  class="ig-input {type === 'number' ? 'text-center no-spinner' : ''} {center
+    ? 'text-center'
+    : ''}"
+  style="grid-column: span {inputSize}"
   {type}
   {placeholder}
   bind:value
