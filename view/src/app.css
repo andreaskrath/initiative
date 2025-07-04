@@ -7,14 +7,14 @@
 
 @source '../node_modules/@skeletonlabs/skeleton-svelte/dist';
 
-/* Chrome, Safari, Edge */
+/* Remove spinner from number inputs in Chrome, Safari, Edge */
 input[type="number"]::-webkit-outer-spin-button,
 input[type="number"]::-webkit-inner-spin-button {
   -webkit-appearance: none;
   margin: 0;
 }
 
-/* Firefox */
+/* Remove spinner from number inputs in Firefox */
 input[type="number"] {
   -moz-appearance: textfield;
 }
