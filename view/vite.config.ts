@@ -11,6 +11,7 @@ export default defineConfig({
       $lib: path.resolve("./src/lib"),
       $components: path.resolve("./src/lib/components"),
       $types: path.resolve("./src/lib/types/"),
+      $utils: path.resolve("./src/lib/utils/"),
     },
   },
 });

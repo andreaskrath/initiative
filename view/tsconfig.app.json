@@ -19,7 +19,8 @@
     "paths": {
       "$lib/*": ["./src/lib/*"],
       "$components/*": ["./src/lib/components/*"],
-      "$types/*": ["./src/lib/types/*"]
+      "$types/*": ["./src/lib/types/*"],
+      "$utils/*": ["./src/lib/utils/*"]
     }
   },
   "include": ["src/**/*.ts", "src/**/*.js", "src/**/*.svelte"]
