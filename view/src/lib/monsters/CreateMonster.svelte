@@ -21,8 +21,7 @@
   let monster = new Monster();
 </script>
 
-<div class="py-2"></div>
-<form class="w-[1200px] mx-auto space-y-2 px-2">
+<form class="space-y-2 py-2">
   <!-- Basic Information -->
   <h2 class="h2">Basic Information</h2>
   <div class="input-group grid-cols-32">

@@ -18,7 +18,7 @@
   items={["Monsters", "Encounters", "Spells", "Settings"]}
 />
 <main>
-  <div class="flex content-center items-center place-content-center">
+  <div class="w-[1200px] mx-auto py-2">
     <PageComponent />
   </div>
 </main>

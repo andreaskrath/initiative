@@ -14,7 +14,7 @@
 </script>
 
 <div class="preset-filled-surface-100-900 flex justify-center">
-  <div class="grid grid-cols-4 gap-4 px-2 py-2 h-[50px] w-[1200px]">
+  <div class="grid grid-cols-4 gap-4 py-2 h-[50px] w-[1200px]">
     {#each items as item, index}
       <button
         type="button"
