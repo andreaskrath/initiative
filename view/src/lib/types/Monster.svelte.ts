@@ -8,6 +8,7 @@ import { Recharge } from "$types/Recharge";
 import { Sight } from "$types/Sight";
 import { Size } from "$types/Size";
 import { Skill, Skills } from "$types/Skill";
+import { RecordFactory } from "$utils/factories";
 
 type NamedDescription = { name: string | null; description: string | null };
 
@@ -89,19 +90,19 @@ export class Monster {
     this.monsterType = $state(null);
     this.species = $state(null);
     this.alignment = $state(null);
-    this.attributes = $state(Monster.RecordFactory(Attributes, null));
+    this.attributes = $state(RecordFactory(Attributes, null));
     this.hitPoints = $state(null);
     this.rollableHitPoints = $state(null);
     this.armorClass = $state(null);
     this.armorType = $state(null);
-    this.savingThrows = $state(Monster.RecordFactory(Attributes, null));
-    this.damageResistances = $state(Monster.RecordFactory(DamageTypes, false));
-    this.damageImmunities = $state(Monster.RecordFactory(DamageTypes, false));
-    this.conditionImmunities = $state(Monster.RecordFactory(Conditions, false));
+    this.savingThrows = $state(RecordFactory(Attributes, null));
+    this.damageResistances = $state(RecordFactory(DamageTypes, false));
+    this.damageImmunities = $state(RecordFactory(DamageTypes, false));
+    this.conditionImmunities = $state(RecordFactory(Conditions, false));
     this.visions = $state([]);
     this.passivePerception = $state(null);
-    this.languages = $state(Monster.RecordFactory(Languages, false));
-    this.skills = $state(Monster.RecordFactory(Skills, null));
+    this.languages = $state(RecordFactory(Languages, false));
+    this.skills = $state(RecordFactory(Skills, null));
     this.traits = $state([]);
     this.regularActions = $state([]);
     this.meleeAttackActions = $state([]);
@@ -346,21 +347,5 @@ export class Monster {
     return function (event: MouseEvent) {
       event.preventDefault();
     };
-  }
-
-  /**
-   * Generic factory helper for creating Records.
-   */
-  private static RecordFactory<T extends string | number | symbol, V>(
-    items: readonly T[],
-    defaultValue: V,
-  ): Record<T, V> {
-    return items.reduce(
-      (record, item) => {
-        record[item] = defaultValue;
-        return record;
-      },
-      {} as Record<T, V>,
-    );
   }
 }
