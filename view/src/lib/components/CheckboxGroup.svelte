@@ -1,4 +1,5 @@
 <script lang="ts">
+  import Checkbox from "$components/Checkbox.svelte";
   let {
     items,
     checkedItems = $bindable(),
@@ -17,15 +18,6 @@
   style="grid-template-columns: repeat({columns}, minmax(0, 1fr))"
 >
   {#each items as item}
-    <label
-      class="flex items-center space-x-2 space-y-2 border-none outline-none col-span-1"
-    >
-      <input
-        class="checkbox"
-        type="checkbox"
-        bind:checked={checkedItems[item]}
-      />
-      <p>{item}</p>
-    </label>
+    <Checkbox label={item} bind:value={checkedItems[item]} />
   {/each}
 </div>
