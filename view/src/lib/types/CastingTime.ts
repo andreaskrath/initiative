@@ -1,11 +1,11 @@
 export enum CastingTime {
-  Action = "1 Action",
-  BonusAction = "1 Bonus Action",
-  Reaction = "1 Reaction",
-  OneMinute = "1 Minute",
-  OneHour = "1 Hour",
-  EightHours = "8 Hours",
-  Day = "24 Hours",
+  Action = "1 action",
+  BonusAction = "1 bonus action",
+  Reaction = "1 reaction",
+  OneMinute = "1 minute",
+  OneHour = "1 hour",
+  EightHours = "8 hours",
+  Day = "24 hours",
 }
 
 export const CastingTimes: CastingTime[] = Object.values(CastingTime);
