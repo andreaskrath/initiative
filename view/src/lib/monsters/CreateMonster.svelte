@@ -18,7 +18,7 @@
 
   import Input from "$components/Input.svelte";
   import Select from "$lib/components/Select.svelte";
-  ("$components/Select.svelte");
+  import Checkbox from "$lib/components/Checkbox.svelte";
 
   let monster = new Monster();
 
@@ -44,152 +44,189 @@
       <Tabs.Trigger value="basic">Basic Information</Tabs.Trigger>
       <Tabs.Trigger value="defensive">Defensive</Tabs.Trigger>
       <Tabs.Trigger value="senses-movement">Senses & Movement</Tabs.Trigger>
-      <Tabs.Trigger value="languages">Languages</Tabs.Trigger>
-      <Tabs.Trigger value="skills">Skills</Tabs.Trigger>
       <Tabs.Trigger value="traits">Traits</Tabs.Trigger>
       <Tabs.Trigger value="actions">Actions</Tabs.Trigger>
       <Tabs.Trigger value="spellcasting">Spellcasting</Tabs.Trigger>
     </Tabs.List>
   </div>
 
-  <Tabs.Content value="basic" class="grid grid-cols-16 space-y-2 gap-x-2">
-    <!-- Name -->
-    <Input
-      label="Name"
-      bind:value={monster.name}
-      type="text"
-      placeholder="Goblin"
-      columns={4}
-    />
-
-    <!-- Challenge Rating -->
-    <Input
-      label="CR"
-      bind:value={monster.challengeRating}
-      type="number"
-      placeholder="0.5"
-      columns={1}
-      center={true}
-    />
-
-    <!-- XP -->
-    <Input
-      label="XP"
-      bind:value={monster.xp}
-      type="number"
-      placeholder="100"
-      columns={2}
-      center={true}
-    />
-
-    <!-- Proficiency Bonus -->
-    <Input
-      label="PB"
-      bind:value={monster.proficiencyBonus}
-      type="number"
-      placeholder="2"
-      columns={1}
-      center={true}
-    />
-
-    <!-- Size -->
-    <Select
-      label="Size"
-      placeholder="Select a size"
-      bind:value={monster.size}
-      items={sizes}
-      columns={3}
-    />
-
-    <!-- Type -->
-    <Select
-      label="Type"
-      placeholder="Select a type"
-      bind:value={monster.monsterType}
-      items={monsterTypes}
-      columns={3}
-    />
-
-    <!-- Species -->
-    <Input
-      label="Species"
-      bind:value={monster.species}
-      type="text"
-      placeholder="Goblinoid"
-      columns={4}
-    />
-
-    <!-- Alignment -->
-    <Select
-      label="Alignment"
-      placeholder="Select an alignment"
-      bind:value={monster.alignment}
-      items={alignments}
-      columns={3}
-    />
-
-    <!-- Attributes -->
-    {#each Attributes as attribute}
+  <Tabs.Content value="basic" class="mt-5 space-y-5">
+    <div class="grid grid-cols-16 space-y-5 gap-x-2">
+      <!-- Name -->
       <Input
-        label={attribute}
-        placeholder="10"
-        bind:value={monster.attributes[attribute]}
+        label="Name"
+        bind:value={monster.name}
+        type="text"
+        placeholder="Goblin"
+        columns={7}
+      />
+
+      <!-- Challenge Rating -->
+      <Input
+        label="Challenge Rating"
+        bind:value={monster.challengeRating}
         type="number"
-        columns={2}
+        placeholder="0.5"
+        columns={3}
         center={true}
       />
-    {/each}
+
+      <!-- XP -->
+      <Input
+        label="XP"
+        bind:value={monster.xp}
+        type="number"
+        placeholder="100"
+        columns={3}
+        center={true}
+      />
+
+      <!-- Proficiency Bonus -->
+      <Input
+        label="Proficiency Bonus"
+        bind:value={monster.proficiencyBonus}
+        type="number"
+        placeholder="2"
+        columns={3}
+        center={true}
+      />
+
+      <!-- Species -->
+      <Input
+        label="Species"
+        bind:value={monster.species}
+        type="text"
+        placeholder="Goblinoid"
+        columns={7}
+      />
+
+      <!-- Type -->
+      <Select
+        label="Type"
+        placeholder="Select a type"
+        bind:value={monster.monsterType}
+        items={monsterTypes}
+        columns={3}
+      />
+
+      <!-- Size -->
+      <Select
+        label="Size"
+        placeholder="Select a size"
+        bind:value={monster.size}
+        items={sizes}
+        columns={3}
+      />
+
+      <!-- Alignment -->
+      <Select
+        label="Alignment"
+        placeholder="Select an alignment"
+        bind:value={monster.alignment}
+        items={alignments}
+        columns={3}
+      />
+    </div>
+
+    <!-- Attributes -->
+    <h2 class="text-muted-foreground mb-2 ml-1 text-xl">Attributes</h2>
+    <div class="grid grid-cols-18 space-y-5 gap-x-2">
+      <!-- Attributes -->
+      {#each Attributes as attribute}
+        <Input
+          label={attribute}
+          placeholder="10"
+          bind:value={monster.attributes[attribute]}
+          type="number"
+          columns={3}
+          center={true}
+        />
+      {/each}
+    </div>
+
+    <!-- Skills -->
+    <h2 class="text-muted-foreground mb-2 ml-1 text-xl">Skills</h2>
+    <div class="grid grid-cols-18 space-y-5 gap-x-2">
+      {#each Skills as skill}
+        <Input
+          label={skill}
+          bind:value={monster.skills[skill]}
+          type="number"
+          placeholder=""
+          columns={3}
+          center={true}
+        />
+      {/each}
+    </div>
+
+    <!-- Languages -->
+    <h2 class="text-muted-foreground mb-2 ml-1 text-xl">Languages</h2>
+    <div class="grid grid-cols-4 space-y-2 gap-x-2">
+      {#each Languages as language}
+        <Checkbox
+          label={language}
+          bind:checked={monster.languages[language]}
+          columns={1}
+        />
+      {/each}
+    </div>
   </Tabs.Content>
-  <Tabs.Content value="defensive" class="grid grid-cols-16 space-y-2 gap-x-2">
-    <!-- Hit Points -->
-    <Input
-      label="Hit Points"
-      placeholder="11"
-      bind:value={monster.hitPoints}
-      type="number"
-      columns={2}
-      center={true}
-    />
+  <Tabs.Content value="defensive">
+    <div class="grid grid-cols-16 space-y-2 gap-x-2">
+      <!-- Hit Points -->
+      <Input
+        label="Hit Points"
+        placeholder="11"
+        bind:value={monster.hitPoints}
+        type="number"
+        columns={3}
+        center={true}
+      />
 
-    <!-- Rollable Hit Points -->
-    <Input
-      label="Rollable Hit Points"
-      placeholder="2d8 + 6"
-      bind:value={monster.rollableHitPoints}
-      type="text"
-      columns={3}
-      center={true}
-    />
+      <!-- Rollable Hit Points -->
+      <Input
+        label="Rollable Hit Points"
+        placeholder="2d8 + 6"
+        bind:value={monster.rollableHitPoints}
+        type="text"
+        columns={3}
+        center={true}
+      />
 
-    <!-- Armor Class -->
-    <Input
-      label="Armor Class"
-      placeholder="18"
-      bind:value={monster.armorClass}
-      type="number"
-      columns={2}
-      center={true}
-    />
+      <!-- Armor Class -->
+      <Input
+        label="Armor Class"
+        placeholder="18"
+        bind:value={monster.armorClass}
+        type="number"
+        columns={3}
+        center={true}
+      />
 
-    <!-- Armor Type -->
-    <Input
-      label="Armor Type"
-      placeholder="chain mail, shield"
-      bind:value={monster.armorType}
-      type="text"
-      columns={3}
-    />
+      <!-- Armor Type -->
+      <Input
+        label="Armor Type"
+        placeholder="chain mail, shield"
+        bind:value={monster.armorType}
+        type="text"
+        columns={7}
+      />
+    </div>
 
     <!-- Saving Throws -->
-    {#each Attributes as attribute}
-      <Input
-        label={attribute}
-        bind:value={monster.savingThrows[attribute]}
-        type="number"
-        placeholder=""
-        columns={2}
-      />
-    {/each}
+    <h2 class="text-muted-foreground mb-2 ml-1 text-xl">Saving Throws</h2>
+    <div class="grid grid-cols-18 space-y-2 gap-x-2">
+      <!-- Saving Throws -->
+      {#each Attributes as attribute}
+        <Input
+          label={attribute}
+          bind:value={monster.savingThrows[attribute]}
+          type="number"
+          placeholder=""
+          columns={3}
+        />
+      {/each}
+    </div>
 
     <!--   <!-- Damage Resistances -->
     <!--   <h6 class="h6">Damage Resistances</h6> -->
@@ -270,8 +307,6 @@
     <!--   {/each} -->
     <!---->
   </Tabs.Content>
-  <Tabs.Content value="languages">Languages</Tabs.Content>
-  <Tabs.Content value="skills">Skills</Tabs.Content>
   <Tabs.Content value="traits">Traits</Tabs.Content>
   <Tabs.Content value="actions">Actions</Tabs.Content>
   <Tabs.Content value="spellcasting">Spellcasting</Tabs.Content>
