@@ -11,6 +11,7 @@ export class Spell {
   verbal: boolean;
   somatic: boolean;
   material: string | null;
+  materialConsumed: boolean;
   ritual: boolean;
   concentration: boolean;
   duration: string | null;
@@ -27,6 +28,7 @@ export class Spell {
     this.verbal = $state(false);
     this.somatic = $state(false);
     this.material = $state(null);
+    this.materialConsumed = $state(false);
     this.ritual = $state(false);
     this.concentration = $state(false);
     this.duration = $state(null);
