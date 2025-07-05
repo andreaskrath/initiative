@@ -23,7 +23,7 @@
   class="col-span-3 flex w-full flex-col gap-1.5"
   style="grid-column: span {columns}"
 >
-  <Label class="ml-1"><strong>{label}</strong></Label>
+  <Label class="ml-1">{label}</Label>
   <Select.Root type="single" name={label} bind:value>
     <Select.Trigger class="w-full">
       {value ? value : placeholder}

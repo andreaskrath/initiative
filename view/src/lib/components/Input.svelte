@@ -22,6 +22,6 @@
 <!-- Have to use inline CSS because dynamic tailwind classes are not picked up by compiler -->
 
 <div class="flex w-full flex-col gap-1.5" style="grid-column: span {columns}">
-  <Label class="ml-1"><strong>{label}</strong></Label>
+  <Label class="ml-1">{label}</Label>
   <Input class={center ? "text-center" : ""} {type} {placeholder} bind:value />
 </div>
