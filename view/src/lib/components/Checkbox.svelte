@@ -2,13 +2,22 @@
   let {
     label,
     value = $bindable(),
+    columns,
+    center,
   }: {
     label: string;
     value: boolean;
+    columns?: number;
+    center?: boolean;
   } = $props();
 </script>
 
-<label class="flex items-center space-x-2 border-none outline-none col-span-1">
-  <input class="checkbox" type="checkbox" bind:checked={value} />
+<div
+  class="flex items-center space-x-2 border-none outline-none
+  {columns ? '' : 'col-span-1'} 
+  {center ? 'justify-center' : ''}"
+  style={columns ? "grid-column: span " + columns : ""}
+>
+  <input class="checkbox mb-0.5" type="checkbox" bind:checked={value} />
   <p>{label}</p>
-</label>
+</div>
