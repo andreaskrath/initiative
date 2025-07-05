@@ -16,7 +16,7 @@ export class Spell {
   duration: string | null;
   range: string | null;
   area: string | null;
-  areaType: string | null;
+  shape: string | null;
   classes: Record<Class, boolean>;
 
   constructor() {
@@ -32,7 +32,7 @@ export class Spell {
     this.duration = $state(null);
     this.range = $state(null);
     this.area = $state(null);
-    this.areaType = $state(null);
+    this.shape = $state(null);
     this.classes = $state(RecordFactory(SpellcastingClasses, false));
   }
 }
