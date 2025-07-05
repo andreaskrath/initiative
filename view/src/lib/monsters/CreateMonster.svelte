@@ -3,10 +3,6 @@
   import CircleX from "@lucide/svelte/icons/circle-x";
 
   import * as Tabs from "$components/ui/tabs/index";
-  import { Input } from "$components/ui/input/index";
-  import { Label } from "$components/ui/label/index";
-  import * as Select from "$components/ui/select/index";
-  import * as Tooltip from "$components/ui/tooltip/index";
 
   import { Alignments } from "$types/Alignment";
   import { Attributes } from "$types/Attribute";
@@ -20,9 +16,9 @@
   import { Monster } from "$types/Monster.svelte";
   import { Recharges } from "$types/Recharge";
 
-  import CheckboxGroup from "$components/CheckboxGroup.svelte";
-  // import Input from "$components/Input.svelte";
-  import SelectInput from "$components/SelectInput.svelte";
+  import Input from "$components/Input.svelte";
+  import Select from "$lib/components/Select.svelte";
+  ("$components/Select.svelte");
 
   let monster = new Monster();
 
@@ -35,16 +31,19 @@
     value: monsterType,
     label: monsterType,
   }));
+
+  const alignments = Alignments.map((alignment) => ({
+    value: alignment,
+    label: alignment,
+  }));
 </script>
 
 <Tabs.Root value="basic" class="mx-auto w-[1000px]">
   <div class="flex w-full justify-center">
     <Tabs.List class="flex w-full justify-center">
       <Tabs.Trigger value="basic">Basic Information</Tabs.Trigger>
-      <Tabs.Trigger value="attributes">Attributes</Tabs.Trigger>
       <Tabs.Trigger value="defensive">Defensive</Tabs.Trigger>
-      <Tabs.Trigger value="movement">Movement</Tabs.Trigger>
-      <Tabs.Trigger value="senses">Senses</Tabs.Trigger>
+      <Tabs.Trigger value="senses-movement">Senses & Movement</Tabs.Trigger>
       <Tabs.Trigger value="languages">Languages</Tabs.Trigger>
       <Tabs.Trigger value="skills">Skills</Tabs.Trigger>
       <Tabs.Trigger value="traits">Traits</Tabs.Trigger>
@@ -55,92 +54,222 @@
 
   <Tabs.Content value="basic" class="grid grid-cols-16 space-y-2 gap-x-2">
     <!-- Name -->
-    <div class="col-span-4 flex w-full flex-col gap-1.5">
-      <Label class="ml-1">Name</Label>
-      <Input type="text" placeholder="Goblin" bind:value={monster.name} />
-    </div>
+    <Input
+      label="Name"
+      bind:value={monster.name}
+      type="text"
+      placeholder="Goblin"
+      columns={4}
+    />
 
     <!-- Challenge Rating -->
-    <div class="col-span-1 flex w-full flex-col gap-1.5">
-      <Label class="ml-1">CR</Label>
-      <Input
-        class="text-center"
-        type="number"
-        placeholder="0.5"
-        bind:value={monster.challengeRating}
-      />
-    </div>
+    <Input
+      label="CR"
+      bind:value={monster.challengeRating}
+      type="number"
+      placeholder="0.5"
+      columns={1}
+      center={true}
+    />
 
     <!-- XP -->
-    <div class="col-span-2 flex w-full flex-col gap-1.5">
-      <Label class="ml-1">XP</Label>
-      <Input
-        class="text-center"
-        type="number"
-        placeholder="100"
-        bind:value={monster.xp}
-      />
-    </div>
+    <Input
+      label="XP"
+      bind:value={monster.xp}
+      type="number"
+      placeholder="100"
+      columns={2}
+      center={true}
+    />
 
     <!-- Proficiency Bonus -->
-    <div class="col-span-1 flex w-full flex-col gap-1.5">
-      <Label class="ml-1">PB</Label>
-      <Input
-        class="text-center"
-        type="number"
-        placeholder="2"
-        bind:value={monster.proficiencyBonus}
-      />
-    </div>
+    <Input
+      label="PB"
+      bind:value={monster.proficiencyBonus}
+      type="number"
+      placeholder="2"
+      columns={1}
+      center={true}
+    />
 
     <!-- Size -->
-    <div class="col-span-3 flex w-full flex-col gap-1.5">
-      <Label class="ml-1">Size</Label>
-      <Select.Root type="single" name="size" bind:value={monster.size}>
-        <Select.Trigger class="w-full">
-          {monster.size ? monster.size : "Select a size"}
-        </Select.Trigger>
-        <Select.Content>
-          <Select.Group>
-            {#each sizes as size (size.value)}
-              <Select.Item value={size.value} label={size.label}>
-                {size.label}
-              </Select.Item>
-            {/each}
-          </Select.Group>
-        </Select.Content>
-      </Select.Root>
-    </div>
+    <Select
+      label="Size"
+      placeholder="Select a size"
+      bind:value={monster.size}
+      items={sizes}
+      columns={3}
+    />
 
     <!-- Type -->
-    <div class="col-span-3 flex w-full flex-col gap-1.5">
-      <Label class="ml-1">Type</Label>
-      <Select.Root type="single" name="size" bind:value={monster.monsterType}>
-        <Select.Trigger class="w-full">
-          {monster.monsterType ? monster.monsterType : "Select a type"}
-        </Select.Trigger>
-        <Select.Content>
-          <Select.Group>
-            {#each monsterTypes as monsterType (monsterType.value)}
-              <Select.Item value={monsterType.value} label={monsterType.label}>
-                {monsterType.label}
-              </Select.Item>
-            {/each}
-          </Select.Group>
-        </Select.Content>
-      </Select.Root>
-    </div>
+    <Select
+      label="Type"
+      placeholder="Select a type"
+      bind:value={monster.monsterType}
+      items={monsterTypes}
+      columns={3}
+    />
 
     <!-- Species -->
-    <div class="col-span-4 flex w-full flex-col gap-1.5">
-      <Label class="ml-1">Species</Label>
-      <Input type="text" placeholder="Goblinoid" bind:value={monster.species} />
-    </div>
+    <Input
+      label="Species"
+      bind:value={monster.species}
+      type="text"
+      placeholder="Goblinoid"
+      columns={4}
+    />
+
+    <!-- Alignment -->
+    <Select
+      label="Alignment"
+      placeholder="Select an alignment"
+      bind:value={monster.alignment}
+      items={alignments}
+      columns={3}
+    />
+
+    <!-- Attributes -->
+    {#each Attributes as attribute}
+      <Input
+        label={attribute}
+        placeholder="10"
+        bind:value={monster.attributes[attribute]}
+        type="number"
+        columns={2}
+        center={true}
+      />
+    {/each}
   </Tabs.Content>
-  <Tabs.Content value="attributes">Attributes</Tabs.Content>
-  <Tabs.Content value="defensive">Defensive</Tabs.Content>
-  <Tabs.Content value="movement">Movement</Tabs.Content>
-  <Tabs.Content value="senses">Senses</Tabs.Content>
+  <Tabs.Content value="defensive" class="grid grid-cols-16 space-y-2 gap-x-2">
+    <!-- Hit Points -->
+    <Input
+      label="Hit Points"
+      placeholder="11"
+      bind:value={monster.hitPoints}
+      type="number"
+      columns={2}
+      center={true}
+    />
+
+    <!-- Rollable Hit Points -->
+    <Input
+      label="Rollable Hit Points"
+      placeholder="2d8 + 6"
+      bind:value={monster.rollableHitPoints}
+      type="text"
+      columns={3}
+      center={true}
+    />
+
+    <!-- Armor Class -->
+    <Input
+      label="Armor Class"
+      placeholder="18"
+      bind:value={monster.armorClass}
+      type="number"
+      columns={2}
+      center={true}
+    />
+
+    <!-- Armor Type -->
+    <Input
+      label="Armor Type"
+      placeholder="chain mail, shield"
+      bind:value={monster.armorType}
+      type="text"
+      columns={3}
+    />
+
+    <!-- Saving Throws -->
+    {#each Attributes as attribute}
+      <Input
+        label={attribute}
+        bind:value={monster.savingThrows[attribute]}
+        type="number"
+        placeholder=""
+        columns={2}
+      />
+    {/each}
+
+    <!--   <!-- Damage Resistances -->
+    <!--   <h6 class="h6">Damage Resistances</h6> -->
+    <!--   <CheckboxGroup -->
+    <!--     items={DamageTypes} -->
+    <!--     bind:checkedItems={monster.damageResistances} -->
+    <!--     columns={4} -->
+    <!--   /> -->
+    <!---->
+    <!--   <!-- Damage Immunities -->
+    <!--   <h6 class="h6">Damage Immunities</h6> -->
+    <!--   <CheckboxGroup -->
+    <!--     items={DamageTypes} -->
+    <!--     bind:checkedItems={monster.damageImmunities} -->
+    <!--     columns={4} -->
+    <!--   /> -->
+    <!---->
+    <!--   <!-- Condition Immunities -->
+    <!--   <h6 class="h6">Condition Immunities</h6> -->
+    <!--   <CheckboxGroup -->
+    <!--     items={Conditions} -->
+    <!--     bind:checkedItems={monster.conditionImmunities} -->
+    <!--     columns={5} -->
+    <!--   /> -->
+    <!---->
+  </Tabs.Content>
+  <Tabs.Content value="senses-movement">
+    <!--   <!-- Senses -->
+    <!--   <hr class="hr" /> -->
+    <!--   <div class="flex justify-between"> -->
+    <!--     <h2 class="h2">Senses</h2> -->
+    <!--     <button -->
+    <!--       type="button" -->
+    <!--       class="btn text-success-300 border-none" -->
+    <!--       onclick={(event) => monster.AddVision(event)}><CirclePlus /></button -->
+    <!--     > -->
+    <!--   </div> -->
+    <!---->
+    <!--   <div class="input-group grid-cols-2"> -->
+    <!--     <Input -->
+    <!--       label="Passive Perception" -->
+    <!--       bind:value={monster.passivePerception} -->
+    <!--       type="number" -->
+    <!--       placeholder="10" -->
+    <!--       labelSize={1} -->
+    <!--       inputSize={1} -->
+    <!--     /> -->
+    <!--   </div> -->
+    <!---->
+    <!--   {#each monster.visions as vision} -->
+    <!--     <div class="input-group grid-cols-16"> -->
+    <!--       <!-- Sight Type -->
+    <!--       <SelectInput -->
+    <!--         title="Sight" -->
+    <!--         bind:value={vision.type} -->
+    <!--         items={Sights} -->
+    <!--         labelSize={2} -->
+    <!--         inputSize={10} -->
+    <!--       /> -->
+    <!---->
+    <!--       <!-- Range -->
+    <!--       <Input -->
+    <!--         label="Range" -->
+    <!--         bind:value={vision.range} -->
+    <!--         type="number" -->
+    <!--         placeholder="60" -->
+    <!--         labelSize={2} -->
+    <!--         inputSize={1} -->
+    <!--       /> -->
+    <!---->
+    <!--       <!-- Remove Sight -->
+    <!--       <button -->
+    <!--         type="button" -->
+    <!--         class="btn preset-tonal text-error-300 col-span-1" -->
+    <!--         onclick={(_) => monster.RemoveVision(vision)}><CircleX /></button -->
+    <!--       > -->
+    <!--     </div> -->
+    <!--   {/each} -->
+    <!---->
+  </Tabs.Content>
   <Tabs.Content value="languages">Languages</Tabs.Content>
   <Tabs.Content value="skills">Skills</Tabs.Content>
   <Tabs.Content value="traits">Traits</Tabs.Content>
@@ -149,184 +278,6 @@
 </Tabs.Root>
 
 <!-- <form class="space-y-2 py-2"> -->
-<!--   <!-- Basic Information -->
-<!--   <h2 class="h2">Basic Information</h2> -->
-<!--   <div class="input-group grid-cols-32"> -->
-<!--     <!-- Species -->
-<!--     <Input -->
-<!--       label="Species" -->
-<!--       bind:value={monster.species} -->
-<!--       type="text" -->
-<!--       placeholder="Goblinoid" -->
-<!--       labelSize={2} -->
-<!--       inputSize={6} -->
-<!--     /> -->
-<!---->
-<!--     <!-- Alignment -->
-<!--     <SelectInput -->
-<!--       title="Alignment" -->
-<!--       bind:value={monster.alignment} -->
-<!--       items={Alignments} -->
-<!--       labelSize={3} -->
-<!--       inputSize={6} -->
-<!--     /> -->
-<!--   </div> -->
-<!---->
-<!--   <!-- Attributes -->
-<!--   <hr class="hr" /> -->
-<!--   <h2 class="h2">Attributes</h2> -->
-<!---->
-<!--   <div class="input-group grid-cols-18"> -->
-<!--     {#each Attributes as attribute} -->
-<!--       <Input -->
-<!--         label={attribute} -->
-<!--         bind:value={monster.attributes[attribute]} -->
-<!--         type="number" -->
-<!--         placeholder="" -->
-<!--         labelSize={2} -->
-<!--         inputSize={1} -->
-<!--       /> -->
-<!--     {/each} -->
-<!--   </div> -->
-<!---->
-<!--   <!-- Defensive -->
-<!--   <hr class="hr" /> -->
-<!--   <h2 class="h2">Defensive</h2> -->
-<!---->
-<!--   <div class="input-group grid-cols-16"> -->
-<!--     <!-- Hit Points -->
-<!--     <Input -->
-<!--       label="Hit Points" -->
-<!--       bind:value={monster.hitPoints} -->
-<!--       type="number" -->
-<!--       placeholder="11" -->
-<!--       labelSize={2} -->
-<!--       inputSize={1} -->
-<!--     /> -->
-<!---->
-<!--     <!-- Rollable Hit Points -->
-<!--     <Input -->
-<!--       label="Rollable" -->
-<!--       bind:value={monster.rollableHitPoints} -->
-<!--       type="text" -->
-<!--       placeholder="2d8 + 2" -->
-<!--       labelSize={2} -->
-<!--       inputSize={2} -->
-<!--       center={true} -->
-<!--     /> -->
-<!---->
-<!--     <!-- Armor Class -->
-<!--     <Input -->
-<!--       label="Armor Class" -->
-<!--       bind:value={monster.armorClass} -->
-<!--       type="number" -->
-<!--       placeholder="18" -->
-<!--       labelSize={2} -->
-<!--       inputSize={1} -->
-<!--     /> -->
-<!---->
-<!--     <!-- Armor Type -->
-<!--     <Input -->
-<!--       label="Armor Type" -->
-<!--       bind:value={monster.armorType} -->
-<!--       type="text" -->
-<!--       placeholder="chain mail, shield" -->
-<!--       labelSize={2} -->
-<!--       inputSize={4} -->
-<!--     /> -->
-<!--   </div> -->
-<!---->
-<!--   <!-- Saving Throws -->
-<!--   <h6 class="h6">Saving Throws</h6> -->
-<!--   <div class="input-group grid-cols-18"> -->
-<!--     {#each Attributes as attribute} -->
-<!--       <Input -->
-<!--         label={attribute} -->
-<!--         bind:value={monster.savingThrows[attribute]} -->
-<!--         type="number" -->
-<!--         placeholder="" -->
-<!--         labelSize={2} -->
-<!--         inputSize={1} -->
-<!--       /> -->
-<!--     {/each} -->
-<!--   </div> -->
-<!---->
-<!--   <!-- Damage Resistances -->
-<!--   <h6 class="h6">Damage Resistances</h6> -->
-<!--   <CheckboxGroup -->
-<!--     items={DamageTypes} -->
-<!--     bind:checkedItems={monster.damageResistances} -->
-<!--     columns={4} -->
-<!--   /> -->
-<!---->
-<!--   <!-- Damage Immunities -->
-<!--   <h6 class="h6">Damage Immunities</h6> -->
-<!--   <CheckboxGroup -->
-<!--     items={DamageTypes} -->
-<!--     bind:checkedItems={monster.damageImmunities} -->
-<!--     columns={4} -->
-<!--   /> -->
-<!---->
-<!--   <!-- Condition Immunities -->
-<!--   <h6 class="h6">Condition Immunities</h6> -->
-<!--   <CheckboxGroup -->
-<!--     items={Conditions} -->
-<!--     bind:checkedItems={monster.conditionImmunities} -->
-<!--     columns={5} -->
-<!--   /> -->
-<!---->
-<!--   <!-- Senses -->
-<!--   <hr class="hr" /> -->
-<!--   <div class="flex justify-between"> -->
-<!--     <h2 class="h2">Senses</h2> -->
-<!--     <button -->
-<!--       type="button" -->
-<!--       class="btn text-success-300 border-none" -->
-<!--       onclick={(event) => monster.AddVision(event)}><CirclePlus /></button -->
-<!--     > -->
-<!--   </div> -->
-<!---->
-<!--   <div class="input-group grid-cols-2"> -->
-<!--     <Input -->
-<!--       label="Passive Perception" -->
-<!--       bind:value={monster.passivePerception} -->
-<!--       type="number" -->
-<!--       placeholder="10" -->
-<!--       labelSize={1} -->
-<!--       inputSize={1} -->
-<!--     /> -->
-<!--   </div> -->
-<!---->
-<!--   {#each monster.visions as vision} -->
-<!--     <div class="input-group grid-cols-16"> -->
-<!--       <!-- Sight Type -->
-<!--       <SelectInput -->
-<!--         title="Sight" -->
-<!--         bind:value={vision.type} -->
-<!--         items={Sights} -->
-<!--         labelSize={2} -->
-<!--         inputSize={10} -->
-<!--       /> -->
-<!---->
-<!--       <!-- Range -->
-<!--       <Input -->
-<!--         label="Range" -->
-<!--         bind:value={vision.range} -->
-<!--         type="number" -->
-<!--         placeholder="60" -->
-<!--         labelSize={2} -->
-<!--         inputSize={1} -->
-<!--       /> -->
-<!---->
-<!--       <!-- Remove Sight -->
-<!--       <button -->
-<!--         type="button" -->
-<!--         class="btn preset-tonal text-error-300 col-span-1" -->
-<!--         onclick={(_) => monster.RemoveVision(vision)}><CircleX /></button -->
-<!--       > -->
-<!--     </div> -->
-<!--   {/each} -->
-<!---->
 <!--   <!-- Languages -->
 <!--   <hr class="hr" /> -->
 <!--   <h2 class="h2">Languages</h2> -->
