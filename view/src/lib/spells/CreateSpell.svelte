@@ -57,7 +57,7 @@
   let customShape: string = $state("");
 </script>
 
-<form class="py-2 space-y-2">
+<form class="space-y-2 py-2">
   <!-- Basic Information -->
   <h2 class="h2">Basic Information</h2>
   <div class="input-group grid-cols-16">

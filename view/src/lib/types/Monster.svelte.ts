@@ -49,8 +49,8 @@ export class Monster {
   challengeRating: number | null;
   xp: number | null;
   proficiencyBonus: number | null;
-  size: Size | null;
-  monsterType: MonsterType | null;
+  size?: Size;
+  monsterType?: MonsterType;
   species: string | null;
   alignment: Alignment | null;
   attributes: Record<Attribute, number | null>;
@@ -86,8 +86,8 @@ export class Monster {
     this.challengeRating = $state(null);
     this.xp = $state(null);
     this.proficiencyBonus = $state(null);
-    this.size = $state(null);
-    this.monsterType = $state(null);
+    this.size = $state(undefined);
+    this.monsterType = $state(undefined);
     this.species = $state(null);
     this.alignment = $state(null);
     this.attributes = $state(RecordFactory(Attributes, null));

@@ -4,11 +4,15 @@
   import Encounters from "$lib/encounters/Encounters.svelte";
   import NotFound from "$lib/NotFound.svelte";
   import Settings from "$lib/settings/Settings.svelte";
-  import Spells from "$lib/spells/Spells.svelte";
+  // import Spells from "$lib/spells/Spells.svelte";
   import Navbar from "$components/Navbar.svelte";
   import type { Component } from "svelte";
 
-  const pages: Component[] = [Monsters, Encounters, Spells, Settings];
+  import ModeToggle from "$components/ModeToggle.svelte";
+
+  import { ModeWatcher } from "mode-watcher";
+
+  const pages: Component[] = [Monsters, Encounters, Settings];
   let currentPage: number = $state(0);
   const PageComponent = $derived(pages[currentPage] || NotFound);
 </script>
@@ -18,7 +22,9 @@
   items={["Monsters", "Encounters", "Spells", "Settings"]}
 />
 <main>
-  <div class="w-[1200px] mx-auto py-2">
+  <ModeWatcher />
+  <ModeToggle />
+  <div class="mx-auto w-[1200px] py-2">
     <PageComponent />
   </div>
 </main>

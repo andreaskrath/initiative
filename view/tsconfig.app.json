@@ -17,6 +17,7 @@
     "moduleDetection": "force",
     "baseUrl": ".",
     "paths": {
+      "$lib": ["./src/lib"],
       "$lib/*": ["./src/lib/*"],
       "$components/*": ["./src/lib/components/*"],
       "$types/*": ["./src/lib/types/*"],
