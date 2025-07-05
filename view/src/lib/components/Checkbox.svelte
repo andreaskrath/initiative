@@ -1,23 +1,25 @@
 <script lang="ts">
+  import { Checkbox } from "$components/ui/checkbox/index";
+  import { Label } from "$components/ui/label/index";
+
   let {
     label,
-    value = $bindable(),
+    checked = $bindable(),
     columns,
     center,
   }: {
     label: string;
-    value: boolean;
-    columns?: number;
+    checked: boolean;
+    columns: number;
     center?: boolean;
   } = $props();
 </script>
 
 <div
-  class="flex items-center space-x-2 border-none outline-none
-  {columns ? '' : 'col-span-1'} 
+  class="flex items-center space-x-2
   {center ? 'justify-center' : ''}"
-  style={columns ? "grid-column: span " + columns : ""}
+  style="grid-column: span {columns}"
 >
-  <input class="checkbox mb-0.5" type="checkbox" bind:checked={value} />
-  <p>{label}</p>
+  <Checkbox id={label} bind:checked />
+  <Label for={label} class="text-base">{label}</Label>
 </div>
