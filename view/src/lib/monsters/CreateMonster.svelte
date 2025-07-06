@@ -60,6 +60,9 @@
   </div>
 
   <Tabs.Content value="basic" class="mt-5 space-y-5">
+    <h2 class="text-muted-foreground col-span-9 mb-2 ml-1 text-xl">
+      Basic Monster Information
+    </h2>
     <div class="grid grid-cols-16 space-y-5 gap-x-2">
       <!-- Name -->
       <Input
@@ -297,6 +300,9 @@
     </div>
   </Tabs.Content>
   <Tabs.Content value="defensive" class="mt-5">
+    <h2 class="text-muted-foreground col-span-9 mb-2 ml-1 text-xl">
+      Basic Defensive Information
+    </h2>
     <div class="grid grid-cols-16 space-y-5 gap-x-2">
       <!-- Hit Points -->
       <Input
