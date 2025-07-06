@@ -401,7 +401,7 @@
     <div class="grid grid-cols-10 space-y-5 gap-x-2">
       <!-- Traits -->
       <h2 class="text-muted-foreground col-span-9 mb-2 ml-1 text-xl">Traits</h2>
-      <!-- Add Speed Button -->
+      <!-- Add Trait Button -->
       <div class="col-span-1 col-start-10 flex justify-center">
         <Button
           variant="ghost"
