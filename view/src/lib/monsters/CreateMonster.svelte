@@ -446,6 +446,55 @@
     </div>
   </Tabs.Content>
   <Tabs.Content value="actions" class="mt-5">
+    <div class="grid grid-cols-10 space-y-5 gap-x-2">
+      <!-- Regular Actions -->
+      <h2 class="text-muted-foreground col-span-9 mb-2 ml-1 text-xl">
+        Regular Actions
+      </h2>
+      <!-- Add Regular Action Button -->
+      <div class="col-span-1 col-start-10 flex justify-center">
+        <Button
+          variant="ghost"
+          size="icon"
+          class="w-full text-green-300 hover:text-green-600"
+          onclick={(e) => monster.AddRegularAction(e)}
+        >
+          <CirclePlus />
+        </Button>
+      </div>
+
+      {#each monster.regularActions as regularAction, index}
+        <!-- Name -->
+        <Input
+          label="Name"
+          placeholder="Martial Advantage"
+          type="text"
+          columns={9}
+          bind:value={regularAction.name}
+        />
+
+        <!-- Remove Regular Action Button -->
+        <div class="col-span-1 col-start-10 flex justify-center">
+          <Button
+            variant="ghost"
+            size="icon"
+            class="mt-5 w-full text-red-300 hover:text-red-600"
+            onclick={(_) => monster.RemoveRegularAction(regularAction)}
+          >
+            <CircleX />
+          </Button>
+        </div>
+
+        <TextArea
+          label="Description"
+          bind:value={regularAction.description}
+          placeholder="xdd"
+          id="trait-{index}"
+          columns={10}
+        />
+      {/each}
+    </div>
+  </Tabs.Content>
   <Tabs.Content value="spellcasting" class="mt-5">Spellcasting</Tabs.Content>
 </Tabs.Root>
 
