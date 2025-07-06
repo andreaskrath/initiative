@@ -120,10 +120,7 @@ export class Monster {
   }
 
   public AddVision(event: MouseEvent) {
-    this.visions = [
-      ...this.visions,
-      { type: Sight.Darkvision, range: undefined },
-    ];
+    this.visions = [...this.visions, { type: undefined, range: undefined }];
 
     event.preventDefault();
   }
