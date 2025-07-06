@@ -1,6 +1,5 @@
 <script lang="ts">
-  import { Checkbox } from "$components/ui/checkbox/index";
-  import { Label } from "$components/ui/label/index";
+  import { Toggle } from "$components/ui/toggle/index";
 
   let {
     label,
@@ -20,6 +19,7 @@
   {center ? 'justify-center' : ''}"
   style="grid-column: span {columns}"
 >
-  <Checkbox id={label} bind:checked />
-  <Label for={label} class="text-base">{label}</Label>
+  <Toggle class="w-full" bind:pressed={checked}>
+    {label}
+  </Toggle>
 </div>
