@@ -19,8 +19,8 @@
   import { Recharges } from "$types/Recharge";
 
   import Input from "$components/Input.svelte";
-  import Select from "$lib/components/Select.svelte";
-  import Checkbox from "$lib/components/Checkbox.svelte";
+  import Select from "$components/Select.svelte";
+  import Checkbox from "$components/Checkbox.svelte";
 
   let monster = new Monster();
 
