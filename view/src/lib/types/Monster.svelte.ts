@@ -125,10 +125,7 @@ export class Monster {
     event.preventDefault();
   }
 
-  public RemoveVision(visionToRemove: {
-    type: Sight;
-    range: number | undefined;
-  }) {
+  public RemoveVision(visionToRemove: Vision) {
     this.visions = this.visions.filter((vision) => vision !== visionToRemove);
 
     return function (event: MouseEvent) {
@@ -142,10 +139,7 @@ export class Monster {
     event.preventDefault();
   }
 
-  public RemoveTrait(traitToRemove: {
-    name: string | undefined;
-    description: string | undefined;
-  }) {
+  public RemoveTrait(traitToRemove: NamedDescription) {
     this.traits = this.traits.filter((trait) => trait !== traitToRemove);
     return function (event: MouseEvent) {
       event.preventDefault();
@@ -161,10 +155,7 @@ export class Monster {
     event.preventDefault();
   }
 
-  public RemoveRegularAction(regularActionToRemove: {
-    name: string | undefined;
-    description: string | undefined;
-  }) {
+  public RemoveRegularAction(regularActionToRemove: NamedDescription) {
     this.regularActions = this.regularActions.filter(
       (regularAction) => regularAction !== regularActionToRemove,
     );
@@ -190,14 +181,7 @@ export class Monster {
     event.preventDefault();
   }
 
-  public RemoveMeleeAttackAction(meleeAttackActionToRemove: {
-    name: string | undefined;
-    hitBonus: number | undefined;
-    reach: number | undefined;
-    oneHandedAttack: string | undefined;
-    twoHandedAttack: string | undefined;
-    damageType: DamageType | undefined;
-  }) {
+  public RemoveMeleeAttackAction(meleeAttackActionToRemove: MeleeAttack) {
     this.meleeAttackActions = this.meleeAttackActions.filter(
       (meleeAttackAction) => meleeAttackAction !== meleeAttackActionToRemove,
     );
@@ -222,14 +206,7 @@ export class Monster {
     event.preventDefault();
   }
 
-  public RemoveRangedAttackAction(rangedAttackActionToRemove: {
-    name: string | undefined;
-    hitBonus: number | undefined;
-    normalRange: number | undefined;
-    longRange: number | undefined;
-    attack: string | undefined;
-    damageType: DamageType | undefined;
-  }) {
+  public RemoveRangedAttackAction(rangedAttackActionToRemove: RangedAttack) {
     this.rangedAttackActions = this.rangedAttackActions.filter(
       (rangedAttackAction) => rangedAttackAction !== rangedAttackActionToRemove,
     );
@@ -251,11 +228,7 @@ export class Monster {
     event.preventDefault();
   }
 
-  public RemoveRechargeAction(rechargeActionToRemove: {
-    name: string | undefined;
-    rechargeDice: Recharge | undefined;
-    description: string | undefined;
-  }) {
+  public RemoveRechargeAction(rechargeActionToRemove: RechargeAction) {
     this.rechargeActions = this.rechargeActions.filter(
       (rechargeAction) => rechargeAction !== rechargeActionToRemove,
     );
@@ -273,10 +246,7 @@ export class Monster {
     event.preventDefault();
   }
 
-  public RemoveBonusAction(bonusActionToRemove: {
-    name: string | undefined;
-    description: string | undefined;
-  }) {
+  public RemoveBonusAction(bonusActionToRemove: NamedDescription) {
     this.bonusActions = this.bonusActions.filter(
       (bonusAction) => bonusAction !== bonusActionToRemove,
     );
@@ -295,10 +265,7 @@ export class Monster {
     event.preventDefault();
   }
 
-  public RemoveReaction(reactionToRemove: {
-    name: string | undefined;
-    description: string | undefined;
-  }) {
+  public RemoveReaction(reactionToRemove: NamedDescription) {
     this.reactions = this.reactions.filter(
       (reaction) => reaction !== reactionToRemove,
     );
@@ -317,11 +284,7 @@ export class Monster {
     event.preventDefault();
   }
 
-  public RemoveLegendaryAction(legendaryActionToRemove: {
-    name: string | undefined;
-    cost: number | undefined;
-    description: string | undefined;
-  }) {
+  public RemoveLegendaryAction(legendaryActionToRemove: LegendaryAction) {
     this.legendaryActions = this.legendaryActions.filter(
       (legendaryAction) => legendaryAction !== legendaryActionToRemove,
     );
@@ -345,10 +308,7 @@ export class Monster {
     event.preventDefault();
   }
 
-  public RemoveLairAction(lairActionToRemove: {
-    name: string | undefined;
-    description: string | undefined;
-  }) {
+  public RemoveLairAction(lairActionToRemove: NamedDescription) {
     this.lairActions = this.lairActions.filter(
       (lairAction) => lairAction !== lairActionToRemove,
     );
