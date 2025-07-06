@@ -3,6 +3,7 @@
   import CircleX from "@lucide/svelte/icons/circle-x";
 
   import * as Tabs from "$components/ui/tabs/index";
+  import { Button } from "$components/ui/button/index";
 
   import { Alignments } from "$types/Alignment";
   import { Attributes } from "$types/Attribute";
@@ -10,6 +11,7 @@
   import { DamageTypes } from "$types/DamageType";
   import { Languages } from "$types/Language";
   import { MonsterTypes } from "$types/MonsterType";
+  import { Movements } from "$types/Movement";
   import { Sights } from "$types/Sight";
   import { Size, Sizes } from "$types/Size";
   import { Skills } from "$types/Skill";
@@ -36,6 +38,13 @@
     value: alignment,
     label: alignment,
   }));
+
+  const sights = Sights.map((sight) => ({ value: sight, label: sight }));
+
+  const movements = Movements.map((movement) => ({
+    value: movement,
+    label: movement,
+  }));
 </script>
 
 <Tabs.Root value="basic" class="mx-auto w-[1000px]">
@@ -43,7 +52,6 @@
     <Tabs.List class="flex w-full justify-center">
       <Tabs.Trigger value="basic">Basic Information</Tabs.Trigger>
       <Tabs.Trigger value="defensive">Defensive</Tabs.Trigger>
-      <Tabs.Trigger value="senses-movement">Senses & Movement</Tabs.Trigger>
       <Tabs.Trigger value="traits">Traits</Tabs.Trigger>
       <Tabs.Trigger value="actions">Actions</Tabs.Trigger>
       <Tabs.Trigger value="spellcasting">Spellcasting</Tabs.Trigger>
@@ -97,7 +105,7 @@
         bind:value={monster.species}
         type="text"
         placeholder="Goblinoid"
-        columns={7}
+        columns={4}
       />
 
       <!-- Type -->
@@ -125,6 +133,16 @@
         bind:value={monster.alignment}
         items={alignments}
         columns={3}
+      />
+
+      <!-- Passive Perception -->
+      <Input
+        label="Passive Perception"
+        bind:value={monster.passivePerception}
+        type="number"
+        placeholder="13"
+        columns={3}
+        center={true}
       />
     </div>
 
@@ -170,9 +188,107 @@
         />
       {/each}
     </div>
+
+    <div class="grid grid-cols-2 space-y-5 gap-x-2">
+      <!-- Vision -->
+      <div class="col-span-1">
+        <div class="grid grid-cols-10 space-y-5 gap-x-2">
+          <h2 class="text-muted-foreground mb-2 ml-1 text-xl">Vision</h2>
+          <!-- Add Vission Button -->
+          <Button
+            variant="ghost"
+            size="icon"
+            class="col-span-1 col-start-10 text-green-300 hover:text-green-600"
+            onclick={(e) => monster.AddVision(e)}
+          >
+            <CirclePlus />
+          </Button>
+
+          <!-- Vision List -->
+          {#each monster.visions as vision}
+            <!-- Range -->
+            <Input
+              label="Range"
+              placeholder="60"
+              type="number"
+              columns={3}
+              center={true}
+              bind:value={vision.range}
+            />
+
+            <!-- Sight Type -->
+            <Select
+              label="Sight"
+              items={sights}
+              bind:value={vision.type}
+              placeholder="Select a vision type"
+              columns={6}
+            />
+
+            <!-- Remove Vision Button -->
+            <Button
+              variant="ghost"
+              size="icon"
+              class="col-span-1 mt-5 text-red-300 hover:text-red-600"
+              onclick={(_) => monster.RemoveVision(vision)}
+            >
+              <CircleX />
+            </Button>
+          {/each}
+        </div>
+      </div>
+
+      <!-- Speed -->
+      <div class="col-span-1">
+        <div class="grid grid-cols-10 space-y-5 gap-x-2">
+          <h2 class="text-muted-foreground mb-2 ml-1 text-xl">Speed</h2>
+          <!-- Add Speed Button -->
+          <Button
+            variant="ghost"
+            size="icon"
+            class="col-span-1 col-start-10 text-green-300 hover:text-green-600"
+            onclick={(e) => monster.AddSpeed(e)}
+          >
+            <CirclePlus />
+          </Button>
+
+          <!-- Speed List -->
+          {#each monster.speeds as speed}
+            <!-- Range -->
+            <Input
+              label="Range"
+              placeholder="60"
+              type="number"
+              columns={3}
+              center={true}
+              bind:value={speed.range}
+            />
+
+            <!-- Movement Type -->
+            <Select
+              label="Movement"
+              items={movements}
+              bind:value={speed.type}
+              placeholder="Select a movement type"
+              columns={6}
+            />
+
+            <!-- Remove Speed Button -->
+            <Button
+              variant="ghost"
+              size="icon"
+              class="col-span-1 mt-5 text-red-300 hover:text-red-600"
+              onclick={(_) => monster.RemoveSpeed(speed)}
+            >
+              <CircleX />
+            </Button>
+          {/each}
+        </div>
+      </div>
+    </div>
   </Tabs.Content>
-  <Tabs.Content value="defensive">
-    <div class="grid grid-cols-16 space-y-2 gap-x-2">
+  <Tabs.Content value="defensive" class="mt-5">
+    <div class="grid grid-cols-16 space-y-5 gap-x-2">
       <!-- Hit Points -->
       <Input
         label="Hit Points"
@@ -215,7 +331,7 @@
 
     <!-- Saving Throws -->
     <h2 class="text-muted-foreground mb-2 ml-1 text-xl">Saving Throws</h2>
-    <div class="grid grid-cols-18 space-y-2 gap-x-2">
+    <div class="grid grid-cols-18 space-y-5 gap-x-2">
       <!-- Saving Throws -->
       {#each Attributes as attribute}
         <Input
@@ -228,84 +344,43 @@
       {/each}
     </div>
 
-    <!--   <!-- Damage Resistances -->
-    <!--   <h6 class="h6">Damage Resistances</h6> -->
-    <!--   <CheckboxGroup -->
-    <!--     items={DamageTypes} -->
-    <!--     bind:checkedItems={monster.damageResistances} -->
-    <!--     columns={4} -->
-    <!--   /> -->
-    <!---->
-    <!--   <!-- Damage Immunities -->
-    <!--   <h6 class="h6">Damage Immunities</h6> -->
-    <!--   <CheckboxGroup -->
-    <!--     items={DamageTypes} -->
-    <!--     bind:checkedItems={monster.damageImmunities} -->
-    <!--     columns={4} -->
-    <!--   /> -->
-    <!---->
-    <!--   <!-- Condition Immunities -->
-    <!--   <h6 class="h6">Condition Immunities</h6> -->
-    <!--   <CheckboxGroup -->
-    <!--     items={Conditions} -->
-    <!--     bind:checkedItems={monster.conditionImmunities} -->
-    <!--     columns={5} -->
-    <!--   /> -->
-    <!---->
-  </Tabs.Content>
-  <Tabs.Content value="senses-movement">
-    <!--   <!-- Senses -->
-    <!--   <hr class="hr" /> -->
-    <!--   <div class="flex justify-between"> -->
-    <!--     <h2 class="h2">Senses</h2> -->
-    <!--     <button -->
-    <!--       type="button" -->
-    <!--       class="btn text-success-300 border-none" -->
-    <!--       onclick={(event) => monster.AddVision(event)}><CirclePlus /></button -->
-    <!--     > -->
-    <!--   </div> -->
-    <!---->
-    <!--   <div class="input-group grid-cols-2"> -->
-    <!--     <Input -->
-    <!--       label="Passive Perception" -->
-    <!--       bind:value={monster.passivePerception} -->
-    <!--       type="number" -->
-    <!--       placeholder="10" -->
-    <!--       labelSize={1} -->
-    <!--       inputSize={1} -->
-    <!--     /> -->
-    <!--   </div> -->
-    <!---->
-    <!--   {#each monster.visions as vision} -->
-    <!--     <div class="input-group grid-cols-16"> -->
-    <!--       <!-- Sight Type -->
-    <!--       <SelectInput -->
-    <!--         title="Sight" -->
-    <!--         bind:value={vision.type} -->
-    <!--         items={Sights} -->
-    <!--         labelSize={2} -->
-    <!--         inputSize={10} -->
-    <!--       /> -->
-    <!---->
-    <!--       <!-- Range -->
-    <!--       <Input -->
-    <!--         label="Range" -->
-    <!--         bind:value={vision.range} -->
-    <!--         type="number" -->
-    <!--         placeholder="60" -->
-    <!--         labelSize={2} -->
-    <!--         inputSize={1} -->
-    <!--       /> -->
-    <!---->
-    <!--       <!-- Remove Sight -->
-    <!--       <button -->
-    <!--         type="button" -->
-    <!--         class="btn preset-tonal text-error-300 col-span-1" -->
-    <!--         onclick={(_) => monster.RemoveVision(vision)}><CircleX /></button -->
-    <!--       > -->
-    <!--     </div> -->
-    <!--   {/each} -->
-    <!---->
+    <!-- Damage Resistances -->
+    <h2 class="text-muted-foreground mb-2 ml-1 text-xl">Damage Resistances</h2>
+    <div class="grid grid-cols-4 space-y-2 gap-x-2">
+      {#each DamageTypes as damageType}
+        <Checkbox
+          label={damageType}
+          bind:checked={monster.damageResistances[damageType]}
+          columns={1}
+        />
+      {/each}
+    </div>
+
+    <!-- Damage Immunities -->
+    <h2 class="text-muted-foreground mb-2 ml-1 text-xl">Damage Immunities</h2>
+    <div class="grid grid-cols-4 space-y-2 gap-x-2">
+      {#each DamageTypes as damageType}
+        <Checkbox
+          label={damageType}
+          bind:checked={monster.damageImmunities[damageType]}
+          columns={1}
+        />
+      {/each}
+    </div>
+
+    <!-- Condition Immunities -->
+    <h2 class="text-muted-foreground mb-2 ml-1 text-xl">
+      Condition Immunities
+    </h2>
+    <div class="grid grid-cols-5 space-y-2 gap-x-2">
+      {#each Conditions as condition}
+        <Checkbox
+          label={condition}
+          bind:checked={monster.conditionImmunities[condition]}
+          columns={1}
+        />
+      {/each}
+    </div>
   </Tabs.Content>
   <Tabs.Content value="traits">Traits</Tabs.Content>
   <Tabs.Content value="actions">Actions</Tabs.Content>
