@@ -397,7 +397,7 @@
       {/each}
     </div>
   </Tabs.Content>
-  <Tabs.Content value="traits">
+  <Tabs.Content value="traits" class="mt-5">
     <div class="grid grid-cols-10 space-y-5 gap-x-2">
       <!-- Traits -->
       <h2 class="text-muted-foreground col-span-9 mb-2 ml-1 text-xl">Traits</h2>
@@ -445,8 +445,8 @@
       {/each}
     </div>
   </Tabs.Content>
-  <Tabs.Content value="actions">Actions</Tabs.Content>
-  <Tabs.Content value="spellcasting">Spellcasting</Tabs.Content>
+  <Tabs.Content value="actions" class="mt-5">
+  <Tabs.Content value="spellcasting" class="mt-5">Spellcasting</Tabs.Content>
 </Tabs.Root>
 
 <!-- <form class="space-y-2 py-2"> -->
