@@ -9,10 +9,13 @@ import { Sight } from "$types/Sight";
 import { Size } from "$types/Size";
 import { Skill, Skills } from "$types/Skill";
 import { RecordFactory } from "$utils/factories";
+import { Movement } from "$types/Movement";
 
 type NamedDescription = { name?: string; description?: string };
 
 type Vision = { type?: Sight; range?: number };
+
+type Speed = { type?: Movement; range?: number };
 
 type MeleeAttack = {
   name?: string;
@@ -64,6 +67,7 @@ export class Monster {
   conditionImmunities: Record<Condition, boolean>;
   visions: Vision[];
   passivePerception?: number;
+  speeds: Speed[];
   languages: Record<Language, boolean>;
   skills: Record<Skill, number | undefined>;
   traits: NamedDescription[];
@@ -101,6 +105,7 @@ export class Monster {
     this.conditionImmunities = $state(RecordFactory(Conditions, false));
     this.visions = $state([]);
     this.passivePerception = $state(undefined);
+    this.speeds = $state([]);
     this.languages = $state(RecordFactory(Languages, false));
     this.skills = $state(RecordFactory(Skills, undefined));
     this.traits = $state([]);
@@ -127,6 +132,20 @@ export class Monster {
 
   public RemoveVision(visionToRemove: Vision) {
     this.visions = this.visions.filter((vision) => vision !== visionToRemove);
+
+    return function (event: MouseEvent) {
+      event.preventDefault();
+    };
+  }
+
+  public AddSpeed(event: MouseEvent) {
+    this.speeds = [...this.speeds, { type: undefined, range: undefined }];
+
+    event.preventDefault();
+  }
+
+  public RemoveSpeed(speedToRemove: Speed) {
+    this.speeds = this.speeds.filter((speed) => speed !== speedToRemove);
 
     return function (event: MouseEvent) {
       event.preventDefault();
