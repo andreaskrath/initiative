@@ -195,14 +195,16 @@
         <div class="grid grid-cols-10 space-y-5 gap-x-2">
           <h2 class="text-muted-foreground mb-2 ml-1 text-xl">Vision</h2>
           <!-- Add Vission Button -->
-          <Button
-            variant="ghost"
-            size="icon"
-            class="col-span-1 col-start-10 text-green-300 hover:text-green-600"
-            onclick={(e) => monster.AddVision(e)}
-          >
-            <CirclePlus />
-          </Button>
+          <div class="col-span-1 col-start-10 flex justify-center">
+            <Button
+              variant="ghost"
+              size="icon"
+              class="text-green-300 hover:text-green-600"
+              onclick={(e) => monster.AddVision(e)}
+            >
+              <CirclePlus />
+            </Button>
+          </div>
 
           <!-- Vision List -->
           {#each monster.visions as vision}
@@ -226,14 +228,16 @@
             />
 
             <!-- Remove Vision Button -->
-            <Button
-              variant="ghost"
-              size="icon"
-              class="col-span-1 mt-5 text-red-300 hover:text-red-600"
-              onclick={(_) => monster.RemoveVision(vision)}
-            >
-              <CircleX />
-            </Button>
+            <div class="col-span-1 col-start-10 flex justify-center">
+              <Button
+                variant="ghost"
+                size="icon"
+                class="mt-5 text-red-300 hover:text-red-600"
+                onclick={(_) => monster.RemoveVision(vision)}
+              >
+                <CircleX />
+              </Button>
+            </div>
           {/each}
         </div>
       </div>
@@ -243,14 +247,16 @@
         <div class="grid grid-cols-10 space-y-5 gap-x-2">
           <h2 class="text-muted-foreground mb-2 ml-1 text-xl">Speed</h2>
           <!-- Add Speed Button -->
-          <Button
-            variant="ghost"
-            size="icon"
-            class="col-span-1 col-start-10 text-green-300 hover:text-green-600"
-            onclick={(e) => monster.AddSpeed(e)}
-          >
-            <CirclePlus />
-          </Button>
+          <div class="col-span-1 col-start-10 flex justify-center">
+            <Button
+              variant="ghost"
+              size="icon"
+              class="text-green-300 hover:text-green-600"
+              onclick={(e) => monster.AddSpeed(e)}
+            >
+              <CirclePlus />
+            </Button>
+          </div>
 
           <!-- Speed List -->
           {#each monster.speeds as speed}
@@ -274,14 +280,16 @@
             />
 
             <!-- Remove Speed Button -->
-            <Button
-              variant="ghost"
-              size="icon"
-              class="col-span-1 mt-5 text-red-300 hover:text-red-600"
-              onclick={(_) => monster.RemoveSpeed(speed)}
-            >
-              <CircleX />
-            </Button>
+            <div class="col-span-1 col-start-10 flex justify-center">
+              <Button
+                variant="ghost"
+                size="icon"
+                class="mt-5 text-red-300 hover:text-red-600"
+                onclick={(_) => monster.RemoveSpeed(speed)}
+              >
+                <CircleX />
+              </Button>
+            </div>
           {/each}
         </div>
       </div>
