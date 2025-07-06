@@ -21,6 +21,7 @@
   import Input from "$components/Input.svelte";
   import Select from "$components/Select.svelte";
   import Checkbox from "$components/Checkbox.svelte";
+  import TextArea from "$components/TextArea.svelte";
 
   let monster = new Monster();
 
@@ -390,7 +391,54 @@
       {/each}
     </div>
   </Tabs.Content>
-  <Tabs.Content value="traits">Traits</Tabs.Content>
+  <Tabs.Content value="traits">
+    <div class="grid grid-cols-10 space-y-5 gap-x-2">
+      <!-- Traits -->
+      <h2 class="text-muted-foreground col-span-9 mb-2 ml-1 text-xl">Traits</h2>
+      <!-- Add Speed Button -->
+      <div class="col-span-1 col-start-10 flex justify-center">
+        <Button
+          variant="ghost"
+          size="icon"
+          class="w-full text-green-300 hover:text-green-600"
+          onclick={(e) => monster.AddTrait(e)}
+        >
+          <CirclePlus />
+        </Button>
+      </div>
+
+      {#each monster.traits as trait, index}
+        <!-- Name -->
+        <Input
+          label="Name"
+          placeholder="Martial Advantage"
+          type="text"
+          columns={9}
+          bind:value={trait.name}
+        />
+
+        <!-- Remove Trait Button -->
+        <div class="col-span-1 col-start-10 flex justify-center">
+          <Button
+            variant="ghost"
+            size="icon"
+            class="mt-5 w-full text-red-300 hover:text-red-600"
+            onclick={(_) => monster.RemoveTrait(trait)}
+          >
+            <CircleX />
+          </Button>
+        </div>
+
+        <TextArea
+          label="Description"
+          bind:value={trait.description}
+          placeholder="xdd"
+          id="trait-{index}"
+          columns={10}
+        />
+      {/each}
+    </div>
+  </Tabs.Content>
   <Tabs.Content value="actions">Actions</Tabs.Content>
   <Tabs.Content value="spellcasting">Spellcasting</Tabs.Content>
 </Tabs.Root>
