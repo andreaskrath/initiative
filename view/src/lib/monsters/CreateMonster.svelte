@@ -46,6 +46,11 @@
     value: movement,
     label: movement,
   }));
+
+  const damageTypes = DamageTypes.map((damageType) => ({
+    value: damageType,
+    label: damageType,
+  }));
 </script>
 
 <Tabs.Root value="basic" class="mx-auto w-[1000px]">
@@ -445,183 +450,156 @@
       {/each}
     </div>
   </Tabs.Content>
-  <Tabs.Content value="actions" class="mt-5">
-    <div class="grid grid-cols-10 space-y-5 gap-x-2">
-      <!-- Regular Actions -->
-      <h2 class="text-muted-foreground col-span-9 mb-2 ml-1 text-xl">
-        Regular Actions
-      </h2>
-      <!-- Add Regular Action Button -->
+  <Tabs.Content
+    value="actions"
+    class="mt-5 grid grid-cols-10 space-y-5 gap-x-2"
+  >
+    <!-- Regular Actions -->
+    <h2 class="text-muted-foreground col-span-9 mb-2 ml-1 text-xl">
+      Regular Actions
+    </h2>
+    <!-- Add Regular Action Button -->
+    <div class="col-span-1 col-start-10 flex justify-center">
+      <Button
+        variant="ghost"
+        size="icon"
+        class="w-full text-green-300 hover:text-green-600"
+        onclick={(e) => monster.AddRegularAction(e)}
+      >
+        <CirclePlus />
+      </Button>
+    </div>
+
+    {#each monster.regularActions as regularAction, index}
+      <!-- Name -->
+      <Input
+        label="Name"
+        placeholder="Martial Advantage"
+        type="text"
+        columns={9}
+        bind:value={regularAction.name}
+      />
+
+      <!-- Remove Regular Action Button -->
       <div class="col-span-1 col-start-10 flex justify-center">
         <Button
           variant="ghost"
           size="icon"
-          class="w-full text-green-300 hover:text-green-600"
-          onclick={(e) => monster.AddRegularAction(e)}
+          class="mt-5 w-full text-red-300 hover:text-red-600"
+          onclick={(_) => monster.RemoveRegularAction(regularAction)}
         >
-          <CirclePlus />
+          <CircleX />
         </Button>
       </div>
 
-      {#each monster.regularActions as regularAction, index}
-        <!-- Name -->
-        <Input
-          label="Name"
-          placeholder="Martial Advantage"
-          type="text"
-          columns={9}
-          bind:value={regularAction.name}
-        />
+      <TextArea
+        label="Description"
+        bind:value={regularAction.description}
+        placeholder="xdd"
+        id="trait-{index}"
+        columns={10}
+      />
 
-        <!-- Remove Regular Action Button -->
-        <div class="col-span-1 col-start-10 flex justify-center">
-          <Button
-            variant="ghost"
-            size="icon"
-            class="mt-5 w-full text-red-300 hover:text-red-600"
-            onclick={(_) => monster.RemoveRegularAction(regularAction)}
-          >
-            <CircleX />
-          </Button>
-        </div>
+      {#if index !== monster.regularActions.length - 1}
+        <hr class="col-span-10" />
+      {/if}
+    {/each}
 
-        <TextArea
-          label="Description"
-          bind:value={regularAction.description}
-          placeholder="xdd"
-          id="trait-{index}"
-          columns={10}
-        />
-      {/each}
+    <!-- Regular Actions -->
+    <h2 class="text-muted-foreground col-span-9 mb-2 ml-1 text-xl">
+      Melee Attack Actions
+    </h2>
+    <!-- Add Regular Action Button -->
+    <div class="col-span-1 col-start-10 flex justify-center">
+      <Button
+        variant="ghost"
+        size="icon"
+        class="w-full text-green-300 hover:text-green-600"
+        onclick={(e) => monster.AddMeleeAttackAction(e)}
+      >
+        <CirclePlus />
+      </Button>
     </div>
+
+    {#each monster.meleeAttackActions as meleeAttackAction, index}
+      <!-- Name -->
+      <Input
+        label="Name"
+        placeholder="Longsword"
+        type="text"
+        columns={5}
+        bind:value={meleeAttackAction.name}
+      />
+
+      <!-- Bonus to Hit -->
+      <Input
+        label="Bonus to Hit"
+        placeholder="5"
+        type="number"
+        columns={2}
+        bind:value={meleeAttackAction.hitBonus}
+        center={true}
+      />
+
+      <!-- Reach -->
+      <Input
+        label="Reach"
+        placeholder="5"
+        type="number"
+        columns={2}
+        bind:value={meleeAttackAction.reach}
+        center={true}
+      />
+
+      <!-- Remove Melee Attack Action Button -->
+      <div class="col-span-1 col-start-10 flex justify-center">
+        <Button
+          variant="ghost"
+          size="icon"
+          class="mt-5 w-full text-red-300 hover:text-red-600"
+          onclick={(_) => monster.RemoveMeleeAttackAction(meleeAttackAction)}
+        >
+          <CircleX />
+        </Button>
+      </div>
+
+      <!-- One-Handed Attack -->
+      <Input
+        label="One-Handed Attack"
+        placeholder="1d8 + 1"
+        type="text"
+        columns={3}
+        bind:value={meleeAttackAction.oneHandedAttack}
+        center={true}
+      />
+
+      <!-- Two-Handed Attack -->
+      <Input
+        label="Two-Handed Attack"
+        placeholder="1d10 + 1"
+        type="text"
+        columns={3}
+        bind:value={meleeAttackAction.twoHandedAttack}
+        center={true}
+      />
+
+      <Select
+        label="Damage Type"
+        bind:value={meleeAttackAction.damageType}
+        placeholder="Select a damage type"
+        items={damageTypes}
+        columns={4}
+      />
+
+      {#if index !== monster.meleeAttackActions.length - 1}
+        <hr class="col-span-10" />
+      {/if}
+    {/each}
   </Tabs.Content>
   <Tabs.Content value="spellcasting" class="mt-5">Spellcasting</Tabs.Content>
 </Tabs.Root>
 
 <!-- <form class="space-y-2 py-2"> -->
-<!--   <!-- Languages -->
-<!--   <hr class="hr" /> -->
-<!--   <h2 class="h2">Languages</h2> -->
-<!--   <CheckboxGroup -->
-<!--     items={Languages} -->
-<!--     bind:checkedItems={monster.languages} -->
-<!--     columns={4} -->
-<!--   /> -->
-<!---->
-<!--   <!-- Skills -->
-<!--   <hr class="hr" /> -->
-<!--   <h2 class="h2">Skills</h2> -->
-<!---->
-<!--   <div class="input-group grid-cols-6"> -->
-<!--     {#each Skills as skill, index} -->
-<!--       <Input -->
-<!--         label={skill} -->
-<!--         bind:value={monster.skills[skill]} -->
-<!--         type="text" -->
-<!--         placeholder="" -->
-<!--         labelSize={1} -->
-<!--         inputSize={1} -->
-<!--       /> -->
-<!---->
-<!--       <!-- This is nasty, but draws the horizontal rulers correctly. -->
-<!--       {#if index !== 0 && index !== Skills.length - 1 && index % 3 === 2} -->
-<!--         <hr class="hr col-span-6" /> -->
-<!--       {/if} -->
-<!--     {/each} -->
-<!--   </div> -->
-<!---->
-<!--   <!-- Traits -->
-<!--   <hr class="hr" /> -->
-<!--   <div class="flex justify-between"> -->
-<!--     <h2 class="h2">Traits</h2> -->
-<!--     <button -->
-<!--       type="button" -->
-<!--       class="btn text-success-500 border-none" -->
-<!--       onclick={(event) => monster.AddTrait(event)}><CirclePlus /></button -->
-<!--     > -->
-<!--   </div> -->
-<!--   {#each monster.traits as trait} -->
-<!--     <div class="input-group grid-cols-16"> -->
-<!--       <!-- Name -->
-<!--       <Input -->
-<!--         label="Name" -->
-<!--         bind:value={trait.name} -->
-<!--         type="text" -->
-<!--         placeholder="Martial Advantage" -->
-<!--         labelSize={1} -->
-<!--         inputSize={14} -->
-<!--       /> -->
-<!---->
-<!--       <!-- Remove Trait Button -->
-<!--       <button -->
-<!--         type="button" -->
-<!--         class="btn preset-tonal text-error-300 col-span-1" -->
-<!--         onclick={(_) => monster.RemoveTrait(trait)}><CircleX /></button -->
-<!--       > -->
-<!---->
-<!--       <hr class="hr col-span-16" /> -->
-<!---->
-<!--       <!-- Description -->
-<!--       <div class="ig-cell preset-tonal col-span-16 h-8">Description</div> -->
-<!--       <hr class="hr col-span-16" /> -->
-<!--       <textarea -->
-<!--         bind:value={trait.description} -->
-<!--         class="ig-input text-area col-span-16" -->
-<!--         rows="4" -->
-<!--         placeholder="Once per turn, the hobgoblin can deal an extra 7 (2d6) damage to a creature it hits with a weapon attack if that creature is within 5 feet of an ally of the hobgoblin that isn't incapacitated" -->
-<!--       ></textarea> -->
-<!--       <hr class="col-span-8" /> -->
-<!--     </div> -->
-<!--   {/each} -->
-<!---->
-<!--   <!-- Actions -->
-<!--   <hr class="hr" /> -->
-<!--   <h2 class="h2">Actions</h2> -->
-<!---->
-<!--   <!-- Regular Actions -->
-<!--   <div class="flex justify-between"> -->
-<!--     <h6 class="h6">Regular Actions</h6> -->
-<!--     <button -->
-<!--       type="button" -->
-<!--       class="btn text-success-500 border-none" -->
-<!--       onclick={(event) => monster.AddRegularAction(event)} -->
-<!--       ><CirclePlus /></button -->
-<!--     > -->
-<!--   </div> -->
-<!--   {#each monster.regularActions as regularAction} -->
-<!--     <div class="input-group grid-cols-16"> -->
-<!--       <!-- Name -->
-<!--       <Input -->
-<!--         label="Name" -->
-<!--         bind:value={regularAction.name} -->
-<!--         type="text" -->
-<!--         placeholder="Martial Advantage" -->
-<!--         labelSize={1} -->
-<!--         inputSize={14} -->
-<!--       /> -->
-<!---->
-<!--       <!-- Remove Regular Action Button -->
-<!--       <button -->
-<!--         type="button" -->
-<!--         class="btn preset-tonal text-error-300 col-span-1" -->
-<!--         onclick={(_) => monster.RemoveRegularAction(regularAction)} -->
-<!--         ><CircleX /></button -->
-<!--       > -->
-<!---->
-<!--       <hr class="hr col-span-16" /> -->
-<!---->
-<!--       <!-- Description -->
-<!--       <div class="ig-cell preset-tonal col-span-16 h-8">Description</div> -->
-<!--       <hr class="hr col-span-16" /> -->
-<!--       <textarea -->
-<!--         bind:value={regularAction.description} -->
-<!--         class="ig-input text-area col-span-16" -->
-<!--         rows="4" -->
-<!--         placeholder="Once per turn, the hobgoblin can deal an extra 7 (2d6) damage to a creature it hits with a weapon attack if that creature is within 5 feet of an ally of the hobgoblin that isn't incapacitated" -->
-<!--       ></textarea> -->
-<!--     </div> -->
-<!--   {/each} -->
-<!---->
 <!--   <!-- Melee Attack Actions -->
 <!--   <div class="flex justify-between"> -->
 <!--     <h6 class="h6">Melee Attack Actions</h6> -->
