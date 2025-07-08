@@ -123,7 +123,7 @@
         placeholder="Select a type"
         bind:value={monster.monsterType}
         items={monsterTypes}
-        columns={3}
+        containerClass="col-span-3"
       />
 
       <!-- Size -->
@@ -132,7 +132,7 @@
         placeholder="Select a size"
         bind:value={monster.size}
         items={sizes}
-        columns={3}
+        containerClass="col-span-3"
       />
 
       <!-- Alignment -->
@@ -141,7 +141,7 @@
         placeholder="Select an alignment"
         bind:value={monster.alignment}
         items={alignments}
-        columns={3}
+        containerClass="col-span-3"
       />
 
       <!-- Passive Perception -->
@@ -233,7 +233,7 @@
               items={sights}
               bind:value={vision.type}
               placeholder="Select a vision type"
-              columns={6}
+              containerClass="col-span-6"
             />
 
             <!-- Remove Vision Button -->
@@ -285,7 +285,7 @@
               items={movements}
               bind:value={speed.type}
               placeholder="Select a movement type"
-              columns={6}
+              containerClass="col-span-6"
             />
 
             <!-- Remove Speed Button -->
@@ -588,7 +588,7 @@
         bind:value={meleeAttackAction.damageType}
         placeholder="Select a damage type"
         items={damageTypes}
-        columns={4}
+        containerClass="col-span-4"
       />
 
       {#if index !== monster.meleeAttackActions.length - 1}
@@ -679,7 +679,7 @@
         bind:value={rangedAttackAction.damageType}
         placeholder="Select a damage type"
         items={damageTypes}
-        columns={4}
+        containerClass="col-span-4"
       />
 
       {#if index !== monster.rangedAttackActions.length - 1}

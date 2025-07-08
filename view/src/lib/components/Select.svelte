@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { cn } from "$lib/utils";
   import * as Select from "$components/ui/select/index";
   import { Label } from "$components/ui/label/index";
 
@@ -7,23 +8,24 @@
     value = $bindable(),
     placeholder,
     items,
-    columns,
+    containerClass,
+    labelClass,
+    selectClass,
   }: {
     label: string;
     value: string | undefined;
     placeholder: string;
     items: { label: string; value: string }[];
-    columns: number;
+    containerClass?: string;
+    labelClass?: string;
+    selectClass?: string;
   } = $props();
 </script>
 
 <!-- Have to use inline CSS because dynamic tailwind classes are not picked up by compiler -->
 
-<div
-  class="col-span-3 flex w-full flex-col gap-1.5"
-  style="grid-column: span {columns}"
->
-  <Label class="ml-1">{label}</Label>
+<div class={cn("flex w-full flex-col gap-1.5", containerClass)}>
+  <Label class={cn("ml-1", labelClass)}>{label}</Label>
   <Select.Root type="single" name={label} bind:value>
     <Select.Trigger class="w-full">
       {value ? value : placeholder}
@@ -31,7 +33,11 @@
     <Select.Content>
       <Select.Group>
         {#each items as item (item.value)}
-          <Select.Item value={item.value} label={item.label}>
+          <Select.Item
+            value={item.value}
+            label={item.label}
+            class={cn(selectClass)}
+          >
             {item.label}
           </Select.Item>
         {/each}
