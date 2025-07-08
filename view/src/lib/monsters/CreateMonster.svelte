@@ -595,6 +595,97 @@
         <hr class="col-span-10" />
       {/if}
     {/each}
+
+    <!-- Ranged Attack Actions -->
+    <h2 class="text-muted-foreground col-span-9 mb-2 ml-1 text-xl">
+      Ranged Attack Actions
+    </h2>
+    <!-- Add Ranged Attack Action Button -->
+    <div class="col-span-1 col-start-10 flex justify-center">
+      <Button
+        variant="ghost"
+        size="icon"
+        class="w-full text-green-300 hover:text-green-600"
+        onclick={(e) => monster.AddRangedAttackAction(e)}
+      >
+        <CirclePlus />
+      </Button>
+    </div>
+
+    {#each monster.rangedAttackActions as rangedAttackAction, index}
+      <!-- Name -->
+      <Input
+        label="Name"
+        placeholder="Longsword"
+        type="text"
+        containerClass="col-span-5"
+        bind:value={rangedAttackAction.name}
+      />
+
+      <!-- Bonus to Hit -->
+      <Input
+        label="Bonus to Hit"
+        placeholder="5"
+        type="number"
+        bind:value={rangedAttackAction.hitBonus}
+        containerClass="col-span-2"
+        inputClass="text-center"
+      />
+
+      <!-- Attack -->
+      <Input
+        label="Attack"
+        placeholder="1d8 + 2"
+        type="text"
+        bind:value={rangedAttackAction.attack}
+        containerClass="col-span-2"
+        inputClass="text-center"
+      />
+
+      <!-- Remove Ranged Attack Action Button -->
+      <div class="col-span-1 col-start-10 flex justify-center">
+        <Button
+          variant="ghost"
+          size="icon"
+          class="mt-5 w-full text-red-300 hover:text-red-600"
+          onclick={(_) => monster.RemoveRangedAttackAction(rangedAttackAction)}
+        >
+          <CircleX />
+        </Button>
+      </div>
+
+      <!-- Normal Range -->
+      <Input
+        label="Normal Range"
+        placeholder="150"
+        type="number"
+        bind:value={rangedAttackAction.normalRange}
+        containerClass="col-span-3"
+        inputClass="text-center"
+      />
+
+      <!-- Long Range -->
+      <Input
+        label="Long Range"
+        placeholder="600"
+        type="number"
+        bind:value={rangedAttackAction.longRange}
+        containerClass="col-span-3"
+        inputClass="text-center"
+      />
+
+      <Select
+        label="Damage Type"
+        bind:value={rangedAttackAction.damageType}
+        placeholder="Select a damage type"
+        items={damageTypes}
+        columns={4}
+      />
+
+      {#if index !== monster.rangedAttackActions.length - 1}
+        <hr class="col-span-10" />
+      {/if}
+    {/each}
   </Tabs.Content>
   <Tabs.Content value="spellcasting" class="mt-5">Spellcasting</Tabs.Content>
 </Tabs.Root>
