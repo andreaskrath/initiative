@@ -445,7 +445,7 @@
           bind:value={trait.description}
           placeholder="xdd"
           id="trait-{index}"
-          columns={10}
+          containerClass="col-span-10"
         />
       {/each}
     </div>
@@ -497,7 +497,7 @@
         bind:value={regularAction.description}
         placeholder="xdd"
         id="trait-{index}"
-        columns={10}
+        containerClass="col-span-10"
       />
 
       {#if index !== monster.regularActions.length - 1}
