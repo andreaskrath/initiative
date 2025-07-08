@@ -13,7 +13,7 @@
   import { MonsterTypes } from "$types/MonsterType";
   import { Movements } from "$types/Movement";
   import { Sights } from "$types/Sight";
-  import { Size, Sizes } from "$types/Size";
+  import { Sizes } from "$types/Size";
   import { Skills } from "$types/Skill";
   import { Monster } from "$types/Monster.svelte";
   import { Recharges } from "$types/Recharge";
