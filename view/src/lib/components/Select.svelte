@@ -22,8 +22,6 @@
   } = $props();
 </script>
 
-<!-- Have to use inline CSS because dynamic tailwind classes are not picked up by compiler -->
-
 <div class={cn("flex w-full flex-col gap-1.5", containerClass)}>
   <Label class={cn("ml-1", labelClass)}>{label}</Label>
   <Select.Root type="single" name={label} bind:value>
