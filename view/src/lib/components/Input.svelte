@@ -24,5 +24,5 @@
 
 <div class={cn("flex w-full flex-col gap-1.5", containerClass)}>
   <Label class={cn("ml-1", labelClass)}>{label}</Label>
-  <Input class={cn(inputClass)} {type} {placeholder} bind:value />
+  <Input class={cn("w-full", inputClass)} {type} {placeholder} bind:value />
 </div>
