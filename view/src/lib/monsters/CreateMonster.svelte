@@ -20,7 +20,7 @@
 
   import Input from "$components/Input.svelte";
   import Select from "$components/Select.svelte";
-  import Checkbox from "$components/Checkbox.svelte";
+  import Toggle from "$components/Toggle.svelte";
   import TextArea from "$components/TextArea.svelte";
 
   let monster = new Monster();
@@ -190,10 +190,10 @@
     <h2 class="text-muted-foreground mb-2 ml-1 text-xl">Languages</h2>
     <div class="grid grid-cols-4 space-y-2 gap-x-2">
       {#each Languages as language}
-        <Checkbox
+        <Toggle
           label={language}
           bind:checked={monster.languages[language]}
-          columns={1}
+          containerClass="col-span-1"
         />
       {/each}
     </div>
@@ -368,10 +368,10 @@
     <h2 class="text-muted-foreground mb-2 ml-1 text-xl">Damage Resistances</h2>
     <div class="grid grid-cols-4 space-y-2 gap-x-2">
       {#each DamageTypes as damageType}
-        <Checkbox
+        <Toggle
           label={damageType}
           bind:checked={monster.damageResistances[damageType]}
-          columns={1}
+          containerClass="col-span-1"
         />
       {/each}
     </div>
@@ -380,10 +380,10 @@
     <h2 class="text-muted-foreground mb-2 ml-1 text-xl">Damage Immunities</h2>
     <div class="grid grid-cols-4 space-y-2 gap-x-2">
       {#each DamageTypes as damageType}
-        <Checkbox
+        <Toggle
           label={damageType}
           bind:checked={monster.damageImmunities[damageType]}
-          columns={1}
+          containerClass="col-span-1"
         />
       {/each}
     </div>
@@ -394,10 +394,10 @@
     </h2>
     <div class="grid grid-cols-5 space-y-2 gap-x-2">
       {#each Conditions as condition}
-        <Checkbox
+        <Toggle
           label={condition}
           bind:checked={monster.conditionImmunities[condition]}
-          columns={1}
+          containerClass="col-span-1"
         />
       {/each}
     </div>
