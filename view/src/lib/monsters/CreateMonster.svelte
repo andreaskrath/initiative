@@ -75,7 +75,7 @@
         bind:value={monster.name}
         type="text"
         placeholder="Goblin"
-        columns={7}
+        containerClass="col-span-7"
       />
 
       <!-- Challenge Rating -->
@@ -84,8 +84,8 @@
         bind:value={monster.challengeRating}
         type="number"
         placeholder="0.5"
-        columns={3}
-        center={true}
+        containerClass="col-span-3"
+        inputClass="text-center"
       />
 
       <!-- XP -->
@@ -94,8 +94,8 @@
         bind:value={monster.xp}
         type="number"
         placeholder="100"
-        columns={3}
-        center={true}
+        containerClass="col-span-3"
+        inputClass="text-center"
       />
 
       <!-- Proficiency Bonus -->
@@ -104,8 +104,8 @@
         bind:value={monster.proficiencyBonus}
         type="number"
         placeholder="2"
-        columns={3}
-        center={true}
+        containerClass="col-span-3"
+        inputClass="text-center"
       />
 
       <!-- Species -->
@@ -114,7 +114,7 @@
         bind:value={monster.species}
         type="text"
         placeholder="Goblinoid"
-        columns={4}
+        containerClass="col-span-4"
       />
 
       <!-- Type -->
@@ -150,8 +150,8 @@
         bind:value={monster.passivePerception}
         type="number"
         placeholder="13"
-        columns={3}
-        center={true}
+        containerClass="col-span-3"
+        inputClass="text-center"
       />
     </div>
 
@@ -165,8 +165,8 @@
           placeholder="10"
           bind:value={monster.attributes[attribute]}
           type="number"
-          columns={3}
-          center={true}
+          containerClass="col-span-3"
+          inputClass="text-center"
         />
       {/each}
     </div>
@@ -180,8 +180,8 @@
           bind:value={monster.skills[skill]}
           type="number"
           placeholder=""
-          columns={3}
-          center={true}
+          containerClass="col-span-3"
+          inputClass="text-center"
         />
       {/each}
     </div>
@@ -222,8 +222,8 @@
               label="Range"
               placeholder="60"
               type="number"
-              columns={3}
-              center={true}
+              containerClass="col-span-3"
+              inputClass="text-center"
               bind:value={vision.range}
             />
 
@@ -274,8 +274,8 @@
               label="Range"
               placeholder="60"
               type="number"
-              columns={3}
-              center={true}
+              containerClass="col-span-3"
+              inputClass="text-center"
               bind:value={speed.range}
             />
 
@@ -315,8 +315,8 @@
         placeholder="11"
         bind:value={monster.hitPoints}
         type="number"
-        columns={3}
-        center={true}
+        containerClass="col-span-3"
+        inputClass="text-center"
       />
 
       <!-- Rollable Hit Points -->
@@ -325,8 +325,8 @@
         placeholder="2d8 + 6"
         bind:value={monster.rollableHitPoints}
         type="text"
-        columns={3}
-        center={true}
+        containerClass="col-span-3"
+        inputClass="text-center"
       />
 
       <!-- Armor Class -->
@@ -335,8 +335,8 @@
         placeholder="18"
         bind:value={monster.armorClass}
         type="number"
-        columns={3}
-        center={true}
+        containerClass="col-span-3"
+        inputClass="text-center"
       />
 
       <!-- Armor Type -->
@@ -345,7 +345,7 @@
         placeholder="chain mail, shield"
         bind:value={monster.armorType}
         type="text"
-        columns={7}
+        containerClass="col-span-7"
       />
     </div>
 
@@ -359,7 +359,7 @@
           bind:value={monster.savingThrows[attribute]}
           type="number"
           placeholder=""
-          columns={3}
+          containerClass="col-span-3"
         />
       {/each}
     </div>
@@ -424,7 +424,7 @@
           label="Name"
           placeholder="Martial Advantage"
           type="text"
-          columns={9}
+          containerClass="col-span-9"
           bind:value={trait.name}
         />
 
@@ -476,7 +476,7 @@
         label="Name"
         placeholder="Martial Advantage"
         type="text"
-        columns={9}
+        containerClass="col-span-9"
         bind:value={regularAction.name}
       />
 
@@ -505,11 +505,11 @@
       {/if}
     {/each}
 
-    <!-- Regular Actions -->
+    <!-- Melee Attack Actions -->
     <h2 class="text-muted-foreground col-span-9 mb-2 ml-1 text-xl">
       Melee Attack Actions
     </h2>
-    <!-- Add Regular Action Button -->
+    <!-- Add Melee Attack Action Button -->
     <div class="col-span-1 col-start-10 flex justify-center">
       <Button
         variant="ghost"
@@ -527,7 +527,7 @@
         label="Name"
         placeholder="Longsword"
         type="text"
-        columns={5}
+        containerClass="col-span-5"
         bind:value={meleeAttackAction.name}
       />
 
@@ -536,9 +536,9 @@
         label="Bonus to Hit"
         placeholder="5"
         type="number"
-        columns={2}
         bind:value={meleeAttackAction.hitBonus}
-        center={true}
+        containerClass="col-span-2"
+        inputClass="text-center"
       />
 
       <!-- Reach -->
@@ -546,9 +546,9 @@
         label="Reach"
         placeholder="5"
         type="number"
-        columns={2}
         bind:value={meleeAttackAction.reach}
-        center={true}
+        containerClass="col-span-2"
+        inputClass="text-center"
       />
 
       <!-- Remove Melee Attack Action Button -->
@@ -568,9 +568,9 @@
         label="One-Handed Attack"
         placeholder="1d8 + 1"
         type="text"
-        columns={3}
         bind:value={meleeAttackAction.oneHandedAttack}
-        center={true}
+        containerClass="col-span-3"
+        inputClass="text-center"
       />
 
       <!-- Two-Handed Attack -->
@@ -578,9 +578,9 @@
         label="Two-Handed Attack"
         placeholder="1d10 + 1"
         type="text"
-        columns={3}
         bind:value={meleeAttackAction.twoHandedAttack}
-        center={true}
+        containerClass="col-span-3"
+        inputClass="text-center"
       />
 
       <Select

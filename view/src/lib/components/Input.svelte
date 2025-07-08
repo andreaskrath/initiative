@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { cn } from "$lib/utils";
   import { Input } from "$components/ui/input/index";
   import { Label } from "$components/ui/label/index";
 
@@ -7,21 +8,21 @@
     value = $bindable(),
     type,
     placeholder,
-    columns,
-    center,
+    containerClass,
+    labelClass,
+    inputClass,
   }: {
     label: string;
     value: string | number | undefined;
     type: "text" | "number";
     placeholder: string;
-    columns: number;
-    center?: boolean;
+    containerClass?: string;
+    labelClass?: string;
+    inputClass?: string;
   } = $props();
 </script>
 
-<!-- Have to use inline CSS because dynamic tailwind classes are not picked up by compiler -->
-
-<div class="flex w-full flex-col gap-1.5" style="grid-column: span {columns}">
-  <Label class="ml-1">{label}</Label>
-  <Input class={center ? "text-center" : ""} {type} {placeholder} bind:value />
+<div class={cn("flex w-full flex-col gap-1.5", containerClass)}>
+  <Label class={cn("ml-1", labelClass)}>{label}</Label>
+  <Input class={cn(inputClass)} {type} {placeholder} bind:value />
 </div>
