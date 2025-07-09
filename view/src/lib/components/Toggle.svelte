@@ -1,22 +1,21 @@
 <script lang="ts">
   import { cn } from "$lib/utils";
   import { Toggle } from "$components/ui/toggle/index";
+  import type { Snippet } from "svelte";
 
   let {
-    label,
     checked = $bindable(),
-    containerClass,
-    toggleClass,
+    class: className,
+    children,
   }: {
-    label: string;
     checked: boolean;
-    containerClass?: string;
-    toggleClass?: string;
+    class?: string;
+    children: Snippet;
   } = $props();
 </script>
 
-<div class={cn("flex items-center space-x-2", containerClass)}>
-  <Toggle class={cn("w-full", toggleClass)} bind:pressed={checked}>
-    {label}
-  </Toggle>
-</div>
+<!-- <div class={cn("flex items-center space-x-2", containerClass)}> -->
+<Toggle class={cn("w-full", className)} bind:pressed={checked}>
+  {@render children?.()}
+</Toggle>
+<!-- </div> -->

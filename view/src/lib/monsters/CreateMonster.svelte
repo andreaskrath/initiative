@@ -22,6 +22,8 @@
   import Select from "$components/Select.svelte";
   import Toggle from "$components/Toggle.svelte";
   import TextArea from "$components/TextArea.svelte";
+  import Container from "$components/Container.svelte";
+  import Label from "$components/Label.svelte";
 
   let monster = new Monster();
 
@@ -70,89 +72,94 @@
     </h2>
     <div class="grid grid-cols-16 space-y-5 gap-x-2">
       <!-- Name -->
-      <Input
-        label="Name"
-        bind:value={monster.name}
-        type="text"
-        placeholder="Goblin"
-        containerClass="col-span-7"
-      />
+      <Container class="col-span-7">
+        <Label>Name</Label>
+        <Input bind:value={monster.name} type="text" placeholder="Goblin" />
+      </Container>
 
       <!-- Challenge Rating -->
-      <Input
-        label="Challenge Rating"
-        bind:value={monster.challengeRating}
-        type="number"
-        placeholder="0.5"
-        containerClass="col-span-3"
-        inputClass="text-center"
-      />
+      <Container class="col-span-3">
+        <Label>Challenge Rating</Label>
+        <Input
+          bind:value={monster.challengeRating}
+          type="number"
+          placeholder="0.5"
+          class="text-center"
+        />
+      </Container>
 
       <!-- XP -->
-      <Input
-        label="XP"
-        bind:value={monster.xp}
-        type="number"
-        placeholder="100"
-        containerClass="col-span-3"
-        inputClass="text-center"
-      />
+      <Container class="col-span-3">
+        <Label>Experience Points</Label>
+        <Input
+          bind:value={monster.xp}
+          type="number"
+          placeholder="100"
+          class="text-center"
+        />
+      </Container>
 
       <!-- Proficiency Bonus -->
-      <Input
-        label="Proficiency Bonus"
-        bind:value={monster.proficiencyBonus}
-        type="number"
-        placeholder="2"
-        containerClass="col-span-3"
-        inputClass="text-center"
-      />
+      <Container class="col-span-3">
+        <Label>Proficiency Bonus</Label>
+        <Input
+          bind:value={monster.proficiencyBonus}
+          type="number"
+          placeholder="2"
+          class="text-center"
+        />
+      </Container>
 
       <!-- Species -->
-      <Input
-        label="Species"
-        bind:value={monster.species}
-        type="text"
-        placeholder="Goblinoid"
-        containerClass="col-span-4"
-      />
+      <Container class="col-span-4">
+        <Label>Species</Label>
+        <Input
+          bind:value={monster.species}
+          type="text"
+          placeholder="Goblinoid"
+        />
+      </Container>
 
       <!-- Type -->
-      <Select
-        label="Type"
-        placeholder="Select a type"
-        bind:value={monster.monsterType}
-        items={monsterTypes}
-        containerClass="col-span-3"
-      />
+      <Container class="col-span-3">
+        <Label>Type</Label>
+        <Select
+          bind:value={monster.monsterType}
+          placeholder="Select a type"
+          items={monsterTypes}
+        />
+      </Container>
 
       <!-- Size -->
-      <Select
-        label="Size"
-        placeholder="Select a size"
-        bind:value={monster.size}
-        items={sizes}
-        containerClass="col-span-3"
-      />
+      <Container class="col-span-3">
+        <Label>Size</Label>
+        <Select
+          bind:value={monster.size}
+          placeholder="Select a size"
+          items={sizes}
+        />
+      </Container>
 
       <!-- Alignment -->
-      <Select
-        label="Alignment"
-        placeholder="Select an alignment"
-        bind:value={monster.alignment}
-        items={alignments}
-        containerClass="col-span-3"
-      />
+      <Container class="col-span-3">
+        <Label>Alignment</Label>
+        <Select
+          bind:value={monster.alignment}
+          placeholder="Select an alignment"
+          items={alignments}
+        />
+      </Container>
 
       <!-- Passive Perception -->
-      <Input
-        label="Passive Perception"
-        bind:value={monster.passivePerception}
-        type="number"
-        placeholder="13"
-        containerClass="col-span-3"
-        inputClass="text-center"
-      />
+      <Container class="col-span-3">
+        <Label>Passive Perception</Label>
+        <Input
+          bind:value={monster.passivePerception}
+          type="number"
+          placeholder="13"
+          class="text-center"
+        />
+      </Container>
     </div>
 
     <!-- Attributes -->
@@ -160,14 +167,15 @@
     <div class="grid grid-cols-18 space-y-5 gap-x-2">
       <!-- Attributes -->
       {#each Attributes as attribute}
-        <Input
-          label={attribute}
-          placeholder="10"
-          bind:value={monster.attributes[attribute]}
-          type="number"
-          containerClass="col-span-3"
-          inputClass="text-center"
-        />
+        <Container class="col-span-3">
+          <Label>{attribute}</Label>
+          <Input
+            bind:value={monster.attributes[attribute]}
+            type="number"
+            placeholder="13"
+            class="text-center"
+          />
+        </Container>
       {/each}
     </div>
 
@@ -175,14 +183,15 @@
     <h2 class="text-muted-foreground mb-2 ml-1 text-xl">Skills</h2>
     <div class="grid grid-cols-18 space-y-5 gap-x-2">
       {#each Skills as skill}
-        <Input
-          label={skill}
-          bind:value={monster.skills[skill]}
-          type="number"
-          placeholder=""
-          containerClass="col-span-3"
-          inputClass="text-center"
-        />
+        <Container class="col-span-3">
+          <Label>{skill}</Label>
+          <Input
+            bind:value={monster.skills[skill]}
+            type="number"
+            placeholder=""
+            class="text-center"
+          />
+        </Container>
       {/each}
     </div>
 
@@ -190,11 +199,11 @@
     <h2 class="text-muted-foreground mb-2 ml-1 text-xl">Languages</h2>
     <div class="grid grid-cols-4 space-y-2 gap-x-2">
       {#each Languages as language}
-        <Toggle
-          label={language}
-          bind:checked={monster.languages[language]}
-          containerClass="col-span-1"
-        />
+        <Container class="col-span-1">
+          <Toggle bind:checked={monster.languages[language]}>
+            {language}
+          </Toggle>
+        </Container>
       {/each}
     </div>
 
@@ -218,23 +227,25 @@
           <!-- Vision List -->
           {#each monster.visions as vision}
             <!-- Range -->
-            <Input
-              label="Range"
-              placeholder="60"
-              type="number"
-              containerClass="col-span-3"
-              inputClass="text-center"
-              bind:value={vision.range}
-            />
+            <Container class="col-span-3">
+              <Label>Range</Label>
+              <Input
+                bind:value={vision.range}
+                type="number"
+                placeholder="60"
+                class="text-center"
+              />
+            </Container>
 
             <!-- Sight Type -->
-            <Select
-              label="Sight"
-              items={sights}
-              bind:value={vision.type}
-              placeholder="Select a vision type"
-              containerClass="col-span-6"
-            />
+            <Container class="col-span-6">
+              <Label>Sight</Label>
+              <Select
+                bind:value={vision.type}
+                placeholder="Select a vision type"
+                items={sights}
+              />
+            </Container>
 
             <!-- Remove Vision Button -->
             <div class="col-span-1 col-start-10 flex justify-center">
@@ -269,24 +280,26 @@
 
           <!-- Speed List -->
           {#each monster.speeds as speed}
-            <!-- Range -->
-            <Input
-              label="Range"
-              placeholder="60"
-              type="number"
-              containerClass="col-span-3"
-              inputClass="text-center"
-              bind:value={speed.range}
-            />
+            <!-- Distance -->
+            <Container class="col-span-3">
+              <Label>Distance</Label>
+              <Input
+                bind:value={speed.distance}
+                type="number"
+                placeholder="60"
+                class="text-center"
+              />
+            </Container>
 
             <!-- Movement Type -->
-            <Select
-              label="Movement"
-              items={movements}
-              bind:value={speed.type}
-              placeholder="Select a movement type"
-              containerClass="col-span-6"
-            />
+            <Container class="col-span-6">
+              <Label>Movement</Label>
+              <Select
+                bind:value={speed.type}
+                placeholder="Select a movement type"
+                items={movements}
+              />
+            </Container>
 
             <!-- Remove Speed Button -->
             <div class="col-span-1 col-start-10 flex justify-center">
@@ -310,43 +323,47 @@
     </h2>
     <div class="grid grid-cols-16 space-y-5 gap-x-2">
       <!-- Hit Points -->
-      <Input
-        label="Hit Points"
-        placeholder="11"
-        bind:value={monster.hitPoints}
-        type="number"
-        containerClass="col-span-3"
-        inputClass="text-center"
-      />
+      <Container class="col-span-3">
+        <Label>Hit Points</Label>
+        <Input
+          bind:value={monster.hitPoints}
+          type="number"
+          placeholder="11"
+          class="text-center"
+        />
+      </Container>
 
       <!-- Rollable Hit Points -->
-      <Input
-        label="Rollable Hit Points"
-        placeholder="2d8 + 6"
-        bind:value={monster.rollableHitPoints}
-        type="text"
-        containerClass="col-span-3"
-        inputClass="text-center"
-      />
+      <Container class="col-span-3">
+        <Label>Rollable Hit Points</Label>
+        <Input
+          bind:value={monster.rollableHitPoints}
+          type="text"
+          placeholder="2d8 + 6"
+          class="text-center"
+        />
+      </Container>
 
       <!-- Armor Class -->
-      <Input
-        label="Armor Class"
-        placeholder="18"
-        bind:value={monster.armorClass}
-        type="number"
-        containerClass="col-span-3"
-        inputClass="text-center"
-      />
+      <Container class="col-span-3">
+        <Label>Armor Class</Label>
+        <Input
+          bind:value={monster.armorClass}
+          type="number"
+          placeholder="18"
+          class="text-center"
+        />
+      </Container>
 
       <!-- Armor Type -->
-      <Input
-        label="Armor Type"
-        placeholder="chain mail, shield"
-        bind:value={monster.armorType}
-        type="text"
-        containerClass="col-span-7"
-      />
+      <Container class="col-span-7">
+        <Label>Armor Type</Label>
+        <Input
+          bind:value={monster.armorType}
+          type="text"
+          placeholder="chain mail, shield"
+        />
+      </Container>
     </div>
 
     <!-- Saving Throws -->
@@ -354,13 +371,15 @@
     <div class="grid grid-cols-18 space-y-5 gap-x-2">
       <!-- Saving Throws -->
       {#each Attributes as attribute}
-        <Input
-          label={attribute}
-          bind:value={monster.savingThrows[attribute]}
-          type="number"
-          placeholder=""
-          containerClass="col-span-3"
-        />
+        <Container class="col-span-3">
+          <Label>{attribute}</Label>
+          <Input
+            bind:value={monster.savingThrows[attribute]}
+            type="number"
+            placeholder=""
+            class="text-center"
+          />
+        </Container>
       {/each}
     </div>
 
@@ -368,11 +387,11 @@
     <h2 class="text-muted-foreground mb-2 ml-1 text-xl">Damage Resistances</h2>
     <div class="grid grid-cols-4 space-y-2 gap-x-2">
       {#each DamageTypes as damageType}
-        <Toggle
-          label={damageType}
-          bind:checked={monster.damageResistances[damageType]}
-          containerClass="col-span-1"
-        />
+        <Container class="col-span-1">
+          <Toggle bind:checked={monster.damageResistances[damageType]}>
+            {damageType}
+          </Toggle>
+        </Container>
       {/each}
     </div>
 
@@ -380,11 +399,11 @@
     <h2 class="text-muted-foreground mb-2 ml-1 text-xl">Damage Immunities</h2>
     <div class="grid grid-cols-4 space-y-2 gap-x-2">
       {#each DamageTypes as damageType}
-        <Toggle
-          label={damageType}
-          bind:checked={monster.damageImmunities[damageType]}
-          containerClass="col-span-1"
-        />
+        <Container class="col-span-1">
+          <Toggle bind:checked={monster.damageImmunities[damageType]}>
+            {damageType}
+          </Toggle>
+        </Container>
       {/each}
     </div>
 
@@ -394,11 +413,11 @@
     </h2>
     <div class="grid grid-cols-5 space-y-2 gap-x-2">
       {#each Conditions as condition}
-        <Toggle
-          label={condition}
-          bind:checked={monster.conditionImmunities[condition]}
-          containerClass="col-span-1"
-        />
+        <Container class="col-span-1">
+          <Toggle bind:checked={monster.conditionImmunities[condition]}>
+            {condition}
+          </Toggle>
+        </Container>
       {/each}
     </div>
   </Tabs.Content>
@@ -420,13 +439,14 @@
 
       {#each monster.traits as trait, index}
         <!-- Name -->
-        <Input
-          label="Name"
-          placeholder="Martial Advantage"
-          type="text"
-          containerClass="col-span-9"
-          bind:value={trait.name}
-        />
+        <Container class="col-span-9">
+          <Label>Name</Label>
+          <Input
+            bind:value={trait.name}
+            type="text"
+            placeholder="Martial Advantage"
+          />
+        </Container>
 
         <!-- Remove Trait Button -->
         <div class="col-span-1 col-start-10 flex justify-center">
@@ -440,13 +460,18 @@
           </Button>
         </div>
 
-        <TextArea
-          label="Description"
-          bind:value={trait.description}
-          placeholder="xdd"
-          id="trait-{index}"
-          containerClass="col-span-10"
-        />
+        <!-- Description -->
+        <Container class="col-span-10">
+          <Label>Description</Label>
+          <TextArea
+            bind:value={trait.description}
+            placeholder="Write a description for the trait.."
+          />
+        </Container>
+
+        {#if index !== monster.traits.length - 1}
+          <hr class="col-span-10" />
+        {/if}
       {/each}
     </div>
   </Tabs.Content>
@@ -472,13 +497,14 @@
 
     {#each monster.regularActions as regularAction, index}
       <!-- Name -->
-      <Input
-        label="Name"
-        placeholder="Martial Advantage"
-        type="text"
-        containerClass="col-span-9"
-        bind:value={regularAction.name}
-      />
+      <Container class="col-span-9">
+        <Label>Name</Label>
+        <Input
+          bind:value={regularAction.name}
+          type="text"
+          placeholder="Martial Advantage"
+        />
+      </Container>
 
       <!-- Remove Regular Action Button -->
       <div class="col-span-1 col-start-10 flex justify-center">
@@ -492,13 +518,14 @@
         </Button>
       </div>
 
-      <TextArea
-        label="Description"
-        bind:value={regularAction.description}
-        placeholder="xdd"
-        id="trait-{index}"
-        containerClass="col-span-10"
-      />
+      <!-- Description -->
+      <Container class="col-span-10">
+        <Label>Description</Label>
+        <TextArea
+          bind:value={regularAction.description}
+          placeholder="Write a description for the regular action.."
+        />
+      </Container>
 
       {#if index !== monster.regularActions.length - 1}
         <hr class="col-span-10" />
@@ -523,33 +550,36 @@
 
     {#each monster.meleeAttackActions as meleeAttackAction, index}
       <!-- Name -->
-      <Input
-        label="Name"
-        placeholder="Longsword"
-        type="text"
-        containerClass="col-span-5"
-        bind:value={meleeAttackAction.name}
-      />
+      <Container class="col-span-5">
+        <Label>Name</Label>
+        <Input
+          bind:value={meleeAttackAction.name}
+          type="text"
+          placeholder="Longsword"
+        />
+      </Container>
 
       <!-- Bonus to Hit -->
-      <Input
-        label="Bonus to Hit"
-        placeholder="5"
-        type="number"
-        bind:value={meleeAttackAction.hitBonus}
-        containerClass="col-span-2"
-        inputClass="text-center"
-      />
+      <Container class="col-span-2">
+        <Label>Bonus to Hit</Label>
+        <Input
+          bind:value={meleeAttackAction.hitBonus}
+          type="number"
+          placeholder="5"
+          class="text-center"
+        />
+      </Container>
 
       <!-- Reach -->
-      <Input
-        label="Reach"
-        placeholder="5"
-        type="number"
-        bind:value={meleeAttackAction.reach}
-        containerClass="col-span-2"
-        inputClass="text-center"
-      />
+      <Container class="col-span-2">
+        <Label>Reach</Label>
+        <Input
+          bind:value={meleeAttackAction.reach}
+          type="number"
+          placeholder="5"
+          class="text-center"
+        />
+      </Container>
 
       <!-- Remove Melee Attack Action Button -->
       <div class="col-span-1 col-start-10 flex justify-center">
@@ -564,32 +594,36 @@
       </div>
 
       <!-- One-Handed Attack -->
-      <Input
-        label="One-Handed Attack"
-        placeholder="1d8 + 1"
-        type="text"
-        bind:value={meleeAttackAction.oneHandedAttack}
-        containerClass="col-span-3"
-        inputClass="text-center"
-      />
+      <Container class="col-span-3">
+        <Label>One-Handed Attack</Label>
+        <Input
+          bind:value={meleeAttackAction.oneHandedAttack}
+          type="text"
+          placeholder="1d8 + 1"
+          class="text-center"
+        />
+      </Container>
 
       <!-- Two-Handed Attack -->
-      <Input
-        label="Two-Handed Attack"
-        placeholder="1d10 + 1"
-        type="text"
-        bind:value={meleeAttackAction.twoHandedAttack}
-        containerClass="col-span-3"
-        inputClass="text-center"
-      />
+      <Container class="col-span-3">
+        <Label>Two-Handed Attack</Label>
+        <Input
+          bind:value={meleeAttackAction.twoHandedAttack}
+          type="text"
+          placeholder="1d10 + 1"
+          class="text-center"
+        />
+      </Container>
 
-      <Select
-        label="Damage Type"
-        bind:value={meleeAttackAction.damageType}
-        placeholder="Select a damage type"
-        items={damageTypes}
-        containerClass="col-span-4"
-      />
+      <!-- Damage Type -->
+      <Container class="col-span-4">
+        <Label>Damage Type</Label>
+        <Select
+          bind:value={meleeAttackAction.damageType}
+          placeholder="Select a damage type"
+          items={damageTypes}
+        />
+      </Container>
 
       {#if index !== monster.meleeAttackActions.length - 1}
         <hr class="col-span-10" />
@@ -614,33 +648,36 @@
 
     {#each monster.rangedAttackActions as rangedAttackAction, index}
       <!-- Name -->
-      <Input
-        label="Name"
-        placeholder="Longsword"
-        type="text"
-        containerClass="col-span-5"
-        bind:value={rangedAttackAction.name}
-      />
+      <Container class="col-span-5">
+        <Label>Name</Label>
+        <Input
+          bind:value={rangedAttackAction.name}
+          type="text"
+          placeholder="Longbow"
+        />
+      </Container>
 
       <!-- Bonus to Hit -->
-      <Input
-        label="Bonus to Hit"
-        placeholder="5"
-        type="number"
-        bind:value={rangedAttackAction.hitBonus}
-        containerClass="col-span-2"
-        inputClass="text-center"
-      />
+      <Container class="col-span-2">
+        <Label>Bonus to Hit</Label>
+        <Input
+          bind:value={rangedAttackAction.hitBonus}
+          type="number"
+          placeholder="5"
+          class="text-center"
+        />
+      </Container>
 
       <!-- Attack -->
-      <Input
-        label="Attack"
-        placeholder="1d8 + 2"
-        type="text"
-        bind:value={rangedAttackAction.attack}
-        containerClass="col-span-2"
-        inputClass="text-center"
-      />
+      <Container class="col-span-2">
+        <Label>Attack</Label>
+        <Input
+          bind:value={rangedAttackAction.attack}
+          type="text"
+          placeholder="1d8 + 2"
+          class="text-center"
+        />
+      </Container>
 
       <!-- Remove Ranged Attack Action Button -->
       <div class="col-span-1 col-start-10 flex justify-center">
@@ -655,32 +692,36 @@
       </div>
 
       <!-- Normal Range -->
-      <Input
-        label="Normal Range"
-        placeholder="150"
-        type="number"
-        bind:value={rangedAttackAction.normalRange}
-        containerClass="col-span-3"
-        inputClass="text-center"
-      />
+      <Container class="col-span-3">
+        <Label>Normal Range</Label>
+        <Input
+          bind:value={rangedAttackAction.normalRange}
+          type="number"
+          placeholder="150"
+          class="text-center"
+        />
+      </Container>
 
       <!-- Long Range -->
-      <Input
-        label="Long Range"
-        placeholder="600"
-        type="number"
-        bind:value={rangedAttackAction.longRange}
-        containerClass="col-span-3"
-        inputClass="text-center"
-      />
+      <Container class="col-span-3">
+        <Label>Long Range</Label>
+        <Input
+          bind:value={rangedAttackAction.longRange}
+          type="number"
+          placeholder="600"
+          class="text-center"
+        />
+      </Container>
 
-      <Select
-        label="Damage Type"
-        bind:value={rangedAttackAction.damageType}
-        placeholder="Select a damage type"
-        items={damageTypes}
-        containerClass="col-span-4"
-      />
+      <!-- Damage Type -->
+      <Container class="col-span-4">
+        <Label>Damage Type</Label>
+        <Select
+          bind:value={rangedAttackAction.damageType}
+          placeholder="Select a damage type"
+          items={damageTypes}
+        />
+      </Container>
 
       {#if index !== monster.rangedAttackActions.length - 1}
         <hr class="col-span-10" />

@@ -15,7 +15,7 @@ type NamedDescription = { name?: string; description?: string };
 
 type Vision = { type?: Sight; range?: number };
 
-type Speed = { type?: Movement; range?: number };
+type Speed = { type?: Movement; distance?: number };
 
 type MeleeAttack = {
   name?: string;
@@ -139,7 +139,7 @@ export class Monster {
   }
 
   public AddSpeed(event: MouseEvent) {
-    this.speeds = [...this.speeds, { type: undefined, range: undefined }];
+    this.speeds = [...this.speeds, { type: undefined, distance: undefined }];
 
     event.preventDefault();
   }
