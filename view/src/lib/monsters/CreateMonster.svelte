@@ -53,6 +53,11 @@
     value: damageType,
     label: damageType,
   }));
+
+  const recharges = Recharges.map((recharge) => ({
+    value: recharge,
+    label: recharge,
+  }));
 </script>
 
 <Tabs.Root value="basic" class="mx-auto w-[1000px]">
@@ -727,426 +732,314 @@
         <hr class="col-span-10" />
       {/if}
     {/each}
+
+    <!-- Recharge Actions -->
+    <h2 class="text-muted-foreground col-span-9 mb-2 ml-1 text-xl">
+      Recharge Actions
+    </h2>
+    <!-- Add Recharge Action Button -->
+    <div class="col-span-1 col-start-10 flex justify-center">
+      <Button
+        variant="ghost"
+        size="icon"
+        class="w-full text-green-300 hover:text-green-600"
+        onclick={(e) => monster.AddRechargeAction(e)}
+      >
+        <CirclePlus />
+      </Button>
+    </div>
+
+    {#each monster.rechargeActions as rechargeAction, index}
+      <!-- Name -->
+      <Container class="col-span-6">
+        <Label>Name</Label>
+        <Input
+          bind:value={rechargeAction.name}
+          type="text"
+          placeholder="Martial Advantage"
+        />
+      </Container>
+
+      <!-- Recharge -->
+      <Container class="col-span-3">
+        <Label>Recharge</Label>
+        <Select
+          bind:value={rechargeAction.rechargeDice}
+          placeholder="Select a recharge dice"
+          items={recharges}
+        />
+      </Container>
+
+      <!-- Remove Recharge Action Button -->
+      <div class="col-span-1 col-start-10 flex justify-center">
+        <Button
+          variant="ghost"
+          size="icon"
+          class="mt-5 w-full text-red-300 hover:text-red-600"
+          onclick={(_) => monster.RemoveRechargeAction(rechargeAction)}
+        >
+          <CircleX />
+        </Button>
+      </div>
+
+      <!-- Description -->
+      <Container class="col-span-10">
+        <Label>Description</Label>
+        <TextArea
+          bind:value={rechargeAction.description}
+          placeholder="Write a description for the recharge action.."
+        />
+      </Container>
+
+      {#if index !== monster.rechargeActions.length - 1}
+        <hr class="col-span-10" />
+      {/if}
+    {/each}
+
+    <!-- Bonus Actions -->
+    <h2 class="text-muted-foreground col-span-9 mb-2 ml-1 text-xl">
+      Bonus Actions
+    </h2>
+    <!-- Add Bonus Action Button -->
+    <div class="col-span-1 col-start-10 flex justify-center">
+      <Button
+        variant="ghost"
+        size="icon"
+        class="w-full text-green-300 hover:text-green-600"
+        onclick={(e) => monster.AddBonusAction(e)}
+      >
+        <CirclePlus />
+      </Button>
+    </div>
+
+    {#each monster.bonusActions as bonusAction, index}
+      <!-- Name -->
+      <Container class="col-span-9">
+        <Label>Name</Label>
+        <Input
+          bind:value={bonusAction.name}
+          type="text"
+          placeholder="Martial Advantage"
+        />
+      </Container>
+
+      <!-- Remove Bonus Action Button -->
+      <div class="col-span-1 col-start-10 flex justify-center">
+        <Button
+          variant="ghost"
+          size="icon"
+          class="mt-5 w-full text-red-300 hover:text-red-600"
+          onclick={(_) => monster.RemoveBonusAction(bonusAction)}
+        >
+          <CircleX />
+        </Button>
+      </div>
+
+      <!-- Description -->
+      <Container class="col-span-10">
+        <Label>Description</Label>
+        <TextArea
+          bind:value={bonusAction.description}
+          placeholder="Write a description for the bonus action.."
+        />
+      </Container>
+
+      {#if index !== monster.bonusActions.length - 1}
+        <hr class="col-span-10" />
+      {/if}
+    {/each}
+
+    <!-- Reactions -->
+    <h2 class="text-muted-foreground col-span-9 mb-2 ml-1 text-xl">
+      Reactions
+    </h2>
+    <!-- Add Reaction Button -->
+    <div class="col-span-1 col-start-10 flex justify-center">
+      <Button
+        variant="ghost"
+        size="icon"
+        class="w-full text-green-300 hover:text-green-600"
+        onclick={(e) => monster.AddReaction(e)}
+      >
+        <CirclePlus />
+      </Button>
+    </div>
+
+    {#each monster.reactions as reaction, index}
+      <!-- Name -->
+      <Container class="col-span-9">
+        <Label>Name</Label>
+        <Input
+          bind:value={reaction.name}
+          type="text"
+          placeholder="Martial Advantage"
+        />
+      </Container>
+
+      <!-- Remove Reaction Button -->
+      <div class="col-span-1 col-start-10 flex justify-center">
+        <Button
+          variant="ghost"
+          size="icon"
+          class="mt-5 w-full text-red-300 hover:text-red-600"
+          onclick={(_) => monster.RemoveReaction(reaction)}
+        >
+          <CircleX />
+        </Button>
+      </div>
+
+      <!-- Description -->
+      <Container class="col-span-10">
+        <Label>Description</Label>
+        <TextArea
+          bind:value={reaction.description}
+          placeholder="Write a description for the reaction.."
+        />
+      </Container>
+
+      {#if index !== monster.reactions.length - 1}
+        <hr class="col-span-10" />
+      {/if}
+    {/each}
+
+    <!-- Legendary Actions -->
+    <h2 class="text-muted-foreground col-span-9 mb-2 ml-1 text-xl">
+      Legendary Actions
+    </h2>
+    <!-- Add Legendary Action Button -->
+    <div class="col-span-1 col-start-10 flex justify-center">
+      <Button
+        variant="ghost"
+        size="icon"
+        class="w-full text-green-300 hover:text-green-600"
+        onclick={(e) => monster.AddLegendaryAction(e)}
+      >
+        <CirclePlus />
+      </Button>
+    </div>
+
+    {#if monster.legendaryActions.length > 0}
+      <Container class="col-span-3">
+        <Label>Available Legendary Actions per Turn</Label>
+        <Input
+          bind:value={monster.availableLegendaryActionsPerTurn}
+          type="number"
+          placeholder="3"
+          class="text-center"
+        />
+      </Container>
+      <div class="col-span-7"></div>
+    {/if}
+
+    {#each monster.legendaryActions as legendaryAction, index}
+      <!-- Name -->
+      <Container class="col-span-7">
+        <Label>Name</Label>
+        <Input
+          bind:value={legendaryAction.name}
+          type="text"
+          placeholder="Martial Advantage"
+        />
+      </Container>
+
+      <!-- Cost -->
+      <Container class="col-span-2">
+        <Label>Cost</Label>
+        <Input
+          bind:value={legendaryAction.cost}
+          type="number"
+          placeholder="3"
+          class="text-center"
+        />
+      </Container>
+
+      <!-- Remove Legendary Action Button -->
+      <div class="col-span-1 col-start-10 flex justify-center">
+        <Button
+          variant="ghost"
+          size="icon"
+          class="mt-5 w-full text-red-300 hover:text-red-600"
+          onclick={(_) => monster.RemoveLegendaryAction(legendaryAction)}
+        >
+          <CircleX />
+        </Button>
+      </div>
+
+      <!-- Description -->
+      <Container class="col-span-10">
+        <Label>Description</Label>
+        <TextArea
+          bind:value={legendaryAction.description}
+          placeholder="Write a description for the reaction.."
+        />
+      </Container>
+
+      {#if index !== monster.legendaryActions.length - 1}
+        <hr class="col-span-10" />
+      {/if}
+    {/each}
+
+    <!-- Lair Actions -->
+    <h2 class="text-muted-foreground col-span-9 mb-2 ml-1 text-xl">
+      Lair Actions
+    </h2>
+    <!-- Add Lair Action Button -->
+    <div class="col-span-1 col-start-10 flex justify-center">
+      <Button
+        variant="ghost"
+        size="icon"
+        class="w-full text-green-300 hover:text-green-600"
+        onclick={(e) => monster.AddLairAction(e)}
+      >
+        <CirclePlus />
+      </Button>
+    </div>
+
+    {#each monster.lairActions as lairAction, index}
+      <!-- Name -->
+      <Container class="col-span-9">
+        <Label>Name</Label>
+        <Input
+          bind:value={lairAction.name}
+          type="text"
+          placeholder="Martial Advantage"
+        />
+      </Container>
+
+      <!-- Remove Lair Action Button -->
+      <div class="col-span-1 col-start-10 flex justify-center">
+        <Button
+          variant="ghost"
+          size="icon"
+          class="mt-5 w-full text-red-300 hover:text-red-600"
+          onclick={(_) => monster.RemoveLairAction(lairAction)}
+        >
+          <CircleX />
+        </Button>
+      </div>
+
+      <!-- Description -->
+      <Container class="col-span-10">
+        <Label>Description</Label>
+        <TextArea
+          bind:value={lairAction.description}
+          placeholder="Write a description for the reaction.."
+        />
+      </Container>
+
+      {#if index !== monster.lairActions.length - 1}
+        <hr class="col-span-10" />
+      {/if}
+    {/each}
   </Tabs.Content>
-  <Tabs.Content value="spellcasting" class="mt-5">Spellcasting</Tabs.Content>
+  <Tabs.Content value="spellcasting" class="mt-5">
+    <h2 class="text-muted-foreground col-span-9 mb-2 ml-1 text-xl">
+      Spellcasting
+    </h2>
+  </Tabs.Content>
 </Tabs.Root>
 
 <!-- <form class="space-y-2 py-2"> -->
-<!--   <!-- Melee Attack Actions -->
-<!--   <div class="flex justify-between"> -->
-<!--     <h6 class="h6">Melee Attack Actions</h6> -->
-<!--     <button -->
-<!--       type="button" -->
-<!--       class="btn text-success-500 border-none" -->
-<!--       onclick={(event) => monster.AddMeleeAttackAction(event)} -->
-<!--       ><CirclePlus /></button -->
-<!--     > -->
-<!--   </div> -->
-<!--   {#each monster.meleeAttackActions as meleeAttackAction} -->
-<!--     <div class="input-group grid-cols-16"> -->
-<!--       <!-- Name -->
-<!--       <Input -->
-<!--         label="Name" -->
-<!--         bind:value={meleeAttackAction.name} -->
-<!--         type="text" -->
-<!--         placeholder="Longsword" -->
-<!--         labelSize={1} -->
-<!--         inputSize={8} -->
-<!--       /> -->
-<!---->
-<!--       <!-- Bonus to Hit -->
-<!--       <Input -->
-<!--         label="Bonus to Hit" -->
-<!--         bind:value={meleeAttackAction.hitBonus} -->
-<!--         type="number" -->
-<!--         placeholder="3" -->
-<!--         labelSize={2} -->
-<!--         inputSize={1} -->
-<!--       /> -->
-<!---->
-<!--       <!-- Reach -->
-<!--       <Input -->
-<!--         label="Reach" -->
-<!--         bind:value={meleeAttackAction.reach} -->
-<!--         type="number" -->
-<!--         placeholder="5" -->
-<!--         labelSize={2} -->
-<!--         inputSize={1} -->
-<!--       /> -->
-<!---->
-<!--       <!-- Remove Melee Attack Action -->
-<!--       <button -->
-<!--         type="button" -->
-<!--         class="btn preset-tonal text-error-300 col-span-1" -->
-<!--         onclick={(_) => monster.RemoveMeleeAttackAction(meleeAttackAction)} -->
-<!--         ><CircleX /></button -->
-<!--       > -->
-<!---->
-<!--       <hr class="hr col-span-16" /> -->
-<!---->
-<!--       <!-- One-Handed Attack -->
-<!--       <Input -->
-<!--         label="One-Handed Attack" -->
-<!--         bind:value={meleeAttackAction.oneHandedAttack} -->
-<!--         type="text" -->
-<!--         placeholder="1d8 + 1" -->
-<!--         labelSize={3} -->
-<!--         inputSize={2} -->
-<!--         center={true} -->
-<!--       /> -->
-<!---->
-<!--       <!-- Two-Handed Attack -->
-<!--       <Input -->
-<!--         label="Two-Handed Attack" -->
-<!--         bind:value={meleeAttackAction.twoHandedAttack} -->
-<!--         type="text" -->
-<!--         placeholder="1d10 + 1" -->
-<!--         labelSize={3} -->
-<!--         inputSize={2} -->
-<!--         center={true} -->
-<!--       /> -->
-<!---->
-<!--       <!-- Damage Type -->
-<!--       <SelectInput -->
-<!--         title="Damage Type" -->
-<!--         bind:value={meleeAttackAction.damageType} -->
-<!--         items={DamageTypes} -->
-<!--         labelSize={2} -->
-<!--         inputSize={4} -->
-<!--       /> -->
-<!--     </div> -->
-<!--   {/each} -->
-<!---->
-<!--   <!-- Ranged Attack Actions -->
-<!--   <div class="flex justify-between"> -->
-<!--     <h6 class="h6">Ranged Attack Actions</h6> -->
-<!--     <button -->
-<!--       type="button" -->
-<!--       class="btn text-success-500 border-none" -->
-<!--       onclick={(event) => monster.AddRangedAttackAction(event)} -->
-<!--       ><CirclePlus /></button -->
-<!--     > -->
-<!--   </div> -->
-<!--   {#each monster.rangedAttackActions as rangedAttackAction} -->
-<!--     <div class="input-group grid-cols-16"> -->
-<!--       <!-- Name -->
-<!--       <Input -->
-<!--         label="Name" -->
-<!--         bind:value={rangedAttackAction.name} -->
-<!--         type="text" -->
-<!--         placeholder="Light Crossbow" -->
-<!--         labelSize={1} -->
-<!--         inputSize={11} -->
-<!--       /> -->
-<!---->
-<!--       <!-- Bonus to Hit -->
-<!--       <Input -->
-<!--         label="Bonus to Hit" -->
-<!--         bind:value={rangedAttackAction.hitBonus} -->
-<!--         type="number" -->
-<!--         placeholder="3" -->
-<!--         labelSize={2} -->
-<!--         inputSize={1} -->
-<!--       /> -->
-<!---->
-<!--       <!-- Remove Ranged Attack Action -->
-<!--       <button -->
-<!--         type="button" -->
-<!--         class="btn preset-tonal text-error-300 col-span-1" -->
-<!--         onclick={(_) => monster.RemoveRangedAttackAction(rangedAttackAction)} -->
-<!--         ><CircleX /></button -->
-<!--       > -->
-<!---->
-<!--       <hr class="hr col-span-16" /> -->
-<!---->
-<!--       <!-- Normal Range -->
-<!--       <Input -->
-<!--         label="Normal Range" -->
-<!--         bind:value={rangedAttackAction.normalRange} -->
-<!--         type="number" -->
-<!--         placeholder="80" -->
-<!--         labelSize={2} -->
-<!--         inputSize={1} -->
-<!--       /> -->
-<!---->
-<!--       <!-- Long Range -->
-<!--       <Input -->
-<!--         label="Long Range" -->
-<!--         bind:value={rangedAttackAction.longRange} -->
-<!--         type="number" -->
-<!--         placeholder="320" -->
-<!--         labelSize={2} -->
-<!--         inputSize={1} -->
-<!--       /> -->
-<!---->
-<!--       <!-- Attack -->
-<!--       <Input -->
-<!--         label="Attack" -->
-<!--         bind:value={rangedAttackAction.attack} -->
-<!--         type="text" -->
-<!--         placeholder="1d8 + 1" -->
-<!--         labelSize={2} -->
-<!--         inputSize={2} -->
-<!--         center={true} -->
-<!--       /> -->
-<!---->
-<!--       <!-- Damage Type -->
-<!--       <SelectInput -->
-<!--         title="Damage Type" -->
-<!--         bind:value={rangedAttackAction.damageType} -->
-<!--         items={DamageTypes} -->
-<!--         labelSize={2} -->
-<!--         inputSize={4} -->
-<!--       /> -->
-<!--     </div> -->
-<!--   {/each} -->
-<!---->
-<!--   <!-- Recharge Actions -->
-<!--   <div class="flex justify-between"> -->
-<!--     <h6 class="h6">Recharge Actions</h6> -->
-<!--     <button -->
-<!--       type="button" -->
-<!--       class="btn text-success-500 border-none" -->
-<!--       onclick={(event) => monster.AddRechargeAction(event)} -->
-<!--       ><CirclePlus /></button -->
-<!--     > -->
-<!--   </div> -->
-<!--   {#each monster.rechargeActions as rechargeAction} -->
-<!--     <div class="input-group grid-cols-16"> -->
-<!--       <!-- Name -->
-<!--       <Input -->
-<!--         label="Name" -->
-<!--         bind:value={rechargeAction.name} -->
-<!--         type="text" -->
-<!--         placeholder="Light Crossbow" -->
-<!--         labelSize={1} -->
-<!--         inputSize={10} -->
-<!--       /> -->
-<!---->
-<!--       <!-- Recharge Dice -->
-<!--       <SelectInput -->
-<!--         title="Recharge Dice" -->
-<!--         bind:value={rechargeAction.rechargeDice} -->
-<!--         items={Recharges} -->
-<!--         labelSize={2} -->
-<!--         inputSize={2} -->
-<!--       /> -->
-<!---->
-<!--       <!-- Remove Recharge Action -->
-<!--       <button -->
-<!--         type="button" -->
-<!--         class="btn preset-tonal text-error-300 col-span-1" -->
-<!--         onclick={(_) => monster.RemoveRechargeAction(rechargeAction)} -->
-<!--         ><CircleX /></button -->
-<!--       > -->
-<!---->
-<!--       <hr class="hr col-span-16" /> -->
-<!---->
-<!--       <!-- Description -->
-<!--       <div class="ig-cell preset-tonal col-span-16 h-8">Description</div> -->
-<!--       <hr class="hr col-span-16" /> -->
-<!--       <textarea -->
-<!--         bind:value={rechargeAction.description} -->
-<!--         class="ig-input text-area col-span-16" -->
-<!--         rows="4" -->
-<!--         placeholder="Once per turn, the hobgoblin can deal an extra 7 (2d6) damage to a creature it hits with a weapon attack if that creature is within 5 feet of an ally of the hobgoblin that isn't incapacitated" -->
-<!--       ></textarea> -->
-<!--     </div> -->
-<!--   {/each} -->
-<!---->
-<!--   <!-- Bonus Actions -->
-<!--   <div class="flex justify-between"> -->
-<!--     <h6 class="h6">Bonus Actions</h6> -->
-<!--     <button -->
-<!--       type="button" -->
-<!--       class="btn text-success-500 border-none" -->
-<!--       onclick={(event) => monster.AddBonusAction(event)}><CirclePlus /></button -->
-<!--     > -->
-<!--   </div> -->
-<!--   {#each monster.bonusActions as bonusAction} -->
-<!--     <div class="input-group grid-cols-16"> -->
-<!--       <!-- Name -->
-<!--       <Input -->
-<!--         label="Name" -->
-<!--         bind:value={bonusAction.name} -->
-<!--         type="text" -->
-<!--         placeholder="Light Crossbow" -->
-<!--         labelSize={1} -->
-<!--         inputSize={14} -->
-<!--       /> -->
-<!---->
-<!--       <!-- Remove Bonus Action -->
-<!--       <button -->
-<!--         type="button" -->
-<!--         class="btn preset-tonal text-error-300 col-span-1" -->
-<!--         onclick={(_) => monster.RemoveBonusAction(bonusAction)} -->
-<!--         ><CircleX /></button -->
-<!--       > -->
-<!---->
-<!--       <hr class="hr col-span-16" /> -->
-<!---->
-<!--       <!-- Description -->
-<!--       <div class="ig-cell preset-tonal col-span-16 h-8">Description</div> -->
-<!--       <hr class="hr col-span-16" /> -->
-<!--       <textarea -->
-<!--         bind:value={bonusAction.description} -->
-<!--         class="ig-input text-area col-span-16" -->
-<!--         rows="4" -->
-<!--         placeholder="Once per turn, the hobgoblin can deal an extra 7 (2d6) damage to a creature it hits with a weapon attack if that creature is within 5 feet of an ally of the hobgoblin that isn't incapacitated" -->
-<!--       ></textarea> -->
-<!--     </div> -->
-<!--   {/each} -->
-<!---->
-<!--   <!-- Reactions -->
-<!--   <div class="flex justify-between"> -->
-<!--     <h6 class="h6">Reactions</h6> -->
-<!--     <button -->
-<!--       type="button" -->
-<!--       class="btn text-success-500 border-none" -->
-<!--       onclick={(event) => monster.AddReaction(event)}><CirclePlus /></button -->
-<!--     > -->
-<!--   </div> -->
-<!--   {#each monster.reactions as reaction} -->
-<!--     <div class="input-group grid-cols-16"> -->
-<!--       <!-- Name -->
-<!--       <Input -->
-<!--         label="Name" -->
-<!--         bind:value={reaction.name} -->
-<!--         type="text" -->
-<!--         placeholder="Light Crossbow" -->
-<!--         labelSize={1} -->
-<!--         inputSize={14} -->
-<!--       /> -->
-<!---->
-<!--       <!-- Remove Reaction -->
-<!--       <button -->
-<!--         type="button" -->
-<!--         class="btn preset-tonal text-error-300 col-span-1" -->
-<!--         onclick={(_) => monster.RemoveReaction(reaction)}><CircleX /></button -->
-<!--       > -->
-<!---->
-<!--       <hr class="hr col-span-16" /> -->
-<!---->
-<!--       <!-- Description -->
-<!--       <div class="ig-cell preset-tonal col-span-16 h-8">Description</div> -->
-<!--       <hr class="hr col-span-16" /> -->
-<!--       <textarea -->
-<!--         bind:value={reaction.description} -->
-<!--         class="ig-input text-area col-span-16" -->
-<!--         rows="4" -->
-<!--         placeholder="The captain adds 2 to its AC against one melee attack that would hit it. To do so, the captain must see the attacker and be wielding a melee weapon." -->
-<!--       ></textarea> -->
-<!--     </div> -->
-<!--   {/each} -->
-<!---->
-<!--   <div class="flex justify-between"> -->
-<!--     <h6 class="h6">Legendary Actions</h6> -->
-<!--     <button -->
-<!--       type="button" -->
-<!--       class="btn text-success-500 border-none" -->
-<!--       onclick={(event) => monster.AddLegendaryAction(event)} -->
-<!--       ><CirclePlus /></button -->
-<!--     > -->
-<!--   </div> -->
-<!--   {#if monster.legendaryActions.length > 0} -->
-<!--     <div class="input-group grid-cols-3"> -->
-<!--       <Input -->
-<!--         label="Available Legendary Actions per Turn" -->
-<!--         bind:value={monster.availableLegendaryActionsPerTurn} -->
-<!--         type="number" -->
-<!--         placeholder="3" -->
-<!--         labelSize={2} -->
-<!--         inputSize={1} -->
-<!--       /> -->
-<!--     </div> -->
-<!--   {/if} -->
-<!--   {#each monster.legendaryActions as legendaryAction} -->
-<!--     <div class="input-group grid-cols-16"> -->
-<!--       <!-- Name -->
-<!--       <Input -->
-<!--         label="Name" -->
-<!--         bind:value={legendaryAction.name} -->
-<!--         type="text" -->
-<!--         placeholder="Light Crossbow" -->
-<!--         labelSize={1} -->
-<!--         inputSize={12} -->
-<!--       /> -->
-<!---->
-<!--       <!-- Cost -->
-<!--       <Input -->
-<!--         label="Cost" -->
-<!--         bind:value={legendaryAction.cost} -->
-<!--         type="number" -->
-<!--         placeholder="1" -->
-<!--         labelSize={1} -->
-<!--         inputSize={1} -->
-<!--       /> -->
-<!---->
-<!--       <!-- Remove Legendary Action -->
-<!--       <button -->
-<!--         type="button" -->
-<!--         class="btn preset-tonal text-error-300 col-span-1" -->
-<!--         onclick={(_) => monster.RemoveLegendaryAction(legendaryAction)} -->
-<!--         ><CircleX /></button -->
-<!--       > -->
-<!---->
-<!--       <hr class="hr col-span-16" /> -->
-<!---->
-<!--       <!-- Description -->
-<!--       <div class="ig-cell preset-tonal col-span-16 h-8">Description</div> -->
-<!--       <hr class="hr col-span-16" /> -->
-<!--       <textarea -->
-<!--         bind:value={legendaryAction.description} -->
-<!--         class="ig-input text-area col-span-16" -->
-<!--         rows="4" -->
-<!--         placeholder="The captain adds 2 to its AC against one melee attack that would hit it. To do so, the captain must see the attacker and be wielding a melee weapon." -->
-<!--       ></textarea> -->
-<!--     </div> -->
-<!--   {/each} -->
-<!---->
-<!--   <!-- Lair Actions -->
-<!--   <div class="flex justify-between"> -->
-<!--     <h6 class="h6">Lair Actions</h6> -->
-<!--     <button -->
-<!--       type="button" -->
-<!--       class="btn text-success-500 border-none" -->
-<!--       onclick={(event) => monster.AddLairAction(event)}><CirclePlus /></button -->
-<!--     > -->
-<!--   </div> -->
-<!--   {#each monster.lairActions as lairAction} -->
-<!--     <div class="input-group grid-cols-16"> -->
-<!--       <!-- Name -->
-<!--       <Input -->
-<!--         label="Name" -->
-<!--         bind:value={lairAction.name} -->
-<!--         type="text" -->
-<!--         placeholder="Light Crossbow" -->
-<!--         labelSize={1} -->
-<!--         inputSize={14} -->
-<!--       /> -->
-<!---->
-<!--       <!-- Remove Lair Action -->
-<!--       <button -->
-<!--         type="button" -->
-<!--         class="btn preset-tonal text-error-300 col-span-1" -->
-<!--         onclick={(_) => monster.RemoveLairAction(lairAction)} -->
-<!--         ><CircleX /></button -->
-<!--       > -->
-<!---->
-<!--       <hr class="hr col-span-16" /> -->
-<!---->
-<!--       <!-- Description -->
-<!--       <div class="ig-cell preset-tonal col-span-16 h-8">Description</div> -->
-<!--       <hr class="hr col-span-16" /> -->
-<!--       <textarea -->
-<!--         bind:value={lairAction.description} -->
-<!--         class="ig-input text-area col-span-16" -->
-<!--         rows="4" -->
-<!--         placeholder="The captain adds 2 to its AC against one melee attack that would hit it. To do so, the captain must see the attacker and be wielding a melee weapon." -->
-<!--       ></textarea> -->
-<!--     </div> -->
-<!--   {/each} -->
-<!---->
 <!--   <!-- Spellcasting -->
 <!--   <hr class="hr" /> -->
 <!--   <h2 class="h2">Spellcasting</h2> -->
