@@ -8,10 +8,6 @@
   import Navbar from "$components/Navbar.svelte";
   import type { Component } from "svelte";
 
-  import ModeToggle from "$components/ModeToggle.svelte";
-
-  import { ModeWatcher } from "mode-watcher";
-
   const pages: Component[] = [Monsters, Encounters, Settings];
   let currentPage: number = $state(0);
   const PageComponent = $derived(pages[currentPage] || NotFound);
@@ -22,8 +18,6 @@
   items={["Monsters", "Encounters", "Spells", "Settings"]}
 />
 <main>
-  <ModeWatcher />
-  <ModeToggle />
   <div class="mx-auto w-[1200px] py-2">
     <PageComponent />
   </div>

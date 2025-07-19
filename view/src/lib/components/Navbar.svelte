@@ -1,4 +1,7 @@
 <script lang="ts">
+  import { ModeWatcher } from "mode-watcher";
+  import ModeToggle from "$components/ModeToggle.svelte";
+
   let {
     currentItem = $bindable(),
     items,
@@ -13,30 +16,19 @@
   }
 </script>
 
-<div class="preset-filled-surface-100-900 flex justify-center">
-  <div class="grid grid-cols-4 gap-4 py-2 h-[50px] w-[1200px]">
+<ModeWatcher />
+<div class="relative w-full">
+  <div class="mx-auto grid h-[50px] w-[1200px] grid-cols-4 gap-4 py-2">
     {#each items as item, index}
       <button
         type="button"
-        class="btn text-center col-span-1 {index === currentItem
-          ? 'preset-glass-secondary preset-outlined'
-          : 'hover:preset-filled-surface-100-900'}"
+        class="btn col-span-1 text-center"
         onclick={(e) => updateItem(e, index)}>{item}</button
       >
     {/each}
   </div>
+  <div class="absolute top-1/2 right-4 -translate-y-1/2">
+    <ModeToggle />
+  </div>
 </div>
 <hr class="hr" />
-
-<style>
-  .preset-glass-secondary {
-    background: color-mix(
-      in oklab,
-      var(--color-secondary-500) 40%,
-      transparent
-    );
-    box-shadow: 0 0px 30px
-      color-mix(in oklab, var(--color-secondary-500) 50%, transparent) inset;
-    backdrop-filter: blur(16px);
-  }
-</style>
