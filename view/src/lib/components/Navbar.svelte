@@ -1,41 +1,42 @@
 <script lang="ts">
-  import { Navigation } from "@skeletonlabs/skeleton-svelte";
-  import Swords from "@lucide/svelte/icons/swords";
-  import Settings from "@lucide/svelte/icons/settings";
-  import Panda from "@lucide/svelte/icons/panda";
-  import type { Component } from "svelte";
+  let {
+    currentItem = $bindable(),
+    items,
+  }: {
+    currentItem: number;
+    items: string[];
+  } = $props();
 
-  let { item = $bindable() }: { item: number } = $props();
-
-  const navbarItems: { title: string; icon: Component }[] = [
-    {
-      title: "Monsters",
-      icon: Panda,
-    },
-    {
-      title: "Encounters",
-      icon: Swords,
-    },
-    {
-      title: "Settings",
-      icon: Settings,
-    },
-  ];
-
-  function updateItem(id: string) {
-    item = navbarItems.findIndex((navItem) => navItem.title === id);
+  function updateItem(event: MouseEvent, index: number) {
+    event.preventDefault();
+    currentItem = index;
   }
 </script>
 
 <div class="preset-filled-surface-100-900 flex justify-center">
-  <div class="card flex gap-3 p-3 h-[100px] w-[1200px]">
-    {#each navbarItems as navbarItem, index}
-      <Navigation.Tile
-        label={navbarItem.title}
-        selected={item === index}
-        id={navbarItem.title}
-        onclick={updateItem}><navbarItem.icon size={48} /></Navigation.Tile
+  <div class="grid grid-cols-4 gap-4 py-2 h-[50px] w-[1200px]">
+    {#each items as item, index}
+      <button
+        type="button"
+        class="btn text-center col-span-1 {index === currentItem
+          ? 'preset-glass-secondary preset-outlined'
+          : 'hover:preset-filled-surface-100-900'}"
+        onclick={(e) => updateItem(e, index)}>{item}</button
       >
     {/each}
   </div>
 </div>
+<hr class="hr" />
+
+<style>
+  .preset-glass-secondary {
+    background: color-mix(
+      in oklab,
+      var(--color-secondary-500) 40%,
+      transparent
+    );
+    box-shadow: 0 0px 30px
+      color-mix(in oklab, var(--color-secondary-500) 50%, transparent) inset;
+    backdrop-filter: blur(16px);
+  }
+</style>

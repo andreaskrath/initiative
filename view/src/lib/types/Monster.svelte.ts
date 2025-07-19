@@ -1,91 +1,113 @@
-import { Alignment } from "./Alignment";
-import { Attribute, Attributes } from "./Attribute";
-import { Condition, Conditions } from "./Condition";
-import { DamageType, DamageTypes } from "./DamageType";
-import { Language, Languages } from "./Language";
-import { MonsterType } from "./MonsterType";
-import { Recharge } from "./Recharge";
-import { Sight } from "./Sight";
-import { Size } from "./Size";
-import { Skill, Skills } from "./Skill";
+import { Alignment } from "$types/Alignment";
+import { Attribute, Attributes } from "$types/Attribute";
+import { Condition, Conditions } from "$types/Condition";
+import { DamageType, DamageTypes } from "$types/DamageType";
+import { Language, Languages } from "$types/Language";
+import { MonsterType } from "$types/MonsterType";
+import { Recharge } from "$types/Recharge";
+import { Sight } from "$types/Sight";
+import { Size } from "$types/Size";
+import { Skill, Skills } from "$types/Skill";
+import { RecordFactory } from "$utils/factories";
+import { Movement } from "$types/Movement";
+
+type NamedDescription = { name?: string; description?: string };
+
+type Vision = { type?: Sight; range?: number };
+
+type Speed = { type?: Movement; distance?: number };
+
+type MeleeAttack = {
+  name?: string;
+  hitBonus?: number;
+  reach?: number;
+  oneHandedAttack?: string;
+  twoHandedAttack?: string;
+  damageType?: DamageType;
+};
+
+type RangedAttack = {
+  name?: string;
+  hitBonus?: number;
+  normalRange?: number;
+  longRange?: number;
+  attack?: string;
+  damageType?: DamageType;
+};
+
+type RechargeAction = {
+  name?: string;
+  rechargeDice?: Recharge;
+  description?: string;
+};
+
+type LegendaryAction = {
+  name?: string;
+  cost?: number;
+  description?: string;
+};
 
 export class Monster {
-  name: string | null;
-  challengeRating: number | null;
-  xp: number | null;
-  proficiencyBonus: number | null;
-  size: Size | null;
-  monsterType: MonsterType | null;
-  species: string | null;
-  alignment: Alignment | null;
-  attributes: Record<Attribute, number | null>;
-  hitPoints: number | null;
-  rollableHitPoints: string | null;
-  armorClass: number | null;
-  armorType: string | null;
-  savingThrows: Record<Attribute, number | null>;
+  name?: string;
+  challengeRating?: number;
+  xp?: number;
+  proficiencyBonus?: number;
+  size?: Size;
+  monsterType?: MonsterType;
+  species?: string;
+  alignment?: Alignment;
+  attributes: Record<Attribute, number | undefined>;
+  hitPoints?: number;
+  rollableHitPoints?: string;
+  armorClass?: number;
+  armorType?: string;
+  savingThrows: Record<Attribute, number | undefined>;
   damageResistances: Record<DamageType, boolean>;
   damageImmunities: Record<DamageType, boolean>;
   conditionImmunities: Record<Condition, boolean>;
-  visions: { type: Sight; range: number | null }[];
+  visions: Vision[];
+  passivePerception?: number;
+  speeds: Speed[];
   languages: Record<Language, boolean>;
-  skills: Record<Skill, number | null>;
-  traits: { name: string | null; description: string | null }[];
-  regularActions: { name: string | null; description: string | null }[];
-  meleeAttackActions: {
-    name: string | null;
-    hitBonus: number | null;
-    reach: number | null;
-    oneHandedAttack: string | null;
-    twoHandedAttack: string | null;
-    damageType: DamageType | null;
-  }[];
-  rangedAttackActions: {
-    name: string | null;
-    hitBonus: number | null;
-    normalRange: number | null;
-    longRange: number | null;
-    attack: string | null;
-    damageType: DamageType | null;
-  }[];
-  rechargeActions: {
-    name: string | null;
-    rechargeDice: Recharge | null;
-    description: string | null;
-  }[];
-  bonusActions: {
-    name: string | null;
-    description: string | null;
-  }[];
-  reactions: {
-    name: string | null;
-    description: string | null;
-  }[];
-
-  // <!-- Legendary Actions -->
-  // <!-- Lair Actions -->
+  skills: Record<Skill, number | undefined>;
+  traits: NamedDescription[];
+  regularActions: NamedDescription[];
+  meleeAttackActions: MeleeAttack[];
+  rangedAttackActions: RangedAttack[];
+  rechargeActions: RechargeAction[];
+  bonusActions: NamedDescription[];
+  reactions: NamedDescription[];
+  availableLegendaryActionsPerTurn?: number;
+  legendaryActions: LegendaryAction[];
+  lairActions: NamedDescription[];
+  spellcastingLevel?: number;
+  spellcastingAttribute?: Attribute;
+  spellcastingDC?: number;
+  spellcastingAttackBonus?: number;
 
   constructor() {
-    this.name = $state(null);
-    this.challengeRating = $state(null);
-    this.xp = $state(null);
-    this.proficiencyBonus = $state(null);
-    this.size = $state(null);
-    this.monsterType = $state(null);
-    this.species = $state(null);
-    this.alignment = $state(null);
-    this.attributes = $state(Monster.AttributesFactory());
-    this.hitPoints = $state(null);
-    this.rollableHitPoints = $state(null);
-    this.armorClass = $state(null);
-    this.armorType = $state(null);
-    this.savingThrows = $state(Monster.AttributesFactory());
-    this.damageResistances = $state(Monster.DamageTypesFactory());
-    this.damageImmunities = $state(Monster.DamageTypesFactory());
-    this.conditionImmunities = $state(Monster.ConditionsFactory());
+    this.name = $state(undefined);
+    this.challengeRating = $state(undefined);
+    this.xp = $state(undefined);
+    this.proficiencyBonus = $state(undefined);
+    this.size = $state(undefined);
+    this.monsterType = $state(undefined);
+    this.species = $state(undefined);
+    this.alignment = $state(undefined);
+    this.attributes = $state(RecordFactory(Attributes, undefined));
+    this.hitPoints = $state(undefined);
+    this.rollableHitPoints = $state(undefined);
+    this.armorClass = $state(undefined);
+    this.armorType = $state(undefined);
+    this.savingThrows = $state(RecordFactory(Attributes, undefined));
+    this.damageResistances = $state(RecordFactory(DamageTypes, false));
+    this.damageImmunities = $state(RecordFactory(DamageTypes, false));
+    this.conditionImmunities = $state(RecordFactory(Conditions, false));
     this.visions = $state([]);
-    this.languages = $state(Monster.LanguagesFactory());
-    this.skills = $state(Monster.SkillsFactory());
+    this.passivePerception = $state(undefined);
+    this.speeds = $state([]);
+    this.languages = $state(RecordFactory(Languages, false));
+    this.skills = $state(RecordFactory(Skills, undefined));
     this.traits = $state([]);
     this.regularActions = $state([]);
     this.meleeAttackActions = $state([]);
@@ -93,15 +115,22 @@ export class Monster {
     this.rechargeActions = $state([]);
     this.bonusActions = $state([]);
     this.reactions = $state([]);
+    this.availableLegendaryActionsPerTurn = $state(undefined);
+    this.legendaryActions = $state([]);
+    this.lairActions = $state([]);
+    this.spellcastingLevel = $state(undefined);
+    this.spellcastingAttribute = $state(undefined);
+    this.spellcastingDC = $state(undefined);
+    this.spellcastingAttackBonus = $state(undefined);
   }
 
   public AddVision(event: MouseEvent) {
-    this.visions = [...this.visions, { type: Sight.Darkvision, range: null }];
+    this.visions = [...this.visions, { type: undefined, range: undefined }];
 
     event.preventDefault();
   }
 
-  public RemoveVision(visionToRemove: { type: Sight; range: number | null }) {
+  public RemoveVision(visionToRemove: Vision) {
     this.visions = this.visions.filter((vision) => vision !== visionToRemove);
 
     return function (event: MouseEvent) {
@@ -109,16 +138,27 @@ export class Monster {
     };
   }
 
-  public AddTrait(event: MouseEvent) {
-    this.traits = [...this.traits, { name: null, description: null }];
+  public AddSpeed(event: MouseEvent) {
+    this.speeds = [...this.speeds, { type: undefined, distance: undefined }];
 
     event.preventDefault();
   }
 
-  public RemoveTrait(traitToRemove: {
-    name: string | null;
-    description: string | null;
-  }) {
+  public RemoveSpeed(speedToRemove: Speed) {
+    this.speeds = this.speeds.filter((speed) => speed !== speedToRemove);
+
+    return function (event: MouseEvent) {
+      event.preventDefault();
+    };
+  }
+
+  public AddTrait(event: MouseEvent) {
+    this.traits = [...this.traits, { name: undefined, description: undefined }];
+
+    event.preventDefault();
+  }
+
+  public RemoveTrait(traitToRemove: NamedDescription) {
     this.traits = this.traits.filter((trait) => trait !== traitToRemove);
     return function (event: MouseEvent) {
       event.preventDefault();
@@ -128,16 +168,13 @@ export class Monster {
   public AddRegularAction(event: MouseEvent) {
     this.regularActions = [
       ...this.regularActions,
-      { name: null, description: null },
+      { name: undefined, description: undefined },
     ];
 
     event.preventDefault();
   }
 
-  public RemoveRegularAction(regularActionToRemove: {
-    name: string | null;
-    description: string | null;
-  }) {
+  public RemoveRegularAction(regularActionToRemove: NamedDescription) {
     this.regularActions = this.regularActions.filter(
       (regularAction) => regularAction !== regularActionToRemove,
     );
@@ -151,26 +188,19 @@ export class Monster {
     this.meleeAttackActions = [
       ...this.meleeAttackActions,
       {
-        name: null,
-        hitBonus: null,
-        reach: null,
-        oneHandedAttack: null,
-        twoHandedAttack: null,
-        damageType: null,
+        name: undefined,
+        hitBonus: undefined,
+        reach: undefined,
+        oneHandedAttack: undefined,
+        twoHandedAttack: undefined,
+        damageType: undefined,
       },
     ];
 
     event.preventDefault();
   }
 
-  public RemoveMeleeAttackAction(meleeAttackActionToRemove: {
-    name: string | null;
-    hitBonus: number | null;
-    reach: number | null;
-    oneHandedAttack: string | null;
-    twoHandedAttack: string | null;
-    damageType: DamageType | null;
-  }) {
+  public RemoveMeleeAttackAction(meleeAttackActionToRemove: MeleeAttack) {
     this.meleeAttackActions = this.meleeAttackActions.filter(
       (meleeAttackAction) => meleeAttackAction !== meleeAttackActionToRemove,
     );
@@ -183,26 +213,19 @@ export class Monster {
     this.rangedAttackActions = [
       ...this.rangedAttackActions,
       {
-        name: null,
-        hitBonus: null,
-        normalRange: null,
-        longRange: null,
-        attack: null,
-        damageType: null,
+        name: undefined,
+        hitBonus: undefined,
+        normalRange: undefined,
+        longRange: undefined,
+        attack: undefined,
+        damageType: undefined,
       },
     ];
 
     event.preventDefault();
   }
 
-  public RemoveRangedAttackAction(rangedAttackActionToRemove: {
-    name: string | null;
-    hitBonus: number | null;
-    normalRange: number | null;
-    longRange: number | null;
-    attack: string | null;
-    damageType: DamageType | null;
-  }) {
+  public RemoveRangedAttackAction(rangedAttackActionToRemove: RangedAttack) {
     this.rangedAttackActions = this.rangedAttackActions.filter(
       (rangedAttackAction) => rangedAttackAction !== rangedAttackActionToRemove,
     );
@@ -215,20 +238,16 @@ export class Monster {
     this.rechargeActions = [
       ...this.rechargeActions,
       {
-        name: null,
-        rechargeDice: null,
-        description: null,
+        name: undefined,
+        rechargeDice: undefined,
+        description: undefined,
       },
     ];
 
     event.preventDefault();
   }
 
-  public RemoveRechargeAction(rechargeActionToRemove: {
-    name: string | null;
-    rechargeDice: Recharge | null;
-    description: string | null;
-  }) {
+  public RemoveRechargeAction(rechargeActionToRemove: RechargeAction) {
     this.rechargeActions = this.rechargeActions.filter(
       (rechargeAction) => rechargeAction !== rechargeActionToRemove,
     );
@@ -240,16 +259,13 @@ export class Monster {
   public AddBonusAction(event: MouseEvent) {
     this.bonusActions = [
       ...this.bonusActions,
-      { name: null, description: null },
+      { name: undefined, description: undefined },
     ];
 
     event.preventDefault();
   }
 
-  public RemoveBonusAction(bonusActionToRemove: {
-    name: string | null;
-    description: string | null;
-  }) {
+  public RemoveBonusAction(bonusActionToRemove: NamedDescription) {
     this.bonusActions = this.bonusActions.filter(
       (bonusAction) => bonusAction !== bonusActionToRemove,
     );
@@ -260,15 +276,15 @@ export class Monster {
   }
 
   public AddReaction(event: MouseEvent) {
-    this.reactions = [...this.reactions, { name: null, description: null }];
+    this.reactions = [
+      ...this.reactions,
+      { name: undefined, description: undefined },
+    ];
 
     event.preventDefault();
   }
 
-  public RemoveReaction(reactionToRemove: {
-    name: string | null;
-    description: string | null;
-  }) {
+  public RemoveReaction(reactionToRemove: NamedDescription) {
     this.reactions = this.reactions.filter(
       (reaction) => reaction !== reactionToRemove,
     );
@@ -278,53 +294,46 @@ export class Monster {
     };
   }
 
-  private static AttributesFactory() {
-    return Attributes.reduce(
-      (record, attribute) => {
-        record[attribute] = null;
-        return record;
-      },
-      {} as Record<Attribute, number | null>,
-    );
+  public AddLegendaryAction(event: MouseEvent) {
+    this.legendaryActions = [
+      ...this.legendaryActions,
+      { name: undefined, cost: undefined, description: undefined },
+    ];
+
+    event.preventDefault();
   }
 
-  private static DamageTypesFactory() {
-    return DamageTypes.reduce(
-      (record, damageType) => {
-        record[damageType] = false;
-        return record;
-      },
-      {} as Record<DamageType, boolean>,
+  public RemoveLegendaryAction(legendaryActionToRemove: LegendaryAction) {
+    this.legendaryActions = this.legendaryActions.filter(
+      (legendaryAction) => legendaryAction !== legendaryActionToRemove,
     );
+
+    // Clear available legendary actions if all legendary actions are removed
+    if (this.legendaryActions.length === 0) {
+      this.availableLegendaryActionsPerTurn = undefined;
+    }
+
+    return function (event: MouseEvent) {
+      event.preventDefault();
+    };
   }
 
-  private static ConditionsFactory() {
-    return Conditions.reduce(
-      (record, condition) => {
-        record[condition] = false;
-        return record;
-      },
-      {} as Record<Condition, boolean>,
-    );
+  public AddLairAction(event: MouseEvent) {
+    this.lairActions = [
+      ...this.lairActions,
+      { name: undefined, description: undefined },
+    ];
+
+    event.preventDefault();
   }
 
-  private static LanguagesFactory() {
-    return Languages.reduce(
-      (record, language) => {
-        record[language] = false;
-        return record;
-      },
-      {} as Record<Language, boolean>,
+  public RemoveLairAction(lairActionToRemove: NamedDescription) {
+    this.lairActions = this.lairActions.filter(
+      (lairAction) => lairAction !== lairActionToRemove,
     );
-  }
 
-  private static SkillsFactory() {
-    return Skills.reduce(
-      (record, skill) => {
-        record[skill] = null;
-        return record;
-      },
-      {} as Record<Skill, number | null>,
-    );
+    return function (event: MouseEvent) {
+      event.preventDefault();
+    };
   }
 }

@@ -1,11 +1,11 @@
 <script lang="ts">
   import Button from "$components/Button.svelte";
-  import CreateMonster from "./CreateMonster.svelte";
+  import CreateSpell from "./CreateSpell.svelte";
   import NotFound from "../NotFound.svelte";
-  import ViewMonster from "./ViewMonster.svelte";
+  import ViewSpell from "./ViewSpell.svelte";
   import type { Component } from "svelte";
 
-  const pages: Component[] = [ViewMonster, CreateMonster];
+  const pages: Component[] = [ViewSpell, CreateSpell];
   let currentPage: number = $state(0);
   const PageComponent = $derived(pages[currentPage] || NotFound);
 
@@ -22,6 +22,6 @@
 
   <!-- Only render "Create New Monster" button if not already on that page -->
   {#if currentPage !== 1}
-    <Button title="Create New Monster" onClick={updatePage(1)} />
+    <Button title="Create New Spell" onClick={updatePage(1)} />
   {/if}
 </div>
