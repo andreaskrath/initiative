@@ -132,7 +132,13 @@ input[type="number"] {
   -moz-appearance: textfield;
 }
 
-/* HTML element takes full width - fixes issue with element shifting based on page length cause of scrollbar*/
 html {
     width: 100vw;
+  overflow: scroll;
+  overflow-x: hidden;
+}
+
+::-webkit-scrollbar {
+  width: 0;
+  background: transparent;
 }
