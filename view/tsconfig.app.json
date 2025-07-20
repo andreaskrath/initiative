@@ -21,7 +21,8 @@
       "$lib/*": ["./src/lib/*"],
       "$components/*": ["./src/lib/components/*"],
       "$types/*": ["./src/lib/types/*"],
-      "$utils/*": ["./src/lib/utils/*"]
+      "$utils/*": ["./src/lib/utils/*"],
+      "$routes/*": ["./src/lib/routes/*"]
     }
   },
   "include": ["src/**/*.ts", "src/**/*.js", "src/**/*.svelte"]
