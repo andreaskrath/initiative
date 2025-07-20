@@ -1,24 +1,72 @@
 <script lang="ts">
   import "./app.css";
-  import Monsters from "$lib/monsters/Monsters.svelte";
-  import Encounters from "$lib/encounters/Encounters.svelte";
-  import NotFound from "$lib/NotFound.svelte";
-  import Settings from "$lib/settings/Settings.svelte";
-  // import Spells from "$lib/spells/Spells.svelte";
-  import Navbar from "$components/Navbar.svelte";
-  import type { Component } from "svelte";
 
-  const pages: Component[] = [Monsters, Encounters, Settings];
-  let currentPage: number = $state(0);
-  const PageComponent = $derived(pages[currentPage] || NotFound);
+  import {
+    Router,
+    type RouteConfig,
+    StatusCode,
+    type RouteResult,
+  } from "@mateothegreat/svelte5-router";
+
+  import Home from "$routes/Home.svelte";
+  import NotFound from "$routes/NotFound.svelte";
+  import Settings from "$routes/Settings.svelte";
+  import MonsterList from "$routes/MonsterList.svelte";
+  import MonsterBuilder from "$routes/MonsterBuilder.svelte";
+  import EncounterList from "$routes/EncounterList.svelte";
+  import EncounterBuilder from "$routes/EncounterBuilder.svelte";
+  import SpellList from "$routes/SpellList.svelte";
+  import SpellBuilder from "$routes/SpellBuilder.svelte";
+
+  import Navbar from "$components/Navbar.svelte";
+
+  const routes: RouteConfig[] = [
+    {
+      component: Home,
+    },
+    {
+      path: "monsters",
+      component: MonsterList,
+    },
+    {
+      path: "monsters/create",
+      component: MonsterBuilder,
+    },
+    {
+      path: "encounters",
+      component: EncounterList,
+    },
+    {
+      path: "encounters/create",
+      component: EncounterBuilder,
+    },
+    {
+      path: "spells",
+      component: SpellList,
+    },
+    {
+      path: "spells/create",
+      component: SpellBuilder,
+    },
+    {
+      path: "settings",
+      component: Settings,
+    },
+  ];
 </script>
 
-<Navbar
-  bind:currentItem={currentPage}
-  items={["Monsters", "Encounters", "Spells", "Settings"]}
-/>
+<Navbar />
 <main>
   <div class="mx-auto w-[1200px] py-2">
-    <PageComponent />
+    <Router
+      {routes}
+      statuses={{
+        [StatusCode.NotFound]: (_: RouteResult) => {
+          return {
+            component: NotFound,
+          };
+        },
+      }}
+    />
   </div>
 </main>
