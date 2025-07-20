@@ -1,4 +1,5 @@
 <script lang="ts">
+  import Route from "$components/Route.svelte";
   import { ModeWatcher } from "mode-watcher";
   import ModeToggle from "$components/ModeToggle.svelte";
   import * as NavigationMenu from "$lib/components/ui/navigation-menu/index.js";
@@ -6,25 +7,21 @@
   import type { HTMLAttributes } from "svelte/elements";
 
   type ListItemProps = HTMLAttributes<HTMLAnchorElement> & {
-    title: string;
+    label: string;
     href: string;
     content: string;
   };
 </script>
 
-{#snippet ListItem({ title, content, href }: ListItemProps)}
+{#snippet ListItem({ label, content, href }: ListItemProps)}
   <li>
     <NavigationMenu.Link>
       {#snippet child()}
-        <a
-          {href}
-          class="hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground block space-y-1 rounded-md p-3 leading-none no-underline transition-colors outline-none select-none"
-        >
-          <div class="text-sm leading-none font-medium">{title}</div>
+        <Route {href} {label}>
           <p class="text-muted-foreground line-clamp-2 text-sm leading-snug">
             {content}
           </p>
-        </a>
+        </Route>
       {/snippet}
     </NavigationMenu.Link>
   </li>
@@ -38,7 +35,7 @@
       <NavigationMenu.Item>
         <NavigationMenu.Link>
           {#snippet child()}
-            <a href="/" class={navigationMenuTriggerStyle()}>Home</a>
+            <Route href="/" label="Home" class={navigationMenuTriggerStyle()} />
           {/snippet}
         </NavigationMenu.Link>
       </NavigationMenu.Item>
@@ -50,12 +47,12 @@
           <ul class="w-[400px] p-2">
             {@render ListItem({
               href: "/monsters",
-              title: "Monster List",
+              label: "Monster List",
               content: "A list of existing monsters.",
             })}
             {@render ListItem({
               href: "/monsters/create",
-              title: "Monster Builder",
+              label: "Monster Builder",
               content: "Build a new monster.",
             })}
           </ul>
@@ -69,12 +66,12 @@
           <ul class="w-[400px] p-2">
             {@render ListItem({
               href: "/encounters",
-              title: "Encounter List",
+              label: "Encounter List",
               content: "A list of existing encounters.",
             })}
             {@render ListItem({
               href: "/encounters/create",
-              title: "Encounter Builder",
+              label: "Encounter Builder",
               content: "Build a new encounter.",
             })}
           </ul>
@@ -88,12 +85,12 @@
           <ul class="w-[400px] p-2">
             {@render ListItem({
               href: "/spells",
-              title: "Spell List",
+              label: "Spell List",
               content: "A list of existing spells.",
             })}
             {@render ListItem({
               href: "/spells/create",
-              title: "Spell Builder",
+              label: "Spell Builder",
               content: "Build a new spell.",
             })}
           </ul>
@@ -104,8 +101,11 @@
       <NavigationMenu.Item>
         <NavigationMenu.Link>
           {#snippet child()}
-            <a href="/settings" class={navigationMenuTriggerStyle()}>Settings</a
-            >
+            <Route
+              href="/settings"
+              label="Settings"
+              class={navigationMenuTriggerStyle()}
+            />
           {/snippet}
         </NavigationMenu.Link>
       </NavigationMenu.Item>
