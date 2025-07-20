@@ -32,6 +32,7 @@
     "vite": "^6.2.0"
   },
   "dependencies": {
+    "@mateothegreat/svelte5-router": "^2.15.3",
     "@tailwindcss/vite": "^4.1.11",
     "mode-watcher": "^1.1.0",
     "tailwindcss": "^4.1.11"
