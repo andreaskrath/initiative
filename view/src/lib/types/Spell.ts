@@ -3,7 +3,7 @@ import { SpellLevel } from "$types/SpellLevel";
 import { Class, SpellcastingClasses } from "$types/Class";
 import { RecordFactory } from "$utils/factories";
 
-export class Spell {
+export type Spell = {
   name: string | null;
   school: MagicSchool | null;
   level: SpellLevel | null;
@@ -19,22 +19,24 @@ export class Spell {
   area: string | null;
   shape: string | null;
   classes: Record<Class, boolean>;
+};
 
-  constructor() {
-    this.name = $state(null);
-    this.school = $state(null);
-    this.level = $state(null);
-    this.castingTime = $state(null);
-    this.verbal = $state(false);
-    this.somatic = $state(false);
-    this.material = $state(null);
-    this.materialConsumed = $state(false);
-    this.ritual = $state(false);
-    this.concentration = $state(false);
-    this.duration = $state(null);
-    this.range = $state(null);
-    this.area = $state(null);
-    this.shape = $state(null);
-    this.classes = $state(RecordFactory(SpellcastingClasses, false));
-  }
-}
+export const SpellActions = {
+  EmptySpell: (): Spell => ({
+    name: null,
+    school: null,
+    level: null,
+    castingTime: null,
+    verbal: false,
+    somatic: false,
+    material: null,
+    materialConsumed: false,
+    ritual: false,
+    concentration: false,
+    duration: null,
+    range: null,
+    area: null,
+    shape: null,
+    classes: RecordFactory(SpellcastingClasses, false),
+  }),
+};
