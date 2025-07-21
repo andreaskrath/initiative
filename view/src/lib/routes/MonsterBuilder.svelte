@@ -15,7 +15,7 @@
   import { Sights } from "$types/Sight";
   import { Sizes } from "$types/Size";
   import { Skills } from "$types/Skill";
-  import { MonsterActions } from "$types/Monster.svelte";
+  import { MonsterActions } from "$types/Monster";
   import { Recharges } from "$types/Recharge";
 
   import Input from "$components/Input.svelte";
