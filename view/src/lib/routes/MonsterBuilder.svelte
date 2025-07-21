@@ -10,20 +10,21 @@
   import { Conditions } from "$types/Condition";
   import { DamageTypes } from "$types/DamageType";
   import { Languages } from "$types/Language";
+  import { MonsterActions } from "$types/Monster";
   import { MonsterTypes } from "$types/MonsterType";
   import { Movements } from "$types/Movement";
+  import { Recharges } from "$types/Recharge";
   import { Sights } from "$types/Sight";
   import { Sizes } from "$types/Size";
   import { Skills } from "$types/Skill";
-  import { MonsterActions } from "$types/Monster";
-  import { Recharges } from "$types/Recharge";
 
-  import Input from "$components/Input.svelte";
-  import Select from "$components/Select.svelte";
-  import Toggle from "$components/Toggle.svelte";
-  import TextArea from "$components/TextArea.svelte";
   import Container from "$components/Container.svelte";
+  import Input from "$components/Input.svelte";
   import Label from "$components/Label.svelte";
+  import Select from "$components/Select.svelte";
+  import TextArea from "$components/TextArea.svelte";
+  import Title from "$lib/components/Title.svelte";
+  import Toggle from "$components/Toggle.svelte";
 
   let monster = $state(MonsterActions.EmptyMonster());
 
@@ -60,7 +61,7 @@
   }));
 </script>
 
-<Tabs.Root value="basic" class="mx-auto w-[1000px]">
+<Tabs.Root value="basic" class="mx-auto mt-5 w-[1000px]">
   <div class="flex w-full justify-center">
     <Tabs.List class="flex w-full justify-center">
       <Tabs.Trigger value="basic">Basic Information</Tabs.Trigger>
@@ -71,10 +72,8 @@
     </Tabs.List>
   </div>
 
-  <Tabs.Content value="basic" class="mt-5 space-y-5">
-    <h2 class="text-muted-foreground col-span-9 mb-2 ml-1 text-xl">
-      Basic Monster Information
-    </h2>
+  <Tabs.Content value="basic" class="space-y-5">
+    <Title variant="muted" class="col-span-9">Basic Monster Information</Title>
     <div class="grid grid-cols-16 space-y-5 gap-x-2">
       <!-- Name -->
       <Container class="col-span-7">
@@ -168,7 +167,7 @@
     </div>
 
     <!-- Attributes -->
-    <h2 class="text-muted-foreground mb-2 ml-1 text-xl">Attributes</h2>
+    <Title variant="muted">Attributes</Title>
     <div class="grid grid-cols-18 space-y-5 gap-x-2">
       <!-- Attributes -->
       {#each Attributes as attribute}
@@ -185,7 +184,7 @@
     </div>
 
     <!-- Skills -->
-    <h2 class="text-muted-foreground mb-2 ml-1 text-xl">Skills</h2>
+    <Title variant="muted">Skills</Title>
     <div class="grid grid-cols-18 space-y-5 gap-x-2">
       {#each Skills as skill}
         <Container class="col-span-3">
@@ -201,7 +200,7 @@
     </div>
 
     <!-- Languages -->
-    <h2 class="text-muted-foreground mb-2 ml-1 text-xl">Languages</h2>
+    <Title variant="muted">Languages</Title>
     <div class="grid grid-cols-4 space-y-2 gap-x-2">
       {#each Languages as language}
         <Container class="col-span-1">
@@ -216,7 +215,7 @@
       <!-- Vision -->
       <div class="col-span-1">
         <div class="grid grid-cols-10 space-y-5 gap-x-2">
-          <h2 class="text-muted-foreground mb-2 ml-1 text-xl">Vision</h2>
+          <Title variant="muted">Vision</Title>
           <!-- Add Vission Button -->
           <div class="col-span-1 col-start-10 flex justify-center">
             <Button
@@ -270,7 +269,7 @@
       <!-- Speed -->
       <div class="col-span-1">
         <div class="grid grid-cols-10 space-y-5 gap-x-2">
-          <h2 class="text-muted-foreground mb-2 ml-1 text-xl">Speed</h2>
+          <Title variant="muted">Speed</Title>
           <!-- Add Speed Button -->
           <div class="col-span-1 col-start-10 flex justify-center">
             <Button
@@ -323,9 +322,8 @@
     </div>
   </Tabs.Content>
   <Tabs.Content value="defensive" class="mt-5">
-    <h2 class="text-muted-foreground col-span-9 mb-2 ml-1 text-xl">
-      Basic Defensive Information
-    </h2>
+    <Title variant="muted" class="col-span-9">Basic Defensive Information</Title
+    >
     <div class="grid grid-cols-16 space-y-5 gap-x-2">
       <!-- Hit Points -->
       <Container class="col-span-3">
@@ -372,7 +370,7 @@
     </div>
 
     <!-- Saving Throws -->
-    <h2 class="text-muted-foreground mb-2 ml-1 text-xl">Saving Throws</h2>
+    <Title variant="muted">Saving Throws</Title>
     <div class="grid grid-cols-18 space-y-5 gap-x-2">
       <!-- Saving Throws -->
       {#each Attributes as attribute}
@@ -389,7 +387,7 @@
     </div>
 
     <!-- Damage Resistances -->
-    <h2 class="text-muted-foreground mb-2 ml-1 text-xl">Damage Resistances</h2>
+    <Title variant="muted">Damage Resistances</Title>
     <div class="grid grid-cols-4 space-y-2 gap-x-2">
       {#each DamageTypes as damageType}
         <Container class="col-span-1">
@@ -401,7 +399,7 @@
     </div>
 
     <!-- Damage Immunities -->
-    <h2 class="text-muted-foreground mb-2 ml-1 text-xl">Damage Immunities</h2>
+    <Title variant="muted">Damage Immunities</Title>
     <div class="grid grid-cols-4 space-y-2 gap-x-2">
       {#each DamageTypes as damageType}
         <Container class="col-span-1">
@@ -413,9 +411,7 @@
     </div>
 
     <!-- Condition Immunities -->
-    <h2 class="text-muted-foreground mb-2 ml-1 text-xl">
-      Condition Immunities
-    </h2>
+    <Title variant="muted">Condition Immunities</Title>
     <div class="grid grid-cols-5 space-y-2 gap-x-2">
       {#each Conditions as condition}
         <Container class="col-span-1">
@@ -429,7 +425,7 @@
   <Tabs.Content value="traits" class="mt-5">
     <div class="grid grid-cols-10 space-y-5 gap-x-2">
       <!-- Traits -->
-      <h2 class="text-muted-foreground col-span-9 mb-2 ml-1 text-xl">Traits</h2>
+      <Title variant="muted" class="col-span-9">Traits</Title>
       <!-- Add Trait Button -->
       <div class="col-span-1 col-start-10 flex justify-center">
         <Button
@@ -485,9 +481,7 @@
     class="mt-5 grid grid-cols-10 space-y-5 gap-x-2"
   >
     <!-- Regular Actions -->
-    <h2 class="text-muted-foreground col-span-9 mb-2 ml-1 text-xl">
-      Regular Actions
-    </h2>
+    <Title variant="muted" class="col-span-9">Regular Actions</Title>
     <!-- Add Regular Action Button -->
     <div class="col-span-1 col-start-10 flex justify-center">
       <Button
@@ -539,9 +533,7 @@
     {/each}
 
     <!-- Melee Attack Actions -->
-    <h2 class="text-muted-foreground col-span-9 mb-2 ml-1 text-xl">
-      Melee Attack Actions
-    </h2>
+    <Title variant="muted" class="col-span-9">Melee Attack Actions</Title>
     <!-- Add Melee Attack Action Button -->
     <div class="col-span-1 col-start-10 flex justify-center">
       <Button
@@ -638,9 +630,7 @@
     {/each}
 
     <!-- Ranged Attack Actions -->
-    <h2 class="text-muted-foreground col-span-9 mb-2 ml-1 text-xl">
-      Ranged Attack Actions
-    </h2>
+    <Title variant="muted" class="col-span-9">Ranged Attack Actions</Title>
     <!-- Add Ranged Attack Action Button -->
     <div class="col-span-1 col-start-10 flex justify-center">
       <Button
@@ -740,9 +730,7 @@
     {/each}
 
     <!-- Recharge Actions -->
-    <h2 class="text-muted-foreground col-span-9 mb-2 ml-1 text-xl">
-      Recharge Actions
-    </h2>
+    <Title variant="muted" class="col-span-9">Recharge Actions</Title>
     <!-- Add Recharge Action Button -->
     <div class="col-span-1 col-start-10 flex justify-center">
       <Button
@@ -804,9 +792,7 @@
     {/each}
 
     <!-- Bonus Actions -->
-    <h2 class="text-muted-foreground col-span-9 mb-2 ml-1 text-xl">
-      Bonus Actions
-    </h2>
+    <Title variant="muted" class="col-span-9">Bonus Actions</Title>
     <!-- Add Bonus Action Button -->
     <div class="col-span-1 col-start-10 flex justify-center">
       <Button
@@ -858,9 +844,7 @@
     {/each}
 
     <!-- Reactions -->
-    <h2 class="text-muted-foreground col-span-9 mb-2 ml-1 text-xl">
-      Reactions
-    </h2>
+    <Title variant="muted" class="col-span-9">Reactions</Title>
     <!-- Add Reaction Button -->
     <div class="col-span-1 col-start-10 flex justify-center">
       <Button
@@ -911,9 +895,7 @@
     {/each}
 
     <!-- Legendary Actions -->
-    <h2 class="text-muted-foreground col-span-9 mb-2 ml-1 text-xl">
-      Legendary Actions
-    </h2>
+    <Title variant="muted" class="col-span-9">Legendary Actions</Title>
     <!-- Add Legendary Action Button -->
     <div class="col-span-1 col-start-10 flex justify-center">
       <Button
@@ -989,9 +971,7 @@
     {/each}
 
     <!-- Lair Actions -->
-    <h2 class="text-muted-foreground col-span-9 mb-2 ml-1 text-xl">
-      Lair Actions
-    </h2>
+    <Title variant="muted" class="col-span-9">Lair Actions</Title>
     <!-- Add Lair Action Button -->
     <div class="col-span-1 col-start-10 flex justify-center">
       <Button
@@ -1042,9 +1022,7 @@
     {/each}
   </Tabs.Content>
   <Tabs.Content value="spellcasting" class="mt-5">
-    <h2 class="text-muted-foreground col-span-9 mb-2 ml-1 text-xl">
-      Spellcasting
-    </h2>
+    <Title variant="muted">Spellcasting</Title>
   </Tabs.Content>
 </Tabs.Root>
 
