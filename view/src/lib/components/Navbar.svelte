@@ -1,5 +1,5 @@
 <script lang="ts">
-  import Route from "$components/Route.svelte";
+  import Link from "$components/Link.svelte";
   import { ModeWatcher } from "mode-watcher";
   import ModeToggle from "$components/ModeToggle.svelte";
   import * as NavigationMenu from "$lib/components/ui/navigation-menu/index.js";
@@ -17,11 +17,11 @@
   <li>
     <NavigationMenu.Link>
       {#snippet child()}
-        <Route {href} {label}>
+        <Link {href} {label}>
           <p class="text-muted-foreground line-clamp-2 text-sm leading-snug">
             {content}
           </p>
-        </Route>
+        </Link>
       {/snippet}
     </NavigationMenu.Link>
   </li>
@@ -35,7 +35,7 @@
       <NavigationMenu.Item>
         <NavigationMenu.Link>
           {#snippet child()}
-            <Route href="/" label="Home" class={navigationMenuTriggerStyle()} />
+            <Link href="/" label="Home" class={navigationMenuTriggerStyle()} />
           {/snippet}
         </NavigationMenu.Link>
       </NavigationMenu.Item>
@@ -101,7 +101,7 @@
       <NavigationMenu.Item>
         <NavigationMenu.Link>
           {#snippet child()}
-            <Route
+            <Link
               href="/settings"
               label="Settings"
               class={navigationMenuTriggerStyle()}
