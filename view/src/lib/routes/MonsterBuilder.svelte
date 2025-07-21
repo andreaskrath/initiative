@@ -15,7 +15,7 @@
   import { Sights } from "$types/Sight";
   import { Sizes } from "$types/Size";
   import { Skills } from "$types/Skill";
-  import { Monster } from "$types/Monster.svelte";
+  import { MonsterActions } from "$types/Monster.svelte";
   import { Recharges } from "$types/Recharge";
 
   import Input from "$components/Input.svelte";
@@ -25,7 +25,7 @@
   import Container from "$components/Container.svelte";
   import Label from "$components/Label.svelte";
 
-  let monster = new Monster();
+  let monster = $state(MonsterActions.EmptyMonster());
 
   const sizes = Sizes.map((size) => ({
     value: size,
@@ -223,7 +223,7 @@
               variant="ghost"
               size="icon"
               class="text-green-300 hover:text-green-600"
-              onclick={(e) => monster.AddVision(e)}
+              onclick={(e) => MonsterActions.AddVision(monster, e)}
             >
               <CirclePlus />
             </Button>
@@ -258,7 +258,7 @@
                 variant="ghost"
                 size="icon"
                 class="mt-5 text-red-300 hover:text-red-600"
-                onclick={(_) => monster.RemoveVision(vision)}
+                onclick={(_) => MonsterActions.RemoveVision(monster, vision)}
               >
                 <CircleX />
               </Button>
@@ -277,7 +277,7 @@
               variant="ghost"
               size="icon"
               class="text-green-300 hover:text-green-600"
-              onclick={(e) => monster.AddSpeed(e)}
+              onclick={(e) => MonsterActions.AddSpeed(monster, e)}
             >
               <CirclePlus />
             </Button>
@@ -312,7 +312,7 @@
                 variant="ghost"
                 size="icon"
                 class="mt-5 text-red-300 hover:text-red-600"
-                onclick={(_) => monster.RemoveSpeed(speed)}
+                onclick={(_) => MonsterActions.RemoveSpeed(monster, speed)}
               >
                 <CircleX />
               </Button>
@@ -436,7 +436,7 @@
           variant="ghost"
           size="icon"
           class="w-full text-green-300 hover:text-green-600"
-          onclick={(e) => monster.AddTrait(e)}
+          onclick={(e) => MonsterActions.AddTrait(monster, e)}
         >
           <CirclePlus />
         </Button>
@@ -459,7 +459,7 @@
             variant="ghost"
             size="icon"
             class="mt-5 w-full text-red-300 hover:text-red-600"
-            onclick={(_) => monster.RemoveTrait(trait)}
+            onclick={(_) => MonsterActions.RemoveTrait(monster, trait)}
           >
             <CircleX />
           </Button>
@@ -494,7 +494,7 @@
         variant="ghost"
         size="icon"
         class="w-full text-green-300 hover:text-green-600"
-        onclick={(e) => monster.AddRegularAction(e)}
+        onclick={(e) => MonsterActions.AddRegularAction(monster, e)}
       >
         <CirclePlus />
       </Button>
@@ -517,7 +517,8 @@
           variant="ghost"
           size="icon"
           class="mt-5 w-full text-red-300 hover:text-red-600"
-          onclick={(_) => monster.RemoveRegularAction(regularAction)}
+          onclick={(_) =>
+            MonsterActions.RemoveRegularAction(monster, regularAction)}
         >
           <CircleX />
         </Button>
@@ -547,7 +548,7 @@
         variant="ghost"
         size="icon"
         class="w-full text-green-300 hover:text-green-600"
-        onclick={(e) => monster.AddMeleeAttackAction(e)}
+        onclick={(e) => MonsterActions.AddMeleeAttackAction(monster, e)}
       >
         <CirclePlus />
       </Button>
@@ -592,7 +593,8 @@
           variant="ghost"
           size="icon"
           class="mt-5 w-full text-red-300 hover:text-red-600"
-          onclick={(_) => monster.RemoveMeleeAttackAction(meleeAttackAction)}
+          onclick={(_) =>
+            MonsterActions.RemoveMeleeAttackAction(monster, meleeAttackAction)}
         >
           <CircleX />
         </Button>
@@ -645,7 +647,7 @@
         variant="ghost"
         size="icon"
         class="w-full text-green-300 hover:text-green-600"
-        onclick={(e) => monster.AddRangedAttackAction(e)}
+        onclick={(e) => MonsterActions.AddRangedAttackAction(monster, e)}
       >
         <CirclePlus />
       </Button>
@@ -690,7 +692,11 @@
           variant="ghost"
           size="icon"
           class="mt-5 w-full text-red-300 hover:text-red-600"
-          onclick={(_) => monster.RemoveRangedAttackAction(rangedAttackAction)}
+          onclick={(_) =>
+            MonsterActions.RemoveRangedAttackAction(
+              monster,
+              rangedAttackAction,
+            )}
         >
           <CircleX />
         </Button>
@@ -743,7 +749,7 @@
         variant="ghost"
         size="icon"
         class="w-full text-green-300 hover:text-green-600"
-        onclick={(e) => monster.AddRechargeAction(e)}
+        onclick={(e) => MonsterActions.AddRechargeAction(monster, e)}
       >
         <CirclePlus />
       </Button>
@@ -776,7 +782,8 @@
           variant="ghost"
           size="icon"
           class="mt-5 w-full text-red-300 hover:text-red-600"
-          onclick={(_) => monster.RemoveRechargeAction(rechargeAction)}
+          onclick={(_) =>
+            MonsterActions.RemoveRechargeAction(monster, rechargeAction)}
         >
           <CircleX />
         </Button>
@@ -806,7 +813,7 @@
         variant="ghost"
         size="icon"
         class="w-full text-green-300 hover:text-green-600"
-        onclick={(e) => monster.AddBonusAction(e)}
+        onclick={(e) => MonsterActions.AddBonusAction(monster, e)}
       >
         <CirclePlus />
       </Button>
@@ -829,7 +836,8 @@
           variant="ghost"
           size="icon"
           class="mt-5 w-full text-red-300 hover:text-red-600"
-          onclick={(_) => monster.RemoveBonusAction(bonusAction)}
+          onclick={(_) =>
+            MonsterActions.RemoveBonusAction(monster, bonusAction)}
         >
           <CircleX />
         </Button>
@@ -859,7 +867,7 @@
         variant="ghost"
         size="icon"
         class="w-full text-green-300 hover:text-green-600"
-        onclick={(e) => monster.AddReaction(e)}
+        onclick={(e) => MonsterActions.AddReaction(monster, e)}
       >
         <CirclePlus />
       </Button>
@@ -882,7 +890,7 @@
           variant="ghost"
           size="icon"
           class="mt-5 w-full text-red-300 hover:text-red-600"
-          onclick={(_) => monster.RemoveReaction(reaction)}
+          onclick={(_) => MonsterActions.RemoveReaction(monster, reaction)}
         >
           <CircleX />
         </Button>
@@ -912,7 +920,7 @@
         variant="ghost"
         size="icon"
         class="w-full text-green-300 hover:text-green-600"
-        onclick={(e) => monster.AddLegendaryAction(e)}
+        onclick={(e) => MonsterActions.AddLegendaryAction(monster, e)}
       >
         <CirclePlus />
       </Button>
@@ -959,7 +967,8 @@
           variant="ghost"
           size="icon"
           class="mt-5 w-full text-red-300 hover:text-red-600"
-          onclick={(_) => monster.RemoveLegendaryAction(legendaryAction)}
+          onclick={(_) =>
+            MonsterActions.RemoveLegendaryAction(monster, legendaryAction)}
         >
           <CircleX />
         </Button>
@@ -989,7 +998,7 @@
         variant="ghost"
         size="icon"
         class="w-full text-green-300 hover:text-green-600"
-        onclick={(e) => monster.AddLairAction(e)}
+        onclick={(e) => MonsterActions.AddLairAction(monster, e)}
       >
         <CirclePlus />
       </Button>
@@ -1012,7 +1021,7 @@
           variant="ghost"
           size="icon"
           class="mt-5 w-full text-red-300 hover:text-red-600"
-          onclick={(_) => monster.RemoveLairAction(lairAction)}
+          onclick={(_) => MonsterActions.RemoveLairAction(monster, lairAction)}
         >
           <CircleX />
         </Button>

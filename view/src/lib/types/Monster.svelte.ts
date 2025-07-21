@@ -47,7 +47,7 @@ type LegendaryAction = {
   description?: string;
 };
 
-export class Monster {
+export type Monster = {
   name?: string;
   challengeRating?: number;
   xp?: number;
@@ -84,109 +84,125 @@ export class Monster {
   spellcastingAttribute?: Attribute;
   spellcastingDC?: number;
   spellcastingAttackBonus?: number;
+};
 
-  constructor() {
-    this.name = $state(undefined);
-    this.challengeRating = $state(undefined);
-    this.xp = $state(undefined);
-    this.proficiencyBonus = $state(undefined);
-    this.size = $state(undefined);
-    this.monsterType = $state(undefined);
-    this.species = $state(undefined);
-    this.alignment = $state(undefined);
-    this.attributes = $state(RecordFactory(Attributes, undefined));
-    this.hitPoints = $state(undefined);
-    this.rollableHitPoints = $state(undefined);
-    this.armorClass = $state(undefined);
-    this.armorType = $state(undefined);
-    this.savingThrows = $state(RecordFactory(Attributes, undefined));
-    this.damageResistances = $state(RecordFactory(DamageTypes, false));
-    this.damageImmunities = $state(RecordFactory(DamageTypes, false));
-    this.conditionImmunities = $state(RecordFactory(Conditions, false));
-    this.visions = $state([]);
-    this.passivePerception = $state(undefined);
-    this.speeds = $state([]);
-    this.languages = $state(RecordFactory(Languages, false));
-    this.skills = $state(RecordFactory(Skills, undefined));
-    this.traits = $state([]);
-    this.regularActions = $state([]);
-    this.meleeAttackActions = $state([]);
-    this.rangedAttackActions = $state([]);
-    this.rechargeActions = $state([]);
-    this.bonusActions = $state([]);
-    this.reactions = $state([]);
-    this.availableLegendaryActionsPerTurn = $state(undefined);
-    this.legendaryActions = $state([]);
-    this.lairActions = $state([]);
-    this.spellcastingLevel = $state(undefined);
-    this.spellcastingAttribute = $state(undefined);
-    this.spellcastingDC = $state(undefined);
-    this.spellcastingAttackBonus = $state(undefined);
-  }
+export const MonsterActions = {
+  EmptyMonster: (): Monster => ({
+    name: undefined,
+    challengeRating: undefined,
+    xp: undefined,
+    proficiencyBonus: undefined,
+    size: undefined,
+    monsterType: undefined,
+    species: undefined,
+    alignment: undefined,
+    attributes: RecordFactory(Attributes, undefined),
+    hitPoints: undefined,
+    rollableHitPoints: undefined,
+    armorClass: undefined,
+    armorType: undefined,
+    savingThrows: RecordFactory(Attributes, undefined),
+    damageResistances: RecordFactory(DamageTypes, false),
+    damageImmunities: RecordFactory(DamageTypes, false),
+    conditionImmunities: RecordFactory(Conditions, false),
+    visions: [],
+    passivePerception: undefined,
+    speeds: [],
+    languages: RecordFactory(Languages, false),
+    skills: RecordFactory(Skills, undefined),
+    traits: [],
+    regularActions: [],
+    meleeAttackActions: [],
+    rangedAttackActions: [],
+    rechargeActions: [],
+    bonusActions: [],
+    reactions: [],
+    availableLegendaryActionsPerTurn: undefined,
+    legendaryActions: [],
+    lairActions: [],
+    spellcastingLevel: undefined,
+    spellcastingAttribute: undefined,
+    spellcastingDC: undefined,
+    spellcastingAttackBonus: undefined,
+  }),
 
-  public AddVision(event: MouseEvent) {
-    this.visions = [...this.visions, { type: undefined, range: undefined }];
+  AddVision: (monster: Monster, event: MouseEvent): void => {
+    monster.visions = [
+      ...monster.visions,
+      { type: undefined, range: undefined },
+    ];
 
     event.preventDefault();
-  }
+  },
 
-  public RemoveVision(visionToRemove: Vision) {
-    this.visions = this.visions.filter((vision) => vision !== visionToRemove);
+  RemoveVision: (monster: Monster, visionToRemove: Vision) => {
+    monster.visions = monster.visions.filter(
+      (vision) => vision !== visionToRemove,
+    );
 
     return function (event: MouseEvent) {
       event.preventDefault();
     };
-  }
+  },
 
-  public AddSpeed(event: MouseEvent) {
-    this.speeds = [...this.speeds, { type: undefined, distance: undefined }];
+  AddSpeed: (monster: Monster, event: MouseEvent) => {
+    monster.speeds = [
+      ...monster.speeds,
+      { type: undefined, distance: undefined },
+    ];
 
     event.preventDefault();
-  }
+  },
 
-  public RemoveSpeed(speedToRemove: Speed) {
-    this.speeds = this.speeds.filter((speed) => speed !== speedToRemove);
+  RemoveSpeed: (monster: Monster, speedToRemove: Speed) => {
+    monster.speeds = monster.speeds.filter((speed) => speed !== speedToRemove);
 
     return function (event: MouseEvent) {
       event.preventDefault();
     };
-  }
+  },
 
-  public AddTrait(event: MouseEvent) {
-    this.traits = [...this.traits, { name: undefined, description: undefined }];
-
-    event.preventDefault();
-  }
-
-  public RemoveTrait(traitToRemove: NamedDescription) {
-    this.traits = this.traits.filter((trait) => trait !== traitToRemove);
-    return function (event: MouseEvent) {
-      event.preventDefault();
-    };
-  }
-
-  public AddRegularAction(event: MouseEvent) {
-    this.regularActions = [
-      ...this.regularActions,
+  AddTrait: (monster: Monster, event: MouseEvent) => {
+    monster.traits = [
+      ...monster.traits,
       { name: undefined, description: undefined },
     ];
 
     event.preventDefault();
-  }
+  },
 
-  public RemoveRegularAction(regularActionToRemove: NamedDescription) {
-    this.regularActions = this.regularActions.filter(
+  RemoveTrait: (monster: Monster, traitToRemove: NamedDescription) => {
+    monster.traits = monster.traits.filter((trait) => trait !== traitToRemove);
+    return function (event: MouseEvent) {
+      event.preventDefault();
+    };
+  },
+
+  AddRegularAction: (monster: Monster, event: MouseEvent) => {
+    monster.regularActions = [
+      ...monster.regularActions,
+      { name: undefined, description: undefined },
+    ];
+
+    event.preventDefault();
+  },
+
+  RemoveRegularAction: (
+    monster: Monster,
+    regularActionToRemove: NamedDescription,
+  ) => {
+    monster.regularActions = monster.regularActions.filter(
       (regularAction) => regularAction !== regularActionToRemove,
     );
 
     return function (event: MouseEvent) {
       event.preventDefault();
     };
-  }
+  },
 
-  public AddMeleeAttackAction(event: MouseEvent) {
-    this.meleeAttackActions = [
-      ...this.meleeAttackActions,
+  AddMeleeAttackAction: (monster: Monster, event: MouseEvent) => {
+    monster.meleeAttackActions = [
+      ...monster.meleeAttackActions,
       {
         name: undefined,
         hitBonus: undefined,
@@ -198,20 +214,23 @@ export class Monster {
     ];
 
     event.preventDefault();
-  }
+  },
 
-  public RemoveMeleeAttackAction(meleeAttackActionToRemove: MeleeAttack) {
-    this.meleeAttackActions = this.meleeAttackActions.filter(
+  RemoveMeleeAttackAction: (
+    monster: Monster,
+    meleeAttackActionToRemove: MeleeAttack,
+  ) => {
+    monster.meleeAttackActions = monster.meleeAttackActions.filter(
       (meleeAttackAction) => meleeAttackAction !== meleeAttackActionToRemove,
     );
     return function (event: MouseEvent) {
       event.preventDefault();
     };
-  }
+  },
 
-  public AddRangedAttackAction(event: MouseEvent) {
-    this.rangedAttackActions = [
-      ...this.rangedAttackActions,
+  AddRangedAttackAction: (monster: Monster, event: MouseEvent) => {
+    monster.rangedAttackActions = [
+      ...monster.rangedAttackActions,
       {
         name: undefined,
         hitBonus: undefined,
@@ -223,20 +242,23 @@ export class Monster {
     ];
 
     event.preventDefault();
-  }
+  },
 
-  public RemoveRangedAttackAction(rangedAttackActionToRemove: RangedAttack) {
-    this.rangedAttackActions = this.rangedAttackActions.filter(
+  RemoveRangedAttackAction: (
+    monster: Monster,
+    rangedAttackActionToRemove: RangedAttack,
+  ) => {
+    monster.rangedAttackActions = monster.rangedAttackActions.filter(
       (rangedAttackAction) => rangedAttackAction !== rangedAttackActionToRemove,
     );
     return function (event: MouseEvent) {
       event.preventDefault();
     };
-  }
+  },
 
-  public AddRechargeAction(event: MouseEvent) {
-    this.rechargeActions = [
-      ...this.rechargeActions,
+  AddRechargeAction: (monster: Monster, event: MouseEvent) => {
+    monster.rechargeActions = [
+      ...monster.rechargeActions,
       {
         name: undefined,
         rechargeDice: undefined,
@@ -245,95 +267,107 @@ export class Monster {
     ];
 
     event.preventDefault();
-  }
+  },
 
-  public RemoveRechargeAction(rechargeActionToRemove: RechargeAction) {
-    this.rechargeActions = this.rechargeActions.filter(
+  RemoveRechargeAction: (
+    monster: Monster,
+    rechargeActionToRemove: RechargeAction,
+  ) => {
+    monster.rechargeActions = monster.rechargeActions.filter(
       (rechargeAction) => rechargeAction !== rechargeActionToRemove,
     );
     return function (event: MouseEvent) {
       event.preventDefault();
     };
-  }
+  },
 
-  public AddBonusAction(event: MouseEvent) {
-    this.bonusActions = [
-      ...this.bonusActions,
+  AddBonusAction: (monster: Monster, event: MouseEvent) => {
+    monster.bonusActions = [
+      ...monster.bonusActions,
       { name: undefined, description: undefined },
     ];
 
     event.preventDefault();
-  }
+  },
 
-  public RemoveBonusAction(bonusActionToRemove: NamedDescription) {
-    this.bonusActions = this.bonusActions.filter(
+  RemoveBonusAction: (
+    monster: Monster,
+    bonusActionToRemove: NamedDescription,
+  ) => {
+    monster.bonusActions = monster.bonusActions.filter(
       (bonusAction) => bonusAction !== bonusActionToRemove,
     );
 
     return function (event: MouseEvent) {
       event.preventDefault();
     };
-  }
+  },
 
-  public AddReaction(event: MouseEvent) {
-    this.reactions = [
-      ...this.reactions,
+  AddReaction: (monster: Monster, event: MouseEvent) => {
+    monster.reactions = [
+      ...monster.reactions,
       { name: undefined, description: undefined },
     ];
 
     event.preventDefault();
-  }
+  },
 
-  public RemoveReaction(reactionToRemove: NamedDescription) {
-    this.reactions = this.reactions.filter(
+  RemoveReaction: (monster: Monster, reactionToRemove: NamedDescription) => {
+    monster.reactions = monster.reactions.filter(
       (reaction) => reaction !== reactionToRemove,
     );
 
     return function (event: MouseEvent) {
       event.preventDefault();
     };
-  }
+  },
 
-  public AddLegendaryAction(event: MouseEvent) {
-    this.legendaryActions = [
-      ...this.legendaryActions,
+  AddLegendaryAction: (monster: Monster, event: MouseEvent) => {
+    monster.legendaryActions = [
+      ...monster.legendaryActions,
       { name: undefined, cost: undefined, description: undefined },
     ];
 
     event.preventDefault();
-  }
+  },
 
-  public RemoveLegendaryAction(legendaryActionToRemove: LegendaryAction) {
-    this.legendaryActions = this.legendaryActions.filter(
+  RemoveLegendaryAction: (
+    monster: Monster,
+    legendaryActionToRemove: LegendaryAction,
+  ) => {
+    monster.legendaryActions = monster.legendaryActions.filter(
       (legendaryAction) => legendaryAction !== legendaryActionToRemove,
     );
 
     // Clear available legendary actions if all legendary actions are removed
-    if (this.legendaryActions.length === 0) {
-      this.availableLegendaryActionsPerTurn = undefined;
+    if (monster.legendaryActions.length === 0) {
+      monster.availableLegendaryActionsPerTurn = undefined;
     }
 
     return function (event: MouseEvent) {
       event.preventDefault();
     };
-  }
+  },
 
-  public AddLairAction(event: MouseEvent) {
-    this.lairActions = [
-      ...this.lairActions,
+  AddLairAction: (monster: Monster, event: MouseEvent) => {
+    monster.lairActions = [
+      ...monster.lairActions,
       { name: undefined, description: undefined },
     ];
 
     event.preventDefault();
-  }
+  },
 
-  public RemoveLairAction(lairActionToRemove: NamedDescription) {
-    this.lairActions = this.lairActions.filter(
+  RemoveLairAction: (
+    monster: Monster,
+    lairActionToRemove: NamedDescription,
+  ) => {
+    monster.lairActions = monster.lairActions.filter(
       (lairAction) => lairAction !== lairActionToRemove,
     );
 
     return function (event: MouseEvent) {
       event.preventDefault();
     };
-  }
-}
+  },
+};
