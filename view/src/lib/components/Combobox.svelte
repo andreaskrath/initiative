@@ -53,7 +53,7 @@
     open = isOpen;
     if (isOpen) {
       await tick();
-      // Focus the input when popover opens
+
       const input = document.querySelector("[cmdk-input]") as HTMLInputElement;
       if (input) {
         input.focus();
@@ -80,7 +80,7 @@
       {/if}
     </Button>
   </Popover.Trigger>
-  <Popover.Content class="w-full p-0">
+  <Popover.Content class="mt-1 p-0">
     <Command.Root shouldFilter={false}>
       <Command.Input
         placeholder="Search"
