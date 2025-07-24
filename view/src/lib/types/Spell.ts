@@ -19,6 +19,8 @@ export type Spell = {
   area?: string;
   shape?: string;
   classes: Record<Class, boolean>;
+  description?: string;
+  atHigherLevels?: string;
 };
 
 export const SpellActions = {
@@ -38,5 +40,7 @@ export const SpellActions = {
     area: undefined,
     shape: undefined,
     classes: RecordFactory(SpellcastingClasses, false),
+    description: undefined,
+    atHigherLevels: undefined,
   }),
 };
