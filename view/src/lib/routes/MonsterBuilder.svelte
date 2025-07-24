@@ -73,7 +73,7 @@
   </div>
 
   <Tabs.Content value="basic" class="space-y-5">
-    <Title variant="muted" class="col-span-9">Basic Monster Information</Title>
+    <Title variant="muted">Basic Monster Information</Title>
     <div class="grid grid-cols-16 space-y-5 gap-x-2">
       <!-- Name -->
       <Container class="col-span-7">
