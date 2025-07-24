@@ -18,6 +18,8 @@
   import { Sizes } from "$types/Size";
   import { Skills } from "$types/Skill";
 
+  import { LabelValueFactory } from "$lib/utils/factories";
+
   import Container from "$components/Container.svelte";
   import Input from "$components/Input.svelte";
   import Label from "$components/Label.svelte";
@@ -28,37 +30,13 @@
 
   let monster = $state(MonsterActions.EmptyMonster());
 
-  const sizes = Sizes.map((size) => ({
-    value: size,
-    label: size,
-  }));
-
-  const monsterTypes = MonsterTypes.map((monsterType) => ({
-    value: monsterType,
-    label: monsterType,
-  }));
-
-  const alignments = Alignments.map((alignment) => ({
-    value: alignment,
-    label: alignment,
-  }));
-
-  const sights = Sights.map((sight) => ({ value: sight, label: sight }));
-
-  const movements = Movements.map((movement) => ({
-    value: movement,
-    label: movement,
-  }));
-
-  const damageTypes = DamageTypes.map((damageType) => ({
-    value: damageType,
-    label: damageType,
-  }));
-
-  const recharges = Recharges.map((recharge) => ({
-    value: recharge,
-    label: recharge,
-  }));
+  const sizes = LabelValueFactory(Sizes);
+  const monsterTypes = LabelValueFactory(MonsterTypes);
+  const alignments = LabelValueFactory(Alignments);
+  const sights = LabelValueFactory(Sights);
+  const movements = LabelValueFactory(Movements);
+  const damageTypes = LabelValueFactory(DamageTypes);
+  const recharges = LabelValueFactory(Recharges);
 </script>
 
 <Tabs.Root value="basic" class="mx-auto mt-5 w-[1000px]">

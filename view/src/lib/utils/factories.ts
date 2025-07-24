@@ -12,3 +12,11 @@ export const RecordFactory = <T extends string | number | symbol, V>(
     },
     {} as Record<T, V>,
   );
+
+export const LabelValueFactory = <T extends string>(
+  items: readonly T[],
+): Array<{ value: T; label: T }> =>
+  items.map((item) => ({
+    value: item,
+    label: item,
+  }));
