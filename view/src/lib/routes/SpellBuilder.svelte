@@ -10,6 +10,7 @@
   import { SpellActions } from "$types/Spell";
   import { SpellLevels } from "$types/SpellLevel";
   import { SpellcastingClasses } from "$types/Class";
+  import { StatusCodes } from "http-status-codes";
 
   import { LabelValueFactory } from "$utils/factories";
   import { CreateSpell } from "$services/spell";
@@ -46,12 +47,12 @@
 
     if (typeof result === "number") {
       switch (result) {
-        case 201:
+        case StatusCodes.CREATED:
           toast.success("Successfully created spell");
           goto("/spells");
-        case 409:
+        case StatusCodes.CONFLICT:
           toast.error("A spell with this name already exists");
-        case 500:
+        case StatusCodes.INTERNAL_SERVER_ERROR:
           toast.success("Internal server error");
         default:
           toast.error("An unknown error occured");
