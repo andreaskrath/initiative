@@ -23,7 +23,8 @@
       "$components/*": ["./src/lib/components/*"],
       "$types/*": ["./src/lib/types/*"],
       "$utils/*": ["./src/lib/utils/*"],
-      "$routes/*": ["./src/lib/routes/*"]
+      "$routes/*": ["./src/lib/routes/*"],
+      "$services/*": ["./src/lib/services/*"]
     }
   },
   "include": ["src/**/*.ts", "src/**/*.js", "src/**/*.svelte"]

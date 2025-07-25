@@ -13,6 +13,7 @@ export default defineConfig({
       $types: path.resolve("./src/lib/types/"),
       $utils: path.resolve("./src/lib/utils/"),
       $routes: path.resolve("./src/lib/routes/"),
+      $services: path.resolve("./src/lib/services/"),
     },
   },
 });
