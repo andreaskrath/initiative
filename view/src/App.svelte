@@ -19,6 +19,7 @@
   import SpellBuilder from "$routes/SpellBuilder.svelte";
 
   import Navbar from "$components/Navbar.svelte";
+  import { Toaster } from "$lib/components/ui/sonner";
 
   const routes: RouteConfig[] = [
     {
@@ -55,6 +56,7 @@
   ];
 </script>
 
+<Toaster duration={5000} position="bottom-right" />
 <Navbar />
 <main>
   <div class="mx-auto w-[1200px] py-2">
