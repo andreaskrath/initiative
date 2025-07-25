@@ -1,4 +1,6 @@
 <script lang="ts">
+  import CircleAlert from "@lucide/svelte/icons/circle-alert";
+
   import { Areas } from "$types/Area";
   import { CastingTimes } from "$types/CastingTime";
   import { Durations } from "$types/Duration";
@@ -10,7 +12,11 @@
   import { SpellcastingClasses } from "$types/Class";
 
   import { LabelValueFactory } from "$utils/factories";
+  import { CreateSpell } from "$services/spell";
+  import { goto } from "@mateothegreat/svelte5-router";
 
+  import * as Alert from "$lib/components/ui/alert/index.js";
+  import { Button } from "$components/ui/button/index";
   import Combobox from "$components/Combobox.svelte";
   import Container from "$components/Container.svelte";
   import Input from "$components/Input.svelte";
@@ -18,10 +24,12 @@
   import Select from "$components/Select.svelte";
   import TextArea from "$lib/components/TextArea.svelte";
   import Title from "$components/Title.svelte";
+  import { toast } from "svelte-sonner";
   import Toggle from "$components/Toggle.svelte";
 
   let spell = $state(SpellActions.EmptySpell());
   let usesMaterials = $state(false);
+  let errors: string[] = $state([]);
 
   const areas = LabelValueFactory(Areas);
   const castingTimes = LabelValueFactory(CastingTimes);
@@ -30,6 +38,28 @@
   const schools = LabelValueFactory(MagicSchools);
   const shapes = LabelValueFactory(Shapes);
   const spellLevels = LabelValueFactory(SpellLevels);
+
+  const handleCreateSpell = async (event: MouseEvent): Promise<void> => {
+    event.preventDefault();
+
+    const result = await CreateSpell(spell);
+
+    if (typeof result === "number") {
+      switch (result) {
+        case 201:
+          toast.success("Successfully created spell");
+          goto("/spells");
+        case 409:
+          toast.error("A spell with this name already exists");
+        case 500:
+          toast.success("Internal server error");
+        default:
+          toast.error("An unknown error occured");
+      }
+    } else {
+      errors = result;
+    }
+  };
 </script>
 
 <div class="mx-auto mt-5 w-[1000px] space-y-5">
@@ -191,4 +221,25 @@ The fire spreads around corners. It ignites flammable objects in the area that a
       </Container>
     {/each}
   </div>
+
+  <!-- Create Spell Button -->
+  <div class="flex justify-end">
+    <Button onclick={async (e) => handleCreateSpell(e)}>Create Spell</Button>
+  </div>
+
+  <!-- Valiation Errors -->
+  {#if errors.length > 0}
+    <Alert.Root variant="destructive">
+      <CircleAlert />
+      <Alert.Title>Unable to create the spell.</Alert.Title>
+      <Alert.Description>
+        <p>The following issues were identified.</p>
+        <ul class="list-inside list-disc text-sm">
+          {#each errors as error}
+            <li>{error}</li>
+          {/each}
+        </ul>
+      </Alert.Description>
+    </Alert.Root>
+  {/if}
 </div>
