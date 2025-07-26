@@ -35,6 +35,7 @@
               vscode-extensions.vadimcn.vscode-lldb.adapter
               openssl
               pkg-config
+              sqlx-cli
 
               nodejs
               node_modules

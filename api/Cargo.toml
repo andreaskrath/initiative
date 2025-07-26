@@ -6,4 +6,13 @@ edition = "2024"
 [dependencies]
 axum = "=0.8.3"
 include_dir = "=0.7.4"
+sqlx = { version = "=0.8.6", features = [
+  "runtime-tokio",
+  "tls-native-tls",
+  "postgres",
+  "derive",
+  "macros",
+  "migrate",
+  "uuid",
+] }
 tokio = { version = "=1.44.2", features = ["rt", "rt-multi-thread"] }
