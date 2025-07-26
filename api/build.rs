@@ -8,6 +8,10 @@ fn main() {
     println!("cargo::rerun-if-changed=../view/package.json");
     println!("cargo::rerun-if-changed=../view/package-lock.json");
 
+    if std::env::var("PROFILE").unwrap_or_default() != "release" {
+        return;
+    }
+
     let npm_install = Command::new(NPM)
         .current_dir(VIEW_PATH)
         .arg("install")
