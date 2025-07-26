@@ -1,0 +1,18 @@
+pub enum DamageType {
+    Acid,
+    Bludgeoning,
+    Cold,
+    Fire,
+    Force,
+    Lightning,
+    Necrotic,
+    NonMagicalBludgeoning,
+    NonMagicalPiercing,
+    NonMagicalSlashing,
+    Piercing,
+    Poison,
+    Psychic,
+    Radiant,
+    Slashing,
+    Thunder,
+}

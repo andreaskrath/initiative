@@ -1,0 +1,12 @@
+pub mod alignment;
+pub mod class;
+pub mod condition;
+pub mod damage_type;
+pub mod language;
+pub mod magic_school;
+pub mod monster_type;
+pub mod sight;
+pub mod size;
+pub mod skill;
+pub mod spell;
+pub mod spell_level;
