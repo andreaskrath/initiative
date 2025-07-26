@@ -46,6 +46,7 @@
     const result = await CreateSpell(spell);
 
     if (typeof result === "number") {
+      errors = [];
       switch (result) {
         case StatusCodes.CREATED:
           toast.success("Successfully created spell");
