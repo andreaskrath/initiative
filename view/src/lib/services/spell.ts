@@ -8,6 +8,9 @@ export const CreateSpell = async (spell: Spell): Promise<number | string[]> => {
 
   const result = await fetch("/spells/create", {
     method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
     body: JSON.stringify(spell),
   });
 
