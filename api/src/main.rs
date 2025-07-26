@@ -1,16 +1,17 @@
+mod handlers;
+mod repositories;
+mod types;
+
+use std::env;
+
 use axum::{
     Router,
-    body::Body,
-    extract::Path,
-    http::{HeaderValue, StatusCode, header},
-    response::{Html, Response},
-    routing::get,
+    routing::{get, post},
 };
-use include_dir::{Dir, include_dir};
+use sqlx::postgres::PgPoolOptions;
 use tokio::net::TcpListener;
 
-static ASSETS_DIR: Dir<'static> = include_dir!("./view/dist/assets");
-static INDEX: Html<&'static str> = Html(include_str!("../../view/dist/index.html"));
+use handlers::spells;
 
 fn main() {
     async_main();
@@ -18,9 +19,22 @@ fn main() {
 
 #[tokio::main]
 async fn async_main() {
+    let db_connection_string = env::var("DB_CONNECTION_STRING")
+        .expect("DB_CONNECTION_STRING environment variable is not set");
+
+    let pool = PgPoolOptions::new()
+        .max_connections(5)
+        .connect(&db_connection_string)
+        .await
+        .expect("failed to connect to database");
+
+    sqlx::migrate!().run(&pool).await.unwrap();
+
     let app = Router::new()
-        .route("/", get(index))
-        .route("/assets/{*path}", get(assets));
+        .route("/", get(handlers::index))
+        .route("/assets/{*path}", get(handlers::assets))
+        .route("/spells/create", post(spells::create))
+        .with_state(pool);
 
     let listener = TcpListener::bind("127.0.0.1:5173")
         .await
@@ -28,38 +42,4 @@ async fn async_main() {
     axum::serve(listener, app)
         .await
         .expect("failed to start server on port 5173");
-}
-
-async fn index() -> Html<&'static str> {
-    INDEX
-}
-
-async fn assets(Path(path): Path<String>) -> Response {
-    let path = path.trim_start_matches('/');
-    let content_type = get_content_type(path);
-
-    let content_type_value = match HeaderValue::try_from(content_type) {
-        Ok(v) => v,
-        Err(err) => todo!(),
-    };
-
-    let (status_code, body) = match ASSETS_DIR.get_file(path) {
-        Some(file) => (StatusCode::OK, Body::from(file.contents())),
-        None => (StatusCode::NOT_FOUND, Body::empty()),
-    };
-
-    Response::builder()
-        .status(status_code)
-        .header(header::CONTENT_TYPE, content_type_value)
-        .body(body)
-        .expect("failed to build response")
-}
-
-fn get_content_type(path: &str) -> &str {
-    let mut iter = path.split('.');
-    match iter.next_back() {
-        Some("js") => "application/javascript",
-        Some("css") => "text/css",
-        _ => "text/plain",
-    }
 }
