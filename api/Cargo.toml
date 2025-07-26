@@ -18,3 +18,4 @@ sqlx = { version = "=0.8.6", features = [
   "uuid",
 ] }
 tokio = { version = "=1.44.2", features = ["rt", "rt-multi-thread"] }
+uuid = { version = "=1.17.0", features = ["v4", "serde"] }
