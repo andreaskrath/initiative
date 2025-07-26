@@ -14,6 +14,17 @@ export const CreateSpell = async (spell: Spell): Promise<number | string[]> => {
   return result.status;
 };
 
+export const GetAllSpells = async (): Promise<Spell[]> => {
+  const response = await fetch("/api/spells", { method: "GET" });
+
+  if (!response.ok) {
+    throw new Error(`HTTP error! status: ${response.status}`);
+  }
+
+  const data: Spell[] = await response.json();
+  return data;
+};
+
 const validateSpell = (spell: Spell): string[] => {
   let errors: string[] = [];
 
