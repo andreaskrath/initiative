@@ -33,6 +33,8 @@
               rust-analyzer
               taplo
               vscode-extensions.vadimcn.vscode-lldb.adapter
+              openssl
+              pkg-config
 
               nodejs
               node_modules
