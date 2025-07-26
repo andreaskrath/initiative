@@ -133,7 +133,7 @@ input[type="number"] {
 }
 
 html {
-    width: 100vw;
+  width: 100vw;
   overflow: scroll;
   overflow-x: hidden;
 }
