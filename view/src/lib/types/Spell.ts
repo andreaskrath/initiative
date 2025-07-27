@@ -1,7 +1,6 @@
 import { MagicSchool } from "$types/MagicSchool";
 import { SpellLevel } from "$types/SpellLevel";
-import { Class, SpellcastingClasses } from "$types/Class";
-import { RecordFactory } from "$utils/factories";
+import { Class } from "$types/Class";
 
 export type Spell = {
   name?: string;
@@ -18,7 +17,7 @@ export type Spell = {
   range?: string;
   area?: string;
   shape?: string;
-  classes: Record<Class, boolean>;
+  classes: Class[];
   description?: string;
   atHigherLevels?: string;
 };
@@ -39,7 +38,7 @@ export const SpellActions = {
     range: undefined,
     area: undefined,
     shape: undefined,
-    classes: RecordFactory(SpellcastingClasses, false),
+    classes: [],
     description: undefined,
     atHigherLevels: undefined,
   }),

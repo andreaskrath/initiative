@@ -9,10 +9,10 @@
   import { Shapes } from "$types/Shape";
   import { SpellActions } from "$types/Spell";
   import { SpellLevels } from "$types/SpellLevel";
-  import { SpellcastingClasses } from "$types/Class";
+  import { Class, SpellcastingClasses } from "$types/Class";
   import { StatusCodes } from "http-status-codes";
 
-  import { LabelValueFactory } from "$utils/factories";
+  import { LabelValueFactory, RecordFactory } from "$utils/factories";
   import { CreateSpell } from "$services/spell";
   import { goto } from "@mateothegreat/svelte5-router";
 
@@ -29,6 +29,7 @@
   import Toggle from "$components/Toggle.svelte";
 
   let spell = $state(SpellActions.EmptySpell());
+  let classRestrictions = $state(RecordFactory(SpellcastingClasses, false));
   let usesMaterials = $state(false);
   let errors: string[] = $state([]);
 
@@ -42,6 +43,10 @@
 
   const handleCreateSpell = async (event: MouseEvent): Promise<void> => {
     event.preventDefault();
+
+    spell.classes = Object.entries(classRestrictions)
+      .filter(([_, enabled]) => enabled)
+      .map(([className]) => className as Class);
 
     const result = await CreateSpell(spell);
 
@@ -62,6 +67,8 @@
       errors = result;
     }
   };
+
+  $inspect(spell);
 </script>
 
 <div class="mx-auto mt-5 w-[1000px] space-y-5">
@@ -217,7 +224,7 @@ The fire spreads around corners. It ignites flammable objects in the area that a
   <div class="grid grid-cols-3 space-y-2 gap-x-2">
     {#each SpellcastingClasses as spellcastingClass}
       <Container class="col-span-1">
-        <Toggle bind:checked={spell.classes[spellcastingClass]}>
+        <Toggle bind:checked={classRestrictions[spellcastingClass]}>
           {spellcastingClass}
         </Toggle>
       </Container>
