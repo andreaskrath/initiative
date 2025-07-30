@@ -1,14 +1,14 @@
 export enum SpellLevel {
   Cantrip = "Cantrip",
-  First = "1st",
-  Second = "2nd",
-  Third = "3rd",
-  Fourth = "4th",
-  Fifth = "5th",
-  Sixth = "6th",
-  Seventh = "7th",
-  Eighth = "8th",
-  Ninth = "9th",
+  First = "First",
+  Second = "Second",
+  Third = "Third",
+  Fourth = "Fourth",
+  Fifth = "Fifth",
+  Sixth = "Sixth",
+  Seventh = "Seventh",
+  Eighth = "Eighth",
+  Ninth = "Ninth",
 }
 
 export const SpellLevels: SpellLevel[] = Object.values(SpellLevel);
