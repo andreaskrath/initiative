@@ -56,10 +56,13 @@
         case StatusCodes.CREATED:
           toast.success("Successfully created spell");
           goto("/spells");
+          break;
         case StatusCodes.CONFLICT:
           toast.error("A spell with this name already exists");
+          break;
         case StatusCodes.INTERNAL_SERVER_ERROR:
           toast.success("Internal server error");
+          break;
         default:
           toast.error("An unknown error occured");
       }
