@@ -10,5 +10,5 @@ pub async fn create(State(pool): State<PgPool>, Json(spell): Json<Spell>) -> Sta
         return StatusCode::INTERNAL_SERVER_ERROR;
     }
 
-    StatusCode::OK
+    StatusCode::CREATED
 }
