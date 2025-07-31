@@ -4,11 +4,7 @@ const NPM: &str = "npm";
 const VIEW_PATH: &str = "../view";
 
 fn main() {
-    println!("cargo::rerun-if-changed=../view/dist");
-    println!("cargo::rerun-if-changed=../view/package.json");
-    println!("cargo::rerun-if-changed=../view/package-lock.json");
-
-    if std::env::var("PROFILE").unwrap_or_default() != "release" {
+    if std::env::var("BUILD_FRONTEND").unwrap_or_default() != "true" {
         return;
     }
 
