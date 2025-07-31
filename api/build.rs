@@ -4,6 +4,9 @@ const NPM: &str = "npm";
 const VIEW_PATH: &str = "../view";
 
 fn main() {
+    println!("cargo:rerun-if-env-changed=BUILD_FRONTEND");
+    println!("cargo:rerun-if-changed=../view/src");
+
     if std::env::var("BUILD_FRONTEND").unwrap_or_default() != "true" {
         return;
     }
