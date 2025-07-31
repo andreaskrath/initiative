@@ -5,7 +5,7 @@ meta {
 }
 
 post {
-  url: http://localhost:5173/spells/create
+  url: http://localhost:5173/api/spells/create
   body: json
   auth: inherit
 }
@@ -22,7 +22,7 @@ body:json {
     "castingTime": "1 action",
     "verbal": true,
     "somatic": true,
-    "material": "a tiny bat guana",
+    "material": "a tiny ball of bat guano and sulfur",
     "materialConsumed": false,
     "ritual": false,
     "concentration": false,
@@ -30,8 +30,14 @@ body:json {
     "range": "150 ft.",
     "area": "20 ft.",
     "shape": "Sphere",
-    "classes": ["Warlock", "Wizard"],
-    "description": "tldr",
-    "atHigherLevels": "more damage"
+    "classes": [
+      "Artificer",
+      "Cleric",
+      "Sorcerer",
+      "Warlock",
+      "Wizard"
+    ],
+    "description": "A bright streak flashes from your pointing finger to a point you choose within range and then blossoms with a low roar into an explosion of flame. Each creature in a 20-foot-radius sphere centered on that point must make a Dexterity saving throw. A target takes 8d6 fire damage on a failed save, or half as much damage on a successful one.\n\nThe fire spreads around corners. It ignites flammable objects in the area that aren't being worn or carried.",
+    "atHigherLevels": "When you cast this spell using a spell slot of 4th level or higher, the damage increases by 1d6 for each slot level above 3rd."
   }
 }
