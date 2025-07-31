@@ -1,8 +1,9 @@
 use axum::{
     body::Body,
     extract::Path,
-    http::{HeaderValue, StatusCode, header},
-    response::{Html, Response},
+    http::{HeaderValue, Request, StatusCode, header},
+    middleware::Next,
+    response::{Html, IntoResponse, Response},
 };
 use include_dir::{Dir, include_dir};
 
@@ -34,6 +35,18 @@ pub async fn assets(Path(path): Path<String>) -> Response {
         .header(header::CONTENT_TYPE, content_type_value)
         .body(body)
         .expect("failed to build response")
+}
+
+/// Redirects to index when an invalid method is used.
+pub async fn method_not_allowed_handler(request: Request<Body>, next: Next) -> Response {
+    let response = next.run(request).await;
+
+    if response.status() == StatusCode::METHOD_NOT_ALLOWED {
+        // Call your fallback index handler directly
+        return index().await.into_response();
+    }
+
+    response
 }
 
 fn get_content_type(path: &str) -> &str {

@@ -34,6 +34,9 @@ async fn async_main() {
         .route("/assets/{*path}", get(handlers::assets))
         .route("/spells/create", post(spells::create))
         .fallback(handlers::index)
+        .layer(axum::middleware::from_fn(
+            handlers::method_not_allowed_handler,
+        ))
         .with_state(pool);
 
     let listener = TcpListener::bind("127.0.0.1:5173")
