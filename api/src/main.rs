@@ -31,9 +31,9 @@ async fn async_main() {
     sqlx::migrate!().run(&pool).await.unwrap();
 
     let app = Router::new()
-        .route("/", get(handlers::index))
         .route("/assets/{*path}", get(handlers::assets))
         .route("/spells/create", post(spells::create))
+        .fallback(handlers::index)
         .with_state(pool);
 
     let listener = TcpListener::bind("127.0.0.1:5173")

@@ -6,6 +6,7 @@
     type RouteConfig,
     StatusCode,
     type RouteResult,
+    goto,
   } from "@mateothegreat/svelte5-router";
 
   import Home from "$routes/Home.svelte";
@@ -20,6 +21,7 @@
 
   import Navbar from "$components/Navbar.svelte";
   import { Toaster } from "$lib/components/ui/sonner";
+  import { onMount } from "svelte";
 
   const routes: RouteConfig[] = [
     {
@@ -54,6 +56,11 @@
       component: Settings,
     },
   ];
+
+  onMount(async () => {
+    const route = window.location.pathname;
+    goto(route);
+  });
 </script>
 
 <Toaster duration={5000} position="bottom-right" />
