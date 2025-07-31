@@ -6,7 +6,7 @@ CREATE TABLE IF NOT EXISTS spells (
     verbal boolean NOT NULL,
     somatic boolean NOT NULL,
     material text,
-    material_consumed boolean,
+    material_consumed boolean NOT NULL,
     ritual boolean NOT NULL,
     concentration boolean NOT NULL,
     casting_time text NOT NULL,
