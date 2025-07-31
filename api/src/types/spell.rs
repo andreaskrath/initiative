@@ -3,7 +3,7 @@ use uuid::Uuid;
 
 use super::{class::Class, magic_school::MagicSchool, spell_level::SpellLevel};
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize, sqlx::FromRow)]
 #[serde(rename_all = "camelCase")]
 pub struct Spell {
     pub id: Option<Uuid>,
@@ -23,5 +23,5 @@ pub struct Spell {
     pub shape: Option<String>,
     pub description: String,
     pub at_higher_levels: Option<String>,
-    pub classes: Box<[Class]>,
+    pub classes: Vec<Class>,
 }

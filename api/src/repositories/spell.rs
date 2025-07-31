@@ -1,4 +1,4 @@
-use sqlx::{PgPool, QueryBuilder};
+use sqlx::{PgPool, QueryBuilder, query_as};
 use uuid::Uuid;
 
 use crate::types::spell::Spell;
@@ -36,7 +36,7 @@ impl SpellRepository {
                 at_higher_levels
             ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16)
             RETURNING id;
-        "#,
+            "#,
         )
         .bind(spell.name)
         .bind(spell.school)
@@ -77,5 +77,27 @@ impl SpellRepository {
         transaction.commit().await?;
 
         Ok(spell_id)
+    }
+
+    pub async fn get_all(&self) -> Result<Box<[Spell]>, sqlx::Error> {
+        let spells: Vec<Spell> = query_as(
+            r#"
+                SELECT 
+                    s.*,
+                    COALESCE(
+                        ARRAY(
+                            SELECT class 
+                            FROM spell_classes 
+                            WHERE spell_id = s.id
+                        ), 
+                        '{}'
+                    ) AS classes
+                FROM spells s;
+            "#,
+        )
+        .fetch_all(&self.pool)
+        .await?;
+
+        Ok(spells.into_boxed_slice())
     }
 }

@@ -33,6 +33,7 @@ async fn async_main() {
     let app = Router::new()
         .route("/assets/{*path}", get(handlers::assets))
         .route("/api/spells/create", post(spells::create))
+        .route("/api/spells", get(spells::get))
         .fallback(handlers::index)
         .with_state(pool);
 
