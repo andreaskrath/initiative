@@ -4,6 +4,7 @@ use uuid::Uuid;
 use super::{class::Class, magic_school::MagicSchool, spell_level::SpellLevel};
 
 #[derive(Debug, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
 pub struct Spell {
     pub id: Option<Uuid>,
     pub name: String,
