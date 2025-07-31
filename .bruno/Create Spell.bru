@@ -1,0 +1,37 @@
+meta {
+  name: Create Spell
+  type: http
+  seq: 1
+}
+
+post {
+  url: http://localhost:5173/spells/create
+  body: json
+  auth: inherit
+}
+
+headers {
+  Content-Type: application/json
+}
+
+body:json {
+  {
+    "name": "Fireball",
+    "school": "Evocation",
+    "level": "Third",
+    "castingTime": "1 action",
+    "verbal": true,
+    "somatic": true,
+    "material": "a tiny bat guana",
+    "materialConsumed": false,
+    "ritual": false,
+    "concentration": false,
+    "duration": "Instantaneous",
+    "range": "150 ft.",
+    "area": "20 ft.",
+    "shape": "Sphere",
+    "classes": ["Warlock", "Wizard"],
+    "description": "tldr",
+    "atHigherLevels": "more damage"
+  }
+}
