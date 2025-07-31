@@ -62,15 +62,11 @@ impl SpellRepository {
             relations.push((spell_id, class));
         }
 
-        let mut class_restriction_query = QueryBuilder::new(
-            r#"
-            INSERT INTO spell_classes (spell_id, class) 
-            VALUES ($1, $2);
-            "#,
-        );
+        let mut class_restriction_query =
+            QueryBuilder::new("INSERT INTO spell_classes (spell_id, class)");
 
-        class_restriction_query.push_values(relations, |mut b, relation| {
-            b.push_bind(relation.0).push_bind(relation.1);
+        class_restriction_query.push_values(relations, |mut b, (spell_id, class)| {
+            b.push_bind(spell_id).push_bind(class);
         });
 
         class_restriction_query
