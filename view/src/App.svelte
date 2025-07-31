@@ -20,7 +20,7 @@
   import SpellBuilder from "$routes/SpellBuilder.svelte";
 
   import Navbar from "$components/Navbar.svelte";
-  import { Toaster } from "$lib/components/ui/sonner";
+  import { Toaster } from "$components/ui/sonner";
   import { onMount } from "svelte";
 
   const routes: RouteConfig[] = [

@@ -9,11 +9,13 @@ export default defineConfig({
   resolve: {
     alias: {
       $lib: path.resolve("./src/lib"),
-      $components: path.resolve("./src/lib/components"),
-      $types: path.resolve("./src/lib/types/"),
-      $utils: path.resolve("./src/lib/utils/"),
+      $components: path.resolve("./src/lib/shared/components/"),
+      $utils: path.resolve("./src/shared/lib/utils/"),
       $routes: path.resolve("./src/lib/routes/"),
-      $services: path.resolve("./src/lib/services/"),
+      $spell: path.resolve("./src/lib/spell/"),
+      $encounter: path.resolve("./src/lib/encounter/"),
+      $monster: path.resolve("./src/lib/monster/"),
+      $shared: path.resolve("./src/lib/shared/"),
     },
   },
 });

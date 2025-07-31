@@ -1,29 +1,30 @@
 <script lang="ts">
   import CircleAlert from "@lucide/svelte/icons/circle-alert";
 
-  import { Areas } from "$types/Area";
-  import { CastingTimes } from "$types/CastingTime";
-  import { Durations } from "$types/Duration";
-  import { MagicSchools } from "$types/MagicSchool";
-  import { Ranges } from "$types/Range";
-  import { Shapes } from "$types/Shape";
-  import { SpellActions } from "$types/Spell";
-  import { SpellLevels } from "$types/SpellLevel";
-  import { Class, SpellcastingClasses } from "$types/Class";
+  import {
+    Areas,
+    CastingTimes,
+    Durations,
+    MagicSchools,
+    Ranges,
+    Shapes,
+    SpellLevels,
+  } from "$spell/types";
+  import { SpellActions } from "$spell/types/Spell";
+  import { Class, SpellcastingClasses } from "$shared/types";
   import { StatusCodes } from "http-status-codes";
-
-  import { LabelValueFactory, RecordFactory } from "$utils/factories";
-  import { CreateSpell } from "$services/spell";
+  import { CreateSpell } from "$spell/service";
+  import { LabelValueFactory, RecordFactory } from "$shared/utils/factories";
   import { goto } from "@mateothegreat/svelte5-router";
 
-  import * as Alert from "$lib/components/ui/alert/index.js";
+  import * as Alert from "$components/ui/alert/index.js";
   import { Button } from "$components/ui/button/index";
   import Combobox from "$components/Combobox.svelte";
   import Container from "$components/Container.svelte";
   import Input from "$components/Input.svelte";
   import Label from "$components/Label.svelte";
   import Select from "$components/Select.svelte";
-  import TextArea from "$lib/components/TextArea.svelte";
+  import TextArea from "$components/TextArea.svelte";
   import Title from "$components/Title.svelte";
   import { toast } from "svelte-sonner";
   import Toggle from "$components/Toggle.svelte";
@@ -236,7 +237,9 @@ The fire spreads around corners. It ignites flammable objects in the area that a
 
   <!-- Create Spell Button -->
   <div class="flex justify-end">
-    <Button onclick={async (e) => handleCreateSpell(e)}>Create Spell</Button>
+    <Button onclick={async (e: MouseEvent) => handleCreateSpell(e)}
+      >Create Spell</Button
+    >
   </div>
 
   <!-- Valiation Errors -->

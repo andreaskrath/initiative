@@ -20,11 +20,13 @@
     "paths": {
       "$lib": ["./src/lib"],
       "$lib/*": ["./src/lib/*"],
-      "$components/*": ["./src/lib/components/*"],
-      "$types/*": ["./src/lib/types/*"],
-      "$utils/*": ["./src/lib/utils/*"],
+      "$components/*": ["./src/lib/shared/components/*"],
+      "$utils/*": ["./src/lib/shared/utils/*"],
       "$routes/*": ["./src/lib/routes/*"],
-      "$services/*": ["./src/lib/services/*"]
+      "$spell/*": ["./src/lib/spell/*"],
+      "$monster/*": ["./src/lib/monster/*"],
+      "$encounter/*": ["./src/lib/encounter/*"],
+      "$shared/*": ["./src/lib/shared/*"],
     }
   },
   "include": ["src/**/*.ts", "src/**/*.js", "src/**/*.svelte"]
