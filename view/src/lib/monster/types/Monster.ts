@@ -94,18 +94,7 @@ export type Monster = {
   spellcastingAttribute?: Attribute;
   spellcastingDC?: number;
   spellcastingAttackBonus?: number;
-  spells: {
-    cantrips: Spell[];
-    firstLevel: Spell[];
-    secondLevel: Spell[];
-    thirdLevel: Spell[];
-    fourthLevel: Spell[];
-    fifthLevel: Spell[];
-    sixthLevel: Spell[];
-    seventhLevel: Spell[];
-    eighthLevel: Spell[];
-    ninthLevel: Spell[];
-  };
+  spells: Spell[];
 };
 
 export const MonsterActions = {
@@ -146,18 +135,7 @@ export const MonsterActions = {
     spellcastingAttribute: undefined,
     spellcastingDC: undefined,
     spellcastingAttackBonus: undefined,
-    spells: {
-      cantrips: [],
-      firstLevel: [],
-      secondLevel: [],
-      thirdLevel: [],
-      fourthLevel: [],
-      fifthLevel: [],
-      sixthLevel: [],
-      seventhLevel: [],
-      eighthLevel: [],
-      ninthLevel: [],
-    },
+    spells: [],
   }),
 
   AddVision: (monster: Monster, event: MouseEvent): void => {
@@ -405,112 +383,8 @@ export const MonsterActions = {
     };
   },
 
-  RemoveCantrip: (monster: Monster, cantripToRemove: Spell) => {
-    monster.spells.cantrips = monster.spells.cantrips.filter(
-      (cantrip) => cantrip !== cantripToRemove,
-    );
-
-    return function (event: MouseEvent) {
-      event.preventDefault();
-    };
-  },
-
-  RemoveFirstLevelSpell: (monster: Monster, firstLevelSpellToRemove: Spell) => {
-    monster.spells.firstLevel = monster.spells.firstLevel.filter(
-      (firstLevelSpell) => firstLevelSpell !== firstLevelSpellToRemove,
-    );
-
-    return function (event: MouseEvent) {
-      event.preventDefault();
-    };
-  },
-
-  RemoveSecondLevelSpell: (
-    monster: Monster,
-    secondLevelSpellToRemove: Spell,
-  ) => {
-    monster.spells.secondLevel = monster.spells.secondLevel.filter(
-      (secondLevelSpell) => secondLevelSpell !== secondLevelSpellToRemove,
-    );
-
-    return function (event: MouseEvent) {
-      event.preventDefault();
-    };
-  },
-
-  RemoveThirdLevelSpell: (monster: Monster, thirdLevelSpellToRemove: Spell) => {
-    monster.spells.thirdLevel = monster.spells.thirdLevel.filter(
-      (thirdLevelSpell) => thirdLevelSpell !== thirdLevelSpellToRemove,
-    );
-
-    return function (event: MouseEvent) {
-      event.preventDefault();
-    };
-  },
-
-  RemoveFourthLevelSpell: (
-    monster: Monster,
-    fourthLevelSpellToRemove: Spell,
-  ) => {
-    monster.spells.fourthLevel = monster.spells.fourthLevel.filter(
-      (fourthLevelSpell) => fourthLevelSpell !== fourthLevelSpellToRemove,
-    );
-
-    return function (event: MouseEvent) {
-      event.preventDefault();
-    };
-  },
-
-  RemoveFifthLevelSpell: (monster: Monster, fifthLevelSpellToRemove: Spell) => {
-    monster.spells.fifthLevel = monster.spells.fifthLevel.filter(
-      (fifthLevelSpell) => fifthLevelSpell !== fifthLevelSpellToRemove,
-    );
-
-    return function (event: MouseEvent) {
-      event.preventDefault();
-    };
-  },
-
-  RemoveSixthLevelSpell: (monster: Monster, sixthLevelSpellToRemove: Spell) => {
-    monster.spells.sixthLevel = monster.spells.sixthLevel.filter(
-      (sixthLevelSpell) => sixthLevelSpell !== sixthLevelSpellToRemove,
-    );
-
-    return function (event: MouseEvent) {
-      event.preventDefault();
-    };
-  },
-
-  RemoveSeventhLevelSpell: (
-    monster: Monster,
-    seventhLevelSpellToRemove: Spell,
-  ) => {
-    monster.spells.seventhLevel = monster.spells.seventhLevel.filter(
-      (seventhLevelSpell) => seventhLevelSpell !== seventhLevelSpellToRemove,
-    );
-
-    return function (event: MouseEvent) {
-      event.preventDefault();
-    };
-  },
-
-  RemoveEighthLevelSpell: (
-    monster: Monster,
-    eighthLevelSpellToRemove: Spell,
-  ) => {
-    monster.spells.eighthLevel = monster.spells.eighthLevel.filter(
-      (eighthLevelSpell) => eighthLevelSpell !== eighthLevelSpellToRemove,
-    );
-
-    return function (event: MouseEvent) {
-      event.preventDefault();
-    };
-  },
-
-  RemoveNinthLevelSpell: (monster: Monster, ninthLevelSpellToRemove: Spell) => {
-    monster.spells.ninthLevel = monster.spells.ninthLevel.filter(
-      (ninthLevelSpell) => ninthLevelSpell !== ninthLevelSpellToRemove,
-    );
+  RemoveSpell: (monster: Monster, spellToRemove: Spell) => {
+    monster.spells = monster.spells.filter((spell) => spell !== spellToRemove);
 
     return function (event: MouseEvent) {
       event.preventDefault();

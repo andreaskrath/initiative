@@ -16,11 +16,11 @@
     Sizes,
     Skills,
   } from "$monster/types";
-  import { type Spell, SpellLevel } from "$spell/types";
+  import { type Spell, SpellLevel, SpellLevels } from "$spell/types";
   import { Attributes, Conditions, DamageTypes } from "$shared/types";
   import { MonsterActions } from "$monster/types/Monster";
 
-  import { LabelValueFactory } from "$shared/utils/factories";
+  import { LabelValueFactory, RecordFactory } from "$shared/utils/factories";
   import { GetAllSpells } from "$spell/service";
 
   import * as Command from "$components/ui/command/index";
@@ -43,73 +43,70 @@
   const sights = LabelValueFactory(Sights);
   const sizes = LabelValueFactory(Sizes);
 
+  let spellSlots: Record<SpellLevel, number | undefined> = RecordFactory(
+    SpellLevels,
+    undefined,
+  );
+
   let monster = $state(MonsterActions.EmptyMonster());
   let spells: Spell[] = $state([]);
-  let cantrips: Spell[] = $state([]);
-  let firstLevelSpells: Spell[] = $state([]);
-  let secondLevelSpells: Spell[] = $state([]);
-  let thirdLevelSpells: Spell[] = $state([]);
-  let fourthLevelSpells: Spell[] = $state([]);
-  let fifthLevelSpells: Spell[] = $state([]);
-  let sixthLevelSpells: Spell[] = $state([]);
-  let seventhLevelSpells: Spell[] = $state([]);
-  let eighthLevelSpells: Spell[] = $state([]);
-  let ninthLevelSpells: Spell[] = $state([]);
 
   const getSpells = async (): Promise<void> => {
-    spells = await GetAllSpells();
-    cantrips = spells.filter((spell) => spell.level === SpellLevel.Cantrip);
-    firstLevelSpells = spells.filter(
-      (spell) => spell.level === SpellLevel.First,
-    );
-    secondLevelSpells = spells.filter(
-      (spell) => spell.level === SpellLevel.Second,
-    );
-    thirdLevelSpells = spells.filter(
-      (spell) => spell.level === SpellLevel.Third,
-    );
-    fourthLevelSpells = spells.filter(
-      (spell) => spell.level === SpellLevel.Fourth,
-    );
-    fifthLevelSpells = spells.filter(
-      (spell) => spell.level === SpellLevel.Fifth,
-    );
-    sixthLevelSpells = spells.filter(
-      (spell) => spell.level === SpellLevel.Sixth,
-    );
-    seventhLevelSpells = spells.filter(
-      (spell) => spell.level === SpellLevel.Seventh,
-    );
-    eighthLevelSpells = spells.filter(
-      (spell) => spell.level === SpellLevel.Eighth,
-    );
-    ninthLevelSpells = spells.filter(
-      (spell) => spell.level === SpellLevel.Ninth,
-    );
+    let all_spells = await GetAllSpells();
+    spells = all_spells.sort((a, b) => a.name!.localeCompare(b.name!));
   };
 </script>
 
-{#snippet SpellListSection(
-  title: string,
-  spells: Spell[],
-  removeSpellCallback: (monster: Monster, spell: Spell) => void,
-)}
-  <h4 class="text-muted-foreground py-2.5 text-xs font-medium">
-    {title}
-  </h4>
-  {#each spells as spell}
-    <div class="flex justify-between text-sm">
-      <span>{spell.name}</span>
-      <div class="flex space-x-2">
+<!-- Creates a section for picking spells to add to a monster. -->
+{#snippet SpellPickSection(title: string, spellLevel: SpellLevel)}
+  <Command.Group heading={title}>
+    {#each spells.filter((spell) => spell.level === spellLevel) as spell}
+      <Command.Item
+        class="flex justify-between"
+        value={spell.name}
+        onclick={(_) => monster.spells.push(spell)}
+        disabled={monster.spells.includes(spell)}
+      >
+        <span>{spell.name}</span>
         <span class="text-muted-foreground">{spell.school}</span>
-        <CircleX
-          class="text-red-300 hover:text-red-600"
-          size="18"
-          onclick={(_) => removeSpellCallback(monster, spell)}
-        />
+      </Command.Item>
+    {/each}
+  </Command.Group>
+{/snippet}
+
+<!-- Creates a section for showing spells added to a monster. -->
+{#snippet SpellListSection(title: string, spellLevel: SpellLevel)}
+  <div class="grid h-[50px] grid-cols-10 content-center">
+    <h4 class="text-muted-foreground col-span-9 py-2.5 text-xs font-medium">
+      {title}
+    </h4>
+    {#if spellLevel !== SpellLevel.Cantrip}
+      <Input
+        bind:value={spellSlots[spellLevel]}
+        placeholder="3"
+        type="number"
+        class="col-span-1 text-center"
+      />
+    {/if}
+  </div>
+  <div class="space-y-2">
+    {#each monster.spells
+      .filter((spell) => spell.level === spellLevel)
+      .sort((a, b) => a.name!.localeCompare(b.name!)) as spell}
+      <div class="flex justify-between text-sm">
+        <span>{spell.name}</span>
+        <div class="flex space-x-2">
+          <span class="text-muted-foreground">{spell.school}</span>
+          <CircleX
+            class="text-red-300 hover:text-red-600"
+            size="18"
+            onclick={(_: MouseEvent) =>
+              MonsterActions.RemoveSpell(monster, spell)}
+          />
+        </div>
       </div>
-    </div>
-  {/each}
+    {/each}
+  </div>
 {/snippet}
 
 <Tabs.Root value="basic" class="mx-auto mt-5 w-[1000px]">
@@ -1139,159 +1136,25 @@
         <Command.Input placeholder="Search for a spell" />
         <Command.List>
           <Command.Empty>No results found.</Command.Empty>
-          <Command.Group heading="Cantrips">
-            {#each cantrips as cantrip}
-              <Command.Item
-                class="flex justify-between"
-                onclick={(_) => monster.spells.cantrips.push(cantrip)}
-                disabled={monster.spells.cantrips.includes(cantrip)}
-              >
-                <span>{cantrip.name}</span>
-                <span class="text-muted-foreground">{cantrip.school}</span>
-              </Command.Item>
-            {/each}
-          </Command.Group>
+          {@render SpellPickSection("Cantrips", SpellLevel.Cantrip)}
           <Command.Separator />
-          <Command.Group heading="1st level">
-            {#each firstLevelSpells as firstLevelSpell}
-              <Command.Item
-                class="flex justify-between"
-                onclick={(_) => monster.spells.firstLevel.push(firstLevelSpell)}
-                disabled={monster.spells.firstLevel.includes(firstLevelSpell)}
-              >
-                <span>{firstLevelSpell.name}</span>
-                <span class="text-muted-foreground">
-                  {firstLevelSpell.school}
-                </span>
-              </Command.Item>
-            {/each}
-          </Command.Group>
+          {@render SpellPickSection("1st level", SpellLevel.First)}
           <Command.Separator />
-          <Command.Group heading="2nd level">
-            {#each secondLevelSpells as secondLevelSpell}
-              <Command.Item
-                class="flex justify-between"
-                onclick={(_) =>
-                  monster.spells.secondLevel.push(secondLevelSpell)}
-                disabled={monster.spells.secondLevel.includes(secondLevelSpell)}
-              >
-                <span>{secondLevelSpell.name}</span>
-                <span class="text-muted-foreground">
-                  {secondLevelSpell.school}
-                </span>
-              </Command.Item>
-            {/each}
-          </Command.Group>
+          {@render SpellPickSection("2nd level", SpellLevel.Second)}
           <Command.Separator />
-          <Command.Group heading="3rd level">
-            {#each thirdLevelSpells as thirdLevelSpell}
-              <Command.Item
-                class="flex justify-between"
-                onclick={(_) => monster.spells.thirdLevel.push(thirdLevelSpell)}
-                disabled={monster.spells.thirdLevel.includes(thirdLevelSpell)}
-              >
-                <span>{thirdLevelSpell.name}</span>
-                <span class="text-muted-foreground">
-                  {thirdLevelSpell.school}
-                </span>
-              </Command.Item>
-            {/each}
-          </Command.Group>
+          {@render SpellPickSection("3rd level", SpellLevel.Third)}
           <Command.Separator />
-          <Command.Group heading="4th level">
-            {#each fourthLevelSpells as fourthLevelSpell}
-              <Command.Item
-                class="flex justify-between"
-                onclick={(_) =>
-                  monster.spells.fourthLevel.push(fourthLevelSpell)}
-                disabled={monster.spells.fourthLevel.includes(fourthLevelSpell)}
-              >
-                <span>{fourthLevelSpell.name}</span>
-                <span class="text-muted-foreground">
-                  {fourthLevelSpell.school}
-                </span>
-              </Command.Item>
-            {/each}
-          </Command.Group>
+          {@render SpellPickSection("4th level", SpellLevel.Fourth)}
           <Command.Separator />
-          <Command.Group heading="5th level">
-            {#each fifthLevelSpells as fifthLevelSpell}
-              <Command.Item
-                class="flex justify-between"
-                onclick={(_) => monster.spells.fifthLevel.push(fifthLevelSpell)}
-                disabled={monster.spells.fifthLevel.includes(fifthLevelSpell)}
-              >
-                <span>{fifthLevelSpell.name}</span>
-                <span class="text-muted-foreground">
-                  {fifthLevelSpell.school}
-                </span>
-              </Command.Item>
-            {/each}
-          </Command.Group>
+          {@render SpellPickSection("5th level", SpellLevel.Fifth)}
           <Command.Separator />
-          <Command.Group heading="6th level">
-            {#each sixthLevelSpells as sixthLevelSpell}
-              <Command.Item
-                class="flex justify-between"
-                onclick={(_) => monster.spells.sixthLevel.push(sixthLevelSpell)}
-                disabled={monster.spells.sixthLevel.includes(sixthLevelSpell)}
-              >
-                <span>{sixthLevelSpell.name}</span>
-                <span class="text-muted-foreground">
-                  {sixthLevelSpell.school}
-                </span>
-              </Command.Item>
-            {/each}
-          </Command.Group>
+          {@render SpellPickSection("6th level", SpellLevel.Sixth)}
           <Command.Separator />
-          <Command.Group heading="7th level">
-            {#each seventhLevelSpells as seventhLevelSpell}
-              <Command.Item
-                class="flex justify-between"
-                onclick={(_) =>
-                  monster.spells.seventhLevel.push(seventhLevelSpell)}
-                disabled={monster.spells.seventhLevel.includes(
-                  seventhLevelSpell,
-                )}
-              >
-                <span>{seventhLevelSpell.name}</span>
-                <span class="text-muted-foreground">
-                  {seventhLevelSpell.school}
-                </span>
-              </Command.Item>
-            {/each}
-          </Command.Group>
+          {@render SpellPickSection("7th level", SpellLevel.Seventh)}
           <Command.Separator />
-          <Command.Group heading="8th level">
-            {#each eighthLevelSpells as eighthLevelSpell}
-              <Command.Item
-                class="flex justify-between"
-                onclick={(_) =>
-                  monster.spells.eighthLevel.push(eighthLevelSpell)}
-                disabled={monster.spells.eighthLevel.includes(eighthLevelSpell)}
-              >
-                <span>{eighthLevelSpell.name}</span>
-                <span class="text-muted-foreground">
-                  {eighthLevelSpell.school}
-                </span>
-              </Command.Item>
-            {/each}
-          </Command.Group>
+          {@render SpellPickSection("8th level", SpellLevel.Eighth)}
           <Command.Separator />
-          <Command.Group heading="9th level">
-            {#each ninthLevelSpells as ninthLevelSpell}
-              <Command.Item
-                class="flex justify-between"
-                onclick={(_) => monster.spells.ninthLevel.push(ninthLevelSpell)}
-                disabled={monster.spells.ninthLevel.includes(ninthLevelSpell)}
-              >
-                <span>{ninthLevelSpell.name}</span>
-                <span class="text-muted-foreground">
-                  {ninthLevelSpell.school}
-                </span>
-              </Command.Item>
-            {/each}
-          </Command.Group>
+          {@render SpellPickSection("9th level", SpellLevel.Ninth)}
         </Command.List>
       </Command.Root>
     {:catch error}
@@ -1303,74 +1166,34 @@
       scrollbarYClasses="hidden"
     >
       <div class="p-2">
-        {@render SpellListSection(
-          "Cantrips",
-          monster.spells.cantrips,
-          MonsterActions.RemoveCantrip,
-        )}
+        {@render SpellListSection("Cantrips", SpellLevel.Cantrip)}
         <Separator />
 
-        {@render SpellListSection(
-          "1st level",
-          monster.spells.firstLevel,
-          MonsterActions.RemoveFirstLevelSpell,
-        )}
+        {@render SpellListSection("1st level", SpellLevel.First)}
         <Separator />
 
-        {@render SpellListSection(
-          "2nd level",
-          monster.spells.secondLevel,
-          MonsterActions.RemoveSecondLevelSpell,
-        )}
+        {@render SpellListSection("2nd level", SpellLevel.Second)}
         <Separator />
 
-        {@render SpellListSection(
-          "3rd level",
-          monster.spells.thirdLevel,
-          MonsterActions.RemoveThirdLevelSpell,
-        )}
+        {@render SpellListSection("3rd level", SpellLevel.Third)}
         <Separator />
 
-        {@render SpellListSection(
-          "4th level",
-          monster.spells.fourthLevel,
-          MonsterActions.RemoveFourthLevelSpell,
-        )}
+        {@render SpellListSection("4th level", SpellLevel.Fourth)}
         <Separator />
 
-        {@render SpellListSection(
-          "5th level",
-          monster.spells.fifthLevel,
-          MonsterActions.RemoveFifthLevelSpell,
-        )}
+        {@render SpellListSection("5th level", SpellLevel.Fifth)}
         <Separator />
 
-        {@render SpellListSection(
-          "6th level",
-          monster.spells.sixthLevel,
-          MonsterActions.RemoveSixthLevelSpell,
-        )}
+        {@render SpellListSection("6th level", SpellLevel.Sixth)}
         <Separator />
 
-        {@render SpellListSection(
-          "7th level",
-          monster.spells.seventhLevel,
-          MonsterActions.RemoveSeventhLevelSpell,
-        )}
+        {@render SpellListSection("7th level", SpellLevel.Seventh)}
         <Separator />
 
-        {@render SpellListSection(
-          "8th level",
-          monster.spells.eighthLevel,
-          MonsterActions.RemoveEighthLevelSpell,
-        )}
+        {@render SpellListSection("8th level", SpellLevel.Eighth)}
         <Separator />
 
-        {@render SpellListSection(
-          "9th level",
-          monster.spells.ninthLevel,
-          MonsterActions.RemoveNinthLevelSpell,
-        )}
+        {@render SpellListSection("9th level", SpellLevel.Ninth)}
       </div>
     </ScrollArea>
   </Tabs.Content>
