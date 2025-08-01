@@ -82,17 +82,14 @@ impl SpellRepository {
     pub async fn get_all(&self) -> Result<Box<[Spell]>, sqlx::Error> {
         let spells: Vec<Spell> = query_as(
             r#"
-                SELECT 
-                    s.*,
-                    COALESCE(
-                        ARRAY(
-                            SELECT class 
-                            FROM spell_classes 
-                            WHERE spell_id = s.id
-                        ), 
-                        '{}'
-                    ) AS classes
-                FROM spells s;
+            SELECT
+                s.*,
+                ARRAY(
+                    SELECT class
+                    FROM spell_classes
+                    WHERE spell_id = s.id
+                ) AS classes
+            FROM spells s;
             "#,
         )
         .fetch_all(&self.pool)
