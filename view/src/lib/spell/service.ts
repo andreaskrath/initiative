@@ -55,10 +55,6 @@ const validateSpell = (spell: Spell): string[] => {
     errors.push("A range must be specified");
   }
 
-  if (!spell.shape) {
-    errors.push("A shape must be specified");
-  }
-
   if (!spell.area) {
     errors.push("An area must be specified");
   }
