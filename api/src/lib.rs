@@ -1,13 +1,15 @@
+pub mod encounter;
+pub mod monster;
+pub mod shared;
+pub mod spell;
+
 use axum::{
     body::Body,
     extract::Path,
-    http::{HeaderValue, Method, Request, StatusCode, header},
-    middleware::Next,
-    response::{Html, IntoResponse, Response},
+    http::{HeaderValue, StatusCode, header},
+    response::{Html, Response},
 };
 use include_dir::{Dir, include_dir};
-
-pub mod spells;
 
 static ASSETS_DIR: Dir<'static> = include_dir!("./view/dist/assets");
 static INDEX: Html<&'static str> = Html(include_str!("../../view/dist/index.html"));

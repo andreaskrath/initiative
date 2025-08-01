@@ -1,7 +1,7 @@
 use sqlx::{PgPool, QueryBuilder, query_as};
 use uuid::Uuid;
 
-use crate::types::spell::Spell;
+use super::types::Spell;
 
 pub struct SpellRepository {
     pool: PgPool,

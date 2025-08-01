@@ -1,17 +1,11 @@
-mod handlers;
-mod repositories;
-mod types;
-
-use std::env;
-
 use axum::{
     Router,
     routing::{get, post},
 };
+use combat_tracker::spell;
 use sqlx::postgres::PgPoolOptions;
+use std::env;
 use tokio::net::TcpListener;
-
-use handlers::spells;
 
 fn main() {
     async_main();
@@ -31,10 +25,10 @@ async fn async_main() {
     sqlx::migrate!().run(&pool).await.unwrap();
 
     let app = Router::new()
-        .route("/assets/{*path}", get(handlers::assets))
-        .route("/api/spells/create", post(spells::create))
-        .route("/api/spells", get(spells::get))
-        .fallback(handlers::index)
+        .route("/assets/{*path}", get(combat_tracker::assets))
+        .route("/api/spells/create", post(spell::handler::create))
+        .route("/api/spells", get(spell::handler::get))
+        .fallback(combat_tracker::index)
         .with_state(pool);
 
     let listener = TcpListener::bind("127.0.0.1:5173")

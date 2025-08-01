@@ -1,7 +1,8 @@
 use serde::{Deserialize, Serialize};
 use uuid::Uuid;
 
-use super::{class::Class, magic_school::MagicSchool, spell_level::SpellLevel};
+use super::{MagicSchool, SpellLevel};
+use crate::shared::types::Class;
 
 #[derive(Debug, Serialize, Deserialize, sqlx::FromRow)]
 #[serde(rename_all = "camelCase")]
