@@ -1,7 +1,8 @@
 import { type Spell } from "$spell/types";
+import { Validate } from "$spell/validate";
 
 export const CreateSpell = async (spell: Spell): Promise<number | string[]> => {
-  let errors = validateSpell(spell);
+  let errors = await Validate(spell);
   if (errors.length > 0) {
     return errors;
   }
@@ -26,50 +27,4 @@ export const GetAllSpells = async (): Promise<Spell[]> => {
 
   const data: Spell[] = await response.json();
   return data;
-};
-
-const validateSpell = (spell: Spell): string[] => {
-  let errors: string[] = [];
-
-  if (!spell.name) {
-    errors.push("A name must be specified");
-  }
-
-  if (!spell.school) {
-    errors.push("A school of magic must be specified");
-  }
-
-  if (!spell.level) {
-    errors.push("A spell level must be specified");
-  }
-
-  if (!spell.castingTime) {
-    errors.push("A casting time must be specified");
-  }
-
-  if (!spell.duration) {
-    errors.push("A duration must be specified");
-  }
-
-  if (!spell.range) {
-    errors.push("A range must be specified");
-  }
-
-  if (!spell.area) {
-    errors.push("An area must be specified");
-  }
-
-  if (!spell.description) {
-    errors.push("A description must be specified");
-  }
-
-  if (spell.materialConsumed && !spell.material) {
-    errors.push("The material is consumed, but no material is specified");
-  }
-
-  if (Object.values(spell.classes).every((value) => !value)) {
-    errors.push("No class restrictions have been specified");
-  }
-
-  return errors;
 };

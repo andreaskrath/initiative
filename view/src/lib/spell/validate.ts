@@ -1,0 +1,59 @@
+import { Class } from "$shared/types";
+import { MagicSchools, SpellLevels, type Spell } from "$spell/types";
+import * as z from "zod";
+
+export const Validate = async (spell: Spell): Promise<string[]> => {
+  const result = await schema.safeParseAsync(spell);
+
+  if (!result.success) {
+    return result.error.issues.map((issue) => issue.message);
+  }
+
+  return [];
+};
+
+const schema = z
+  .object({
+    name: z
+      .string("The name must be specified")
+      .min(1, "The name must be at least a single character long"),
+    school: z.enum(MagicSchools, "A school of magic must be specified"),
+    level: z.enum(SpellLevels, "A spell level must be specified"),
+    castingTime: z
+      .string("The casting time must be specified")
+      .min(1, "A casting time must be at least a single character long"),
+    verbal: z.boolean(),
+    somatic: z.boolean(),
+    material: z.string().optional(),
+    materialConsumed: z.boolean(),
+    ritual: z.boolean(),
+    concentration: z.boolean(),
+    duration: z
+      .string("The duration must be specified")
+      .min(1, "A duration must be at least a single character long"),
+    range: z
+      .string("The range must be specified")
+      .min(1, "A range must be at least a single character long"),
+    area: z
+      .string("The area must be specified")
+      .min(1, "An area must be at least a single character long"),
+    shape: z.string().optional(),
+    classes: z.array(z.enum(Class)),
+    description: z
+      .string("The description must be specified")
+      .min(1, "A description must be at least a single character long"),
+    atHigherLevels: z.string().optional(),
+  })
+  .refine(
+    (data) => {
+      // If materialConsumed is true, material must have a value
+      if (data.materialConsumed === true) {
+        return data.material !== undefined && data.material.length > 0;
+      }
+      return true;
+    },
+    {
+      message: "Material components must be specified when they are consumed",
+      path: ["material"],
+    },
+  );
