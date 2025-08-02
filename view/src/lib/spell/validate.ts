@@ -14,6 +14,7 @@ export const Validate = async (spell: Spell): Promise<string[]> => {
 
 const schema = z
   .object({
+    id: z.uuid().optional(),
     name: z
       .string("The name must be specified")
       .min(1, "The name must be at least a single character long"),
