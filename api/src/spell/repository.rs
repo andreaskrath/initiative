@@ -80,7 +80,7 @@ impl SpellRepository {
     }
 
     pub async fn get_all(&self) -> Result<Box<[Spell]>, sqlx::Error> {
-        let spells: Vec<Spell> = query_as("SELECT * FROM mv_spells;")
+        let spells: Vec<Spell> = query_as("SELECT * FROM v_spells;")
             .fetch_all(&self.pool)
             .await?;
 
