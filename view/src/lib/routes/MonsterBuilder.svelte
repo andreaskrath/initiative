@@ -33,6 +33,7 @@
 
   import * as Command from "$components/ui/command/index";
   import Container from "$components/Container.svelte";
+  import Errors from "$components/Errors.svelte";
   import Input from "$components/Input.svelte";
   import Label from "$components/Label.svelte";
   import { ScrollArea } from "$components/ui/scroll-area/index";
@@ -41,6 +42,10 @@
   import TextArea from "$components/TextArea.svelte";
   import Title from "$components/Title.svelte";
   import Toggle from "$components/Toggle.svelte";
+  import { MonsterService } from "$lib/monster/service";
+  import { StatusCodes } from "http-status-codes";
+  import { toast } from "svelte-sonner";
+  import { goto } from "@mateothegreat/svelte5-router";
   import Combobox from "$lib/shared/components/Combobox.svelte";
 
   const alignments = LabelValueFactory(Alignments);
@@ -54,6 +59,8 @@
 
   let monster = $state(MonsterActions.EmptyMonster());
   let spells: Spell[] = $state([]);
+  let errors: string[] = $state([]);
+
   let spellSlots: Record<SpellLevel, number | undefined> = $state(
     RecordFactory(SpellLevels, undefined),
   );
@@ -79,6 +86,73 @@
   const getSpells = async (): Promise<void> => {
     let all_spells = await GetAllSpells();
     spells = all_spells.sort((a, b) => a.name!.localeCompare(b.name!));
+  };
+
+  const handleCreateMonster = async (event: MouseEvent): Promise<void> => {
+    event.preventDefault();
+
+    for (const spellLevel of SpellLevels) {
+      let value = spellSlots[spellLevel];
+      if (value) {
+        monster.spellcasting.spellSlots.push([spellLevel, value]);
+      }
+    }
+
+    for (const skill of Skills) {
+      let value = skills[skill];
+      if (value) {
+        monster.skills.push([skill, value]);
+      }
+    }
+
+    for (const attribute of Attributes) {
+      let value = savingThrows[attribute];
+      if (value) {
+        monster.savingThrows.push([attribute, value]);
+      }
+    }
+
+    for (const language of Languages) {
+      if (languages[language]) {
+        monster.languages.push(language);
+      }
+    }
+
+    for (const damageType of DamageTypes) {
+      if (damageResistances[damageType]) {
+        monster.damageResistances.push(damageType);
+      }
+
+      if (damageImmunities[damageType]) {
+        monster.damageImmunities.push(damageType);
+      }
+    }
+
+    for (const condition of Conditions) {
+      if (conditionImmunities[condition]) {
+        monster.conditionImmunities.push(condition);
+      }
+    }
+
+    const result = await MonsterService.Create(monster);
+    if (typeof result === "number") {
+      switch (result) {
+        case StatusCodes.CREATED:
+          toast.success("Successfully created monster");
+          goto("/monsters");
+          break;
+        case StatusCodes.CONFLICT:
+          toast.error("A monster with this name already exists");
+          break;
+        case StatusCodes.INTERNAL_SERVER_ERROR:
+          toast.success("Internal server error");
+          break;
+        default:
+          toast.error("An unknown error occured");
+      }
+    } else {
+      errors = result;
+    }
   };
 </script>
 
@@ -1271,3 +1345,15 @@
     </ScrollArea>
   </Tabs.Content>
 </Tabs.Root>
+
+<!-- Create Monster Button -->
+<div class="flex justify-end">
+  <Button onclick={async (e: MouseEvent) => handleCreateMonster(e)}>
+    Create Monster
+  </Button>
+</div>
+
+<!-- Valiation Errors -->
+<div class="flex justify-center">
+  <Errors title="Unable to create spell" bind:errors />
+</div>
