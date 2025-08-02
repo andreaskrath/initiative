@@ -85,12 +85,14 @@ export type Monster = {
   availableLegendaryActionsPerTurn?: number;
   legendaryActions: LegendaryAction[];
   lairActions: NamedDescription[];
-  spellcastingLevel?: number;
-  spellcastingAttribute?: Attribute;
-  spellcastingDC?: number;
-  spellcastingAttackBonus?: number;
-  spellSlots: [SpellLevel, number][];
-  spells: Spell[];
+  spellcasting: {
+    level?: number;
+    attribute?: Attribute;
+    dc?: number;
+    attackBonus?: number;
+    spellSlots: [SpellLevel, number][];
+    spells: Spell[];
+  };
 };
 
 export const MonsterActions = {
@@ -133,12 +135,14 @@ export const MonsterActions = {
     availableLegendaryActionsPerTurn: undefined,
     legendaryActions: [],
     lairActions: [],
-    spellcastingLevel: undefined,
-    spellcastingAttribute: undefined,
-    spellcastingDC: undefined,
-    spellcastingAttackBonus: undefined,
-    spellSlots: [],
-    spells: [],
+    spellcasting: {
+      level: undefined,
+      attribute: undefined,
+      dc: undefined,
+      attackBonus: undefined,
+      spellSlots: [],
+      spells: [],
+    },
   }),
 
   AddVision: (monster: Monster, event: MouseEvent): void => {
@@ -387,7 +391,9 @@ export const MonsterActions = {
   },
 
   RemoveSpell: (monster: Monster, spellToRemove: Spell) => {
-    monster.spells = monster.spells.filter((spell) => spell !== spellToRemove);
+    monster.spellcasting.spells = monster.spellcasting.spells.filter(
+      (spell) => spell !== spellToRemove,
+    );
 
     return function (event: MouseEvent) {
       event.preventDefault();
