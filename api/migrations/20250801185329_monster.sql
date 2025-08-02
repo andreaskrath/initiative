@@ -35,11 +35,17 @@ CREATE TABLE IF NOT EXISTS monster_spellcasting (
     PRIMARY KEY (monster_id)
 );
 
-CREATE TABLE IF NOT EXISTS monster_attributes (
+CREATE TABLE IF NOT EXISTS monster_spell_slots (
     monster_id uuid NOT NULL REFERENCES monsters(id) ON DELETE CASCADE,
-    attribute attribute NOT NULL,
-    value smallint NOT NULL,
-    PRIMARY KEY (monster_id, attribute)
+    level spell_level NOT NULL,
+    slots smallint NOT NULL,
+    PRIMARY KEY (monster_id, level)
+);
+
+CREATE TABLE IF NOT EXISTS monster_spells (
+    monster_id uuid NOT NULL REFERENCES monsters(id) ON DELETE CASCADE,
+    spell_id uuid NOT NULL REFERENCES spells(id) ON DELETE CASCADE,
+    PRIMARY KEY (monster_id, spell_id)
 );
 
 CREATE TABLE IF NOT EXISTS monster_saving_throws (
@@ -166,10 +172,4 @@ CREATE TABLE IF NOT EXISTS monster_lair_actions (
     name text NOT NULL,
     description text NOT NULL,
     PRIMARY KEY (monster_id, name)
-);
-
-CREATE TABLE IF NOT EXISTS monster_spells (
-    monster_id uuid NOT NULL REFERENCES monsters(id) ON DELETE CASCADE,
-    spell_id uuid NOT NULL REFERENCES spells(id) ON DELETE CASCADE,
-    PRIMARY KEY (monster_id, spell_id)
 );
