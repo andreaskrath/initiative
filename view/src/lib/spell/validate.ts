@@ -1,8 +1,10 @@
+import { PrepareForValidation } from "$utils/validate";
 import { Class } from "$shared/types";
 import { MagicSchool, SpellLevel, type Spell } from "$spell/types";
 import * as z from "zod";
 
 export const Validate = async (spell: Spell): Promise<string[]> => {
+  spell = PrepareForValidation(spell);
   const result = await schema.safeParseAsync(spell);
 
   if (!result.success) {
