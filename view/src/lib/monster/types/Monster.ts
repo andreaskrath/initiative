@@ -3,7 +3,6 @@ import {
   Language,
   MonsterType,
   Movement,
-  Recharge,
   Sight,
   Size,
   Skill,
@@ -37,7 +36,7 @@ type RangedAttack = {
 
 type RechargeAction = {
   name?: string;
-  rechargeDice?: Recharge;
+  rechargeDice?: string;
   description?: string;
 };
 

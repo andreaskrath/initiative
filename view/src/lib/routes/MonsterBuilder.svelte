@@ -41,6 +41,7 @@
   import TextArea from "$components/TextArea.svelte";
   import Title from "$components/Title.svelte";
   import Toggle from "$components/Toggle.svelte";
+  import Combobox from "$lib/shared/components/Combobox.svelte";
 
   const alignments = LabelValueFactory(Alignments);
   const attributes = LabelValueFactory(Attributes);
@@ -883,7 +884,7 @@
       <!-- Recharge -->
       <Container class="col-span-3">
         <Label>Recharge</Label>
-        <Select
+        <Combobox
           bind:value={rechargeAction.rechargeDice}
           placeholder="Select a recharge dice"
           items={recharges}
