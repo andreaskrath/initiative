@@ -7,17 +7,25 @@
 
   import {
     Alignments,
+    Language,
     Languages,
-    type Monster,
     MonsterTypes,
     Movements,
     Recharges,
     Sights,
     Sizes,
+    Skill,
     Skills,
   } from "$monster/types";
   import { type Spell, SpellLevel, SpellLevels } from "$spell/types";
-  import { Attributes, Conditions, DamageTypes } from "$shared/types";
+  import {
+    Attribute,
+    Attributes,
+    Condition,
+    Conditions,
+    DamageType,
+    DamageTypes,
+  } from "$shared/types";
   import { MonsterActions } from "$monster/types/Monster";
 
   import { LabelValueFactory, RecordFactory } from "$shared/utils/factories";
@@ -43,13 +51,29 @@
   const sights = LabelValueFactory(Sights);
   const sizes = LabelValueFactory(Sizes);
 
-  let spellSlots: Record<SpellLevel, number | undefined> = RecordFactory(
-    SpellLevels,
-    undefined,
-  );
-
   let monster = $state(MonsterActions.EmptyMonster());
   let spells: Spell[] = $state([]);
+  let spellSlots: Record<SpellLevel, number | undefined> = $state(
+    RecordFactory(SpellLevels, undefined),
+  );
+  let skills: Record<Skill, number | undefined> = $state(
+    RecordFactory(Skills, undefined),
+  );
+  let languages: Record<Language, boolean> = $state(
+    RecordFactory(Languages, false),
+  );
+  let savingThrows: Record<Attribute, number | undefined> = $state(
+    RecordFactory(Attributes, undefined),
+  );
+  let damageResistances: Record<DamageType, boolean> = $state(
+    RecordFactory(DamageTypes, false),
+  );
+  let damageImmunities: Record<DamageType, boolean> = $state(
+    RecordFactory(DamageTypes, false),
+  );
+  let conditionImmunities: Record<Condition, boolean> = $state(
+    RecordFactory(Conditions, false),
+  );
 
   const getSpells = async (): Promise<void> => {
     let all_spells = await GetAllSpells();
@@ -218,17 +242,65 @@
     <Title variant="muted">Attributes</Title>
     <div class="grid grid-cols-18 space-y-5 gap-x-2">
       <!-- Attributes -->
-      {#each Attributes as attribute}
-        <Container class="col-span-3">
-          <Label>{attribute}</Label>
-          <Input
-            bind:value={monster.attributes[attribute]}
-            type="number"
-            placeholder="13"
-            class="text-center"
-          />
-        </Container>
-      {/each}
+      <Container class="col-span-3">
+        <Label>{Attribute.Strength}</Label>
+        <Input
+          bind:value={monster.strength}
+          type="number"
+          placeholder="13"
+          class="text-center"
+        />
+      </Container>
+
+      <Container class="col-span-3">
+        <Label>{Attribute.Dexterity}</Label>
+        <Input
+          bind:value={monster.dexterity}
+          type="number"
+          placeholder="13"
+          class="text-center"
+        />
+      </Container>
+
+      <Container class="col-span-3">
+        <Label>{Attribute.Consitution}</Label>
+        <Input
+          bind:value={monster.constitution}
+          type="number"
+          placeholder="13"
+          class="text-center"
+        />
+      </Container>
+
+      <Container class="col-span-3">
+        <Label>{Attribute.Intelligence}</Label>
+        <Input
+          bind:value={monster.intelligence}
+          type="number"
+          placeholder="13"
+          class="text-center"
+        />
+      </Container>
+
+      <Container class="col-span-3">
+        <Label>{Attribute.Wisdom}</Label>
+        <Input
+          bind:value={monster.wisdom}
+          type="number"
+          placeholder="13"
+          class="text-center"
+        />
+      </Container>
+
+      <Container class="col-span-3">
+        <Label>{Attribute.Charisma}</Label>
+        <Input
+          bind:value={monster.charisma}
+          type="number"
+          placeholder="13"
+          class="text-center"
+        />
+      </Container>
     </div>
 
     <!-- Skills -->
@@ -238,7 +310,7 @@
         <Container class="col-span-3">
           <Label>{skill}</Label>
           <Input
-            bind:value={monster.skills[skill]}
+            bind:value={skills[skill]}
             type="number"
             placeholder=""
             class="text-center"
@@ -252,7 +324,7 @@
     <div class="grid grid-cols-4 space-y-2 gap-x-2">
       {#each Languages as language}
         <Container class="col-span-1">
-          <Toggle bind:checked={monster.languages[language]}>
+          <Toggle bind:checked={languages[language]}>
             {language}
           </Toggle>
         </Container>
@@ -427,7 +499,7 @@
         <Container class="col-span-3">
           <Label>{attribute}</Label>
           <Input
-            bind:value={monster.savingThrows[attribute]}
+            bind:value={savingThrows[attribute]}
             type="number"
             placeholder=""
             class="text-center"
@@ -441,7 +513,7 @@
     <div class="grid grid-cols-4 space-y-2 gap-x-2">
       {#each DamageTypes as damageType}
         <Container class="col-span-1">
-          <Toggle bind:checked={monster.damageResistances[damageType]}>
+          <Toggle bind:checked={damageResistances[damageType]}>
             {damageType}
           </Toggle>
         </Container>
@@ -453,7 +525,7 @@
     <div class="grid grid-cols-4 space-y-2 gap-x-2">
       {#each DamageTypes as damageType}
         <Container class="col-span-1">
-          <Toggle bind:checked={monster.damageImmunities[damageType]}>
+          <Toggle bind:checked={damageImmunities[damageType]}>
             {damageType}
           </Toggle>
         </Container>
@@ -465,7 +537,7 @@
     <div class="grid grid-cols-5 space-y-2 gap-x-2">
       {#each Conditions as condition}
         <Container class="col-span-1">
-          <Toggle bind:checked={monster.conditionImmunities[condition]}>
+          <Toggle bind:checked={conditionImmunities[condition]}>
             {condition}
           </Toggle>
         </Container>

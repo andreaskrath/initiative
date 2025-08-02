@@ -1,25 +1,15 @@
 import {
   Alignment,
   Language,
-  Languages,
   MonsterType,
   Movement,
   Recharge,
   Sight,
   Size,
   Skill,
-  Skills,
 } from "$monster/types";
-import {
-  Attribute,
-  Attributes,
-  Condition,
-  Conditions,
-  DamageType,
-  DamageTypes,
-} from "$shared/types";
-import { RecordFactory } from "$shared/utils/factories";
-import { type Spell } from "$spell/types";
+import { Attribute, Condition, DamageType } from "$shared/types";
+import { SpellLevel, type Spell } from "$spell/types";
 
 type NamedDescription = { name?: string; description?: string };
 
@@ -58,6 +48,7 @@ type LegendaryAction = {
 };
 
 export type Monster = {
+  id?: string;
   name?: string;
   challengeRating?: number;
   xp?: number;
@@ -66,20 +57,25 @@ export type Monster = {
   monsterType?: MonsterType;
   species?: string;
   alignment?: Alignment;
-  attributes: Record<Attribute, number | undefined>;
+  strength?: number;
+  dexterity?: number;
+  constitution?: number;
+  intelligence?: number;
+  wisdom?: number;
+  charisma?: number;
   hitPoints?: number;
   rollableHitPoints?: string;
   armorClass?: number;
   armorType?: string;
-  savingThrows: Record<Attribute, number | undefined>;
-  damageResistances: Record<DamageType, boolean>;
-  damageImmunities: Record<DamageType, boolean>;
-  conditionImmunities: Record<Condition, boolean>;
+  savingThrows: [Attribute, number][];
+  damageResistances: DamageType[];
+  damageImmunities: DamageType[];
+  conditionImmunities: Condition[];
   visions: Vision[];
   passivePerception?: number;
   speeds: Speed[];
-  languages: Record<Language, boolean>;
-  skills: Record<Skill, number | undefined>;
+  languages: Language[];
+  skills: [Skill, number][];
   traits: NamedDescription[];
   regularActions: NamedDescription[];
   meleeAttackActions: MeleeAttack[];
@@ -94,11 +90,13 @@ export type Monster = {
   spellcastingAttribute?: Attribute;
   spellcastingDC?: number;
   spellcastingAttackBonus?: number;
+  spellSlots: [SpellLevel, number][];
   spells: Spell[];
 };
 
 export const MonsterActions = {
   EmptyMonster: (): Monster => ({
+    id: undefined,
     name: undefined,
     challengeRating: undefined,
     xp: undefined,
@@ -107,20 +105,25 @@ export const MonsterActions = {
     monsterType: undefined,
     species: undefined,
     alignment: undefined,
-    attributes: RecordFactory(Attributes, undefined),
+    strength: undefined,
+    dexterity: undefined,
+    constitution: undefined,
+    intelligence: undefined,
+    wisdom: undefined,
+    charisma: undefined,
     hitPoints: undefined,
     rollableHitPoints: undefined,
     armorClass: undefined,
     armorType: undefined,
-    savingThrows: RecordFactory(Attributes, undefined),
-    damageResistances: RecordFactory(DamageTypes, false),
-    damageImmunities: RecordFactory(DamageTypes, false),
-    conditionImmunities: RecordFactory(Conditions, false),
+    savingThrows: [],
+    damageResistances: [],
+    damageImmunities: [],
+    conditionImmunities: [],
     visions: [],
     passivePerception: undefined,
     speeds: [],
-    languages: RecordFactory(Languages, false),
-    skills: RecordFactory(Skills, undefined),
+    languages: [],
+    skills: [],
     traits: [],
     regularActions: [],
     meleeAttackActions: [],
@@ -135,6 +138,7 @@ export const MonsterActions = {
     spellcastingAttribute: undefined,
     spellcastingDC: undefined,
     spellcastingAttackBonus: undefined,
+    spellSlots: [],
     spells: [],
   }),
 
