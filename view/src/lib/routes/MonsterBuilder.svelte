@@ -263,7 +263,7 @@
       </Container>
 
       <Container class="col-span-3">
-        <Label>{Attribute.Consitution}</Label>
+        <Label>{Attribute.Constitution}</Label>
         <Input
           bind:value={monster.constitution}
           type="number"

@@ -1,7 +1,7 @@
 export enum Attribute {
   Strength = "Strength",
   Dexterity = "Dexterity",
-  Consitution = "Constitution",
+  Constitution = "Constitution",
   Intelligence = "Intelligence",
   Wisdom = "Wisdom",
   Charisma = "Charisma",
