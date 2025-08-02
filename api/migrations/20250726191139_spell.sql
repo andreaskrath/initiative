@@ -18,7 +18,6 @@ CREATE TABLE IF NOT EXISTS spells (
     at_higher_levels text
 );
 
-CREATE INDEX IF NOT EXISTS idx_spells_id ON spells(id);
 CREATE INDEX IF NOT EXISTS idx_spells_school ON spells(school);
 CREATE INDEX IF NOT EXISTS idx_spells_level ON spells(level);
 
@@ -27,6 +26,15 @@ CREATE TABLE IF NOT EXISTS spell_classes (
     class class NOT NULL,
     PRIMARY KEY (spell_id, class)
 );
-
-CREATE INDEX IF NOT EXISTS idx_spell_classes_spell_id ON spell_classes(spell_id);
 CREATE INDEX IF NOT EXISTS idx_spell_classes_class ON spell_classes(class);
+
+CREATE OR REPLACE VIEW v_spells AS
+SELECT
+    spells.*,
+    ARRAY (
+        SELECT class
+        FROM spell_classes
+        WHERE spell_id = spells.id
+        ORDER BY class
+    ) as classes
+FROM spells;

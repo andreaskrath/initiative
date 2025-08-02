@@ -12,6 +12,15 @@ CREATE TYPE alignment AS ENUM (
     'unaligned'
 );
 
+CREATE TYPE attribute AS ENUM (
+    'strength', 
+    'dexterity', 
+    'constitution', 
+    'intelligence', 
+    'wisdom', 
+    'charisma'
+);
+
 CREATE TYPE class AS ENUM (
     'artificer',
     'barbarian',
@@ -110,6 +119,15 @@ CREATE TYPE monster_type AS ENUM (
     'ooze',
     'plant',
     'undead'
+);
+
+CREATE TYPE movement_type AS ENUM (
+    'normal', 
+    'burrow',
+    'climb',
+    'fly',
+    'fly_hover', 
+    'swim'
 );
 
 CREATE TYPE sight AS ENUM (
