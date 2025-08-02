@@ -10,7 +10,7 @@ export default defineConfig({
     alias: {
       $lib: path.resolve("./src/lib"),
       $components: path.resolve("./src/lib/shared/components/"),
-      $utils: path.resolve("./src/shared/lib/utils/"),
+      $utils: path.resolve("./src/lib/shared/utils/"),
       $routes: path.resolve("./src/lib/routes/"),
       $spell: path.resolve("./src/lib/spell/"),
       $encounter: path.resolve("./src/lib/encounter/"),
