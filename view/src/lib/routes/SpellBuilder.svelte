@@ -1,6 +1,4 @@
 <script lang="ts">
-  import CircleAlert from "@lucide/svelte/icons/circle-alert";
-
   import {
     Areas,
     CastingTimes,
@@ -17,10 +15,10 @@
   import { LabelValueFactory, RecordFactory } from "$shared/utils/factories";
   import { goto } from "@mateothegreat/svelte5-router";
 
-  import * as Alert from "$components/ui/alert/index.js";
   import { Button } from "$components/ui/button/index";
   import Combobox from "$components/Combobox.svelte";
   import Container from "$components/Container.svelte";
+  import Errors from "$components/Errors.svelte";
   import Input from "$components/Input.svelte";
   import Label from "$components/Label.svelte";
   import Select from "$components/Select.svelte";
@@ -243,18 +241,5 @@ The fire spreads around corners. It ignites flammable objects in the area that a
   </div>
 
   <!-- Valiation Errors -->
-  {#if errors.length > 0}
-    <Alert.Root variant="destructive">
-      <CircleAlert />
-      <Alert.Title>Unable to create the spell.</Alert.Title>
-      <Alert.Description>
-        <p>The following issues were identified.</p>
-        <ul class="list-inside list-disc text-sm">
-          {#each errors as error}
-            <li>{error}</li>
-          {/each}
-        </ul>
-      </Alert.Description>
-    </Alert.Root>
-  {/if}
+  <Errors title="Unable to create spell" bind:errors />
 </div>
