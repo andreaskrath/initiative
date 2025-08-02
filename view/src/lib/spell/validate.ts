@@ -1,5 +1,5 @@
 import { Class } from "$shared/types";
-import { MagicSchools, SpellLevels, type Spell } from "$spell/types";
+import { MagicSchool, SpellLevel, type Spell } from "$spell/types";
 import * as z from "zod";
 
 export const Validate = async (spell: Spell): Promise<string[]> => {
@@ -17,8 +17,8 @@ const schema = z
     name: z
       .string("The name must be specified")
       .min(1, "The name must be at least a single character long"),
-    school: z.enum(MagicSchools, "A school of magic must be specified"),
-    level: z.enum(SpellLevels, "A spell level must be specified"),
+    school: z.enum(MagicSchool, "A school of magic must be specified"),
+    level: z.enum(SpellLevel, "A spell level must be specified"),
     castingTime: z
       .string("The casting time must be specified")
       .min(1, "A casting time must be at least a single character long"),
