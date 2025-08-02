@@ -235,9 +235,9 @@ The fire spreads around corners. It ignites flammable objects in the area that a
 
   <!-- Create Spell Button -->
   <div class="flex justify-end">
-    <Button onclick={async (e: MouseEvent) => handleCreateSpell(e)}
-      >Create Spell</Button
-    >
+    <Button onclick={async (e: MouseEvent) => handleCreateSpell(e)}>
+      Create Spell
+    </Button>
   </div>
 
   <!-- Valiation Errors -->
