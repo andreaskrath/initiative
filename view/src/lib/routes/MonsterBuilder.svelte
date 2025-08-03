@@ -94,21 +94,30 @@
     for (const spellLevel of SpellLevels) {
       let value = spellSlots[spellLevel];
       if (value) {
-        monster.spellcasting.spellSlots.push([spellLevel, value]);
+        monster.spellcasting.spellSlots.push({
+          level: spellLevel,
+          slots: value,
+        });
       }
     }
 
     for (const skill of Skills) {
       let value = skills[skill];
       if (value) {
-        monster.skills.push([skill, value]);
+        monster.skills.push({
+          skill: skill,
+          modifier: value,
+        });
       }
     }
 
     for (const attribute of Attributes) {
       let value = savingThrows[attribute];
       if (value) {
-        monster.savingThrows.push([attribute, value]);
+        monster.savingThrows.push({
+          attribute: attribute,
+          modifier: value,
+        });
       }
     }
 

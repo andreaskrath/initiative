@@ -48,10 +48,24 @@ const schema = z.object({
     .regex(/^\d+d\d+([+-]\d+)?$/, "Invalid rollable hit points format"),
   armorClass: z.number("An armor class must be specified"),
   armorType: z.string().optional(),
-  savingThrows: z.array(z.tuple([z.enum(Attribute), z.number()])),
-  damageResistances: z.array(z.enum(DamageType)),
-  damageImmunities: z.array(z.enum(DamageType)),
-  conditionImmunities: z.array(z.enum(Condition)),
+  savingThrows: z.array(
+    z.object({
+      attribute: z.enum(
+        Attribute,
+        "A saving throw must have an attribute specified",
+      ),
+      modifier: z.number("A saving throw must have a modifier specified"),
+    }),
+  ),
+  damageResistances: z.array(
+    z.enum(DamageType, "Damage resistances must specify a damage type"),
+  ),
+  damageImmunities: z.array(
+    z.enum(DamageType, "Damge immunities must specify a damage type"),
+  ),
+  conditionImmunities: z.array(
+    z.enum(Condition, "Condition immunities must specify a condition"),
+  ),
   visions: z.array(
     z.object({
       type: z.enum(Sight, "A sight type must be specified for a vision"),
@@ -66,7 +80,12 @@ const schema = z.object({
     }),
   ),
   languages: z.array(z.enum(Language)),
-  skills: z.array(z.tuple([z.enum(Skill), z.number()])),
+  skills: z.array(
+    z.object({
+      skill: z.enum(Skill, "A skill must have a skill specified"),
+      modifier: z.number("A skill must have a modifier specified"),
+    }),
+  ),
   traits: z.array(
     z.object({
       name: z.string("A name must be specified for a trait"),
@@ -193,7 +212,17 @@ const schema = z.object({
       attribute: z.enum(Attribute).optional(),
       dc: z.number().optional(),
       attackBonus: z.number().optional(),
-      spellSlots: z.array(z.tuple([z.enum(SpellLevel), z.number()])),
+      spellSlots: z.array(
+        z.object({
+          level: z.enum(
+            SpellLevel,
+            "A spell slot must have a spell level specified",
+          ),
+          slots: z.number(
+            "A spell slot must have the number of spell slots specified",
+          ),
+        }),
+      ),
       spells: z.array(z.string()),
     })
     .superRefine((spellcasting, ctx) => {

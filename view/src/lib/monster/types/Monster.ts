@@ -66,7 +66,10 @@ export type Monster = {
   rollableHitPoints?: string;
   armorClass?: number;
   armorType?: string;
-  savingThrows: [Attribute, number][];
+  savingThrows: {
+    attribute: Attribute;
+    modifier: number;
+  }[];
   damageResistances: DamageType[];
   damageImmunities: DamageType[];
   conditionImmunities: Condition[];
@@ -74,7 +77,10 @@ export type Monster = {
   passivePerception?: number;
   speeds: Speed[];
   languages: Language[];
-  skills: [Skill, number][];
+  skills: {
+    skill: Skill;
+    modifier: number;
+  }[];
   traits: NamedDescription[];
   regularActions: NamedDescription[];
   meleeAttackActions: MeleeAttack[];
@@ -90,7 +96,10 @@ export type Monster = {
     attribute?: Attribute;
     dc?: number;
     attackBonus?: number;
-    spellSlots: [SpellLevel, number][];
+    spellSlots: {
+      level: SpellLevel;
+      slots: number;
+    }[];
     spells: Spell[];
   };
 };
