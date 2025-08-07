@@ -5,7 +5,7 @@ use super::{MagicSchool, SpellLevel};
 use crate::shared::types::Class;
 
 #[derive(Debug, Serialize, Deserialize, sqlx::FromRow)]
-#[serde(rename_all = "camelCase")]
+#[serde(rename_all = "snake_case")]
 pub struct Spell {
     pub id: Option<Uuid>,
     pub name: String,

@@ -1,3 +1,8 @@
+use serde::{Deserialize, Serialize};
+
+#[derive(Debug, Clone, Copy, PartialEq, sqlx::Type, Serialize, Deserialize)]
+#[sqlx(type_name = "monster_type", rename_all = "lowercase")]
+#[serde(rename_all = "snake_case")]
 pub enum MonsterType {
     Aberration,
     Beast,

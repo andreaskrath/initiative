@@ -2,6 +2,7 @@ import { Class } from "$shared/types";
 import { MagicSchool, SpellLevel } from "$spell/types";
 
 export type Spell = {
+  id?: string;
   name?: string;
   school?: MagicSchool;
   level?: SpellLevel;
@@ -23,6 +24,7 @@ export type Spell = {
 
 export const SpellActions = {
   EmptySpell: (): Spell => ({
+    id: undefined,
     name: undefined,
     school: undefined,
     level: undefined,
