@@ -25,13 +25,15 @@
           typescript-language-server
           eslint
         ];
+
+        rustToolchain = pkgs.rust-bin.stable.latest.default.override {
+          extensions = ["rust-src" "rust-analyzer"];
+        };
       in {
         devShells.default = with pkgs;
           mkShell {
             buildInputs = [
-              rust-bin.stable.latest.default
-              rust-analyzer
-              taplo
+              rustToolchain
               vscode-extensions.vadimcn.vscode-lldb.adapter
               openssl
               pkg-config
@@ -40,6 +42,7 @@
               nodejs
               node_modules
             ];
+            RUST_SRC_PATH = "${rustToolchain}/lib/rustlib/src/rust/library";
           };
       }
     );
