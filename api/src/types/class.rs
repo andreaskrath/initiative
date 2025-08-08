@@ -1,7 +1,5 @@
-use serde::{Deserialize, Serialize};
-
-#[derive(Debug, Clone, Copy, PartialEq, sqlx::Type, Serialize, Deserialize)]
-#[sqlx(type_name = "class", rename_all = "lowercase")]
+#[derive(Debug, Clone, Copy, PartialEq, sqlx::Type, serde::Serialize, serde::Deserialize)]
+#[sqlx(type_name = "class", rename_all = "snake_case")]
 #[serde(rename_all = "snake_case")]
 pub enum Class {
     Artificer,

@@ -1,6 +1,4 @@
-use serde::{Deserialize, Serialize};
-
-#[derive(Debug, Clone, Copy, PartialEq, sqlx::Type, Serialize, Deserialize)]
+#[derive(Debug, Clone, Copy, PartialEq, sqlx::Type, serde::Serialize, serde::Deserialize)]
 #[sqlx(type_name = "damage_type", rename_all = "snake_case")]
 #[serde(rename_all = "snake_case")]
 pub enum DamageType {

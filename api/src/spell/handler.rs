@@ -1,7 +1,7 @@
+use super::repository::SpellRepository;
+use crate::types::Spell;
 use axum::{Json, extract::State, http::StatusCode, response::IntoResponse};
 use sqlx::PgPool;
-
-use super::{repository::SpellRepository, types::Spell};
 
 pub async fn create(State(pool): State<PgPool>, Json(spell): Json<Spell>) -> StatusCode {
     let spell_repo = SpellRepository::new(pool);

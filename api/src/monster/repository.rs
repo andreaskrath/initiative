@@ -1,6 +1,5 @@
+use crate::types::Monster;
 use sqlx::{PgPool, query_as};
-
-use super::types::Monster;
 
 pub struct MonsterRepository {
     pool: PgPool,

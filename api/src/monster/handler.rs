@@ -1,7 +1,7 @@
+use super::repository::MonsterRepository;
+use crate::types::Monster;
 use axum::{Json, extract::State, http::StatusCode, response::IntoResponse};
 use sqlx::PgPool;
-
-use super::{repository::MonsterRepository, types::Monster};
 
 pub async fn create(State(pool): State<PgPool>, Json(monster): Json<Monster>) -> StatusCode {
     // let monster_repo = MonsterRepository::new(pool);

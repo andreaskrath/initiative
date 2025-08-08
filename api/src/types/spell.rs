@@ -1,11 +1,7 @@
-use serde::{Deserialize, Serialize};
+use super::{Class, MagicSchool, SpellLevel};
 use uuid::Uuid;
 
-use super::{MagicSchool, SpellLevel};
-use crate::shared::types::Class;
-
-#[derive(Debug, Serialize, Deserialize, sqlx::FromRow)]
-#[serde(rename_all = "snake_case")]
+#[derive(Debug, serde::Serialize, serde::Deserialize, sqlx::FromRow)]
 pub struct Spell {
     pub id: Option<Uuid>,
     pub name: String,

@@ -2,6 +2,7 @@ pub mod encounter;
 pub mod monster;
 pub mod shared;
 pub mod spell;
+mod types;
 
 use axum::{
     body::Body,

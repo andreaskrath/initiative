@@ -1,14 +1,11 @@
-use crate::{
-    shared::types::{Condition, DamageType},
-    spell::types::{Spell, SpellLevel},
+use super::{
+    Alignment, Attribute, Condition, DamageType, Language, MonsterType, Movement, Sight, Size,
+    Skill, Spell, SpellLevel,
 };
-
-use super::{Alignment, Language, MonsterType, Movement, Sight, Size, Skill, attribute::Attribute};
 use serde::{Deserialize, Serialize};
 use uuid::Uuid;
 
 #[derive(Debug, Serialize, Deserialize, sqlx::FromRow)]
-#[serde(rename_all = "camelCase")]
 pub struct Monster {
     id: Option<Uuid>,
     name: String,
@@ -61,7 +58,7 @@ pub struct Monster {
     legendary_actions: Vec<LegendaryAction>,
     #[sqlx(json)]
     lair_actions: Vec<LairAction>,
-    #[sqlx(json, default)]
+    #[sqlx(json)]
     spellcasting: Option<Spellcasting>,
     #[sqlx(json)]
     spell_slots: Vec<SpellSlot>,
@@ -70,49 +67,42 @@ pub struct Monster {
 }
 
 #[derive(Debug, Serialize, Deserialize)]
-#[serde(rename_all = "snake_case")]
 struct SavingThrow {
     attribute: Attribute,
     modifier: i16,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
-#[serde(rename_all = "snake_case")]
 struct Vision {
     sight: Sight,
     range: i16,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
-#[serde(rename_all = "snake_case")]
 struct Speed {
     movement: Movement,
     distance: i16,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
-#[serde(rename_all = "snake_case")]
 struct SkillModifier {
     skill: Skill,
     modifier: i16,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
-#[serde(rename_all = "snake_case")]
 struct Trait {
     name: String,
     description: String,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
-#[serde(rename_all = "snake_case")]
 struct RegularAction {
     name: String,
     description: String,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
-#[serde(rename_all = "snake_case")]
 struct MeleeAttackAction {
     name: String,
     hit_bonus: i16,
@@ -123,7 +113,6 @@ struct MeleeAttackAction {
 }
 
 #[derive(Debug, Serialize, Deserialize)]
-#[serde(rename_all = "snake_case")]
 struct RangedAttackAction {
     name: String,
     hit_bonus: i16,
@@ -134,7 +123,6 @@ struct RangedAttackAction {
 }
 
 #[derive(Debug, Serialize, Deserialize)]
-#[serde(rename_all = "snake_case")]
 struct RechargeAction {
     name: String,
     recharge: String,
@@ -142,21 +130,18 @@ struct RechargeAction {
 }
 
 #[derive(Debug, Serialize, Deserialize)]
-#[serde(rename_all = "snake_case")]
 struct BonusAction {
     name: String,
     description: String,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
-#[serde(rename_all = "snake_case")]
 struct Reaction {
     name: String,
     description: String,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
-#[serde(rename_all = "snake_case")]
 struct LegendaryAction {
     name: String,
     cost: i16,
@@ -164,14 +149,12 @@ struct LegendaryAction {
 }
 
 #[derive(Debug, Serialize, Deserialize)]
-#[serde(rename_all = "snake_case")]
 struct LairAction {
     name: String,
     description: String,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
-#[serde(rename_all = "snake_case")]
 struct Spellcasting {
     level: SpellLevel,
     attribute: Attribute,
@@ -180,7 +163,6 @@ struct Spellcasting {
 }
 
 #[derive(Debug, Serialize, Deserialize)]
-#[serde(rename_all = "snake_case")]
 struct SpellSlot {
     level: SpellLevel,
     slots: i16,
