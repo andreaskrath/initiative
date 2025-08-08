@@ -1,16 +1,18 @@
 import * as z from "zod";
 import {
   Alignment,
+  Attribute,
+  Condition,
+  DamageType,
   Language,
   MonsterType,
   Movement,
   Sight,
   Size,
   Skill,
+  SpellLevel,
   type Monster,
-} from "$monster/types";
-import { Attribute, Condition, DamageType } from "$shared/types";
-import { SpellLevel } from "$lib/spell/types";
+} from "$types";
 import { PrepareForValidation } from "$utils/validate";
 
 export const Validate = async (monster: Monster): Promise<string[]> => {

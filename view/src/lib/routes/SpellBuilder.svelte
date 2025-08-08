@@ -2,14 +2,15 @@
   import {
     Areas,
     CastingTimes,
+    Class,
     Durations,
     MagicSchools,
     Ranges,
     Shapes,
     SpellLevels,
-  } from "$spell/types";
-  import { SpellActions } from "$spell/types/Spell";
-  import { Class, SpellcastingClasses } from "$shared/types";
+    SpellcastingClasses,
+    SpellActions,
+  } from "$types";
   import { StatusCodes } from "http-status-codes";
   import { CreateSpell } from "$spell/service";
   import { LabelValueFactory, RecordFactory } from "$shared/utils/factories";

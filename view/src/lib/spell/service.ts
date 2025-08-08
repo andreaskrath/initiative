@@ -1,4 +1,4 @@
-import { type Spell } from "$spell/types";
+import { type Spell } from "$types";
 import { Validate } from "$spell/validate";
 
 export const CreateSpell = async (spell: Spell): Promise<number | string[]> => {

@@ -1,14 +1,17 @@
 import {
   Alignment,
+  Attribute,
+  Condition,
+  DamageType,
   Language,
   MonsterType,
   Movement,
   Sight,
   Size,
   Skill,
-} from "$monster/types";
-import { Attribute, Condition, DamageType } from "$shared/types";
-import { SpellLevel, type Spell } from "$spell/types";
+  SpellLevel,
+  type Spell,
+} from "$types";
 
 type NamedDescription = { name?: string; description?: string };
 

@@ -1,4 +1,4 @@
-import { type Monster } from "$monster/types";
+import { type Monster } from "$types";
 import { Validate } from "$monster/validate";
 
 export const MonsterService = {

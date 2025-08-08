@@ -1,5 +1,4 @@
-import { Class } from "$shared/types";
-import { MagicSchool, SpellLevel } from "$spell/types";
+import { Class, MagicSchool, SpellLevel } from "$types";
 
 export type Spell = {
   id?: string;

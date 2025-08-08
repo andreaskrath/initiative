@@ -27,6 +27,7 @@
       "$monster/*": ["./src/lib/monster/*"],
       "$encounter/*": ["./src/lib/encounter/*"],
       "$shared/*": ["./src/lib/shared/*"],
+      "$types": ["./src/lib/types/index.ts"]
     }
   },
   "include": ["src/**/*.ts", "src/**/*.js", "src/**/*.svelte"]

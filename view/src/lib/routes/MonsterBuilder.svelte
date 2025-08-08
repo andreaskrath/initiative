@@ -7,8 +7,15 @@
 
   import {
     Alignments,
+    Attribute,
+    Attributes,
+    Condition,
+    Conditions,
+    DamageType,
+    DamageTypes,
     Language,
     Languages,
+    MonsterActions,
     MonsterTypes,
     Movements,
     Recharges,
@@ -16,17 +23,10 @@
     Sizes,
     Skill,
     Skills,
-  } from "$monster/types";
-  import { type Spell, SpellLevel, SpellLevels } from "$spell/types";
-  import {
-    Attribute,
-    Attributes,
-    Condition,
-    Conditions,
-    DamageType,
-    DamageTypes,
-  } from "$shared/types";
-  import { MonsterActions } from "$monster/types/Monster";
+    SpellLevel,
+    SpellLevels,
+    type Spell,
+  } from "$types";
 
   import { LabelValueFactory, RecordFactory } from "$shared/utils/factories";
   import { GetAllSpells } from "$spell/service";

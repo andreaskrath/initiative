@@ -1,9 +1,0 @@
-export { Alignment, Alignments } from "./Alignment";
-export { Language, Languages } from "./Language";
-export { type Monster } from "./Monster";
-export { MonsterType, MonsterTypes } from "./MonsterType";
-export { Movement, Movements } from "./Movement";
-export { Recharge, Recharges } from "./Recharge";
-export { Sight, Sights } from "./Sight";
-export { Size, Sizes } from "./Size";
-export { Skill, Skills } from "./Skill";

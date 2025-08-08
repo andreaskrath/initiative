@@ -16,6 +16,7 @@ export default defineConfig({
       $encounter: path.resolve("./src/lib/encounter/"),
       $monster: path.resolve("./src/lib/monster/"),
       $shared: path.resolve("./src/lib/shared/"),
+      $types: path.resolve("./src/lib/types/"),
     },
   },
 });

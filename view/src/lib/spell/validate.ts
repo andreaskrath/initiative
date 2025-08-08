@@ -1,6 +1,5 @@
 import { PrepareForValidation } from "$utils/validate";
-import { Class } from "$shared/types";
-import { MagicSchool, SpellLevel, type Spell } from "$spell/types";
+import { Class, MagicSchool, SpellLevel, type Spell } from "$types";
 import * as z from "zod";
 
 export const Validate = async (spell: Spell): Promise<string[]> => {
