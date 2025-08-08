@@ -82,9 +82,9 @@ CREATE TABLE IF NOT EXISTS monster_visions (
 
 CREATE TABLE IF NOT EXISTS monster_speeds (
     monster_id uuid NOT NULL REFERENCES monsters(id) ON DELETE CASCADE,
-    movement_type movement_type NOT NULL,
-    speed smallint NOT NULL,
-    PRIMARY KEY (monster_id, movement_type)
+    movement movement NOT NULL,
+    distance smallint NOT NULL,
+    PRIMARY KEY (monster_id, movement)
 );
 
 CREATE TABLE IF NOT EXISTS monster_languages (

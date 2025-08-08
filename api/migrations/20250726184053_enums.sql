@@ -121,7 +121,7 @@ CREATE TYPE monster_type AS ENUM (
     'undead'
 );
 
-CREATE TYPE movement_type AS ENUM (
+CREATE TYPE movement AS ENUM (
     'normal', 
     'burrow',
     'climb',

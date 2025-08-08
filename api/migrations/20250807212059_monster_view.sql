@@ -102,7 +102,7 @@ select
     ) as skills,
     -- speeds
     (
-        select json_agg(json_build_object('movement', monster_speeds.movement_type, 'distance', monster_speeds.speed))
+        select json_agg(json_build_object('movement', monster_speeds.movement, 'distance', monster_speeds.distance))
         from monster_speeds
         where monster_speeds.monster_id = monsters.id
     ) as speeds,
