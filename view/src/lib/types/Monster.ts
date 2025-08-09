@@ -15,9 +15,9 @@ import {
 
 type NamedDescription = { name?: string; description?: string };
 
-type Vision = { type?: Sight; range?: number };
+type Vision = { sight?: Sight; range?: number };
 
-type Speed = { type?: Movement; distance?: number };
+type Speed = { movement?: Movement; distance?: number };
 
 type MeleeAttack = {
   name?: string;
@@ -160,7 +160,7 @@ export const MonsterActions = {
   AddVision: (monster: Monster, event: MouseEvent): void => {
     monster.visions = [
       ...monster.visions,
-      { type: undefined, range: undefined },
+      { sight: undefined, range: undefined },
     ];
 
     event.preventDefault();
@@ -179,7 +179,7 @@ export const MonsterActions = {
   AddSpeed: (monster: Monster, event: MouseEvent) => {
     monster.speeds = [
       ...monster.speeds,
-      { type: undefined, distance: undefined },
+      { movement: undefined, distance: undefined },
     ];
 
     event.preventDefault();

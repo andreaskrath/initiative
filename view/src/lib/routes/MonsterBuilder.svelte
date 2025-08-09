@@ -449,7 +449,7 @@
             <Container class="col-span-6">
               <Label>Sight</Label>
               <Select
-                bind:value={vision.type}
+                bind:value={vision.sight}
                 placeholder="Select a vision type"
                 items={sights}
               />
@@ -495,7 +495,7 @@
               <Input
                 bind:value={speed.distance}
                 type="number"
-                placeholder="60"
+                placeholder="30"
                 class="text-center"
               />
             </Container>
@@ -504,7 +504,7 @@
             <Container class="col-span-6">
               <Label>Movement</Label>
               <Select
-                bind:value={speed.type}
+                bind:value={speed.movement}
                 placeholder="Select a movement type"
                 items={movements}
               />

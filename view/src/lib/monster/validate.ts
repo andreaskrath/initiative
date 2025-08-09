@@ -70,14 +70,17 @@ const schema = z.object({
   ),
   visions: z.array(
     z.object({
-      type: z.enum(Sight, "A sight type must be specified for a vision"),
+      sight: z.enum(Sight, "A sight type must be specified for a vision"),
       range: z.number("A range must be specified for a vision"),
     }),
   ),
   passivePerception: z.number("A passive perception must be specified"),
   speeds: z.array(
     z.object({
-      type: z.enum(Movement, "A movement type must be specified for a speed"),
+      movement: z.enum(
+        Movement,
+        "A movement type must be specified for a speed",
+      ),
       distance: z.number("A distance must be specified for a speed"),
     }),
   ),
