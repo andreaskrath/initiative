@@ -16,7 +16,11 @@
   } from "$types";
   import { StatusCodes } from "http-status-codes";
   import { CreateSpell } from "$spell/service";
-  import { LabelValueFactory, RecordFactory } from "$shared/utils/factories";
+  import {
+    ToLabelValue,
+    ToLabelValueWith,
+    RecordFactory,
+  } from "$shared/utils/factories";
   import { goto } from "@mateothegreat/svelte5-router";
 
   import { Button } from "$components/ui/button/index";
@@ -36,13 +40,13 @@
   let usesMaterials = $state(false);
   let errors: string[] = $state([]);
 
-  const areas = LabelValueFactory(Areas);
-  const castingTimes = LabelValueFactory(CastingTimes);
-  const durations = LabelValueFactory(Durations);
-  const ranges = LabelValueFactory(Ranges);
-  const schools = LabelValueFactory(MagicSchools);
-  const shapes = LabelValueFactory(Shapes);
-  const spellLevels = LabelValueFactory(SpellLevels);
+  const areas = ToLabelValue(Areas);
+  const castingTimes = ToLabelValue(CastingTimes);
+  const durations = ToLabelValue(Durations);
+  const ranges = ToLabelValue(Ranges);
+  const schools = ToLabelValueWith(MagicSchools, DisplayMagicSchool);
+  const shapes = ToLabelValue(Shapes);
+  const spellLevels = ToLabelValueWith(SpellLevels, DisplaySpellLevel);
 
   const handleCreateSpell = async (event: MouseEvent): Promise<void> => {
     event.preventDefault();

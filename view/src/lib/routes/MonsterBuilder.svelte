@@ -39,7 +39,11 @@
     type Spell,
   } from "$types";
 
-  import { LabelValueFactory, RecordFactory } from "$shared/utils/factories";
+  import {
+    ToLabelValue,
+    ToLabelValueWith,
+    RecordFactory,
+  } from "$shared/utils/factories";
   import { GetAllSpells } from "$spell/service";
 
   import * as Command from "$components/ui/command/index";
@@ -59,14 +63,14 @@
   import { goto } from "@mateothegreat/svelte5-router";
   import Combobox from "$lib/shared/components/Combobox.svelte";
 
-  const alignments = LabelValueFactory(Alignments);
-  const attributes = LabelValueFactory(Attributes);
-  const damageTypes = LabelValueFactory(DamageTypes);
-  const monsterTypes = LabelValueFactory(MonsterTypes);
-  const movements = LabelValueFactory(Movements);
-  const recharges = LabelValueFactory(Recharges);
-  const sights = LabelValueFactory(Sights);
-  const sizes = LabelValueFactory(Sizes);
+  const alignments = ToLabelValueWith(Alignments, DisplayAlignment);
+  const attributes = ToLabelValueWith(Attributes, DisplayAttribute);
+  const damageTypes = ToLabelValueWith(DamageTypes, DisplayDamageType);
+  const monsterTypes = ToLabelValueWith(MonsterTypes, DisplayMonsterType);
+  const movements = ToLabelValueWith(Movements, DisplayMovement);
+  const recharges = ToLabelValue(Recharges);
+  const sights = ToLabelValueWith(Sights, DisplaySight);
+  const sizes = ToLabelValueWith(Sizes, DisplaySize);
 
   let monster = $state(MonsterActions.EmptyMonster());
   let spells: Spell[] = $state([]);
