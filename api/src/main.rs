@@ -28,6 +28,7 @@ async fn async_main() {
         .route("/assets/{*path}", get(combat_tracker::assets))
         .route("/api/spells/create", post(spell::handler::create))
         .route("/api/spells", get(spell::handler::get))
+        .route("/api/monsters/create", post(monster::handler::create))
         .route("/api/monsters", get(monster::handler::get))
         .fallback(combat_tracker::index)
         .with_state(pool);
