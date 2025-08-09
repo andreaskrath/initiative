@@ -191,7 +191,9 @@
         disabled={monster.spellcasting!.spells.includes(spell)}
       >
         <span>{spell.name}</span>
-        <span class="text-muted-foreground">{spell.school}</span>
+        <span class="text-muted-foreground">
+          {DisplayMagicSchool[spell.school!]}
+        </span>
       </Command.Item>
     {/each}
   </Command.Group>
