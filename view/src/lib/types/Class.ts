@@ -1,18 +1,34 @@
 export enum Class {
-  Artificer = "Artificer",
-  Barbarian = "Barbarian",
-  Bard = "Bard",
-  Cleric = "Cleric",
-  Druid = "Druid",
-  Fighter = "Fighter",
-  Monk = "Monk",
-  Paladin = "Paladin",
-  Ranger = "Ranger",
-  Rogue = "Rogue",
-  Sorcerer = "Sorcerer",
-  Warlock = "Warlock",
-  Wizard = "Wizard",
+  Artificer = "artificer",
+  Barbarian = "barbarian",
+  Bard = "bard",
+  Cleric = "cleric",
+  Druid = "druid",
+  Fighter = "fighter",
+  Monk = "monk",
+  Paladin = "paladin",
+  Ranger = "ranger",
+  Rogue = "rogue",
+  Sorcerer = "sorcerer",
+  Warlock = "warlock",
+  Wizard = "wizard",
 }
+
+export const DisplayClass: Readonly<Record<Class, string>> = {
+  [Class.Artificer]: "Artificer",
+  [Class.Barbarian]: "Barbarian",
+  [Class.Bard]: "Bard",
+  [Class.Cleric]: "Cleric",
+  [Class.Druid]: "Druid",
+  [Class.Fighter]: "Fighter",
+  [Class.Monk]: "Monk",
+  [Class.Paladin]: "Paladin",
+  [Class.Ranger]: "Ranger",
+  [Class.Rogue]: "Rogue",
+  [Class.Sorcerer]: "Sorcerer",
+  [Class.Warlock]: "Warlock",
+  [Class.Wizard]: "Wizard",
+} as const;
 
 export const Classes: Class[] = Object.values(Class);
 
