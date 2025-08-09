@@ -109,7 +109,7 @@
     for (const spellLevel of SpellLevels) {
       let value = spellSlots[spellLevel];
       if (value) {
-        monster.spellcasting.spellSlots.push({
+        monster.spellcasting!.spellSlots.push({
           level: spellLevel,
           slots: value,
         });
@@ -187,8 +187,8 @@
       <Command.Item
         class="flex justify-between"
         value={spell.name}
-        onclick={(_) => monster.spellcasting.spells.push(spell)}
-        disabled={monster.spellcasting.spells.includes(spell)}
+        onclick={(_) => monster.spellcasting!.spells.push(spell)}
+        disabled={monster.spellcasting!.spells.includes(spell)}
       >
         <span>{spell.name}</span>
         <span class="text-muted-foreground">{spell.school}</span>
@@ -213,8 +213,8 @@
     {/if}
   </div>
   <div class="space-y-2">
-    {#each monster.spellcasting.spells
-      .filter((spell) => spell.level === spellLevel)
+    {#each monster
+      .spellcasting!.spells.filter((spell) => spell.level === spellLevel)
       .sort((a, b) => a.name!.localeCompare(b.name!)) as spell}
       <div class="flex justify-between text-sm">
         <span>{spell.name}</span>
@@ -1261,7 +1261,7 @@
     <Container class="col-span-4">
       <Label>Level</Label>
       <Input
-        bind:value={monster.spellcasting.level}
+        bind:value={monster.spellcasting!.level}
         type="number"
         class="text-center"
         placeholder="15"
@@ -1272,7 +1272,7 @@
     <Container class="col-span-4">
       <Label>Attribute</Label>
       <Select
-        bind:value={monster.spellcasting.attribute}
+        bind:value={monster.spellcasting!.attribute}
         placeholder="Select an attribute"
         items={attributes}
       />
@@ -1282,7 +1282,7 @@
     <Container class="col-span-4">
       <Label>Saving Throw DC</Label>
       <Input
-        bind:value={monster.spellcasting.dc}
+        bind:value={monster.spellcasting!.dc}
         type="number"
         class="text-center"
         placeholder="18"
@@ -1293,7 +1293,7 @@
     <Container class="col-span-4">
       <Label>Attack Bonus</Label>
       <Input
-        bind:value={monster.spellcasting.attackBonus}
+        bind:value={monster.spellcasting!.attackBonus}
         type="number"
         class="text-center"
         placeholder="9"

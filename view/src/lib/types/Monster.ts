@@ -94,7 +94,8 @@ export type Monster = {
   availableLegendaryActionsPerTurn?: number;
   legendaryActions: LegendaryAction[];
   lairActions: NamedDescription[];
-  spellcasting: {
+  // While this can be undefined, it will only ever be undefined when sending the object to the backend.
+  spellcasting?: {
     level?: number;
     attribute?: Attribute;
     dc?: number;
@@ -403,7 +404,7 @@ export const MonsterActions = {
   },
 
   RemoveSpell: (monster: Monster, spellToRemove: Spell) => {
-    monster.spellcasting.spells = monster.spellcasting.spells.filter(
+    monster.spellcasting!.spells = monster.spellcasting!.spells.filter(
       (spell) => spell !== spellToRemove,
     );
 
