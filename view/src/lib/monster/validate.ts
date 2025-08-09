@@ -116,14 +116,14 @@ const schema = z.object({
         oneHandedAttack: z
           .string()
           .regex(
-            /^\d+d\d+$/,
+            /^\d+d\d+([+-]\d+)?$/,
             "Invalid dice roll format for a melee attack action",
           )
           .optional(),
         twoHandedAttack: z
           .string()
           .regex(
-            /^\d+d\d+$/,
+            /^\d+d\d+([+-]\d+)?$/,
             "Invalid dice roll format for a melee attack action",
           )
           .optional(),
@@ -159,7 +159,7 @@ const schema = z.object({
       attack: z
         .string("An attack roll must be specified for a ranged attack action")
         .regex(
-          /^\d+d\d+$/,
+          /^\d+d\d+([+-]\d+)?$/,
           "Invalid dice roll format for a ranged attack action",
         ),
       damageType: z.enum(
