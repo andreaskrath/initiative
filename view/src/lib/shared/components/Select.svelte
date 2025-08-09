@@ -13,11 +13,15 @@
     items: { label: string; value: string }[];
     class?: string;
   } = $props();
+
+  const triggerContent = $derived(
+    items.find((item) => item.value === value)?.label ?? placeholder,
+  );
 </script>
 
 <Select.Root type="single" bind:value>
   <Select.Trigger class="w-full">
-    {value ? value : placeholder}
+    {triggerContent}
   </Select.Trigger>
   <Select.Content>
     <Select.Group>
