@@ -60,10 +60,6 @@ pub struct Monster {
     lair_actions: Vec<LairAction>,
     #[sqlx(json)]
     spellcasting: Option<Spellcasting>,
-    #[sqlx(json)]
-    spell_slots: Vec<SpellSlot>,
-    #[sqlx(json)]
-    spells: Vec<Spell>,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
@@ -160,6 +156,8 @@ struct Spellcasting {
     attribute: Attribute,
     dc: i16,
     attack_bonus: i16,
+    spell_slots: Vec<SpellSlot>,
+    spells: Vec<Spell>,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
