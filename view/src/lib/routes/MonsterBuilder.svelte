@@ -106,6 +106,7 @@
   const handleCreateMonster = async (event: MouseEvent): Promise<void> => {
     event.preventDefault();
 
+    monster.spellcasting!.spellSlots = [];
     for (const spellLevel of SpellLevels) {
       let value = spellSlots[spellLevel];
       if (value) {
@@ -116,6 +117,7 @@
       }
     }
 
+    monster.skills = [];
     for (const skill of Skills) {
       let value = skills[skill];
       if (value) {
@@ -126,6 +128,7 @@
       }
     }
 
+    monster.savingThrows = [];
     for (const attribute of Attributes) {
       let value = savingThrows[attribute];
       if (value) {
@@ -136,12 +139,15 @@
       }
     }
 
+    monster.languages = [];
     for (const language of Languages) {
       if (languages[language]) {
         monster.languages.push(language);
       }
     }
 
+    monster.damageResistances = [];
+    monster.damageImmunities = [];
     for (const damageType of DamageTypes) {
       if (damageResistances[damageType]) {
         monster.damageResistances.push(damageType);
@@ -152,6 +158,7 @@
       }
     }
 
+    monster.conditionImmunities = [];
     for (const condition of Conditions) {
       if (conditionImmunities[condition]) {
         monster.conditionImmunities.push(condition);
