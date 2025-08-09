@@ -13,6 +13,17 @@
     Conditions,
     DamageType,
     DamageTypes,
+    DisplayAlignment,
+    DisplayAttribute,
+    DisplayCondition,
+    DisplayDamageType,
+    DisplayLanguage,
+    DisplayMagicSchool,
+    DisplayMonsterType,
+    DisplayMovement,
+    DisplaySight,
+    DisplaySize,
+    DisplaySkill,
     Language,
     Languages,
     MonsterActions,
@@ -204,7 +215,9 @@
       <div class="flex justify-between text-sm">
         <span>{spell.name}</span>
         <div class="flex space-x-2">
-          <span class="text-muted-foreground">{spell.school}</span>
+          <span class="text-muted-foreground">
+            {DisplayMagicSchool[spell.school!]}
+          </span>
           <CircleX
             class="text-red-300 hover:text-red-600"
             size="18"
@@ -327,7 +340,7 @@
     <div class="grid grid-cols-18 space-y-5 gap-x-2">
       <!-- Attributes -->
       <Container class="col-span-3">
-        <Label>{Attribute.Strength}</Label>
+        <Label>{DisplayAttribute[Attribute.Strength]}</Label>
         <Input
           bind:value={monster.strength}
           type="number"
@@ -337,7 +350,7 @@
       </Container>
 
       <Container class="col-span-3">
-        <Label>{Attribute.Dexterity}</Label>
+        <Label>{DisplayAttribute[Attribute.Dexterity]}</Label>
         <Input
           bind:value={monster.dexterity}
           type="number"
@@ -347,7 +360,7 @@
       </Container>
 
       <Container class="col-span-3">
-        <Label>{Attribute.Constitution}</Label>
+        <Label>{DisplayAttribute[Attribute.Constitution]}</Label>
         <Input
           bind:value={monster.constitution}
           type="number"
@@ -357,7 +370,7 @@
       </Container>
 
       <Container class="col-span-3">
-        <Label>{Attribute.Intelligence}</Label>
+        <Label>{DisplayAttribute[Attribute.Intelligence]}</Label>
         <Input
           bind:value={monster.intelligence}
           type="number"
@@ -367,7 +380,7 @@
       </Container>
 
       <Container class="col-span-3">
-        <Label>{Attribute.Wisdom}</Label>
+        <Label>{DisplayAttribute[Attribute.Wisdom]}</Label>
         <Input
           bind:value={monster.wisdom}
           type="number"
@@ -377,7 +390,7 @@
       </Container>
 
       <Container class="col-span-3">
-        <Label>{Attribute.Charisma}</Label>
+        <Label>{DisplayAttribute[Attribute.Charisma]}</Label>
         <Input
           bind:value={monster.charisma}
           type="number"
@@ -392,7 +405,7 @@
     <div class="grid grid-cols-18 space-y-5 gap-x-2">
       {#each Skills as skill}
         <Container class="col-span-3">
-          <Label>{skill}</Label>
+          <Label>{DisplaySkill[skill]}</Label>
           <Input
             bind:value={skills[skill]}
             type="number"
@@ -409,7 +422,7 @@
       {#each Languages as language}
         <Container class="col-span-1">
           <Toggle bind:checked={languages[language]}>
-            {language}
+            {DisplayLanguage[language]}
           </Toggle>
         </Container>
       {/each}
@@ -581,7 +594,7 @@
       <!-- Saving Throws -->
       {#each Attributes as attribute}
         <Container class="col-span-3">
-          <Label>{attribute}</Label>
+          <Label>{DisplayAttribute[attribute]}</Label>
           <Input
             bind:value={savingThrows[attribute]}
             type="number"
@@ -598,7 +611,7 @@
       {#each DamageTypes as damageType}
         <Container class="col-span-1">
           <Toggle bind:checked={damageResistances[damageType]}>
-            {damageType}
+            {DisplayDamageType[damageType]}
           </Toggle>
         </Container>
       {/each}
@@ -610,7 +623,7 @@
       {#each DamageTypes as damageType}
         <Container class="col-span-1">
           <Toggle bind:checked={damageImmunities[damageType]}>
-            {damageType}
+            {DisplayDamageType[damageType]}
           </Toggle>
         </Container>
       {/each}
@@ -622,7 +635,7 @@
       {#each Conditions as condition}
         <Container class="col-span-1">
           <Toggle bind:checked={conditionImmunities[condition]}>
-            {condition}
+            {DisplayCondition[condition]}
           </Toggle>
         </Container>
       {/each}

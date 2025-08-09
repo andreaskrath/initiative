@@ -10,6 +10,9 @@
     SpellLevels,
     SpellcastingClasses,
     SpellActions,
+    DisplayMagicSchool,
+    DisplaySpellLevel,
+    DisplayClass,
   } from "$types";
   import { StatusCodes } from "http-status-codes";
   import { CreateSpell } from "$spell/service";
@@ -228,7 +231,7 @@ The fire spreads around corners. It ignites flammable objects in the area that a
     {#each SpellcastingClasses as spellcastingClass}
       <Container class="col-span-1">
         <Toggle bind:checked={classRestrictions[spellcastingClass]}>
-          {spellcastingClass}
+          {DisplayClass[spellcastingClass]}
         </Toggle>
       </Container>
     {/each}
