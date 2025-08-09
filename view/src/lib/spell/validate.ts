@@ -1,9 +1,7 @@
-import { PrepareForValidation } from "$utils/validate";
 import { Class, MagicSchool, SpellLevel, type Spell } from "$types";
 import * as z from "zod";
 
 export const Validate = async (spell: Spell): Promise<string[]> => {
-  spell = PrepareForValidation(spell);
   const result = await schema.safeParseAsync(spell);
 
   if (!result.success) {
@@ -21,13 +19,13 @@ const schema = z
       .min(1, "The name must be at least a single character long"),
     school: z.enum(MagicSchool, "A school of magic must be specified"),
     level: z.enum(SpellLevel, "A spell level must be specified"),
-    castingTime: z
+    casting_time: z
       .string("The casting time must be specified")
       .min(1, "A casting time must be at least a single character long"),
     verbal: z.boolean(),
     somatic: z.boolean(),
     material: z.string().optional(),
-    materialConsumed: z.boolean(),
+    material_consumed: z.boolean(),
     ritual: z.boolean(),
     concentration: z.boolean(),
     duration: z
@@ -44,12 +42,12 @@ const schema = z
     description: z
       .string("The description must be specified")
       .min(1, "A description must be at least a single character long"),
-    atHigherLevels: z.string().optional(),
+    at_higher_levels: z.string().optional(),
   })
   .refine(
     (data) => {
       // If materialConsumed is true, material must have a value
-      if (data.materialConsumed === true) {
+      if (data.material_consumed === true) {
         return data.material !== undefined && data.material.length > 0;
       }
       return true;

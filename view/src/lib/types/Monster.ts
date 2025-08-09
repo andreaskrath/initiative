@@ -21,25 +21,25 @@ type Speed = { movement?: Movement; distance?: number };
 
 type MeleeAttack = {
   name?: string;
-  hitBonus?: number;
+  hit_bonus?: number;
   reach?: number;
-  oneHandedAttack?: string;
-  twoHandedAttack?: string;
-  damageType?: DamageType;
+  one_handed_attack?: string;
+  two_handed_attack?: string;
+  damage_type?: DamageType;
 };
 
 type RangedAttack = {
   name?: string;
-  hitBonus?: number;
-  normalRange?: number;
-  longRange?: number;
+  hit_bonus?: number;
+  normal_range?: number;
+  long_range?: number;
   attack?: string;
-  damageType?: DamageType;
+  damage_type?: DamageType;
 };
 
 type RechargeAction = {
   name?: string;
-  rechargeDice?: string;
+  recharge?: string;
   description?: string;
 };
 
@@ -52,11 +52,11 @@ type LegendaryAction = {
 export type Monster = {
   id?: string;
   name?: string;
-  challengeRating?: number;
+  challenge_rating?: number;
   xp?: number;
-  proficiencyBonus?: number;
+  proficiency_bnonus?: number;
   size?: Size;
-  monsterType?: MonsterType;
+  monster_type?: MonsterType;
   species?: string;
   alignment?: Alignment;
   strength?: number;
@@ -66,18 +66,18 @@ export type Monster = {
   wisdom?: number;
   charisma?: number;
   hitPoints?: number;
-  rollableHitPoints?: string;
-  armorClass?: number;
-  armorType?: string;
-  savingThrows: {
+  rollable_hit_points?: string;
+  armor_class?: number;
+  armor_type?: string;
+  saving_throws: {
     attribute: Attribute;
     modifier: number;
   }[];
-  damageResistances: DamageType[];
-  damageImmunities: DamageType[];
-  conditionImmunities: Condition[];
+  damage_resistances: DamageType[];
+  damage_immunities: DamageType[];
+  condition_immunities: Condition[];
   visions: Vision[];
-  passivePerception?: number;
+  passive_perception?: number;
   speeds: Speed[];
   languages: Language[];
   skills: {
@@ -85,22 +85,22 @@ export type Monster = {
     modifier: number;
   }[];
   traits: NamedDescription[];
-  regularActions: NamedDescription[];
-  meleeAttackActions: MeleeAttack[];
-  rangedAttackActions: RangedAttack[];
-  rechargeActions: RechargeAction[];
-  bonusActions: NamedDescription[];
+  regular_actions: NamedDescription[];
+  melee_attack_actions: MeleeAttack[];
+  ranged_attack_actions: RangedAttack[];
+  recharge_actions: RechargeAction[];
+  bonus_actions: NamedDescription[];
   reactions: NamedDescription[];
-  availableLegendaryActionsPerTurn?: number;
-  legendaryActions: LegendaryAction[];
-  lairActions: NamedDescription[];
+  available_legendary_actions_per_turn?: number;
+  legendary_actions: LegendaryAction[];
+  lair_actions: NamedDescription[];
   // While this can be undefined, it will only ever be undefined when sending the object to the backend.
   spellcasting?: {
     level?: number;
     attribute?: Attribute;
     dc?: number;
-    attackBonus?: number;
-    spellSlots: {
+    attack_bonus?: number;
+    spell_slots: {
       level: SpellLevel;
       slots: number;
     }[];
@@ -112,11 +112,11 @@ export const MonsterActions = {
   EmptyMonster: (): Monster => ({
     id: undefined,
     name: undefined,
-    challengeRating: undefined,
+    challenge_rating: undefined,
     xp: undefined,
-    proficiencyBonus: undefined,
+    proficiency_bnonus: undefined,
     size: undefined,
-    monsterType: undefined,
+    monster_type: undefined,
     species: undefined,
     alignment: undefined,
     strength: undefined,
@@ -126,34 +126,34 @@ export const MonsterActions = {
     wisdom: undefined,
     charisma: undefined,
     hitPoints: undefined,
-    rollableHitPoints: undefined,
-    armorClass: undefined,
-    armorType: undefined,
-    savingThrows: [],
-    damageResistances: [],
-    damageImmunities: [],
-    conditionImmunities: [],
+    rollable_hit_points: undefined,
+    armor_class: undefined,
+    armor_type: undefined,
+    saving_throws: [],
+    damage_resistances: [],
+    damage_immunities: [],
+    condition_immunities: [],
     visions: [],
-    passivePerception: undefined,
+    passive_perception: undefined,
     speeds: [],
     languages: [],
     skills: [],
     traits: [],
-    regularActions: [],
-    meleeAttackActions: [],
-    rangedAttackActions: [],
-    rechargeActions: [],
-    bonusActions: [],
+    regular_actions: [],
+    melee_attack_actions: [],
+    ranged_attack_actions: [],
+    recharge_actions: [],
+    bonus_actions: [],
     reactions: [],
-    availableLegendaryActionsPerTurn: undefined,
-    legendaryActions: [],
-    lairActions: [],
+    available_legendary_actions_per_turn: undefined,
+    legendary_actions: [],
+    lair_actions: [],
     spellcasting: {
       level: undefined,
       attribute: undefined,
       dc: undefined,
-      attackBonus: undefined,
-      spellSlots: [],
+      attack_bonus: undefined,
+      spell_slots: [],
       spells: [],
     },
   }),
@@ -211,8 +211,8 @@ export const MonsterActions = {
   },
 
   AddRegularAction: (monster: Monster, event: MouseEvent) => {
-    monster.regularActions = [
-      ...monster.regularActions,
+    monster.regular_actions = [
+      ...monster.regular_actions,
       { name: undefined, description: undefined },
     ];
 
@@ -223,7 +223,7 @@ export const MonsterActions = {
     monster: Monster,
     regularActionToRemove: NamedDescription,
   ) => {
-    monster.regularActions = monster.regularActions.filter(
+    monster.regular_actions = monster.regular_actions.filter(
       (regularAction) => regularAction !== regularActionToRemove,
     );
 
@@ -233,15 +233,15 @@ export const MonsterActions = {
   },
 
   AddMeleeAttackAction: (monster: Monster, event: MouseEvent) => {
-    monster.meleeAttackActions = [
-      ...monster.meleeAttackActions,
+    monster.melee_attack_actions = [
+      ...monster.melee_attack_actions,
       {
         name: undefined,
-        hitBonus: undefined,
+        hit_bonus: undefined,
         reach: undefined,
-        oneHandedAttack: undefined,
-        twoHandedAttack: undefined,
-        damageType: undefined,
+        one_handed_attack: undefined,
+        two_handed_attack: undefined,
+        damage_type: undefined,
       },
     ];
 
@@ -252,7 +252,7 @@ export const MonsterActions = {
     monster: Monster,
     meleeAttackActionToRemove: MeleeAttack,
   ) => {
-    monster.meleeAttackActions = monster.meleeAttackActions.filter(
+    monster.melee_attack_actions = monster.melee_attack_actions.filter(
       (meleeAttackAction) => meleeAttackAction !== meleeAttackActionToRemove,
     );
     return function (event: MouseEvent) {
@@ -261,15 +261,15 @@ export const MonsterActions = {
   },
 
   AddRangedAttackAction: (monster: Monster, event: MouseEvent) => {
-    monster.rangedAttackActions = [
-      ...monster.rangedAttackActions,
+    monster.ranged_attack_actions = [
+      ...monster.ranged_attack_actions,
       {
         name: undefined,
-        hitBonus: undefined,
-        normalRange: undefined,
-        longRange: undefined,
+        hit_bonus: undefined,
+        normal_range: undefined,
+        long_range: undefined,
         attack: undefined,
-        damageType: undefined,
+        damage_type: undefined,
       },
     ];
 
@@ -280,7 +280,7 @@ export const MonsterActions = {
     monster: Monster,
     rangedAttackActionToRemove: RangedAttack,
   ) => {
-    monster.rangedAttackActions = monster.rangedAttackActions.filter(
+    monster.ranged_attack_actions = monster.ranged_attack_actions.filter(
       (rangedAttackAction) => rangedAttackAction !== rangedAttackActionToRemove,
     );
     return function (event: MouseEvent) {
@@ -289,11 +289,11 @@ export const MonsterActions = {
   },
 
   AddRechargeAction: (monster: Monster, event: MouseEvent) => {
-    monster.rechargeActions = [
-      ...monster.rechargeActions,
+    monster.recharge_actions = [
+      ...monster.recharge_actions,
       {
         name: undefined,
-        rechargeDice: undefined,
+        recharge: undefined,
         description: undefined,
       },
     ];
@@ -305,7 +305,7 @@ export const MonsterActions = {
     monster: Monster,
     rechargeActionToRemove: RechargeAction,
   ) => {
-    monster.rechargeActions = monster.rechargeActions.filter(
+    monster.recharge_actions = monster.recharge_actions.filter(
       (rechargeAction) => rechargeAction !== rechargeActionToRemove,
     );
     return function (event: MouseEvent) {
@@ -314,8 +314,8 @@ export const MonsterActions = {
   },
 
   AddBonusAction: (monster: Monster, event: MouseEvent) => {
-    monster.bonusActions = [
-      ...monster.bonusActions,
+    monster.bonus_actions = [
+      ...monster.bonus_actions,
       { name: undefined, description: undefined },
     ];
 
@@ -326,7 +326,7 @@ export const MonsterActions = {
     monster: Monster,
     bonusActionToRemove: NamedDescription,
   ) => {
-    monster.bonusActions = monster.bonusActions.filter(
+    monster.bonus_actions = monster.bonus_actions.filter(
       (bonusAction) => bonusAction !== bonusActionToRemove,
     );
 
@@ -355,8 +355,8 @@ export const MonsterActions = {
   },
 
   AddLegendaryAction: (monster: Monster, event: MouseEvent) => {
-    monster.legendaryActions = [
-      ...monster.legendaryActions,
+    monster.legendary_actions = [
+      ...monster.legendary_actions,
       { name: undefined, cost: undefined, description: undefined },
     ];
 
@@ -367,13 +367,13 @@ export const MonsterActions = {
     monster: Monster,
     legendaryActionToRemove: LegendaryAction,
   ) => {
-    monster.legendaryActions = monster.legendaryActions.filter(
+    monster.legendary_actions = monster.legendary_actions.filter(
       (legendaryAction) => legendaryAction !== legendaryActionToRemove,
     );
 
     // Clear available legendary actions if all legendary actions are removed
-    if (monster.legendaryActions.length === 0) {
-      monster.availableLegendaryActionsPerTurn = undefined;
+    if (monster.legendary_actions.length === 0) {
+      monster.available_legendary_actions_per_turn = undefined;
     }
 
     return function (event: MouseEvent) {
@@ -382,8 +382,8 @@ export const MonsterActions = {
   },
 
   AddLairAction: (monster: Monster, event: MouseEvent) => {
-    monster.lairActions = [
-      ...monster.lairActions,
+    monster.lair_actions = [
+      ...monster.lair_actions,
       { name: undefined, description: undefined },
     ];
 
@@ -394,7 +394,7 @@ export const MonsterActions = {
     monster: Monster,
     lairActionToRemove: NamedDescription,
   ) => {
-    monster.lairActions = monster.lairActions.filter(
+    monster.lair_actions = monster.lair_actions.filter(
       (lairAction) => lairAction !== lairActionToRemove,
     );
 

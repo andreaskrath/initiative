@@ -13,10 +13,11 @@ import {
   SpellLevel,
   type Monster,
 } from "$types";
-import { PrepareForValidation } from "$utils/validate";
 
+/*
+ * Validate that a monster fits the expected data structure and values for the backend.
+ */
 export const Validate = async (monster: Monster): Promise<string[]> => {
-  monster = PrepareForValidation(monster);
   const result = await schema.safeParseAsync(monster);
 
   if (!result.success) {
@@ -31,11 +32,11 @@ const schema = z.object({
   name: z
     .string("A name must be specified")
     .min(1, "A name must be at least 1 character long"),
-  challengeRating: z.number("A challenge rating must be specified"),
+  challenge_rating: z.number("A challenge rating must be specified"),
   xp: z.number("An XP yield must be specified"),
-  proficiencyBonus: z.number("A proficiency bonus must be specified"),
+  proficiency_bonus: z.number("A proficiency bonus must be specified"),
   size: z.enum(Size, "A size must be specified"),
-  monsterType: z.enum(MonsterType, "A monster type must be specified"),
+  monster_type: z.enum(MonsterType, "A monster type must be specified"),
   species: z.string().optional(),
   alignment: z.enum(Alignment, "An alignment must be specified"),
   strength: z.number("A strength attribute must be specified"),
@@ -45,12 +46,12 @@ const schema = z.object({
   wisdom: z.number("A wisdom attribute must be specified"),
   charisma: z.number("A charisma attribute must be specified"),
   hitPoints: z.number("Hit points must be specified"),
-  rollableHitPoints: z
+  rollable_hit_points: z
     .string("Rollable hit points must be specified")
     .regex(/^\d+d\d+([+-]\d+)?$/, "Invalid rollable hit points format"),
-  armorClass: z.number("An armor class must be specified"),
-  armorType: z.string().optional(),
-  savingThrows: z.array(
+  armor_class: z.number("An armor class must be specified"),
+  armor_type: z.string().optional(),
+  saving_throws: z.array(
     z.object({
       attribute: z.enum(
         Attribute,
@@ -59,13 +60,13 @@ const schema = z.object({
       modifier: z.number("A saving throw must have a modifier specified"),
     }),
   ),
-  damageResistances: z.array(
+  damage_resistances: z.array(
     z.enum(DamageType, "Damage resistances must specify a damage type"),
   ),
-  damageImmunities: z.array(
+  damage_immunities: z.array(
     z.enum(DamageType, "Damge immunities must specify a damage type"),
   ),
-  conditionImmunities: z.array(
+  condition_immunities: z.array(
     z.enum(Condition, "Condition immunities must specify a condition"),
   ),
   visions: z.array(
@@ -74,7 +75,7 @@ const schema = z.object({
       range: z.number("A range must be specified for a vision"),
     }),
   ),
-  passivePerception: z.number("A passive perception must be specified"),
+  passive_perception: z.number("A passive perception must be specified"),
   speeds: z.array(
     z.object({
       movement: z.enum(
@@ -97,7 +98,7 @@ const schema = z.object({
       description: z.string("A description must be specified for a trait"),
     }),
   ),
-  regularActions: z.array(
+  regular_actions: z.array(
     z.object({
       name: z.string("A name must be specified for a regular action"),
       description: z.string(
@@ -105,29 +106,29 @@ const schema = z.object({
       ),
     }),
   ),
-  meleeAttackActions: z
+  melee_attack_actions: z
     .array(
       z.object({
         name: z.string("A name must be specified for a melee attack action"),
-        hitBonus: z.number(
+        hit_bonus: z.number(
           "A bonus to hit must be specified for a melee attack action",
         ),
         reach: z.number("A reach must be specified for a melee attack action"),
-        oneHandedAttack: z
+        one_handed_attack: z
           .string()
           .regex(
             /^\d+d\d+([+-]\d+)?$/,
             "Invalid dice roll format for a melee attack action",
           )
           .optional(),
-        twoHandedAttack: z
+        two_handed_attack: z
           .string()
           .regex(
             /^\d+d\d+([+-]\d+)?$/,
             "Invalid dice roll format for a melee attack action",
           )
           .optional(),
-        damageType: z.enum(
+        damage_type: z.enum(
           DamageType,
           "A damage type must be specified for a melee attack action",
         ),
@@ -135,7 +136,7 @@ const schema = z.object({
     )
     .superRefine((data, ctx) => {
       for (const [i, entry] of data.entries()) {
-        if (!entry.oneHandedAttack && !entry.twoHandedAttack) {
+        if (!entry.one_handed_attack && !entry.two_handed_attack) {
           ctx.addIssue({
             code: "custom",
             message: `Melee attack action ${i + 1} does not have either a one-handed or two-handed attack roll specified`,
@@ -144,16 +145,16 @@ const schema = z.object({
         }
       }
     }),
-  rangedAttackActions: z.array(
+  ranged_attack_actions: z.array(
     z.object({
       name: z.string("A name must be specified for a ranged attack action"),
-      hitBonus: z.number(
+      hit_bonus: z.number(
         "A bonus to hit must be specified for a ranged attack action",
       ),
-      normalRange: z.number(
+      normal_range: z.number(
         "A normal range must be specified for a ranged attack action",
       ),
-      longRange: z.number(
+      long_range: z.number(
         "A long range must be specified for a ranged attack action",
       ),
       attack: z
@@ -162,24 +163,22 @@ const schema = z.object({
           /^\d+d\d+([+-]\d+)?$/,
           "Invalid dice roll format for a ranged attack action",
         ),
-      damageType: z.enum(
+      damage_type: z.enum(
         DamageType,
         "A damage type must be specified for a melee attack action",
       ),
     }),
   ),
-  rechargeActions: z.array(
+  recharge_actions: z.array(
     z.object({
       name: z.string("A name must be specified for a recharge action"),
-      rechargeDice: z.string(
-        "A recharge must be specified for at recharge action",
-      ),
+      recharge: z.string("A recharge must be specified for at recharge action"),
       description: z.string(
         "A description must be specified for a recharge action",
       ),
     }),
   ),
-  bonusActions: z.array(
+  bonus_actions: z.array(
     z.object({
       name: z.string("A name must be specified for a bonus action"),
       description: z.string(
@@ -193,8 +192,8 @@ const schema = z.object({
       description: z.string("A description must be specified for a reaction"),
     }),
   ),
-  availableLegendaryActionsPerTurn: z.number().optional(),
-  legendaryActions: z.array(
+  available_legendary_actions_per_turn: z.number().optional(),
+  legendary_actions: z.array(
     z.object({
       name: z.string("A name must be specified for a legendary action"),
       cost: z.number("A cost must be specified for a legendary action"),
@@ -203,7 +202,7 @@ const schema = z.object({
       ),
     }),
   ),
-  lairActions: z.array(
+  lair_actions: z.array(
     z.object({
       name: z.string("A name must be specified for a lair action"),
       description: z.string(
@@ -216,8 +215,8 @@ const schema = z.object({
       level: z.number().optional(),
       attribute: z.enum(Attribute).optional(),
       dc: z.number().optional(),
-      attackBonus: z.number().optional(),
-      spellSlots: z.array(
+      attack_bonus: z.number().optional(),
+      spell_slots: z.array(
         z.object({
           level: z.enum(
             SpellLevel,
@@ -235,7 +234,7 @@ const schema = z.object({
         spellcasting.level,
         spellcasting.attribute,
         spellcasting.dc,
-        spellcasting.attackBonus,
+        spellcasting.attack_bonus,
       ];
       const spellcastingPropsUndefined = spellcastingProps.filter(
         (prop) => prop === undefined,

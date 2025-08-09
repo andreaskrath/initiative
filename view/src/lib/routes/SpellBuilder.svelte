@@ -115,7 +115,7 @@
     <Container class="col-span-4">
       <Label>Casting Time</Label>
       <Combobox
-        bind:value={spell.castingTime}
+        bind:value={spell.casting_time}
         placeholder="Select a casting time"
         items={castingTimes}
       />
@@ -181,7 +181,7 @@ The fire spreads around corners. It ignites flammable objects in the area that a
     <Container class="col-span-16">
       <Label>At Higher Levels</Label>
       <Input
-        bind:value={spell.atHigherLevels}
+        bind:value={spell.at_higher_levels}
         type="text"
         placeholder="The damage increases by 1d6 for each slot level above 3rd."
       />
@@ -214,7 +214,8 @@ The fire spreads around corners. It ignites flammable objects in the area that a
     {#if usesMaterials}
       <!-- Material Consumed -->
       <Container class="col-span-3">
-        <Toggle bind:checked={spell.materialConsumed}>Consumes Materials</Toggle
+        <Toggle bind:checked={spell.material_consumed}
+          >Consumes Materials</Toggle
         >
       </Container>
 

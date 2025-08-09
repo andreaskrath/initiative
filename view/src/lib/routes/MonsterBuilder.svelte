@@ -106,11 +106,11 @@
   const handleCreateMonster = async (event: MouseEvent): Promise<void> => {
     event.preventDefault();
 
-    monster.spellcasting!.spellSlots = [];
+    monster.spellcasting!.spell_slots = [];
     for (const spellLevel of SpellLevels) {
       let value = spellSlots[spellLevel];
       if (value) {
-        monster.spellcasting!.spellSlots.push({
+        monster.spellcasting!.spell_slots.push({
           level: spellLevel,
           slots: value,
         });
@@ -128,11 +128,11 @@
       }
     }
 
-    monster.savingThrows = [];
+    monster.saving_throws = [];
     for (const attribute of Attributes) {
       let value = savingThrows[attribute];
       if (value) {
-        monster.savingThrows.push({
+        monster.saving_throws.push({
           attribute: attribute,
           modifier: value,
         });
@@ -146,22 +146,22 @@
       }
     }
 
-    monster.damageResistances = [];
-    monster.damageImmunities = [];
+    monster.damage_resistances = [];
+    monster.damage_immunities = [];
     for (const damageType of DamageTypes) {
       if (damageResistances[damageType]) {
-        monster.damageResistances.push(damageType);
+        monster.damage_resistances.push(damageType);
       }
 
       if (damageImmunities[damageType]) {
-        monster.damageImmunities.push(damageType);
+        monster.damage_immunities.push(damageType);
       }
     }
 
-    monster.conditionImmunities = [];
+    monster.condition_immunities = [];
     for (const condition of Conditions) {
       if (conditionImmunities[condition]) {
-        monster.conditionImmunities.push(condition);
+        monster.condition_immunities.push(condition);
       }
     }
 
@@ -267,7 +267,7 @@
       <Container class="col-span-3">
         <Label>Challenge Rating</Label>
         <Input
-          bind:value={monster.challengeRating}
+          bind:value={monster.challenge_rating}
           type="number"
           placeholder="0.5"
           class="text-center"
@@ -289,7 +289,7 @@
       <Container class="col-span-3">
         <Label>Proficiency Bonus</Label>
         <Input
-          bind:value={monster.proficiencyBonus}
+          bind:value={monster.proficiency_bnonus}
           type="number"
           placeholder="2"
           class="text-center"
@@ -310,7 +310,7 @@
       <Container class="col-span-3">
         <Label>Type</Label>
         <Select
-          bind:value={monster.monsterType}
+          bind:value={monster.monster_type}
           placeholder="Select a type"
           items={monsterTypes}
         />
@@ -340,7 +340,7 @@
       <Container class="col-span-3">
         <Label>Passive Perception</Label>
         <Input
-          bind:value={monster.passivePerception}
+          bind:value={monster.passive_perception}
           type="number"
           placeholder="13"
           class="text-center"
@@ -572,7 +572,7 @@
       <Container class="col-span-3">
         <Label>Rollable Hit Points</Label>
         <Input
-          bind:value={monster.rollableHitPoints}
+          bind:value={monster.rollable_hit_points}
           type="text"
           placeholder="2d8 + 6"
           class="text-center"
@@ -583,7 +583,7 @@
       <Container class="col-span-3">
         <Label>Armor Class</Label>
         <Input
-          bind:value={monster.armorClass}
+          bind:value={monster.armor_class}
           type="number"
           placeholder="18"
           class="text-center"
@@ -594,7 +594,7 @@
       <Container class="col-span-7">
         <Label>Armor Type</Label>
         <Input
-          bind:value={monster.armorType}
+          bind:value={monster.armor_type}
           type="text"
           placeholder="chain mail, shield"
         />
@@ -727,7 +727,7 @@
       </Button>
     </div>
 
-    {#each monster.regularActions as regularAction, index}
+    {#each monster.regular_actions as regularAction, index}
       <!-- Name -->
       <Container class="col-span-9">
         <Label>Name</Label>
@@ -760,7 +760,7 @@
         />
       </Container>
 
-      {#if index !== monster.regularActions.length - 1}
+      {#if index !== monster.regular_actions.length - 1}
         <hr class="col-span-10" />
       {/if}
     {/each}
@@ -780,7 +780,7 @@
       </Button>
     </div>
 
-    {#each monster.meleeAttackActions as meleeAttackAction, index}
+    {#each monster.melee_attack_actions as meleeAttackAction, index}
       <!-- Name -->
       <Container class="col-span-5">
         <Label>Name</Label>
@@ -795,7 +795,7 @@
       <Container class="col-span-2">
         <Label>Bonus to Hit</Label>
         <Input
-          bind:value={meleeAttackAction.hitBonus}
+          bind:value={meleeAttackAction.hit_bonus}
           type="number"
           placeholder="5"
           class="text-center"
@@ -830,7 +830,7 @@
       <Container class="col-span-3">
         <Label>One-Handed Attack</Label>
         <Input
-          bind:value={meleeAttackAction.oneHandedAttack}
+          bind:value={meleeAttackAction.one_handed_attack}
           type="text"
           placeholder="1d8 + 1"
           class="text-center"
@@ -841,7 +841,7 @@
       <Container class="col-span-3">
         <Label>Two-Handed Attack</Label>
         <Input
-          bind:value={meleeAttackAction.twoHandedAttack}
+          bind:value={meleeAttackAction.two_handed_attack}
           type="text"
           placeholder="1d10 + 1"
           class="text-center"
@@ -852,13 +852,13 @@
       <Container class="col-span-4">
         <Label>Damage Type</Label>
         <Select
-          bind:value={meleeAttackAction.damageType}
+          bind:value={meleeAttackAction.damage_type}
           placeholder="Select a damage type"
           items={damageTypes}
         />
       </Container>
 
-      {#if index !== monster.meleeAttackActions.length - 1}
+      {#if index !== monster.melee_attack_actions.length - 1}
         <hr class="col-span-10" />
       {/if}
     {/each}
@@ -878,7 +878,7 @@
       </Button>
     </div>
 
-    {#each monster.rangedAttackActions as rangedAttackAction, index}
+    {#each monster.ranged_attack_actions as rangedAttackAction, index}
       <!-- Name -->
       <Container class="col-span-5">
         <Label>Name</Label>
@@ -893,7 +893,7 @@
       <Container class="col-span-2">
         <Label>Bonus to Hit</Label>
         <Input
-          bind:value={rangedAttackAction.hitBonus}
+          bind:value={rangedAttackAction.hit_bonus}
           type="number"
           placeholder="5"
           class="text-center"
@@ -931,7 +931,7 @@
       <Container class="col-span-3">
         <Label>Normal Range</Label>
         <Input
-          bind:value={rangedAttackAction.normalRange}
+          bind:value={rangedAttackAction.normal_range}
           type="number"
           placeholder="150"
           class="text-center"
@@ -942,7 +942,7 @@
       <Container class="col-span-3">
         <Label>Long Range</Label>
         <Input
-          bind:value={rangedAttackAction.longRange}
+          bind:value={rangedAttackAction.long_range}
           type="number"
           placeholder="600"
           class="text-center"
@@ -953,13 +953,13 @@
       <Container class="col-span-4">
         <Label>Damage Type</Label>
         <Select
-          bind:value={rangedAttackAction.damageType}
+          bind:value={rangedAttackAction.damage_type}
           placeholder="Select a damage type"
           items={damageTypes}
         />
       </Container>
 
-      {#if index !== monster.rangedAttackActions.length - 1}
+      {#if index !== monster.ranged_attack_actions.length - 1}
         <hr class="col-span-10" />
       {/if}
     {/each}
@@ -979,7 +979,7 @@
       </Button>
     </div>
 
-    {#each monster.rechargeActions as rechargeAction, index}
+    {#each monster.recharge_actions as rechargeAction, index}
       <!-- Name -->
       <Container class="col-span-6">
         <Label>Name</Label>
@@ -994,7 +994,7 @@
       <Container class="col-span-3">
         <Label>Recharge</Label>
         <Combobox
-          bind:value={rechargeAction.rechargeDice}
+          bind:value={rechargeAction.recharge}
           placeholder="Select a recharge dice"
           items={recharges}
         />
@@ -1022,7 +1022,7 @@
         />
       </Container>
 
-      {#if index !== monster.rechargeActions.length - 1}
+      {#if index !== monster.regular_actions.length - 1}
         <hr class="col-span-10" />
       {/if}
     {/each}
@@ -1041,7 +1041,7 @@
       </Button>
     </div>
 
-    {#each monster.bonusActions as bonusAction, index}
+    {#each monster.bonus_actions as bonusAction, index}
       <!-- Name -->
       <Container class="col-span-9">
         <Label>Name</Label>
@@ -1074,7 +1074,7 @@
         />
       </Container>
 
-      {#if index !== monster.bonusActions.length - 1}
+      {#if index !== monster.bonus_actions.length - 1}
         <hr class="col-span-10" />
       {/if}
     {/each}
@@ -1146,11 +1146,11 @@
       </Button>
     </div>
 
-    {#if monster.legendaryActions.length > 0}
+    {#if monster.legendary_actions.length > 0}
       <Container class="col-span-3">
         <Label>Available Legendary Actions per Turn</Label>
         <Input
-          bind:value={monster.availableLegendaryActionsPerTurn}
+          bind:value={monster.available_legendary_actions_per_turn}
           type="number"
           placeholder="3"
           class="text-center"
@@ -1159,7 +1159,7 @@
       <div class="col-span-7"></div>
     {/if}
 
-    {#each monster.legendaryActions as legendaryAction, index}
+    {#each monster.legendary_actions as legendaryAction, index}
       <!-- Name -->
       <Container class="col-span-7">
         <Label>Name</Label>
@@ -1203,7 +1203,7 @@
         />
       </Container>
 
-      {#if index !== monster.legendaryActions.length - 1}
+      {#if index !== monster.legendary_actions.length - 1}
         <hr class="col-span-10" />
       {/if}
     {/each}
@@ -1222,7 +1222,7 @@
       </Button>
     </div>
 
-    {#each monster.lairActions as lairAction, index}
+    {#each monster.lair_actions as lairAction, index}
       <!-- Name -->
       <Container class="col-span-9">
         <Label>Name</Label>
@@ -1255,7 +1255,7 @@
         />
       </Container>
 
-      {#if index !== monster.lairActions.length - 1}
+      {#if index !== monster.lair_actions.length - 1}
         <hr class="col-span-10" />
       {/if}
     {/each}
@@ -1302,7 +1302,7 @@
     <Container class="col-span-4">
       <Label>Attack Bonus</Label>
       <Input
-        bind:value={monster.spellcasting!.attackBonus}
+        bind:value={monster.spellcasting!.attack_bonus}
         type="number"
         class="text-center"
         placeholder="9"

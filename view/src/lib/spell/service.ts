@@ -1,8 +1,10 @@
 import { type Spell } from "$types";
 import { Validate } from "$spell/validate";
+import { PrepareForValidation } from "$utils/validate";
 
 export const CreateSpell = async (spell: Spell): Promise<number | string[]> => {
-  let errors = await Validate(spell);
+  const preparedSpell = PrepareForValidation(spell);
+  let errors = await Validate(preparedSpell);
   if (errors.length > 0) {
     return errors;
   }
@@ -12,7 +14,7 @@ export const CreateSpell = async (spell: Spell): Promise<number | string[]> => {
     headers: {
       "Content-Type": "application/json",
     },
-    body: JSON.stringify(spell),
+    body: JSON.stringify(preparedSpell),
   });
 
   return result.status;
@@ -25,6 +27,6 @@ export const GetAllSpells = async (): Promise<Spell[]> => {
     throw new Error(`HTTP error! status: ${response.status}`);
   }
 
-  const data: Spell[] = await response.json();
-  return data;
+  const spells = (await response.json()) as Spell[];
+  return spells;
 };

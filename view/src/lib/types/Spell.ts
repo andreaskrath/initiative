@@ -5,11 +5,11 @@ export type Spell = {
   name?: string;
   school?: MagicSchool;
   level?: SpellLevel;
-  castingTime?: string;
+  casting_time?: string;
   verbal: boolean;
   somatic: boolean;
   material?: string;
-  materialConsumed: boolean;
+  material_consumed: boolean;
   ritual: boolean;
   concentration: boolean;
   duration?: string;
@@ -18,7 +18,7 @@ export type Spell = {
   shape?: string;
   classes: Class[];
   description?: string;
-  atHigherLevels?: string;
+  at_higher_levels?: string;
 };
 
 export const SpellActions = {
@@ -27,11 +27,11 @@ export const SpellActions = {
     name: undefined,
     school: undefined,
     level: undefined,
-    castingTime: undefined,
+    casting_time: undefined,
     verbal: false,
     somatic: false,
     material: undefined,
-    materialConsumed: false,
+    material_consumed: false,
     ritual: false,
     concentration: false,
     duration: undefined,
@@ -40,6 +40,6 @@ export const SpellActions = {
     shape: undefined,
     classes: [],
     description: undefined,
-    atHigherLevels: undefined,
+    at_higher_levels: undefined,
   }),
 };
