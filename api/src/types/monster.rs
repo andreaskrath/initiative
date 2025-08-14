@@ -7,161 +7,161 @@ use uuid::Uuid;
 
 #[derive(Debug, Serialize, Deserialize, sqlx::FromRow)]
 pub struct Monster {
-    id: Option<Uuid>,
-    name: String,
-    challenge_rating: f32,
-    xp: i16,
-    proficiency_bonus: i16,
-    size: Size,
-    monster_type: MonsterType,
-    species: Option<String>,
-    alignment: Alignment,
-    strength: i16,
-    dexterity: i16,
-    constitution: i16,
-    intelligence: i16,
-    wisdom: i16,
-    charisma: i16,
-    hit_points: i16,
-    rollable_hit_points: String,
-    armor_class: i16,
-    armor_type: Option<String>,
+    pub id: Option<Uuid>,
+    pub name: String,
+    pub challenge_rating: f32,
+    pub xp: i16,
+    pub proficiency_bonus: i16,
+    pub size: Size,
+    pub monster_type: MonsterType,
+    pub species: Option<String>,
+    pub alignment: Alignment,
+    pub strength: i16,
+    pub dexterity: i16,
+    pub constitution: i16,
+    pub intelligence: i16,
+    pub wisdom: i16,
+    pub charisma: i16,
+    pub hit_points: i16,
+    pub rollable_hit_points: String,
+    pub armor_class: i16,
+    pub armor_type: Option<String>,
     #[sqlx(json)]
-    saving_throws: Vec<SavingThrow>,
-    damage_resistances: Vec<DamageType>,
-    damage_immunities: Vec<DamageType>,
-    condition_immunities: Vec<Condition>,
+    pub saving_throws: Vec<SavingThrow>,
+    pub damage_resistances: Vec<DamageType>,
+    pub damage_immunities: Vec<DamageType>,
+    pub condition_immunities: Vec<Condition>,
     #[sqlx(json)]
-    visions: Vec<Vision>,
-    passive_perception: i16,
+    pub visions: Vec<Vision>,
+    pub passive_perception: i16,
     #[sqlx(json)]
-    speeds: Vec<Speed>,
-    languages: Vec<Language>,
+    pub speeds: Vec<Speed>,
+    pub languages: Vec<Language>,
     #[sqlx(json)]
-    skills: Vec<SkillModifier>,
+    pub skills: Vec<SkillModifier>,
     #[sqlx(json)]
-    traits: Vec<Trait>,
+    pub traits: Vec<Trait>,
     #[sqlx(json)]
-    regular_actions: Vec<RegularAction>,
+    pub regular_actions: Vec<RegularAction>,
     #[sqlx(json)]
-    melee_attack_actions: Vec<MeleeAttackAction>,
+    pub melee_attack_actions: Vec<MeleeAttackAction>,
     #[sqlx(json)]
-    ranged_attack_actions: Vec<RangedAttackAction>,
+    pub ranged_attack_actions: Vec<RangedAttackAction>,
     #[sqlx(json)]
-    recharge_actions: Vec<RechargeAction>,
+    pub recharge_actions: Vec<RechargeAction>,
     #[sqlx(json)]
-    bonus_actions: Vec<BonusAction>,
+    pub bonus_actions: Vec<BonusAction>,
     #[sqlx(json)]
-    reactions: Vec<Reaction>,
-    available_legendary_actions: Option<i16>,
+    pub reactions: Vec<Reaction>,
+    pub available_legendary_actions: Option<i16>,
     #[sqlx(json)]
-    legendary_actions: Vec<LegendaryAction>,
+    pub legendary_actions: Vec<LegendaryAction>,
     #[sqlx(json)]
-    lair_actions: Vec<LairAction>,
+    pub lair_actions: Vec<LairAction>,
     #[sqlx(json)]
-    spellcasting: Option<Spellcasting>,
+    pub spellcasting: Option<Spellcasting>,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
-struct SavingThrow {
-    attribute: Attribute,
-    modifier: i16,
+pub struct SavingThrow {
+    pub attribute: Attribute,
+    pub modifier: i16,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
-struct Vision {
-    sight: Sight,
-    range: i16,
+pub struct Vision {
+    pub sight: Sight,
+    pub range: i16,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
-struct Speed {
-    movement: Movement,
-    distance: i16,
+pub struct Speed {
+    pub movement: Movement,
+    pub distance: i16,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
-struct SkillModifier {
-    skill: Skill,
-    modifier: i16,
+pub struct SkillModifier {
+    pub skill: Skill,
+    pub modifier: i16,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
-struct Trait {
-    name: String,
-    description: String,
+pub struct Trait {
+    pub name: String,
+    pub description: String,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
-struct RegularAction {
-    name: String,
-    description: String,
+pub struct RegularAction {
+    pub name: String,
+    pub description: String,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
-struct MeleeAttackAction {
-    name: String,
-    hit_bonus: i16,
-    reach: i16,
-    one_handed_attack: Option<String>,
-    two_handed_attack: Option<String>,
-    damage_type: DamageType,
+pub struct MeleeAttackAction {
+    pub name: String,
+    pub hit_bonus: i16,
+    pub reach: i16,
+    pub one_handed_attack: Option<String>,
+    pub two_handed_attack: Option<String>,
+    pub damage_type: DamageType,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
-struct RangedAttackAction {
-    name: String,
-    hit_bonus: i16,
-    normal_range: i16,
-    long_range: i16,
-    attack: String,
-    damage_type: DamageType,
+pub struct RangedAttackAction {
+    pub name: String,
+    pub hit_bonus: i16,
+    pub normal_range: i16,
+    pub long_range: i16,
+    pub attack: String,
+    pub damage_type: DamageType,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
-struct RechargeAction {
-    name: String,
-    recharge: String,
-    description: String,
+pub struct RechargeAction {
+    pub name: String,
+    pub recharge: String,
+    pub description: String,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
-struct BonusAction {
-    name: String,
-    description: String,
+pub struct BonusAction {
+    pub name: String,
+    pub description: String,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
-struct Reaction {
-    name: String,
-    description: String,
+pub struct Reaction {
+    pub name: String,
+    pub description: String,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
-struct LegendaryAction {
-    name: String,
-    cost: i16,
-    description: String,
+pub struct LegendaryAction {
+    pub name: String,
+    pub cost: i16,
+    pub description: String,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
-struct LairAction {
-    name: String,
-    description: String,
+pub struct LairAction {
+    pub name: String,
+    pub description: String,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
-struct Spellcasting {
-    level: SpellLevel,
-    attribute: Attribute,
-    dc: i16,
-    attack_bonus: i16,
-    spell_slots: Vec<SpellSlot>,
-    spells: Vec<Spell>,
+pub struct Spellcasting {
+    pub level: i16,
+    pub attribute: Attribute,
+    pub dc: i16,
+    pub attack_bonus: i16,
+    pub spell_slots: Vec<SpellSlot>,
+    pub spells: Vec<Spell>,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
-struct SpellSlot {
-    level: SpellLevel,
-    slots: i16,
+pub struct SpellSlot {
+    pub level: SpellLevel,
+    pub slots: i16,
 }
