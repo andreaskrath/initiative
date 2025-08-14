@@ -289,7 +289,7 @@
       <Container class="col-span-3">
         <Label>Proficiency Bonus</Label>
         <Input
-          bind:value={monster.proficiency_bnonus}
+          bind:value={monster.proficiency_bonus}
           type="number"
           placeholder="2"
           class="text-center"

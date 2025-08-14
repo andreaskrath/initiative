@@ -54,7 +54,7 @@ export type Monster = {
   name?: string;
   challenge_rating?: number;
   xp?: number;
-  proficiency_bnonus?: number;
+  proficiency_bonus?: number;
   size?: Size;
   monster_type?: MonsterType;
   species?: string;
@@ -114,7 +114,7 @@ export const MonsterActions = {
     name: undefined,
     challenge_rating: undefined,
     xp: undefined,
-    proficiency_bnonus: undefined,
+    proficiency_bonus: undefined,
     size: undefined,
     monster_type: undefined,
     species: undefined,
