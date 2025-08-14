@@ -561,7 +561,7 @@
       <Container class="col-span-3">
         <Label>Hit Points</Label>
         <Input
-          bind:value={monster.hitPoints}
+          bind:value={monster.hit_points}
           type="number"
           placeholder="11"
           class="text-center"

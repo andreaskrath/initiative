@@ -45,7 +45,7 @@ const schema = z.object({
   intelligence: z.number("An intelligence attribute must be specified"),
   wisdom: z.number("A wisdom attribute must be specified"),
   charisma: z.number("A charisma attribute must be specified"),
-  hitPoints: z.number("Hit points must be specified"),
+  hit_points: z.number("Hit points must be specified"),
   rollable_hit_points: z
     .string("Rollable hit points must be specified")
     .regex(/^\d+d\d+([+-]\d+)?$/, "Invalid rollable hit points format"),

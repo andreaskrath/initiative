@@ -65,7 +65,7 @@ export type Monster = {
   intelligence?: number;
   wisdom?: number;
   charisma?: number;
-  hitPoints?: number;
+  hit_points?: number;
   rollable_hit_points?: string;
   armor_class?: number;
   armor_type?: string;
