@@ -17,7 +17,7 @@ CREATE TABLE IF NOT EXISTS monsters (
     hit_points smallint NOT NULL,
     rollable_hit_points text NOT NULL,
     armor_class smallint NOT NULL,
-    armor_type text NOT NULL,
+    armor_type text,
     passive_perception smallint NOT NULL,
     available_legendary_actions smallint
 );
