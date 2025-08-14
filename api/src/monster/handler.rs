@@ -4,12 +4,13 @@ use axum::{Json, extract::State, http::StatusCode, response::IntoResponse};
 use sqlx::PgPool;
 
 pub async fn create(State(pool): State<PgPool>, Json(monster): Json<Monster>) -> StatusCode {
-    // let monster_repo = MonsterRepository::new(pool);
-    //
-    // if let Err(err) = monster_repo.create(monster).await {
-    //     return StatusCode::INTERNAL_SERVER_ERROR;
-    // }
-    //
+    let monster_repo = MonsterRepository::new(pool);
+
+    if let Err(err) = monster_repo.create(monster).await {
+        println!("{err:?}");
+        return StatusCode::INTERNAL_SERVER_ERROR;
+    }
+
     StatusCode::CREATED
 }
 
