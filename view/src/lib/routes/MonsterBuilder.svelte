@@ -167,6 +167,7 @@
 
     const result = await MonsterService.Create(monster);
     if (typeof result === "number") {
+      errors = [];
       switch (result) {
         case StatusCodes.CREATED:
           toast.success("Successfully created monster");
