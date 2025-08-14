@@ -11,6 +11,7 @@ import {
   Size,
   Skill,
   SpellLevel,
+  SpellLevels,
   type Monster,
 } from "$types";
 import { spellSchema } from "$spell/validate";
@@ -251,6 +252,40 @@ const schema = z.object({
             "All spellcasting fields must be set together, or none at all.",
           path: ["spellcastingLevel"],
         });
+      }
+
+      for (const spellLevel of SpellLevels) {
+        // There are no spell slots for cantrips
+        if (spellLevel === SpellLevel.Cantrip) {
+          continue;
+        }
+
+        const currentLevelSpells = spellcasting.spells.filter(
+          (spell) => spell.level === spellLevel,
+        );
+        const currentLevelSpellSlots = spellcasting.spell_slots.filter(
+          (spell_slots) => spell_slots.level === spellLevel,
+        );
+
+        if (
+          currentLevelSpells.length !== 0 &&
+          currentLevelSpellSlots.length === 0
+        ) {
+          ctx.addIssue({
+            code: "custom",
+            message: `Spells of ${spellLevel} level are defined, but no spells slots are defined for this level of spells`,
+            path: ["spellcastingSpellSlots"],
+          });
+        } else if (
+          currentLevelSpells.length === 0 &&
+          currentLevelSpellSlots.length !== 0
+        ) {
+          ctx.addIssue({
+            code: "custom",
+            message: `No spells of ${spellLevel} level are defined, but spells slots are defined for this level of spells`,
+            path: ["spellcastingSpellSlots"],
+          });
+        }
       }
     }),
 });
