@@ -13,6 +13,7 @@ import {
   SpellLevel,
   type Monster,
 } from "$types";
+import { spellSchema } from "$spell/validate";
 
 /*
  * Validate that a monster fits the expected data structure and values for the backend.
@@ -227,7 +228,7 @@ const schema = z.object({
           ),
         }),
       ),
-      spells: z.array(z.string()),
+      spells: z.array(spellSchema),
     })
     .superRefine((spellcasting, ctx) => {
       const spellcastingProps = [

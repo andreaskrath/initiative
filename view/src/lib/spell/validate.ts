@@ -2,7 +2,7 @@ import { Class, MagicSchool, SpellLevel, type Spell } from "$types";
 import * as z from "zod";
 
 export const Validate = async (spell: Spell): Promise<string[]> => {
-  const result = await schema.safeParseAsync(spell);
+  const result = await spellSchema.safeParseAsync(spell);
 
   if (!result.success) {
     return result.error.issues.map((issue) => issue.message);
@@ -11,7 +11,7 @@ export const Validate = async (spell: Spell): Promise<string[]> => {
   return [];
 };
 
-const schema = z
+export const spellSchema = z
   .object({
     id: z.uuid().optional(),
     name: z
