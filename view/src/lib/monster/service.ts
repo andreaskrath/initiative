@@ -10,12 +10,14 @@ export const MonsterService = {
       return errors;
     }
 
+    const cleanedMonster = cleanMonster(preparedMonster);
+
     const result = await fetch("/api/monsters/create", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify(preparedMonster),
+      body: JSON.stringify(cleanedMonster),
     });
 
     return result.status;
