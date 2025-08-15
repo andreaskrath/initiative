@@ -1382,14 +1382,16 @@
   </Tabs.Content>
 </Tabs.Root>
 
-<!-- Create Monster Button -->
-<div class="flex justify-end">
-  <Button onclick={async (e: MouseEvent) => handleCreateMonster(e)}>
-    Create Monster
-  </Button>
-</div>
-
 <!-- Valiation Errors -->
 <div class="flex justify-center">
   <Errors title="Unable to create spell" bind:errors />
+</div>
+
+<div class="h-[100px]"></div>
+
+<!-- Create Monster Button -->
+<div class="fixed inset-x-0 bottom-0 mx-auto flex w-[1000px] justify-end pb-10">
+  <Button onclick={async (e: MouseEvent) => handleCreateMonster(e)}>
+    Create Monster
+  </Button>
 </div>

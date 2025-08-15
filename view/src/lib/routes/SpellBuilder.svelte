@@ -242,13 +242,15 @@ The fire spreads around corners. It ignites flammable objects in the area that a
     {/each}
   </div>
 
+  <!-- Valiation Errors -->
+  <Errors title="Unable to create spell" bind:errors />
+
   <!-- Create Spell Button -->
-  <div class="flex justify-end">
+  <div
+    class="fixed inset-x-0 bottom-0 mx-auto flex w-[1000px] justify-end pb-10"
+  >
     <Button onclick={async (e: MouseEvent) => handleCreateSpell(e)}>
       Create Spell
     </Button>
   </div>
-
-  <!-- Valiation Errors -->
-  <Errors title="Unable to create spell" bind:errors />
 </div>
