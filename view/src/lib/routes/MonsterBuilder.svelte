@@ -54,6 +54,7 @@
   import { ScrollArea } from "$components/ui/scroll-area/index";
   import { Separator } from "$components/ui/separator/index";
   import Select from "$components/Select.svelte";
+  import { Skeleton } from "$lib/shared/components/ui/skeleton/index";
   import TextArea from "$components/TextArea.svelte";
   import Title from "$components/Title.svelte";
   import Toggle from "$components/Toggle.svelte";
@@ -1313,7 +1314,19 @@
     <Title variant="muted" class="col-span-16">Spell List</Title>
 
     {#await getSpells()}
-      Loading...
+      <div class="col-span-8 h-[300px] w-full rounded-lg border">
+        <div class="mt-3 ml-5 grid gap-x-4 gap-y-4">
+          <Skeleton class="h-4 w-[450px]" />
+          <Skeleton class="h-4 w-[400px]" />
+          <Skeleton class="h-4 w-[450px]" />
+          <Skeleton class="h-4 w-[450px]" />
+          <Skeleton class="h-4 w-[400px]" />
+          <Skeleton class="h-4 w-[400px]" />
+          <Skeleton class="h-4 w-[450px]" />
+          <Skeleton class="h-4 w-[450px]" />
+          <Skeleton class="h-4 w-[450px]" />
+        </div>
+      </div>
     {:then}
       <Command.Root class="col-span-8 h-[300px] w-full rounded-lg border">
         <Command.Input placeholder="Search for a spell" />
@@ -1341,7 +1354,11 @@
         </Command.List>
       </Command.Root>
     {:catch error}
-      Some {error} occurred.
+      <div class="col-span-8 h-[300px] w-full rounded-lg border">
+        <p class="mt-5 text-center">
+          An error occurred while loading the spells.
+        </p>
+      </div>
     {/await}
 
     <ScrollArea
