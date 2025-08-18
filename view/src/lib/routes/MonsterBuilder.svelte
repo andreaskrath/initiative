@@ -229,7 +229,7 @@
       .sort((a, b) => a.name!.localeCompare(b.name!)) as spell}
       <div class="flex justify-between text-sm">
         <span>{spell.name}</span>
-        <div class="flex space-x-2">
+        <div class="flex gap-x-2">
           <span class="text-muted-foreground">
             {DisplayMagicSchool[spell.school!]}
           </span>
@@ -258,7 +258,7 @@
 
   <Tabs.Content value="basic" class="space-y-5">
     <Title variant="muted">Basic Monster Information</Title>
-    <div class="grid grid-cols-16 space-y-5 gap-x-2">
+    <div class="grid grid-cols-16 gap-x-2 gap-y-5">
       <!-- Name -->
       <Container class="col-span-7">
         <Label>Name</Label>
@@ -352,7 +352,7 @@
 
     <!-- Attributes -->
     <Title variant="muted">Attributes</Title>
-    <div class="grid grid-cols-18 space-y-5 gap-x-2">
+    <div class="grid grid-cols-18 gap-x-2 gap-y-5">
       <!-- Attributes -->
       <Container class="col-span-3">
         <Label>{DisplayAttribute[Attribute.Strength]}</Label>
@@ -417,7 +417,7 @@
 
     <!-- Skills -->
     <Title variant="muted">Skills</Title>
-    <div class="grid grid-cols-18 space-y-5 gap-x-2">
+    <div class="grid grid-cols-18 gap-x-2 gap-y-5">
       {#each Skills as skill}
         <Container class="col-span-3">
           <Label>{DisplaySkill[skill]}</Label>
@@ -433,7 +433,7 @@
 
     <!-- Languages -->
     <Title variant="muted">Languages</Title>
-    <div class="grid grid-cols-4 space-y-2 gap-x-2">
+    <div class="grid grid-cols-4 gap-x-2 gap-y-2">
       {#each Languages as language}
         <Container class="col-span-1">
           <Toggle bind:checked={languages[language]}>
@@ -443,10 +443,10 @@
       {/each}
     </div>
 
-    <div class="grid grid-cols-2 space-y-5 gap-x-2">
+    <div class="grid grid-cols-2 gap-x-2 gap-y-5">
       <!-- Vision -->
       <div class="col-span-1">
-        <div class="grid grid-cols-10 space-y-5 gap-x-2">
+        <div class="grid grid-cols-10 gap-x-2 gap-y-5">
           <Title variant="muted">Vision</Title>
           <!-- Add Vission Button -->
           <div class="col-span-1 col-start-10 flex justify-center">
@@ -501,7 +501,7 @@
 
       <!-- Speed -->
       <div class="col-span-1">
-        <div class="grid grid-cols-10 space-y-5 gap-x-2">
+        <div class="grid grid-cols-10 gap-x-2 gap-y-5">
           <Title variant="muted">Speed</Title>
           <!-- Add Speed Button -->
           <div class="col-span-1 col-start-10 flex justify-center">
@@ -555,10 +555,11 @@
       </div>
     </div>
   </Tabs.Content>
-  <Tabs.Content value="defensive" class="mt-5">
-    <Title variant="muted" class="col-span-9">Basic Defensive Information</Title
-    >
-    <div class="grid grid-cols-16 space-y-5 gap-x-2">
+  <Tabs.Content value="defensive" class="mt-5 space-y-5">
+    <Title variant="muted" class="col-span-9">
+      Basic Defensive Information
+    </Title>
+    <div class="grid grid-cols-16 gap-x-2 gap-y-5">
       <!-- Hit Points -->
       <Container class="col-span-3">
         <Label>Hit Points</Label>
@@ -605,7 +606,7 @@
 
     <!-- Saving Throws -->
     <Title variant="muted">Saving Throws</Title>
-    <div class="grid grid-cols-18 space-y-5 gap-x-2">
+    <div class="grid grid-cols-18 gap-x-2 gap-y-5">
       <!-- Saving Throws -->
       {#each Attributes as attribute}
         <Container class="col-span-3">
@@ -622,7 +623,7 @@
 
     <!-- Damage Resistances -->
     <Title variant="muted">Damage Resistances</Title>
-    <div class="grid grid-cols-4 space-y-2 gap-x-2">
+    <div class="grid grid-cols-4 gap-x-2 gap-y-2">
       {#each DamageTypes as damageType}
         <Container class="col-span-1">
           <Toggle bind:checked={damageResistances[damageType]}>
@@ -634,7 +635,7 @@
 
     <!-- Damage Immunities -->
     <Title variant="muted">Damage Immunities</Title>
-    <div class="grid grid-cols-4 space-y-2 gap-x-2">
+    <div class="grid grid-cols-4 gap-x-2 gap-y-2">
       {#each DamageTypes as damageType}
         <Container class="col-span-1">
           <Toggle bind:checked={damageImmunities[damageType]}>
@@ -646,7 +647,7 @@
 
     <!-- Condition Immunities -->
     <Title variant="muted">Condition Immunities</Title>
-    <div class="grid grid-cols-5 space-y-2 gap-x-2">
+    <div class="grid grid-cols-5 gap-x-2 gap-y-2">
       {#each Conditions as condition}
         <Container class="col-span-1">
           <Toggle bind:checked={conditionImmunities[condition]}>
@@ -657,7 +658,7 @@
     </div>
   </Tabs.Content>
   <Tabs.Content value="traits" class="mt-5">
-    <div class="grid grid-cols-10 space-y-5 gap-x-2">
+    <div class="grid grid-cols-10 gap-x-2 gap-y-5">
       <!-- Traits -->
       <Title variant="muted" class="col-span-9">Traits</Title>
       <!-- Add Trait Button -->
@@ -711,10 +712,7 @@
       {/each}
     </div>
   </Tabs.Content>
-  <Tabs.Content
-    value="actions"
-    class="mt-5 grid grid-cols-10 space-y-5 gap-x-2"
-  >
+  <Tabs.Content value="actions" class="mt-5 grid grid-cols-10 gap-x-2 gap-y-5">
     <!-- Regular Actions -->
     <Title variant="muted" class="col-span-9">Regular Actions</Title>
     <!-- Add Regular Action Button -->
@@ -1265,7 +1263,7 @@
 
   <Tabs.Content
     value="spellcasting"
-    class="mt-5 grid grid-cols-16 space-y-5 gap-x-2"
+    class="mt-5 grid grid-cols-16 gap-x-2 gap-y-5"
   >
     <Title variant="muted" class="col-span-16">Spellcasting</Title>
     <!-- Level -->
