@@ -125,7 +125,7 @@ export const MonsterActions = {
     intelligence: undefined,
     wisdom: undefined,
     charisma: undefined,
-    hitPoints: undefined,
+    hit_points: undefined,
     rollable_hit_points: undefined,
     armor_class: undefined,
     armor_type: undefined,
