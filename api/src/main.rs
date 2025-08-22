@@ -26,6 +26,7 @@ async fn async_main() {
 
     let app = Router::new()
         .route("/assets/{*path}", get(combat_tracker::assets))
+        .route("/images/{*path}", get(combat_tracker::images))
         .route("/api/spells/create", post(spell::handler::create))
         .route("/api/spells", get(spell::handler::get))
         .route("/api/monsters/create", post(monster::handler::create))
