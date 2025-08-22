@@ -7,14 +7,15 @@ export interface Entity {
   isActive: boolean;
 }
 
-interface Player {}
-
-export interface PlayerEntity extends Entity {
-  type: "player";
-  player: Player;
+interface CombatEntity extends Entity {
+  concentration: boolean;
 }
 
-export interface MonsterEntity extends Entity {
+export interface PlayerEntity extends CombatEntity {
+  type: "player";
+}
+
+export interface MonsterEntity extends CombatEntity {
   type: "monster";
   current_hp: number;
   max_hp: number;
@@ -27,4 +28,4 @@ export interface ReminderEntity extends Entity {
   description: string;
 }
 
-export type CombatEntity = PlayerEntity | MonsterEntity | ReminderEntity;
+export type EncounterEntity = PlayerEntity | MonsterEntity | ReminderEntity;

@@ -5,11 +5,13 @@
     MonsterActions,
     MonsterType,
     MonsterTypes,
+    type EncounterEntity,
     type Monster,
   } from "$types";
 
   import { Button } from "$components/ui/button/index";
   import * as Command from "$components/ui/command/index";
+  import * as DropdownMenu from "$components/ui/dropdown-menu/index";
   import { EncounterActions } from "$lib/types/Encounter";
   import Title from "$lib/shared/components/Title.svelte";
 
@@ -27,59 +29,62 @@
   let monsters: Monster[] = $state([]);
 
   encounter.entities.push({
-    id: "something",
+    id: "player1",
     name: "Roberto",
     initiative: 15,
     isActive: false,
+    concentration: true,
     type: "player",
-    player: {},
   });
   encounter.entities.push({
-    id: "something-else",
+    id: "player2",
     name: "Dixie",
     initiative: 4,
     isActive: false,
+    concentration: false,
     type: "player",
-    player: {},
   });
 
   encounter.entities.push({
-    id: "something-else",
+    id: "monster1",
     name: "Goblin #1",
     initiative: 4,
     isActive: false,
     current_hp: 50,
     max_hp: 60,
     temporary_hp: 20,
+    concentration: true,
     type: "monster",
     monster: MonsterActions.EmptyMonster(),
   });
   encounter.entities.push({
-    id: "something-else",
+    id: "monster2",
     name: "Goblin #2",
     initiative: 5,
     isActive: false,
     current_hp: 60,
     max_hp: 160,
     temporary_hp: 0,
+    concentration: false,
     type: "monster",
     monster: MonsterActions.EmptyMonster(),
   });
   encounter.entities.push({
-    id: "something-else",
+    id: "monster3",
     name: "Goblin #3",
     initiative: 8,
     isActive: false,
     current_hp: 10,
     max_hp: 160,
     temporary_hp: 0,
+    concentration: false,
     type: "monster",
     monster: MonsterActions.EmptyMonster(),
   });
 
   encounter.entities.push({
-    id: "something-else",
-    name: "House is falling apart",
+    id: "reminder1",
+    name: "House",
     initiative: 20,
     isActive: false,
     type: "reminder",
@@ -87,7 +92,7 @@
       "The house is falling apart and two random squares on the battle map become holes that you can fall through.",
   });
   encounter.entities.push({
-    id: "something-else",
+    id: "reminder2",
     name: "Rats",
     initiative: 20,
     isActive: false,
@@ -96,6 +101,37 @@
       "2 swarm of rats enter the house through the broken walls and floor.",
   });
 </script>
+
+{#snippet ConcentrationIcon()}
+  <img
+    src="/images/concentration.svg"
+    alt="Concentration icon"
+    class="ml-5 h-[25px] w-[25px]"
+  />
+{/snippet}
+
+{#snippet ActionsButton(entity: EncounterEntity)}
+  <DropdownMenu.Root>
+    <DropdownMenu.Trigger>
+      {#snippet child({ props })}
+        <Button {...props} variant="ghost" size="icon" class="size-8">
+          <Ellipsis />
+        </Button>
+      {/snippet}
+    </DropdownMenu.Trigger>
+    <DropdownMenu.Content class="w-56" align="center">
+      <DropdownMenu.Group>
+        <DropdownMenu.Item>Edit</DropdownMenu.Item>
+        <DropdownMenu.Item
+          onSelect={(e) => EncounterActions.RemoveEntity(encounter, entity, e)}
+          closeOnSelect={true}
+        >
+          Remove
+        </DropdownMenu.Item>
+      </DropdownMenu.Group>
+    </DropdownMenu.Content>
+  </DropdownMenu.Root>
+{/snippet}
 
 <!-- Creates a section for picking spells to add to a monster. -->
 {#snippet MonsterPickSection(title: string, monsterType: MonsterType)}
@@ -177,17 +213,20 @@
     <hr />
 
     <!-- Player Rows -->
-    {#each playerEntities as player, index}
+    {#each playerEntities as player, index (player.id!)}
       <div class="grid min-h-[50px] grid-cols-[2fr_1fr_6fr_1fr] px-6 py-2">
-        <div class="flex items-center text-sm font-medium">{player.name}</div>
+        <div class="flex items-center text-sm font-medium">
+          {player.name}
+          {#if player.concentration}
+            {@render ConcentrationIcon()}
+          {/if}
+        </div>
         <div class="flex items-center justify-center text-center text-sm">
           {player.initiative}
         </div>
         <div class="flex items-center text-sm font-medium">details</div>
         <div class="flex items-center justify-center text-sm">
-          <Button variant="ghost" size="icon" class="size-8">
-            <Ellipsis />
-          </Button>
+          {@render ActionsButton(player)}
         </div>
       </div>
 
@@ -213,9 +252,14 @@
     <hr />
 
     <!-- Monster Rows -->
-    {#each monsterEntities as monster, index}
+    {#each monsterEntities as monster, index (monster.id!)}
       <div class="grid min-h-[50px] grid-cols-[2fr_1fr_3fr_3fr_1fr] px-6 py-2">
-        <div class="flex items-center text-sm font-medium">{monster.name}</div>
+        <div class="flex items-center text-sm font-medium">
+          {monster.name}
+          {#if monster.concentration}
+            {@render ConcentrationIcon()}
+          {/if}
+        </div>
         <div class="flex items-center justify-center text-center text-sm">
           {monster.initiative}
         </div>
@@ -228,9 +272,7 @@
           )}
         </div>
         <div class="flex items-center justify-center text-sm">
-          <Button variant="ghost" size="icon" class="size-8">
-            <Ellipsis />
-          </Button>
+          {@render ActionsButton(monster)}
         </div>
       </div>
 
@@ -255,7 +297,7 @@
     <hr />
 
     <!-- Reminders Rows -->
-    {#each reminderEntities as reminder, index}
+    {#each reminderEntities as reminder, index (reminder.id!)}
       <div class="grid min-h-[50px] grid-cols-[2fr_1fr_6fr_1fr] px-6 py-2">
         <div class="flex items-center text-sm font-medium">{reminder.name}</div>
         <div class="flex items-center justify-center text-center text-sm">
@@ -265,9 +307,7 @@
           {reminder.description}
         </div>
         <div class="flex items-center justify-center text-sm">
-          <Button variant="ghost" size="icon" class="size-8">
-            <Ellipsis />
-          </Button>
+          {@render ActionsButton(reminder)}
         </div>
       </div>
 

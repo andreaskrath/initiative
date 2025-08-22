@@ -19,4 +19,4 @@ export { Skill, Skills, DisplaySkill } from "./Skill";
 export { SpellLevel, SpellLevels, DisplaySpellLevel } from "./SpellLevel";
 export { type Monster, MonsterActions } from "./Monster";
 export { type Spell, SpellActions } from "./Spell";
-export { type CombatEntity } from "./Entities";
+export { type EncounterEntity } from "./Entities";

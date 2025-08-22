@@ -1,9 +1,9 @@
-import type { CombatEntity, MonsterEntity } from "./Entities";
+import type { EncounterEntity, MonsterEntity } from "./Entities";
 import type { Monster } from "./Monster";
 
 export type Encounter = {
   id?: string;
-  entities: CombatEntity[];
+  entities: EncounterEntity[];
 };
 
 export const EncounterActions = {
@@ -11,6 +11,7 @@ export const EncounterActions = {
     id: undefined,
     entities: [],
   }),
+
   AddMonster: (
     encounter: Encounter,
     monster: Monster,
@@ -26,10 +27,23 @@ export const EncounterActions = {
       type: "monster",
       current_hp: 0,
       max_hp: 0,
+      concentration: false,
       temporary_hp: 0,
       monster: monster,
     };
 
     encounter.entities.push(monsterEntity);
+  },
+
+  RemoveEntity: (
+    encounter: Encounter,
+    entityToRemove: EncounterEntity,
+    event: Event,
+  ): void => {
+    event.preventDefault();
+
+    encounter.entities = encounter.entities.filter(
+      (entity) => entity !== entityToRemove,
+    );
   },
 };
