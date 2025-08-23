@@ -7,13 +7,20 @@
     MonsterTypes,
     type EncounterEntity,
     type Monster,
+    EncounterActions,
+    type PlayerEntity,
   } from "$types";
 
-  import { Button } from "$components/ui/button/index";
+  import { Button, buttonVariants } from "$components/ui/button/index";
   import * as Command from "$components/ui/command/index";
   import * as DropdownMenu from "$components/ui/dropdown-menu/index";
-  import { EncounterActions } from "$lib/types/Encounter";
+  import Label from "$lib/shared/components/Label.svelte";
+  import Input from "$lib/shared/components/Input.svelte";
   import Title from "$lib/shared/components/Title.svelte";
+  import Container from "$lib/shared/components/Container.svelte";
+  import Toggle from "$lib/shared/components/Toggle.svelte";
+  import { type Snippet } from "svelte";
+  import Dialog from "$components/Dialog.svelte";
 
   let encounter = $state(EncounterActions.EmptyEncounter());
   let playerEntities = $derived(
@@ -27,6 +34,18 @@
   );
 
   let monsters: Monster[] = $state([]);
+
+  let playerForm: {
+    type: string;
+    name?: string;
+    initiative?: number;
+    concentration: boolean;
+  } = $state({
+    type: "player",
+    name: "",
+    initiative: undefined,
+    concentration: false,
+  });
 
   encounter.entities.push({
     id: "player1",
@@ -199,7 +218,56 @@
 
 <div class="mx-auto mt-5 w-[1000px] space-y-5">
   <!-- Players Section -->
-  <Title variant="default">Players</Title>
+  <div class="flex justify-between">
+    <Title variant="default" class="relative top-1">Players</Title>
+    <Dialog
+      title="Add new player"
+      description="Add a new player to the encounter, click the button at the bottom when you are done."
+    >
+      {#snippet trigger()}
+        <Button variant="default">Add Player</Button>
+      {/snippet}
+
+      {#snippet content()}
+        <div class="flex w-full gap-5">
+          <!-- Name -->
+          <Container class="flex-3">
+            <Label>Name</Label>
+            <Input
+              type="text"
+              placeholder="Player 1"
+              bind:value={playerForm.name}
+            />
+          </Container>
+
+          <!-- Initiative -->
+          <Container class="flex-1">
+            <Label>Initiative</Label>
+            <Input
+              type="number"
+              placeholder="16"
+              bind:value={playerForm.initiative}
+            />
+          </Container>
+
+          <!-- Concentration -->
+          <div class="flex flex-col justify-end">
+            <Toggle bind:checked={playerForm.concentration}>
+              Concentration
+            </Toggle>
+          </div>
+        </div>
+      {/snippet}
+
+      {#snippet footer()}
+        <Button variant="default" onclick={(_) => console.log("add player")}>
+          Add Player
+        </Button>
+      {/snippet}
+    </Dialog>
+    <!-- {@render AddEntity("Add Player", "Add a new player to the encounter. Click the button at the bottom when you are done")} -->
+    <!-- {/@render} -->
+  </div>
   <section class="mt-5 rounded-lg border">
     <!-- Header -->
     <div
