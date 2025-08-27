@@ -28,9 +28,7 @@
         {description}
       </Dialog.Description>
     </Dialog.Header>
-    <div class="flex gap-5">
-      {@render content()}
-    </div>
+    {@render content()}
     <Dialog.Footer>
       {@render footer()}
     </Dialog.Footer>
