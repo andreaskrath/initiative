@@ -9,9 +9,18 @@
     type Monster,
     EncounterActions,
     type PlayerEntity,
+    type CombatEntity,
+    type CombatCondition,
+    Conditions,
+    DisplayCondition,
+    Attributes,
+    DisplayAttribute,
+    SaveTriggers,
+    DisplaySaveTrigger,
+    CombatEntityActions,
   } from "$types";
 
-  import { Button, buttonVariants } from "$components/ui/button/index";
+  import { Button } from "$components/ui/button/index";
   import * as Command from "$components/ui/command/index";
   import * as DropdownMenu from "$components/ui/dropdown-menu/index";
   import Label from "$lib/shared/components/Label.svelte";
@@ -21,6 +30,9 @@
   import Toggle from "$lib/shared/components/Toggle.svelte";
   import { type Snippet } from "svelte";
   import Dialog from "$components/Dialog.svelte";
+  import Select from "$components/Select.svelte";
+  import { ToLabelValueWith } from "$utils/factories";
+  import Combobox from "$lib/shared/components/Combobox.svelte";
 
   let encounter = $state(EncounterActions.EmptyEncounter());
   let playerEntities = $derived(
@@ -35,23 +47,29 @@
 
   let monsters: Monster[] = $state([]);
 
+  const selectConditions = ToLabelValueWith(Conditions, DisplayCondition);
+  const selectAttributes = ToLabelValueWith(Attributes, DisplayAttribute);
+  const selectSaveTriggers = ToLabelValueWith(SaveTriggers, DisplaySaveTrigger);
+
   let playerForm: {
     type: string;
     name?: string;
     initiative?: number;
     concentration: boolean;
+    conditions: CombatCondition[];
   } = $state({
     type: "player",
     name: "",
     initiative: undefined,
     concentration: false,
+    conditions: [],
   });
 
   encounter.entities.push({
     id: "player1",
     name: "Roberto",
     initiative: 15,
-    isActive: false,
+    is_active: false,
     concentration: true,
     type: "player",
   });
@@ -59,7 +77,7 @@
     id: "player2",
     name: "Dixie",
     initiative: 4,
-    isActive: false,
+    is_active: false,
     concentration: false,
     type: "player",
   });
@@ -68,7 +86,7 @@
     id: "monster1",
     name: "Goblin #1",
     initiative: 4,
-    isActive: false,
+    is_active: false,
     current_hp: 50,
     max_hp: 60,
     temporary_hp: 20,
@@ -80,7 +98,7 @@
     id: "monster2",
     name: "Goblin #2",
     initiative: 5,
-    isActive: false,
+    is_active: false,
     current_hp: 60,
     max_hp: 160,
     temporary_hp: 0,
@@ -92,7 +110,7 @@
     id: "monster3",
     name: "Goblin #3",
     initiative: 8,
-    isActive: false,
+    is_active: false,
     current_hp: 10,
     max_hp: 160,
     temporary_hp: 0,
@@ -105,19 +123,21 @@
     id: "reminder1",
     name: "House",
     initiative: 20,
-    isActive: false,
+    is_active: false,
     type: "reminder",
     description:
       "The house is falling apart and two random squares on the battle map become holes that you can fall through.",
+    win_initiative_tie: false,
   });
   encounter.entities.push({
     id: "reminder2",
     name: "Rats",
     initiative: 20,
-    isActive: false,
+    is_active: false,
     type: "reminder",
     description:
       "2 swarm of rats enter the house through the broken walls and floor.",
+    win_initiative_tie: true,
   });
 </script>
 
@@ -127,6 +147,79 @@
     alt="Concentration icon"
     class="ml-5 h-[25px] w-[25px]"
   />
+{/snippet}
+
+{#snippet ConditionsSection(conditions: CombatCondition[])}
+  {#each conditions as condition, index (condition)}
+    <div class="flex w-full gap-5">
+      <!-- Condition -->
+      <Container class="flex-1">
+        <Label>Condition</Label>
+        <Select
+          bind:value={condition.condition}
+          placeholder="Charmed"
+          items={selectConditions}
+        />
+      </Container>
+
+      <!-- Saving Throw Attribute -->
+      <Container class="flex-1">
+        <Label>Saving Throw Atribute</Label>
+        <Select
+          bind:value={condition.saving_throw_attribute}
+          placeholder="Wisdom"
+          items={selectAttributes}
+        />
+      </Container>
+
+      <!-- Saving Throw DC -->
+      <Container class="flex-1">
+        <Label>Saving Throw DC</Label>
+        <Input
+          class="text-center"
+          type="number"
+          placeholder="13"
+          bind:value={condition.saving_throw_dc}
+        />
+      </Container>
+    </div>
+
+    <div class="flex w-full gap-5">
+      <!-- Source -->
+      <Container class="flex-1">
+        <Label>Source</Label>
+        <Combobox
+          placeholder="Lamia #1"
+          bind:value={condition.source}
+          items={[]}
+        />
+      </Container>
+
+      <!-- Cause -->
+      <Container class="flex-1">
+        <Label>Cause</Label>
+        <Input
+          type="text"
+          placeholder="Charm Person"
+          bind:value={condition.cause}
+        />
+      </Container>
+
+      <!-- Save Trigger -->
+      <Container class="flex-1">
+        <Label>Saving Throw Trigger</Label>
+        <Select
+          bind:value={condition.save_trigger}
+          placeholder="Nothing"
+          items={selectSaveTriggers}
+        />
+      </Container>
+    </div>
+
+    {#if index !== conditions.length - 1}
+      <hr />
+    {/if}
+  {/each}
 {/snippet}
 
 {#snippet ActionsButton(entity: EncounterEntity)}
@@ -244,6 +337,7 @@
           <Container class="flex-1">
             <Label>Initiative</Label>
             <Input
+              class="text-center"
               type="number"
               placeholder="16"
               bind:value={playerForm.initiative}
@@ -257,6 +351,15 @@
             </Toggle>
           </div>
         </div>
+
+        <!-- Conditions -->
+        <div class="flex w-full justify-between gap-5">
+          <Title variant="muted">Conditions</Title>
+          <Button onclick={(_) => CombatEntityActions.AddCondition(playerForm)}>
+            Add Condition
+          </Button>
+        </div>
+        {@render ConditionsSection(playerForm.conditions)}
       {/snippet}
 
       {#snippet footer()}
@@ -355,10 +458,11 @@
   <section class="mt-5 rounded-lg border">
     <!-- Header -->
     <div
-      class="mt-5 mb-5 grid grid-cols-[2fr_1fr_6fr_1fr] px-6 py-1 text-xs font-medium tracking-wider uppercase"
+      class="mt-5 mb-5 grid grid-cols-[2fr_1fr_1fr_5fr_1fr] px-6 py-1 text-xs font-medium tracking-wider uppercase"
     >
       <div>Name</div>
       <div class="text-center">Initiative</div>
+      <div class="text-center">Wins Tie</div>
       <div class="text-center">Description</div>
       <div class="text-center">Actions</div>
     </div>
@@ -366,10 +470,13 @@
 
     <!-- Reminders Rows -->
     {#each reminderEntities as reminder, index (reminder.id!)}
-      <div class="grid min-h-[50px] grid-cols-[2fr_1fr_6fr_1fr] px-6 py-2">
+      <div class="grid min-h-[50px] grid-cols-[2fr_1fr_1fr_5fr_1fr] px-6 py-2">
         <div class="flex items-center text-sm font-medium">{reminder.name}</div>
         <div class="flex items-center justify-center text-center text-sm">
           {reminder.initiative}
+        </div>
+        <div class="flex items-center justify-center text-center text-sm">
+          {reminder.win_initiative_tie ? "Yes" : "No"}
         </div>
         <div class="flex items-center text-sm font-medium">
           {reminder.description}
