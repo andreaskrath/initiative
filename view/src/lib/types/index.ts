@@ -12,17 +12,18 @@ export { MonsterType, MonsterTypes, DisplayMonsterType } from "./MonsterType";
 export { Movement, Movements, DisplayMovement } from "./Movement";
 export { Range, Ranges } from "./Range";
 export { Recharge, Recharges } from "./Recharge";
+export { SaveTrigger, SaveTriggers, DisplaySaveTrigger } from "./SaveTrigger";
 export { Shape, Shapes } from "./Shape";
 export { Sight, Sights, DisplaySight } from "./Sight";
 export { Size, Sizes, DisplaySize } from "./Size";
 export { Skill, Skills, DisplaySkill } from "./Skill";
 export { SpellLevel, SpellLevels, DisplaySpellLevel } from "./SpellLevel";
-export { type Monster, MonsterActions } from "./Monster";
-export { type Spell, SpellActions } from "./Spell";
-export {
-  type EncounterEntity,
-  type PlayerEntity,
-  type MonsterEntity,
-  type ReminderEntity,
-} from "./Entities";
+export { type CombatCondition } from "./CombatCondition";
+export { type CombatEntity, CombatEntityActions } from "./CombatEntity";
 export { type Encounter, EncounterActions } from "./Encounter";
+export { type EncounterEntity } from "./EncounterEntity";
+export { type Monster, MonsterActions } from "./Monster";
+export { type MonsterEntity } from "./MonsterEntity";
+export { type PlayerEntity } from "./PlayerEntity";
+export { type ReminderEntity } from "./ReminderEntity";
+export { type Spell, SpellActions } from "./Spell";
