@@ -1,5 +1,5 @@
-import type { EncounterEntity, MonsterEntity } from "./Entities";
-import type { Monster } from "./Monster";
+import type { EncounterEntity } from "./EncounterEntity";
+import type { PlayerEntity } from "./PlayerEntity";
 
 export type Encounter = {
   id?: string;
@@ -12,27 +12,8 @@ export const EncounterActions = {
     entities: [],
   }),
 
-  AddMonster: (
-    encounter: Encounter,
-    monster: Monster,
-    event: MouseEvent,
-  ): void => {
-    event.preventDefault();
-
-    const monsterEntity: MonsterEntity = {
-      id: undefined,
-      name: "",
-      initiative: 0,
-      isActive: false,
-      type: "monster",
-      current_hp: 0,
-      max_hp: 0,
-      concentration: false,
-      temporary_hp: 0,
-      monster: monster,
-    };
-
-    encounter.entities.push(monsterEntity);
+  AddPlayer: (encounter: Encounter, player: PlayerEntity): void => {
+    encounter.entities.push(player);
   },
 
   RemoveEntity: (
