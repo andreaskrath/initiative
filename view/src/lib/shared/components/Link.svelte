@@ -26,7 +26,7 @@
   use:route={options}
   {href}
   class={cn(
-    "hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground block space-y-1 rounded-md p-3 leading-none no-underline transition-colors outline-none select-none",
+    "hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground block rounded-md p-1 leading-none no-underline transition-colors outline-none select-none",
     className,
   )}
 >
