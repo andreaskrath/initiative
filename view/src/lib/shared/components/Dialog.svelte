@@ -8,16 +8,18 @@
     trigger,
     content,
     footer,
+    open = $bindable(),
   }: {
     title: string;
     description: string;
     trigger: Snippet;
     content: Snippet;
     footer: Snippet;
+    open: boolean;
   } = $props();
 </script>
 
-<Dialog.Root>
+<Dialog.Root bind:open>
   <Dialog.Trigger>
     {@render trigger()}
   </Dialog.Trigger>
