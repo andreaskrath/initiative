@@ -1,23 +1,27 @@
 <script lang="ts">
   import Ellipsis from "@lucide/svelte/icons/ellipsis";
   import {
+    Attributes,
+    CombatEntityActions,
+    ConditionsNoExhaustion,
+    DisplayAttribute,
+    DisplayCondition,
+    DisplayExhaustionLevel,
     DisplayMonsterType,
+    DisplaySaveTrigger,
+    EncounterActions,
+    ExhaustionLevel,
+    ExhaustionLevels,
     MonsterActions,
     MonsterType,
     MonsterTypes,
+    PlayerEntityActions,
+    SaveTriggers,
+    type CombatCondition,
+    type CombatEntity,
     type EncounterEntity,
     type Monster,
-    EncounterActions,
     type PlayerEntity,
-    type CombatEntity,
-    type CombatCondition,
-    Conditions,
-    DisplayCondition,
-    Attributes,
-    DisplayAttribute,
-    SaveTriggers,
-    DisplaySaveTrigger,
-    CombatEntityActions,
   } from "$types";
 
   import { Button } from "$components/ui/button/index";
@@ -28,11 +32,12 @@
   import Title from "$lib/shared/components/Title.svelte";
   import Container from "$lib/shared/components/Container.svelte";
   import Toggle from "$lib/shared/components/Toggle.svelte";
-  import { type Snippet } from "svelte";
   import Dialog from "$components/Dialog.svelte";
   import Select from "$components/Select.svelte";
   import { ToLabelValueWith } from "$utils/factories";
   import Combobox from "$lib/shared/components/Combobox.svelte";
+
+  let addPlayerDialogOpen = $state(false);
 
   let encounter = $state(EncounterActions.EmptyEncounter());
   let playerEntities = $derived(
@@ -47,23 +52,20 @@
 
   let monsters: Monster[] = $state([]);
 
-  const selectConditions = ToLabelValueWith(Conditions, DisplayCondition);
+  const selectConditions = ToLabelValueWith(
+    ConditionsNoExhaustion,
+    DisplayCondition,
+  );
   const selectAttributes = ToLabelValueWith(Attributes, DisplayAttribute);
   const selectSaveTriggers = ToLabelValueWith(SaveTriggers, DisplaySaveTrigger);
+  const selectExhaustLevels = ToLabelValueWith(
+    ExhaustionLevels,
+    DisplayExhaustionLevel,
+  );
 
-  let playerForm: {
-    type: string;
-    name?: string;
-    initiative?: number;
-    concentration: boolean;
-    conditions: CombatCondition[];
-  } = $state({
-    type: "player",
-    name: "",
-    initiative: undefined,
-    concentration: false,
-    conditions: [],
-  });
+  let playerForm: PlayerEntity = $state(
+    PlayerEntityActions.EmptyPlayerEntity(),
+  );
 
   encounter.entities.push({
     id: "player1",
@@ -72,6 +74,8 @@
     is_active: false,
     concentration: true,
     type: "player",
+    conditions: [],
+    exhaustion_level: ExhaustionLevel.None,
   });
   encounter.entities.push({
     id: "player2",
@@ -80,6 +84,8 @@
     is_active: false,
     concentration: false,
     type: "player",
+    conditions: [],
+    exhaustion_level: ExhaustionLevel.None,
   });
 
   encounter.entities.push({
@@ -93,6 +99,8 @@
     concentration: true,
     type: "monster",
     monster: MonsterActions.EmptyMonster(),
+    conditions: [],
+    exhaustion_level: ExhaustionLevel.None,
   });
   encounter.entities.push({
     id: "monster2",
@@ -105,6 +113,8 @@
     concentration: false,
     type: "monster",
     monster: MonsterActions.EmptyMonster(),
+    conditions: [],
+    exhaustion_level: ExhaustionLevel.None,
   });
   encounter.entities.push({
     id: "monster3",
@@ -117,6 +127,8 @@
     concentration: false,
     type: "monster",
     monster: MonsterActions.EmptyMonster(),
+    conditions: [],
+    exhaustion_level: ExhaustionLevel.None,
   });
 
   encounter.entities.push({
@@ -139,6 +151,12 @@
       "2 swarm of rats enter the house through the broken walls and floor.",
     win_initiative_tie: true,
   });
+
+  const AddPlayer = () => {
+    encounter.entities.push(playerForm);
+    playerForm = PlayerEntityActions.EmptyPlayerEntity();
+    addPlayerDialogOpen = false;
+  };
 </script>
 
 {#snippet ConcentrationIcon()}
@@ -149,8 +167,31 @@
   />
 {/snippet}
 
-{#snippet ConditionsSection(conditions: CombatCondition[])}
-  {#each conditions as condition, index (condition)}
+{#snippet ConditionsSection(combatEntity: CombatEntity)}
+  <div class="flex w-full justify-between gap-5">
+    <Title variant="muted">Conditions</Title>
+    <Button onclick={(_) => CombatEntityActions.AddCondition(combatEntity)}>
+      Add Condition
+    </Button>
+  </div>
+
+  <!-- Exhaustion Level -->
+  <div class="flex">
+    <Container class="basis-2/3">
+      <Label>Exhaustion Level</Label>
+      <Select
+        bind:value={combatEntity.exhaustion_level}
+        placeholder="Select an exhaustion level"
+        items={selectExhaustLevels}
+      />
+    </Container>
+  </div>
+
+  {#if combatEntity.conditions.length > 0}
+    <hr />
+  {/if}
+
+  {#each combatEntity.conditions as condition, index (condition)}
     <div class="flex w-full gap-5">
       <!-- Condition -->
       <Container class="flex-1">
@@ -186,7 +227,7 @@
 
     <div class="flex w-full gap-5">
       <!-- Source -->
-      <Container class="flex-1">
+      <Container class="min-w-0 flex-1">
         <Label>Source</Label>
         <Combobox
           placeholder="Lamia #1"
@@ -206,7 +247,7 @@
       </Container>
 
       <!-- Save Trigger -->
-      <Container class="flex-1">
+      <Container class="min-w-0 flex-1">
         <Label>Saving Throw Trigger</Label>
         <Select
           bind:value={condition.save_trigger}
@@ -216,10 +257,21 @@
       </Container>
     </div>
 
-    {#if index !== conditions.length - 1}
+    <div class="flex justify-end">
+      <Button
+        variant="destructive"
+        onclick={(_) =>
+          CombatEntityActions.RemoveCondition(combatEntity, condition)}
+      >
+        Remove
+      </Button>
+    </div>
+
+    {#if index !== combatEntity.conditions.length - 1}
       <hr />
     {/if}
   {/each}
+  <hr />
 {/snippet}
 
 {#snippet ActionsButton(entity: EncounterEntity)}
@@ -249,11 +301,7 @@
 {#snippet MonsterPickSection(title: string, monsterType: MonsterType)}
   <Command.Group heading={title}>
     {#each monsters.filter((monster) => monster.monster_type === monsterType) as monster}
-      <Command.Item
-        class="flex justify-between"
-        value={monster.name}
-        onclick={(e) => EncounterActions.AddMonster(encounter, monster, e)}
-      >
+      <Command.Item class="flex justify-between" value={monster.name}>
         <span>{monster.challenge_rating}</span>
         <span class="text-muted-foreground">
           {DisplayMonsterType[monsterType]}
@@ -316,6 +364,7 @@
     <Dialog
       title="Add new player"
       description="Add a new player to the encounter, click the button at the bottom when you are done."
+      bind:open={addPlayerDialogOpen}
     >
       {#snippet trigger()}
         <Button variant="default">Add Player</Button>
@@ -353,23 +402,15 @@
         </div>
 
         <!-- Conditions -->
-        <div class="flex w-full justify-between gap-5">
-          <Title variant="muted">Conditions</Title>
-          <Button onclick={(_) => CombatEntityActions.AddCondition(playerForm)}>
-            Add Condition
-          </Button>
-        </div>
-        {@render ConditionsSection(playerForm.conditions)}
+        {@render ConditionsSection(playerForm)}
       {/snippet}
 
       {#snippet footer()}
-        <Button variant="default" onclick={(_) => console.log("add player")}>
+        <Button variant="default" onclick={(_) => AddPlayer()}>
           Add Player
         </Button>
       {/snippet}
     </Dialog>
-    <!-- {@render AddEntity("Add Player", "Add a new player to the encounter. Click the button at the bottom when you are done")} -->
-    <!-- {/@render} -->
   </div>
   <section class="mt-5 rounded-lg border">
     <!-- Header -->
@@ -437,8 +478,8 @@
         <div class="flex items-center text-sm font-medium">details</div>
         <div class="flex items-center text-sm font-medium">
           {@render HealthBar(
-            monster.current_hp,
-            monster.max_hp,
+            monster.current_hp!,
+            monster.max_hp!,
             monster.temporary_hp,
           )}
         </div>
