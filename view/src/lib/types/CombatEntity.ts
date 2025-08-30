@@ -1,9 +1,10 @@
 import type { CombatCondition } from "./CombatCondition";
 import { type Entity } from "./Entity";
+import type { ExhaustionLevel } from "./ExhaustionLevel";
 
 export interface CombatEntity extends Entity {
   concentration: boolean;
-  exhaustion_level?: number;
+  exhaustion_level: ExhaustionLevel;
   conditions: CombatCondition[];
 }
 
@@ -17,5 +18,14 @@ export const CombatEntityActions = {
       cause: undefined,
       save_trigger: undefined,
     });
+  },
+
+  RemoveCondition: (
+    combatEntity: CombatEntity,
+    combatConditionToRemove: CombatCondition,
+  ): void => {
+    combatEntity.conditions = combatEntity.conditions.filter(
+      (combatCondition) => combatCondition !== combatConditionToRemove,
+    );
   },
 };
