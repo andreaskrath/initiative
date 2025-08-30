@@ -261,13 +261,13 @@
     <div class="grid grid-cols-16 gap-x-2 gap-y-5">
       <!-- Name -->
       <Container class="col-span-7">
-        <Label>Name</Label>
+        <Label required>Name</Label>
         <Input bind:value={monster.name} type="text" placeholder="Goblin" />
       </Container>
 
       <!-- Challenge Rating -->
       <Container class="col-span-3">
-        <Label>Challenge Rating</Label>
+        <Label required>Challenge Rating</Label>
         <Input
           bind:value={monster.challenge_rating}
           type="number"
@@ -278,7 +278,7 @@
 
       <!-- XP -->
       <Container class="col-span-3">
-        <Label>Experience Points</Label>
+        <Label required>Experience Points</Label>
         <Input
           bind:value={monster.xp}
           type="number"
@@ -289,7 +289,7 @@
 
       <!-- Proficiency Bonus -->
       <Container class="col-span-3">
-        <Label>Proficiency Bonus</Label>
+        <Label required>Proficiency Bonus</Label>
         <Input
           bind:value={monster.proficiency_bonus}
           type="number"
@@ -310,7 +310,7 @@
 
       <!-- Type -->
       <Container class="col-span-3">
-        <Label>Type</Label>
+        <Label required>Type</Label>
         <Select
           bind:value={monster.monster_type}
           placeholder="Select a type"
@@ -320,7 +320,7 @@
 
       <!-- Size -->
       <Container class="col-span-3">
-        <Label>Size</Label>
+        <Label required>Size</Label>
         <Select
           bind:value={monster.size}
           placeholder="Select a size"
@@ -330,7 +330,7 @@
 
       <!-- Alignment -->
       <Container class="col-span-3">
-        <Label>Alignment</Label>
+        <Label required>Alignment</Label>
         <Select
           bind:value={monster.alignment}
           placeholder="Select an alignment"
@@ -340,7 +340,7 @@
 
       <!-- Passive Perception -->
       <Container class="col-span-3">
-        <Label>Passive Perception</Label>
+        <Label required>Passive Perception</Label>
         <Input
           bind:value={monster.passive_perception}
           type="number"
@@ -355,7 +355,7 @@
     <div class="grid grid-cols-18 gap-x-2 gap-y-5">
       <!-- Attributes -->
       <Container class="col-span-3">
-        <Label>{DisplayAttribute[Attribute.Strength]}</Label>
+        <Label required>{DisplayAttribute[Attribute.Strength]}</Label>
         <Input
           bind:value={monster.strength}
           type="number"
@@ -365,7 +365,7 @@
       </Container>
 
       <Container class="col-span-3">
-        <Label>{DisplayAttribute[Attribute.Dexterity]}</Label>
+        <Label required>{DisplayAttribute[Attribute.Dexterity]}</Label>
         <Input
           bind:value={monster.dexterity}
           type="number"
@@ -375,7 +375,7 @@
       </Container>
 
       <Container class="col-span-3">
-        <Label>{DisplayAttribute[Attribute.Constitution]}</Label>
+        <Label required>{DisplayAttribute[Attribute.Constitution]}</Label>
         <Input
           bind:value={monster.constitution}
           type="number"
@@ -385,7 +385,7 @@
       </Container>
 
       <Container class="col-span-3">
-        <Label>{DisplayAttribute[Attribute.Intelligence]}</Label>
+        <Label required>{DisplayAttribute[Attribute.Intelligence]}</Label>
         <Input
           bind:value={monster.intelligence}
           type="number"
@@ -395,7 +395,7 @@
       </Container>
 
       <Container class="col-span-3">
-        <Label>{DisplayAttribute[Attribute.Wisdom]}</Label>
+        <Label required>{DisplayAttribute[Attribute.Wisdom]}</Label>
         <Input
           bind:value={monster.wisdom}
           type="number"
@@ -405,7 +405,7 @@
       </Container>
 
       <Container class="col-span-3">
-        <Label>{DisplayAttribute[Attribute.Charisma]}</Label>
+        <Label required>{DisplayAttribute[Attribute.Charisma]}</Label>
         <Input
           bind:value={monster.charisma}
           type="number"
@@ -464,7 +464,7 @@
           {#each monster.visions as vision}
             <!-- Range -->
             <Container class="col-span-3">
-              <Label>Range</Label>
+              <Label required>Range</Label>
               <Input
                 bind:value={vision.range}
                 type="number"
@@ -475,7 +475,7 @@
 
             <!-- Sight Type -->
             <Container class="col-span-6">
-              <Label>Sight</Label>
+              <Label required>Sight</Label>
               <Select
                 bind:value={vision.sight}
                 placeholder="Select a vision type"
@@ -519,7 +519,7 @@
           {#each monster.speeds as speed}
             <!-- Distance -->
             <Container class="col-span-3">
-              <Label>Distance</Label>
+              <Label required>Distance</Label>
               <Input
                 bind:value={speed.distance}
                 type="number"
@@ -530,7 +530,7 @@
 
             <!-- Movement Type -->
             <Container class="col-span-6">
-              <Label>Movement</Label>
+              <Label required>Movement</Label>
               <Select
                 bind:value={speed.movement}
                 placeholder="Select a movement type"
@@ -562,7 +562,7 @@
     <div class="grid grid-cols-16 gap-x-2 gap-y-5">
       <!-- Hit Points -->
       <Container class="col-span-3">
-        <Label>Hit Points</Label>
+        <Label required>Hit Points</Label>
         <Input
           bind:value={monster.hit_points}
           type="number"
@@ -573,7 +573,7 @@
 
       <!-- Rollable Hit Points -->
       <Container class="col-span-3">
-        <Label>Rollable Hit Points</Label>
+        <Label required>Rollable Hit Points</Label>
         <Input
           bind:value={monster.rollable_hit_points}
           type="text"
@@ -584,7 +584,7 @@
 
       <!-- Armor Class -->
       <Container class="col-span-3">
-        <Label>Armor Class</Label>
+        <Label required>Armor Class</Label>
         <Input
           bind:value={monster.armor_class}
           type="number"
@@ -676,7 +676,7 @@
       {#each monster.traits as trait, index}
         <!-- Name -->
         <Container class="col-span-9">
-          <Label>Name</Label>
+          <Label required>Name</Label>
           <Input
             bind:value={trait.name}
             type="text"
@@ -699,7 +699,7 @@
 
         <!-- Description -->
         <Container class="col-span-10">
-          <Label>Description</Label>
+          <Label required>Description</Label>
           <TextArea
             bind:value={trait.description}
             placeholder="Write a description for the trait.."
@@ -730,7 +730,7 @@
     {#each monster.regular_actions as regularAction, index}
       <!-- Name -->
       <Container class="col-span-9">
-        <Label>Name</Label>
+        <Label required>Name</Label>
         <Input
           bind:value={regularAction.name}
           type="text"
@@ -753,7 +753,7 @@
 
       <!-- Description -->
       <Container class="col-span-10">
-        <Label>Description</Label>
+        <Label required>Description</Label>
         <TextArea
           bind:value={regularAction.description}
           placeholder="Write a description for the regular action.."
@@ -783,7 +783,7 @@
     {#each monster.melee_attack_actions as meleeAttackAction, index}
       <!-- Name -->
       <Container class="col-span-5">
-        <Label>Name</Label>
+        <Label required>Name</Label>
         <Input
           bind:value={meleeAttackAction.name}
           type="text"
@@ -793,7 +793,7 @@
 
       <!-- Bonus to Hit -->
       <Container class="col-span-2">
-        <Label>Bonus to Hit</Label>
+        <Label required>Bonus to Hit</Label>
         <Input
           bind:value={meleeAttackAction.hit_bonus}
           type="number"
@@ -804,7 +804,7 @@
 
       <!-- Reach -->
       <Container class="col-span-2">
-        <Label>Reach</Label>
+        <Label required>Reach</Label>
         <Input
           bind:value={meleeAttackAction.reach}
           type="number"
@@ -850,7 +850,7 @@
 
       <!-- Damage Type -->
       <Container class="col-span-4">
-        <Label>Damage Type</Label>
+        <Label required>Damage Type</Label>
         <Select
           bind:value={meleeAttackAction.damage_type}
           placeholder="Select a damage type"
@@ -881,7 +881,7 @@
     {#each monster.ranged_attack_actions as rangedAttackAction, index}
       <!-- Name -->
       <Container class="col-span-5">
-        <Label>Name</Label>
+        <Label required>Name</Label>
         <Input
           bind:value={rangedAttackAction.name}
           type="text"
@@ -891,7 +891,7 @@
 
       <!-- Bonus to Hit -->
       <Container class="col-span-2">
-        <Label>Bonus to Hit</Label>
+        <Label required>Bonus to Hit</Label>
         <Input
           bind:value={rangedAttackAction.hit_bonus}
           type="number"
@@ -902,7 +902,7 @@
 
       <!-- Attack -->
       <Container class="col-span-2">
-        <Label>Attack</Label>
+        <Label required>Attack</Label>
         <Input
           bind:value={rangedAttackAction.attack}
           type="text"
@@ -929,7 +929,7 @@
 
       <!-- Normal Range -->
       <Container class="col-span-3">
-        <Label>Normal Range</Label>
+        <Label required>Normal Range</Label>
         <Input
           bind:value={rangedAttackAction.normal_range}
           type="number"
@@ -940,7 +940,7 @@
 
       <!-- Long Range -->
       <Container class="col-span-3">
-        <Label>Long Range</Label>
+        <Label required>Long Range</Label>
         <Input
           bind:value={rangedAttackAction.long_range}
           type="number"
@@ -951,7 +951,7 @@
 
       <!-- Damage Type -->
       <Container class="col-span-4">
-        <Label>Damage Type</Label>
+        <Label required>Damage Type</Label>
         <Select
           bind:value={rangedAttackAction.damage_type}
           placeholder="Select a damage type"
@@ -982,7 +982,7 @@
     {#each monster.recharge_actions as rechargeAction, index}
       <!-- Name -->
       <Container class="col-span-6">
-        <Label>Name</Label>
+        <Label required>Name</Label>
         <Input
           bind:value={rechargeAction.name}
           type="text"
@@ -992,7 +992,7 @@
 
       <!-- Recharge -->
       <Container class="col-span-3">
-        <Label>Recharge</Label>
+        <Label required>Recharge</Label>
         <Combobox
           bind:value={rechargeAction.recharge}
           placeholder="Select a recharge dice"
@@ -1015,7 +1015,7 @@
 
       <!-- Description -->
       <Container class="col-span-10">
-        <Label>Description</Label>
+        <Label required>Description</Label>
         <TextArea
           bind:value={rechargeAction.description}
           placeholder="Write a description for the recharge action.."
@@ -1044,7 +1044,7 @@
     {#each monster.bonus_actions as bonusAction, index}
       <!-- Name -->
       <Container class="col-span-9">
-        <Label>Name</Label>
+        <Label required>Name</Label>
         <Input
           bind:value={bonusAction.name}
           type="text"
@@ -1067,7 +1067,7 @@
 
       <!-- Description -->
       <Container class="col-span-10">
-        <Label>Description</Label>
+        <Label required>Description</Label>
         <TextArea
           bind:value={bonusAction.description}
           placeholder="Write a description for the bonus action.."
@@ -1096,7 +1096,7 @@
     {#each monster.reactions as reaction, index}
       <!-- Name -->
       <Container class="col-span-9">
-        <Label>Name</Label>
+        <Label required>Name</Label>
         <Input
           bind:value={reaction.name}
           type="text"
@@ -1119,7 +1119,7 @@
 
       <!-- Description -->
       <Container class="col-span-10">
-        <Label>Description</Label>
+        <Label required>Description</Label>
         <TextArea
           bind:value={reaction.description}
           placeholder="Write a description for the reaction.."
@@ -1148,7 +1148,7 @@
 
     {#if monster.legendary_actions.length > 0}
       <Container class="col-span-3">
-        <Label>Available Legendary Actions per Turn</Label>
+        <Label required>Available Legendary Actions per Turn</Label>
         <Input
           bind:value={monster.available_legendary_actions_per_turn}
           type="number"
@@ -1162,7 +1162,7 @@
     {#each monster.legendary_actions as legendaryAction, index}
       <!-- Name -->
       <Container class="col-span-7">
-        <Label>Name</Label>
+        <Label required>Name</Label>
         <Input
           bind:value={legendaryAction.name}
           type="text"
@@ -1172,7 +1172,7 @@
 
       <!-- Cost -->
       <Container class="col-span-2">
-        <Label>Cost</Label>
+        <Label required>Cost</Label>
         <Input
           bind:value={legendaryAction.cost}
           type="number"
@@ -1196,7 +1196,7 @@
 
       <!-- Description -->
       <Container class="col-span-10">
-        <Label>Description</Label>
+        <Label required>Description</Label>
         <TextArea
           bind:value={legendaryAction.description}
           placeholder="Write a description for the reaction.."
@@ -1225,7 +1225,7 @@
     {#each monster.lair_actions as lairAction, index}
       <!-- Name -->
       <Container class="col-span-9">
-        <Label>Name</Label>
+        <Label required>Name</Label>
         <Input
           bind:value={lairAction.name}
           type="text"
@@ -1248,7 +1248,7 @@
 
       <!-- Description -->
       <Container class="col-span-10">
-        <Label>Description</Label>
+        <Label required>Description</Label>
         <TextArea
           bind:value={lairAction.description}
           placeholder="Write a description for the reaction.."

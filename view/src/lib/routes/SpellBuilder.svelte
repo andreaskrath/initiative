@@ -34,6 +34,7 @@
   import Title from "$components/Title.svelte";
   import { toast } from "svelte-sonner";
   import Toggle from "$components/Toggle.svelte";
+  import Required from "$components/Required.svelte";
 
   let spell = $state(SpellActions.EmptySpell());
   let classRestrictions = $state(RecordFactory(SpellcastingClasses, false));
@@ -87,13 +88,13 @@
   <div class="grid grid-cols-16 space-y-5 gap-x-2">
     <!-- Name -->
     <Container class="col-span-8">
-      <Label>Name</Label>
+      <Label required>Name</Label>
       <Input bind:value={spell.name} placeholder="Fireball" type="text" />
     </Container>
 
     <!-- Spell Level -->
     <Container class="col-span-4">
-      <Label>Spell Level</Label>
+      <Label required>Spell Level</Label>
       <Select
         bind:value={spell.level}
         placeholder="Select a spell level"
@@ -103,7 +104,7 @@
 
     <!-- School of Magic -->
     <Container class="col-span-4">
-      <Label>School of Magic</Label>
+      <Label required>School of Magic</Label>
       <Select
         bind:value={spell.school}
         placeholder="Select a school of magic"
@@ -113,7 +114,7 @@
 
     <!-- Casting Time -->
     <Container class="col-span-4">
-      <Label>Casting Time</Label>
+      <Label required>Casting Time</Label>
       <Combobox
         bind:value={spell.casting_time}
         placeholder="Select a casting time"
@@ -123,7 +124,7 @@
 
     <!-- Duration -->
     <Container class="col-span-4">
-      <Label>Duration</Label>
+      <Label required>Duration</Label>
       <Combobox
         bind:value={spell.duration}
         placeholder="Select a duration"
@@ -133,7 +134,7 @@
 
     <!-- Range -->
     <Container class="col-span-4">
-      <Label>Range</Label>
+      <Label required>Range</Label>
       <Combobox
         bind:value={spell.range}
         placeholder="Select a range"
@@ -158,7 +159,7 @@
 
     <!-- Area -->
     <Container class="col-span-8">
-      <Label>Area</Label>
+      <Label required>Area</Label>
       <Combobox
         bind:value={spell.area}
         placeholder="Select a area"
@@ -168,7 +169,7 @@
 
     <!-- Description -->
     <Container class="col-span-16">
-      <Label>Description</Label>
+      <Label required>Description</Label>
       <TextArea
         bind:value={spell.description}
         placeholder="A bright streak flashes from your pointing finger to a point you choose within range and then blossoms with a low roar into an explosion of flame. Each creature in a 20-foot-radius sphere centered on that point must make a Dexterity saving throw. A target takes 8d6 fire damage on a failed save, or half as much damage on a successful one.
@@ -183,13 +184,15 @@ The fire spreads around corners. It ignites flammable objects in the area that a
       <Input
         bind:value={spell.at_higher_levels}
         type="text"
-        placeholder="The damage increases by 1d6 for each slot level above 3rd."
+        placeholder="The damage increases by 1d6 for each spell slot level above 3rd."
       />
     </Container>
   </div>
 
   <!-- Requirements -->
-  <Title variant="muted">Requirements</Title>
+  <Title variant="muted" class="relative inline-block w-fit">
+    Requirements <Required vertical="bottom-2" />
+  </Title>
   <div class="grid grid-cols-16 space-y-5 gap-x-2">
     <!-- Concentration -->
     <Container class="col-span-2">
@@ -231,7 +234,9 @@ The fire spreads around corners. It ignites flammable objects in the area that a
   </div>
 
   <!-- Class Restrictions -->
-  <Title variant="muted">Class Restrictions</Title>
+  <Title variant="muted" class="relative inline-block w-fit">
+    Class Restrictions <Required vertical="bottom-2" />
+  </Title>
   <div class="grid grid-cols-3 space-y-2 gap-x-2">
     {#each SpellcastingClasses as spellcastingClass}
       <Container class="col-span-1">
