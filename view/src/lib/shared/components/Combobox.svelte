@@ -68,7 +68,7 @@
       variant="outline"
       role="combobox"
       aria-expanded={open}
-      class="w-full justify-between {displayValue
+      class="w-full justify-between truncate {displayValue
         ? ''
         : 'text-muted-foreground'}"
     >

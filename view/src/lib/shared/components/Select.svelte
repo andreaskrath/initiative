@@ -20,7 +20,7 @@
 </script>
 
 <Select.Root type="single" bind:value>
-  <Select.Trigger class="w-full">
+  <Select.Trigger class="w-full truncate">
     {triggerContent}
   </Select.Trigger>
   <Select.Content>
