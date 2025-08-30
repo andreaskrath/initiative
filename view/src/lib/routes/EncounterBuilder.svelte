@@ -1,5 +1,6 @@
 <script lang="ts">
   import Ellipsis from "@lucide/svelte/icons/ellipsis";
+  import * as z from "zod";
   import {
     Attributes,
     CombatEntityActions,
@@ -37,8 +38,10 @@
   import { ToLabelValueWith } from "$utils/factories";
   import Combobox from "$components/Combobox.svelte";
   import { ValidatePlayerEntity } from "$encounter/validate";
+  import Errors from "$lib/shared/components/Errors.svelte";
 
   let addPlayerDialogOpen = $state(false);
+  let playerFormErrors: z.ZodError | null = $state(null);
 
   let encounter = $state(EncounterActions.EmptyEncounter());
   let playerEntities = $derived(
@@ -153,10 +156,20 @@
     win_initiative_tie: true,
   });
 
-  const AddPlayer = () => {
+  const AddPlayer = async () => {
+    playerFormErrors = await ValidatePlayerEntity(playerForm);
+
+    if (playerFormErrors) {
+      return;
+    }
+
     encounter.entities.push(playerForm);
     playerForm = PlayerEntityActions.EmptyPlayerEntity();
     addPlayerDialogOpen = false;
+  };
+
+  const hasError = (errors: z.ZodError | null, field: string): boolean => {
+    return errors?.issues.some((issue) => issue.path.includes(field)) ?? false;
   };
 </script>
 
@@ -379,6 +392,7 @@
             <Input
               type="text"
               placeholder="Player 1"
+              error={hasError(playerFormErrors, "name")}
               bind:value={playerForm.name}
             />
           </Container>
@@ -390,6 +404,7 @@
               class="text-center"
               type="number"
               placeholder="16"
+              error={hasError(playerFormErrors, "initiative")}
               bind:value={playerForm.initiative}
             />
           </Container>
@@ -407,9 +422,27 @@
       {/snippet}
 
       {#snippet footer()}
-        <Button variant="default" onclick={(_) => AddPlayer()}>
-          Add Player
-        </Button>
+        <div class="flex w-full flex-col gap-2">
+          <Errors
+            title="Unable to add player"
+            errors={playerFormErrors?.issues.map((issue) => issue.message) ??
+              []}
+          />
+
+          {#if (playerFormErrors?.issues?.length ?? 0) > 0}
+            <hr />
+          {/if}
+
+          <div class="flex justify-end">
+            <Button
+              variant="default"
+              class="w-fit"
+              onclick={(_) => AddPlayer()}
+            >
+              Add Player
+            </Button>
+          </div>
+        </div>
       {/snippet}
     </Dialog>
   </div>
