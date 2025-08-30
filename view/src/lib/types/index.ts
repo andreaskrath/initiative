@@ -3,7 +3,12 @@ export { Area, Areas } from "./Area";
 export { Attribute, Attributes, DisplayAttribute } from "./Attribute";
 export { CastingTime, CastingTimes } from "./CastingTime";
 export { Class, Classes, SpellcastingClasses, DisplayClass } from "./Class";
-export { Condition, Conditions, DisplayCondition } from "./Condition";
+export {
+  Condition,
+  Conditions,
+  DisplayCondition,
+  ConditionsNoExhaustion,
+} from "./Condition";
 export { DamageType, DamageTypes, DisplayDamageType } from "./DamageType";
 export { Duration, Durations } from "./Duration";
 export { Language, Languages, DisplayLanguage } from "./Language";
@@ -24,6 +29,11 @@ export { type Encounter, EncounterActions } from "./Encounter";
 export { type EncounterEntity } from "./EncounterEntity";
 export { type Monster, MonsterActions } from "./Monster";
 export { type MonsterEntity } from "./MonsterEntity";
-export { type PlayerEntity } from "./PlayerEntity";
+export { type PlayerEntity, PlayerEntityActions } from "./PlayerEntity";
 export { type ReminderEntity } from "./ReminderEntity";
 export { type Spell, SpellActions } from "./Spell";
+export {
+  ExhaustionLevel,
+  ExhaustionLevels,
+  DisplayExhaustionLevel,
+} from "./ExhaustionLevel";
