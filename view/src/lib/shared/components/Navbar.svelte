@@ -28,18 +28,20 @@
 {/snippet}
 
 <ModeWatcher />
-<div class="relative w-full">
-  <NavigationMenu.Root viewport={false} class="mx-auto mt-2 mb-2">
+<div
+  class="relative mx-auto flex h-[50px] w-[1000px] max-w-[1000px] items-center"
+>
+  <div class="absolute left-4">
+    <Link href="/" label="">
+      <img
+        src="/images/logo.svg"
+        alt="Application logo"
+        class="h-[40px] w-auto"
+      />
+    </Link>
+  </div>
+  <NavigationMenu.Root viewport={false} class="z-50 mx-auto mt-2 mb-2">
     <NavigationMenu.List>
-      <!-- Home -->
-      <NavigationMenu.Item>
-        <NavigationMenu.Link>
-          {#snippet child()}
-            <Link href="/" label="Home" class={navigationMenuTriggerStyle()} />
-          {/snippet}
-        </NavigationMenu.Link>
-      </NavigationMenu.Item>
-
       <!-- Monsters -->
       <NavigationMenu.Item>
         <NavigationMenu.Trigger>Monsters</NavigationMenu.Trigger>
