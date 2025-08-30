@@ -23,7 +23,9 @@
   <Dialog.Trigger>
     {@render trigger()}
   </Dialog.Trigger>
-  <Dialog.Content class="w-[800px] !max-w-none">
+  <Dialog.Content
+    class="fixed top-[100px] max-h-[800px] w-[800px] !max-w-none translate-y-0 overflow-y-auto"
+  >
     <Dialog.Header>
       <Dialog.Title>{title}</Dialog.Title>
       <Dialog.Description>
