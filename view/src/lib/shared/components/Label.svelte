@@ -2,6 +2,7 @@
   import { cn } from "$shared/utils/utils";
   import { Label } from "$components/ui/label";
   import type { Snippet } from "svelte";
+  import Required from "./Required.svelte";
 
   let {
     class: className,
@@ -14,9 +15,9 @@
   } = $props();
 </script>
 
-<Label class={cn("ml-1", className)}>
+<Label class={cn("relative ml-1 inline-block w-fit", className)}>
   {@render children?.()}
   {#if required}
-    <span class="text-sm text-red-500">*</span>
+    <Required />
   {/if}
 </Label>
