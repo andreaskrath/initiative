@@ -35,3 +35,7 @@ export const DisplayCondition: Readonly<Record<Condition, string>> = {
 } as const;
 
 export const Conditions: Condition[] = Object.values(Condition);
+
+export const ConditionsNoExhaustion: Condition[] = Object.values(
+  Condition,
+).filter((condition) => condition !== Condition.Exhaustion);
