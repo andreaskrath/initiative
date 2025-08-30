@@ -6,13 +6,21 @@
     value = $bindable(),
     type,
     placeholder,
+    error = false,
     class: className,
   }: {
     value: string | number | undefined;
     type: "text" | "number";
     placeholder: string;
+    error?: boolean;
     class?: string;
   } = $props();
 </script>
 
-<Input class={cn("w-full", className)} {type} {placeholder} bind:value />
+<Input
+  class={cn("w-full", className)}
+  {type}
+  aria-invalid={error}
+  {placeholder}
+  bind:value
+/>
