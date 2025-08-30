@@ -27,15 +27,16 @@
   import { Button } from "$components/ui/button/index";
   import * as Command from "$components/ui/command/index";
   import * as DropdownMenu from "$components/ui/dropdown-menu/index";
-  import Label from "$lib/shared/components/Label.svelte";
-  import Input from "$lib/shared/components/Input.svelte";
-  import Title from "$lib/shared/components/Title.svelte";
-  import Container from "$lib/shared/components/Container.svelte";
-  import Toggle from "$lib/shared/components/Toggle.svelte";
+  import Label from "$components/Label.svelte";
+  import Input from "$components/Input.svelte";
+  import Title from "$components/Title.svelte";
+  import Container from "$components/Container.svelte";
+  import Toggle from "$components/Toggle.svelte";
   import Dialog from "$components/Dialog.svelte";
   import Select from "$components/Select.svelte";
   import { ToLabelValueWith } from "$utils/factories";
-  import Combobox from "$lib/shared/components/Combobox.svelte";
+  import Combobox from "$components/Combobox.svelte";
+  import { ValidatePlayerEntity } from "$encounter/validate";
 
   let addPlayerDialogOpen = $state(false);
 
