@@ -1,5 +1,18 @@
 import * as z from "zod";
 
+export type FieldErrors = Map<string, string>;
+
+export const CreateFieldErrors = (errors: z.ZodError): FieldErrors => {
+  const fieldErrors = new Map<string, string>();
+
+  for (const issue of errors.issues) {
+    const field = issue.path.join(".");
+    fieldErrors.set(field, issue.message);
+  }
+
+  return fieldErrors;
+};
+
 /**
  * Check if a ZodError object contains any errors for a given field.
  *
