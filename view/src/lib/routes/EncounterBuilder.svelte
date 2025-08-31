@@ -192,7 +192,7 @@
   <!-- Exhaustion Level -->
   <div class="flex">
     <Container class="basis-2/3">
-      <Label>Exhaustion Level</Label>
+      <Label required>Exhaustion Level</Label>
       <Select
         bind:value={combatEntity.exhaustion_level}
         placeholder="Select an exhaustion level"
@@ -210,7 +210,7 @@
     <div class="flex w-full gap-5">
       <!-- Condition -->
       <Container class="flex-1">
-        <Label>Condition</Label>
+        <Label required>Condition</Label>
         <Select
           bind:value={condition.condition}
           placeholder="Charmed"
@@ -221,7 +221,7 @@
 
       <!-- Saving Throw Attribute -->
       <Container class="flex-1">
-        <Label>Saving Throw Atribute</Label>
+        <Label required>Saving Throw Atribute</Label>
         <Select
           bind:value={condition.saving_throw_attribute}
           placeholder="Wisdom"
@@ -232,7 +232,7 @@
 
       <!-- Saving Throw DC -->
       <Container class="flex-1">
-        <Label>Saving Throw DC</Label>
+        <Label required>Saving Throw DC</Label>
         <Input
           class="text-center"
           type="number"
@@ -266,7 +266,7 @@
 
       <!-- Save Trigger -->
       <Container class="min-w-0 flex-1">
-        <Label>Saving Throw Trigger</Label>
+        <Label required>Saving Throw Trigger</Label>
         <Select
           bind:value={condition.save_trigger}
           placeholder="Nothing"
@@ -393,7 +393,7 @@
         <div class="flex w-full gap-5">
           <!-- Name -->
           <Container class="flex-3">
-            <Label>Name</Label>
+            <Label required>Name</Label>
             <Input
               type="text"
               placeholder="Player 1"
@@ -404,7 +404,7 @@
 
           <!-- Initiative -->
           <Container class="flex-1">
-            <Label>Initiative</Label>
+            <Label required>Initiative</Label>
             <Input
               class="text-center"
               type="number"
