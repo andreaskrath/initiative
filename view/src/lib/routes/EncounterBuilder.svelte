@@ -1,6 +1,5 @@
 <script lang="ts">
   import Ellipsis from "@lucide/svelte/icons/ellipsis";
-  import * as z from "zod";
   import {
     Attributes,
     CombatEntityActions,
@@ -36,13 +35,12 @@
   import Dialog from "$components/Dialog.svelte";
   import Select from "$components/Select.svelte";
   import { ToLabelValueWith } from "$utils/factories";
-  import { HasError } from "$utils/error";
+  import { CreateFieldErrors, type FieldErrors } from "$utils/error";
   import Combobox from "$components/Combobox.svelte";
   import { ValidatePlayerEntity } from "$encounter/validate";
-  import Errors from "$lib/shared/components/Errors.svelte";
 
   let addPlayerDialogOpen = $state(false);
-  let playerFormErrors: z.ZodError | null = $state(null);
+  let playerFormErrors: FieldErrors | null = $state(null);
 
   let encounter = $state(EncounterActions.EmptyEncounter());
   let playerEntities = $derived(
@@ -158,19 +156,17 @@
   });
 
   const AddPlayer = async () => {
-    playerFormErrors = await ValidatePlayerEntity(playerForm);
+    const result = await ValidatePlayerEntity(playerForm);
 
-    if (playerFormErrors) {
-      for (const entry of playerFormErrors.issues) {
-        console.log(entry.path.join("."));
-      }
-      console.log(playerFormErrors);
+    if (result) {
+      playerFormErrors = CreateFieldErrors(result);
       return;
     }
 
     encounter.entities.push(playerForm);
     playerForm = PlayerEntityActions.EmptyPlayerEntity();
     addPlayerDialogOpen = false;
+    playerFormErrors = null;
   };
 </script>
 
@@ -184,7 +180,7 @@
 
 {#snippet ConditionsSection(
   combatEntity: CombatEntity,
-  errors: z.ZodError | null,
+  errors: FieldErrors | null,
 )}
   <div class="flex w-full justify-between gap-5">
     <Title variant="muted">Conditions</Title>
@@ -201,7 +197,7 @@
         bind:value={combatEntity.exhaustion_level}
         placeholder="Select an exhaustion level"
         items={selectExhaustLevels}
-        error={HasError(errors, "exhaustion_level")}
+        error={errors?.has("exhaustion_level")}
       />
     </Container>
   </div>
@@ -219,7 +215,7 @@
           bind:value={condition.condition}
           placeholder="Charmed"
           items={selectConditions}
-          error={HasError(errors, `conditions.${index}.condition`)}
+          error={errors?.has(`conditions.${index}.condition`)}
         />
       </Container>
 
@@ -230,7 +226,7 @@
           bind:value={condition.saving_throw_attribute}
           placeholder="Wisdom"
           items={selectAttributes}
-          error={HasError(errors, `conditions.${index}.saving_throw_attribute`)}
+          error={errors?.has(`conditions.${index}.saving_throw_attribute`)}
         />
       </Container>
 
@@ -242,7 +238,7 @@
           type="number"
           placeholder="13"
           bind:value={condition.saving_throw_dc}
-          error={HasError(errors, `conditions.${index}.saving_throw_dc`)}
+          error={errors?.has(`conditions.${index}.saving_throw_dc`)}
         />
       </Container>
     </div>
@@ -275,7 +271,7 @@
           bind:value={condition.save_trigger}
           placeholder="Nothing"
           items={selectSaveTriggers}
-          error={HasError(errors, `conditions.${index}.save_trigger`)}
+          error={errors?.has(`conditions.${index}.save_trigger`)}
         />
       </Container>
     </div>
@@ -401,7 +397,7 @@
             <Input
               type="text"
               placeholder="Player 1"
-              error={HasError(playerFormErrors, "name")}
+              error={playerFormErrors?.has("name")}
               bind:value={playerForm.name}
             />
           </Container>
@@ -413,7 +409,7 @@
               class="text-center"
               type="number"
               placeholder="16"
-              error={HasError(playerFormErrors, "initiative")}
+              error={playerFormErrors?.has("initiative")}
               bind:value={playerForm.initiative}
             />
           </Container>
@@ -432,15 +428,15 @@
 
       {#snippet footer()}
         <div class="flex w-full flex-col gap-2">
-          <Errors
-            title="Unable to add player"
-            errors={playerFormErrors?.issues.map((issue) => issue.message) ??
-              []}
-          />
+          <!-- <Errors -->
+          <!--   title="Unable to add player" -->
+          <!--   errors={playerFormErrors?.issues.map((issue) => issue.message) ?? -->
+          <!--     []} -->
+          <!-- /> -->
 
-          {#if (playerFormErrors?.issues?.length ?? 0) > 0}
-            <hr />
-          {/if}
+          <!-- {#if (playerFormErrors?.issues?.length ?? 0) > 0} -->
+          <!--   <hr /> -->
+          <!-- {/if} -->
 
           <div class="flex justify-end">
             <Button
