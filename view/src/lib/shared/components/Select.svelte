@@ -6,11 +6,13 @@
     value = $bindable(),
     placeholder,
     items,
+    error = false,
     class: className,
   }: {
     value: string | undefined;
     placeholder: string;
     items: { label: string; value: string }[];
+    error?: boolean;
     class?: string;
   } = $props();
 
@@ -20,7 +22,7 @@
 </script>
 
 <Select.Root type="single" bind:value>
-  <Select.Trigger class="w-full truncate">
+  <Select.Trigger class="w-full truncate {error ? 'border-red-500' : ''}">
     {triggerContent}
   </Select.Trigger>
   <Select.Content>
