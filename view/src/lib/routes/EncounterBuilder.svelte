@@ -36,6 +36,7 @@
   import Dialog from "$components/Dialog.svelte";
   import Select from "$components/Select.svelte";
   import { ToLabelValueWith } from "$utils/factories";
+  import { HasError } from "$utils/error";
   import Combobox from "$components/Combobox.svelte";
   import { ValidatePlayerEntity } from "$encounter/validate";
   import Errors from "$lib/shared/components/Errors.svelte";
@@ -160,16 +161,16 @@
     playerFormErrors = await ValidatePlayerEntity(playerForm);
 
     if (playerFormErrors) {
+      for (const entry of playerFormErrors.issues) {
+        console.log(entry.path.join("."));
+      }
+      console.log(playerFormErrors);
       return;
     }
 
     encounter.entities.push(playerForm);
     playerForm = PlayerEntityActions.EmptyPlayerEntity();
     addPlayerDialogOpen = false;
-  };
-
-  const hasError = (errors: z.ZodError | null, field: string): boolean => {
-    return errors?.issues.some((issue) => issue.path.includes(field)) ?? false;
   };
 </script>
 
@@ -181,7 +182,10 @@
   />
 {/snippet}
 
-{#snippet ConditionsSection(combatEntity: CombatEntity)}
+{#snippet ConditionsSection(
+  combatEntity: CombatEntity,
+  errors: z.ZodError | null,
+)}
   <div class="flex w-full justify-between gap-5">
     <Title variant="muted">Conditions</Title>
     <Button onclick={(_) => CombatEntityActions.AddCondition(combatEntity)}>
@@ -197,6 +201,7 @@
         bind:value={combatEntity.exhaustion_level}
         placeholder="Select an exhaustion level"
         items={selectExhaustLevels}
+        error={HasError(errors, "exhaustion_level")}
       />
     </Container>
   </div>
@@ -214,6 +219,7 @@
           bind:value={condition.condition}
           placeholder="Charmed"
           items={selectConditions}
+          error={HasError(errors, `conditions.${index}.condition`)}
         />
       </Container>
 
@@ -224,6 +230,7 @@
           bind:value={condition.saving_throw_attribute}
           placeholder="Wisdom"
           items={selectAttributes}
+          error={HasError(errors, `conditions.${index}.saving_throw_attribute`)}
         />
       </Container>
 
@@ -235,6 +242,7 @@
           type="number"
           placeholder="13"
           bind:value={condition.saving_throw_dc}
+          error={HasError(errors, `conditions.${index}.saving_throw_dc`)}
         />
       </Container>
     </div>
@@ -267,6 +275,7 @@
           bind:value={condition.save_trigger}
           placeholder="Nothing"
           items={selectSaveTriggers}
+          error={HasError(errors, `conditions.${index}.save_trigger`)}
         />
       </Container>
     </div>
@@ -297,7 +306,7 @@
         </Button>
       {/snippet}
     </DropdownMenu.Trigger>
-    <DropdownMenu.Content class="w-56" align="center">
+    <DropdownMenu.Content class="w-fit" align="center">
       <DropdownMenu.Group>
         <DropdownMenu.Item>Edit</DropdownMenu.Item>
         <DropdownMenu.Item
@@ -392,7 +401,7 @@
             <Input
               type="text"
               placeholder="Player 1"
-              error={hasError(playerFormErrors, "name")}
+              error={HasError(playerFormErrors, "name")}
               bind:value={playerForm.name}
             />
           </Container>
@@ -404,7 +413,7 @@
               class="text-center"
               type="number"
               placeholder="16"
-              error={hasError(playerFormErrors, "initiative")}
+              error={HasError(playerFormErrors, "initiative")}
               bind:value={playerForm.initiative}
             />
           </Container>
@@ -418,7 +427,7 @@
         </div>
 
         <!-- Conditions -->
-        {@render ConditionsSection(playerForm)}
+        {@render ConditionsSection(playerForm, playerFormErrors)}
       {/snippet}
 
       {#snippet footer()}
