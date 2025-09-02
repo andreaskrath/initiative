@@ -1,11 +1,15 @@
 import { type Spell } from "$types";
 import { Validate } from "$spell/validate";
 import { PrepareForValidation } from "$utils/validate";
+import type { FieldErrors } from "$utils/error";
 
-export const CreateSpell = async (spell: Spell): Promise<number | string[]> => {
+export const CreateSpell = async (
+  spell: Spell,
+): Promise<number | FieldErrors> => {
   const preparedSpell = PrepareForValidation(spell);
   let errors = await Validate(preparedSpell);
-  if (errors.length > 0) {
+
+  if (errors !== null) {
     return errors;
   }
 

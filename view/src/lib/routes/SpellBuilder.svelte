@@ -26,7 +26,6 @@
   import { Button } from "$components/ui/button/index";
   import Combobox from "$components/Combobox.svelte";
   import Container from "$components/Container.svelte";
-  import Errors from "$components/Errors.svelte";
   import Input from "$components/Input.svelte";
   import Label from "$components/Label.svelte";
   import Select from "$components/Select.svelte";
@@ -35,11 +34,12 @@
   import { toast } from "svelte-sonner";
   import Toggle from "$components/Toggle.svelte";
   import Required from "$components/Required.svelte";
+  import type { FieldErrors } from "$utils/error";
 
   let spell = $state(SpellActions.EmptySpell());
   let classRestrictions = $state(RecordFactory(SpellcastingClasses, false));
   let usesMaterials = $state(false);
-  let errors: string[] = $state([]);
+  let errors: FieldErrors | null = $state(null);
 
   const areas = ToLabelValue(Areas);
   const castingTimes = ToLabelValue(CastingTimes);
@@ -59,7 +59,7 @@
     const result = await CreateSpell(spell);
 
     if (typeof result === "number") {
-      errors = [];
+      errors = null;
       switch (result) {
         case StatusCodes.CREATED:
           toast.success("Successfully created spell");
@@ -89,7 +89,12 @@
     <!-- Name -->
     <Container class="col-span-8">
       <Label required>Name</Label>
-      <Input bind:value={spell.name} placeholder="Fireball" type="text" />
+      <Input
+        bind:value={spell.name}
+        placeholder="Fireball"
+        type="text"
+        error={errors?.get("name")}
+      />
     </Container>
 
     <!-- Spell Level -->
@@ -99,6 +104,7 @@
         bind:value={spell.level}
         placeholder="Select a spell level"
         items={spellLevels}
+        error={errors?.get("level")}
       />
     </Container>
 
@@ -109,6 +115,7 @@
         bind:value={spell.school}
         placeholder="Select a school of magic"
         items={schools}
+        error={errors?.get("school")}
       />
     </Container>
 
@@ -119,6 +126,7 @@
         bind:value={spell.casting_time}
         placeholder="Select a casting time"
         items={castingTimes}
+        error={errors?.get("casting_time")}
       />
     </Container>
 
@@ -129,6 +137,7 @@
         bind:value={spell.duration}
         placeholder="Select a duration"
         items={durations}
+        error={errors?.get("duration")}
       />
     </Container>
 
@@ -139,6 +148,7 @@
         bind:value={spell.range}
         placeholder="Select a range"
         items={ranges}
+        error={errors?.get("range")}
       />
     </Container>
 
@@ -154,6 +164,7 @@
         bind:value={spell.shape}
         placeholder="Select a shape"
         items={shapes}
+        error={errors?.get("shape")}
       />
     </Container>
 
@@ -164,6 +175,7 @@
         bind:value={spell.area}
         placeholder="Select a area"
         items={areas}
+        error={errors?.get("area")}
       />
     </Container>
 
@@ -175,6 +187,7 @@
         placeholder="A bright streak flashes from your pointing finger to a point you choose within range and then blossoms with a low roar into an explosion of flame. Each creature in a 20-foot-radius sphere centered on that point must make a Dexterity saving throw. A target takes 8d6 fire damage on a failed save, or half as much damage on a successful one.
 
 The fire spreads around corners. It ignites flammable objects in the area that aren't being worn or carried."
+        error={errors?.get("description")}
       />
     </Container>
 
@@ -185,6 +198,7 @@ The fire spreads around corners. It ignites flammable objects in the area that a
         bind:value={spell.at_higher_levels}
         type="text"
         placeholder="The damage increases by 1d6 for each spell slot level above 3rd."
+        error={errors?.get("at_higher_levels")}
       />
     </Container>
   </div>
@@ -228,6 +242,7 @@ The fire spreads around corners. It ignites flammable objects in the area that a
           bind:value={spell.material}
           placeholder="a tiny ball of bat guano and sulfur"
           type="text"
+          error={errors?.get("material")}
         />
       </Container>
     {/if}
@@ -246,9 +261,6 @@ The fire spreads around corners. It ignites flammable objects in the area that a
       </Container>
     {/each}
   </div>
-
-  <!-- Valiation Errors -->
-  <Errors title="Unable to create spell" bind:errors />
 
   <!-- Create Spell Button -->
   <div

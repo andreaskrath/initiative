@@ -1,14 +1,15 @@
+import { CreateFieldErrors, type FieldErrors } from "$lib/shared/utils/error";
 import { Class, MagicSchool, SpellLevel, type Spell } from "$types";
 import * as z from "zod";
 
-export const Validate = async (spell: Spell): Promise<string[]> => {
+export const Validate = async (spell: Spell): Promise<FieldErrors | null> => {
   const result = await spellSchema.safeParseAsync(spell);
 
   if (!result.success) {
-    return result.error.issues.map((issue) => issue.message);
+    return CreateFieldErrors(result.error);
   }
 
-  return [];
+  return null;
 };
 
 export const spellSchema = z
