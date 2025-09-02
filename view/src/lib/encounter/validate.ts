@@ -27,32 +27,27 @@ export const ValidateReminderEntity = {};
 
 const combatConditionSchema = z.object({
   condition: z.enum(Condition, "A condition type must be specified"),
-  saving_throw_dc: z.number(
-    "A condition must have a saving throw DC specified",
-  ),
+  saving_throw_dc: z.number("A saving throw DC must be specified"),
   saving_throw_attribute: z.enum(
     Attribute,
-    "A condition must have a saving throw attribute specified",
+    "A saving throw attribute must be specified",
   ),
   source: z.string().optional(),
   cause: z.string().optional(),
-  save_trigger: z.enum(
-    SaveTrigger,
-    "A condition must have a save trigger specified",
-  ),
+  save_trigger: z.enum(SaveTrigger, "A save trigger must be specified"),
 });
 
 const playerEntitySchema = z.object({
   id: z.uuid().optional(),
   type: z.literal("player", "The type of a player must be 'player'"),
-  name: z.string("A player must have a name specified"),
-  initiative: z.number("A player must have an initiative specified"),
+  name: z.string("A name must be specified"),
+  initiative: z.number("An initiative must be specified"),
   concentration: z.boolean(
     "A player must have a concentration specified, even if false",
   ),
   exhaustion_level: z.enum(
     ExhaustionLevel,
-    "A player must have an exhaustion level specified",
+    "An exhaustion level must be specified",
   ),
   conditions: z.array(
     combatConditionSchema,
