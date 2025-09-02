@@ -7,15 +7,18 @@
   import { Button } from "$components/ui/button";
   import { cn } from "$shared/utils/utils";
   import { tick } from "svelte";
+  import Error from "$components/Error.svelte";
 
   let {
     value = $bindable(),
     placeholder,
     items,
+    error = "",
   }: {
     value?: string;
     placeholder: string;
     items: { label: string; value: string }[];
+    error?: string;
   } = $props();
 
   let open = $state(false);
@@ -64,21 +67,26 @@
 
 <Popover.Root bind:open onOpenChange={handleOpenChange}>
   <Popover.Trigger>
-    <Button
-      variant="outline"
-      role="combobox"
-      aria-expanded={open}
-      class="w-full justify-between truncate {displayValue
-        ? ''
-        : 'text-muted-foreground'}"
-    >
-      {displayValue || placeholder}
-      {#if open}
-        <ChevronUp class="ml-2 h-4 w-4 shrink-0 opacity-50" />
-      {:else}
-        <ChevronDown class="ml-2 h-4 w-4 shrink-0 opacity-50" />
+    <div class="relative w-full">
+      <Button
+        variant="outline"
+        role="combobox"
+        aria-expanded={open}
+        class="w-full justify-between truncate
+        {displayValue ? '' : 'text-muted-foreground'}
+        {error ? 'border-red-500' : ''}"
+      >
+        {displayValue || placeholder}
+        {#if open}
+          <ChevronUp class="ml-2 h-4 w-4 shrink-0 opacity-50" />
+        {:else}
+          <ChevronDown class="ml-2 h-4 w-4 shrink-0 opacity-50" />
+        {/if}
+      </Button>
+      {#if error}
+        <Error {error} />
       {/if}
-    </Button>
+    </div>
   </Popover.Trigger>
   <Popover.Content class="mt-1 p-0">
     <Command.Root shouldFilter={false}>
