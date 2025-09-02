@@ -197,7 +197,7 @@
         bind:value={combatEntity.exhaustion_level}
         placeholder="Select an exhaustion level"
         items={selectExhaustLevels}
-        error={errors?.has("exhaustion_level")}
+        error={errors?.get("exhaustion_level")}
       />
     </Container>
   </div>
@@ -215,7 +215,7 @@
           bind:value={condition.condition}
           placeholder="Charmed"
           items={selectConditions}
-          error={errors?.has(`conditions.${index}.condition`)}
+          error={errors?.get(`conditions.${index}.condition`)}
         />
       </Container>
 
@@ -226,7 +226,7 @@
           bind:value={condition.saving_throw_attribute}
           placeholder="Wisdom"
           items={selectAttributes}
-          error={errors?.has(`conditions.${index}.saving_throw_attribute`)}
+          error={errors?.get(`conditions.${index}.saving_throw_attribute`)}
         />
       </Container>
 
@@ -238,7 +238,7 @@
           type="number"
           placeholder="13"
           bind:value={condition.saving_throw_dc}
-          error={errors?.has(`conditions.${index}.saving_throw_dc`)}
+          error={errors?.get(`conditions.${index}.saving_throw_dc`)}
         />
       </Container>
     </div>
@@ -271,7 +271,7 @@
           bind:value={condition.save_trigger}
           placeholder="Nothing"
           items={selectSaveTriggers}
-          error={errors?.has(`conditions.${index}.save_trigger`)}
+          error={errors?.get(`conditions.${index}.save_trigger`)}
         />
       </Container>
     </div>
@@ -397,7 +397,7 @@
             <Input
               type="text"
               placeholder="Player 1"
-              error={playerFormErrors?.has("name")}
+              error={playerFormErrors?.get("name")}
               bind:value={playerForm.name}
             />
           </Container>
@@ -409,7 +409,7 @@
               class="text-center"
               type="number"
               placeholder="16"
-              error={playerFormErrors?.has("initiative")}
+              error={playerFormErrors?.get("initiative")}
               bind:value={playerForm.initiative}
             />
           </Container>
@@ -428,16 +428,6 @@
 
       {#snippet footer()}
         <div class="flex w-full flex-col gap-2">
-          <!-- <Errors -->
-          <!--   title="Unable to add player" -->
-          <!--   errors={playerFormErrors?.issues.map((issue) => issue.message) ?? -->
-          <!--     []} -->
-          <!-- /> -->
-
-          <!-- {#if (playerFormErrors?.issues?.length ?? 0) > 0} -->
-          <!--   <hr /> -->
-          <!-- {/if} -->
-
           <div class="flex justify-end">
             <Button
               variant="default"
