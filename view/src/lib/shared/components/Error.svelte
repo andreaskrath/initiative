@@ -8,7 +8,7 @@
 
 <Tooltip.Provider>
   <Tooltip.Root delayDuration={200}>
-    <Tooltip.Trigger class="absolute right-1 text-red-500 {placementClasses}">
+    <Tooltip.Trigger class="absolute right-1 text-red-400 {placementClasses}">
       <CircleAlert class="h-4 w-4" />
     </Tooltip.Trigger>
     <Tooltip.Content side="top" align="center">
