@@ -39,7 +39,9 @@ export const spellSchema = z
       .string("The area must be specified")
       .min(1, "An area must be at least a single character long"),
     shape: z.string().optional(),
-    classes: z.array(z.enum(Class)),
+    classes: z
+      .array(z.enum(Class))
+      .min(1, "At least a single class must be specified"),
     description: z
       .string("The description must be specified")
       .min(1, "A description must be at least a single character long"),
