@@ -26,6 +26,7 @@
   import { Button } from "$components/ui/button/index";
   import Combobox from "$components/Combobox.svelte";
   import Container from "$components/Container.svelte";
+  import Error from "$components/Error.svelte";
   import Input from "$components/Input.svelte";
   import Label from "$components/Label.svelte";
   import Select from "$components/Select.svelte";
@@ -249,9 +250,15 @@ The fire spreads around corners. It ignites flammable objects in the area that a
   </div>
 
   <!-- Class Restrictions -->
-  <Title variant="muted" class="relative inline-block w-fit">
-    Class Restrictions <Required vertical="bottom-2" />
-  </Title>
+  <div class="relative w-full">
+    <Title variant="muted" class="relative inline-block w-fit">
+      Class Restrictions <Required vertical="bottom-2" />
+    </Title>
+
+    {#if errors?.has("classes")}
+      <Error placement="top-1" error={errors?.get("classes") ?? ""} />
+    {/if}
+  </div>
   <div class="grid grid-cols-3 space-y-2 gap-x-2">
     {#each SpellcastingClasses as spellcastingClass}
       <Container class="col-span-1">
