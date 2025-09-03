@@ -72,9 +72,10 @@
         variant="outline"
         role="combobox"
         aria-expanded={open}
-        class="w-full justify-between truncate
+        aria-invalid={error !== ""}
+        class="invalid !aria-invalid:ring-destructive/20 !dark:aria-invalid:ring-destructive/40 !aria-invalid:border-destructive w-full justify-between truncate
         {displayValue ? '' : 'text-muted-foreground'}
-        {error ? 'border-red-500' : ''}"
+        "
       >
         {displayValue || placeholder}
         {#if open}
