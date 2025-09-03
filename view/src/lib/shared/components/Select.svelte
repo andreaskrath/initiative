@@ -24,7 +24,11 @@
 
 <div class="relative">
   <Select.Root type="single" bind:value>
-    <Select.Trigger class="w-full truncate {error ? 'border-red-500' : ''}">
+    <Select.Trigger
+      class="w-full truncate {error
+        ? '!ring-destructive/20 !dark:ring-destructive/40 !border-destructive'
+        : ''}"
+    >
       {triggerContent}
     </Select.Trigger>
     <Select.Content>
