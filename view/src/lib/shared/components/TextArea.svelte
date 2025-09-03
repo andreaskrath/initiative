@@ -15,7 +15,11 @@
     class?: string;
   } = $props();
 
-  let errorClasses = $derived(error ? "border-red-500" : "");
+  let errorClasses = $derived(
+    error
+      ? "!ring-destructive/20 !dark:ring-destructive/40 !border-destructive"
+      : "",
+  );
 </script>
 
 <div class="relative w-full">
