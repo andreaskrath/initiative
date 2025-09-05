@@ -38,6 +38,7 @@
   import { CreateFieldErrors, type FieldErrors } from "$utils/error";
   import Combobox from "$components/Combobox.svelte";
   import { ValidatePlayerEntity } from "$encounter/validate";
+  import ConcentrationIcon from "$lib/shared/components/ConcentrationIcon.svelte";
 
   let addPlayerDialogOpen = $state(false);
   let playerFormErrors: FieldErrors | null = $state(null);
@@ -169,14 +170,6 @@
     playerFormErrors = null;
   };
 </script>
-
-{#snippet ConcentrationIcon()}
-  <img
-    src="/images/concentration.svg"
-    alt="Concentration icon"
-    class="ml-5 h-[25px] w-[25px]"
-  />
-{/snippet}
 
 {#snippet ConditionsSection(
   combatEntity: CombatEntity,
@@ -459,7 +452,7 @@
         <div class="flex items-center text-sm font-medium">
           {player.name}
           {#if player.concentration}
-            {@render ConcentrationIcon()}
+            <ConcentrationIcon />
           {/if}
         </div>
         <div class="flex items-center justify-center text-center text-sm">
@@ -498,7 +491,7 @@
         <div class="flex items-center text-sm font-medium">
           {monster.name}
           {#if monster.concentration}
-            {@render ConcentrationIcon()}
+            <ConcentrationIcon />
           {/if}
         </div>
         <div class="flex items-center justify-center text-center text-sm">
