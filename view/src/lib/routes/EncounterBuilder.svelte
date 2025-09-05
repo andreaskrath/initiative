@@ -1,5 +1,6 @@
 <script lang="ts">
   import Ellipsis from "@lucide/svelte/icons/ellipsis";
+  import CirclePlus from "@lucide/svelte/icons/circle-plus";
   import {
     Attributes,
     CombatEntityActions,
@@ -41,6 +42,7 @@
   import ConcentrationIcon from "$lib/shared/components/ConcentrationIcon.svelte";
 
   let addPlayerDialogOpen = $state(false);
+  let addMonsterDialogOpen = $state(false);
   let playerFormErrors: FieldErrors | null = $state(null);
 
   let encounter = $state(EncounterActions.EmptyEncounter());
@@ -374,12 +376,17 @@
   <div class="flex justify-between">
     <Title variant="default" class="relative top-1">Players</Title>
     <Dialog
-      title="Add new player"
+      title="Add a new player"
       description="Add a new player to the encounter, click the button at the bottom when you are done."
       bind:open={addPlayerDialogOpen}
     >
       {#snippet trigger()}
-        <Button variant="default">Add Player</Button>
+        <Button
+          variant="ghost"
+          class="text-green-500 hover:text-green-300 dark:text-green-300 dark:hover:text-green-500"
+        >
+          <CirclePlus />
+        </Button>
       {/snippet}
 
       {#snippet content()}
@@ -471,7 +478,74 @@
   </section>
 
   <!-- Monsters Section -->
-  <Title variant="default">Monsters</Title>
+  <div class="flex justify-between">
+    <Title variant="default" class="relative top-1">Monsters</Title>
+    <Dialog
+      title="Add a new monster"
+      description="Add a new monster to the encounter, click the button at the bottom when you are done."
+      bind:open={addMonsterDialogOpen}
+    >
+      {#snippet trigger()}
+        <Button
+          variant="ghost"
+          class="text-green-500 hover:text-green-300 dark:text-green-300 dark:hover:text-green-500"
+        >
+          <CirclePlus />
+        </Button>
+      {/snippet}
+
+      {#snippet content()}
+        <div class="flex w-full gap-5">
+          <!-- Name -->
+          <Container class="flex-3">
+            <Label required>Name</Label>
+            <Input
+              type="text"
+              placeholder="Player 1"
+              error={playerFormErrors?.get("name")}
+              bind:value={playerForm.name}
+            />
+          </Container>
+
+          <!-- Initiative -->
+          <Container class="flex-1">
+            <Label required>Initiative</Label>
+            <Input
+              class="text-center"
+              type="number"
+              placeholder="16"
+              error={playerFormErrors?.get("initiative")}
+              bind:value={playerForm.initiative}
+            />
+          </Container>
+
+          <!-- Concentration -->
+          <div class="flex flex-col justify-end">
+            <Toggle bind:checked={playerForm.concentration}>
+              Concentration
+            </Toggle>
+          </div>
+        </div>
+
+        <!-- Conditions -->
+        {@render ConditionsSection(playerForm, playerFormErrors)}
+      {/snippet}
+
+      {#snippet footer()}
+        <div class="flex w-full flex-col gap-2">
+          <div class="flex justify-end">
+            <Button
+              variant="default"
+              class="w-fit"
+              onclick={(_) => AddPlayer()}
+            >
+              Add Player
+            </Button>
+          </div>
+        </div>
+      {/snippet}
+    </Dialog>
+  </div>
   <section class="mt-5 rounded-lg border">
     <!-- Header -->
     <div
@@ -554,6 +628,13 @@
       {/if}
     {/each}
   </section>
+</div>
+
+<!-- Create Spell Button -->
+<div class="fixed inset-x-0 bottom-0 mx-auto flex w-[1000px] justify-end pb-10">
+  <Button onclick={async (e: MouseEvent) => console.log("button 2")}>
+    Create Encounter
+  </Button>
 </div>
 
 <div class="mx-auto mt-5 grid w-[1000px] grid-cols-3">
