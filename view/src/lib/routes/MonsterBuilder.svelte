@@ -187,7 +187,6 @@
     } else {
       errors = result;
       toast.error("There is an issue with the defined monster");
-      console.log(errors);
     }
   };
 </script>
