@@ -5,7 +5,7 @@
 
 <span
   class={cn(
-    "ml-2 flex h-5 w-5 items-center justify-center rounded-xs font-bold",
+    "ml-2 flex h-5 w-5 items-center justify-center rounded-xs text-xs font-bold tracking-wider uppercase",
     "bg-black text-white",
     "dark:bg-white dark:text-black",
     className,
