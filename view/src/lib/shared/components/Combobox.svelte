@@ -63,6 +63,13 @@
       }
     }
   }
+
+  let displayClasses = $derived(displayValue ? "" : "text-muted-foreground");
+  let errorClasses = $derived(
+    error
+      ? "!ring-destructive/20 !dark:ring-destructive/40 !border-destructive"
+      : "",
+  );
 </script>
 
 <Popover.Root bind:open onOpenChange={handleOpenChange}>
@@ -72,10 +79,11 @@
         variant="outline"
         role="combobox"
         aria-expanded={open}
-        aria-invalid={error !== ""}
-        class="invalid !aria-invalid:ring-destructive/20 !dark:aria-invalid:ring-destructive/40 !aria-invalid:border-destructive w-full justify-between truncate
-        {displayValue ? '' : 'text-muted-foreground'}
-        "
+        class={cn(
+          "invalid  w-full justify-between truncate",
+          displayClasses,
+          errorClasses,
+        )}
       >
         {displayValue || placeholder}
         {#if open}
