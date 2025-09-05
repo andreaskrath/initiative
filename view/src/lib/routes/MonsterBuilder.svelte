@@ -48,7 +48,7 @@
 
   import * as Command from "$components/ui/command/index";
   import Container from "$components/Container.svelte";
-  import Errors from "$components/Errors.svelte";
+  import Error from "$components/Error.svelte";
   import Input from "$components/Input.svelte";
   import Label from "$components/Label.svelte";
   import { ScrollArea } from "$components/ui/scroll-area/index";
@@ -63,6 +63,7 @@
   import { toast } from "svelte-sonner";
   import { goto } from "@mateothegreat/svelte5-router";
   import Combobox from "$lib/shared/components/Combobox.svelte";
+  import type { FieldErrors } from "$utils/error";
 
   const alignments = ToLabelValueWith(Alignments, DisplayAlignment);
   const attributes = ToLabelValueWith(Attributes, DisplayAttribute);
@@ -75,7 +76,7 @@
 
   let monster = $state(MonsterActions.EmptyMonster());
   let spells: Spell[] = $state([]);
-  let errors: string[] = $state([]);
+  let errors: FieldErrors | null = $state(null);
 
   let spellSlots: Record<SpellLevel, number | undefined> = $state(
     RecordFactory(SpellLevels, undefined),
@@ -168,7 +169,7 @@
 
     const result = await MonsterService.Create(monster);
     if (typeof result === "number") {
-      errors = [];
+      errors = null;
       switch (result) {
         case StatusCodes.CREATED:
           toast.success("Successfully created monster");
@@ -185,6 +186,8 @@
       }
     } else {
       errors = result;
+      toast.error("There is an issue with the defined monster");
+      console.log(errors);
     }
   };
 </script>
@@ -262,7 +265,12 @@
       <!-- Name -->
       <Container class="col-span-7">
         <Label required>Name</Label>
-        <Input bind:value={monster.name} type="text" placeholder="Goblin" />
+        <Input
+          bind:value={monster.name}
+          type="text"
+          placeholder="Goblin"
+          error={errors?.get("name")}
+        />
       </Container>
 
       <!-- Challenge Rating -->
@@ -273,6 +281,7 @@
           type="number"
           placeholder="0.5"
           class="text-center"
+          error={errors?.get("challenge_rating")}
         />
       </Container>
 
@@ -284,6 +293,7 @@
           type="number"
           placeholder="100"
           class="text-center"
+          error={errors?.get("xp")}
         />
       </Container>
 
@@ -295,6 +305,7 @@
           type="number"
           placeholder="2"
           class="text-center"
+          error={errors?.get("proficiency_bonus")}
         />
       </Container>
 
@@ -305,6 +316,7 @@
           bind:value={monster.species}
           type="text"
           placeholder="Goblinoid"
+          error={errors?.get("species")}
         />
       </Container>
 
@@ -315,6 +327,7 @@
           bind:value={monster.monster_type}
           placeholder="Select a type"
           items={monsterTypes}
+          error={errors?.get("monster_type")}
         />
       </Container>
 
@@ -325,6 +338,7 @@
           bind:value={monster.size}
           placeholder="Select a size"
           items={sizes}
+          error={errors?.get("size")}
         />
       </Container>
 
@@ -335,6 +349,7 @@
           bind:value={monster.alignment}
           placeholder="Select an alignment"
           items={alignments}
+          error={errors?.get("alignment")}
         />
       </Container>
 
@@ -346,6 +361,7 @@
           type="number"
           placeholder="13"
           class="text-center"
+          error={errors?.get("passive_perception")}
         />
       </Container>
     </div>
@@ -361,6 +377,7 @@
           type="number"
           placeholder="13"
           class="text-center"
+          error={errors?.get("strength")}
         />
       </Container>
 
@@ -371,6 +388,7 @@
           type="number"
           placeholder="13"
           class="text-center"
+          error={errors?.get("dexterity")}
         />
       </Container>
 
@@ -381,6 +399,7 @@
           type="number"
           placeholder="13"
           class="text-center"
+          error={errors?.get("constitution")}
         />
       </Container>
 
@@ -391,6 +410,7 @@
           type="number"
           placeholder="13"
           class="text-center"
+          error={errors?.get("intelligence")}
         />
       </Container>
 
@@ -401,6 +421,7 @@
           type="number"
           placeholder="13"
           class="text-center"
+          error={errors?.get("wisdom")}
         />
       </Container>
 
@@ -411,6 +432,7 @@
           type="number"
           placeholder="13"
           class="text-center"
+          error={errors?.get("charisma")}
         />
       </Container>
     </div>
@@ -461,7 +483,7 @@
           </div>
 
           <!-- Vision List -->
-          {#each monster.visions as vision}
+          {#each monster.visions as vision, index (vision)}
             <!-- Range -->
             <Container class="col-span-3">
               <Label required>Range</Label>
@@ -470,6 +492,7 @@
                 type="number"
                 placeholder="60"
                 class="text-center"
+                error={errors?.get(`visions.${index}.range`)}
               />
             </Container>
 
@@ -480,6 +503,7 @@
                 bind:value={vision.sight}
                 placeholder="Select a vision type"
                 items={sights}
+                error={errors?.get(`visions.${index}.sight`)}
               />
             </Container>
 
@@ -516,7 +540,7 @@
           </div>
 
           <!-- Speed List -->
-          {#each monster.speeds as speed}
+          {#each monster.speeds as speed, index (speed)}
             <!-- Distance -->
             <Container class="col-span-3">
               <Label required>Distance</Label>
@@ -525,6 +549,7 @@
                 type="number"
                 placeholder="30"
                 class="text-center"
+                error={errors?.get(`speeds.${index}.distance`)}
               />
             </Container>
 
@@ -535,6 +560,7 @@
                 bind:value={speed.movement}
                 placeholder="Select a movement type"
                 items={movements}
+                error={errors?.get(`speeds.${index}.movement`)}
               />
             </Container>
 
@@ -568,6 +594,7 @@
           type="number"
           placeholder="11"
           class="text-center"
+          error={errors?.get("hit_points")}
         />
       </Container>
 
@@ -579,6 +606,7 @@
           type="text"
           placeholder="2d8 + 6"
           class="text-center"
+          error={errors?.get("rollable_hit_points")}
         />
       </Container>
 
@@ -590,6 +618,7 @@
           type="number"
           placeholder="18"
           class="text-center"
+          error={errors?.get("armor_class")}
         />
       </Container>
 
@@ -600,6 +629,7 @@
           bind:value={monster.armor_type}
           type="text"
           placeholder="chain mail, shield"
+          error={errors?.get("armor_type")}
         />
       </Container>
     </div>
@@ -673,7 +703,7 @@
         </Button>
       </div>
 
-      {#each monster.traits as trait, index}
+      {#each monster.traits as trait, index (trait)}
         <!-- Name -->
         <Container class="col-span-9">
           <Label required>Name</Label>
@@ -681,6 +711,7 @@
             bind:value={trait.name}
             type="text"
             placeholder="Martial Advantage"
+            error={errors?.get(`traits.${index}.name`)}
           />
         </Container>
 
@@ -703,6 +734,7 @@
           <TextArea
             bind:value={trait.description}
             placeholder="Write a description for the trait.."
+            error={errors?.get(`traits.${index}.description`)}
           />
         </Container>
 
@@ -727,7 +759,7 @@
       </Button>
     </div>
 
-    {#each monster.regular_actions as regularAction, index}
+    {#each monster.regular_actions as regularAction, index (regularAction)}
       <!-- Name -->
       <Container class="col-span-9">
         <Label required>Name</Label>
@@ -735,6 +767,7 @@
           bind:value={regularAction.name}
           type="text"
           placeholder="Martial Advantage"
+          error={errors?.get(`regular_actions.${index}.name`)}
         />
       </Container>
 
@@ -757,6 +790,7 @@
         <TextArea
           bind:value={regularAction.description}
           placeholder="Write a description for the regular action.."
+          error={errors?.get(`regular_actions.${index}.description`)}
         />
       </Container>
 
@@ -780,7 +814,7 @@
       </Button>
     </div>
 
-    {#each monster.melee_attack_actions as meleeAttackAction, index}
+    {#each monster.melee_attack_actions as meleeAttackAction, index (meleeAttackAction)}
       <!-- Name -->
       <Container class="col-span-5">
         <Label required>Name</Label>
@@ -788,6 +822,7 @@
           bind:value={meleeAttackAction.name}
           type="text"
           placeholder="Longsword"
+          error={errors?.get(`melee_attack_actions.${index}.name`)}
         />
       </Container>
 
@@ -799,6 +834,7 @@
           type="number"
           placeholder="5"
           class="text-center"
+          error={errors?.get(`melee_attack_actions.${index}.hit_bonus`)}
         />
       </Container>
 
@@ -810,6 +846,7 @@
           type="number"
           placeholder="5"
           class="text-center"
+          error={errors?.get(`melee_attack_actions.${index}.reach`)}
         />
       </Container>
 
@@ -834,6 +871,7 @@
           type="text"
           placeholder="1d8 + 1"
           class="text-center"
+          error={errors?.get(`melee_attack_actions.${index}.one_handed_attack`)}
         />
       </Container>
 
@@ -845,6 +883,7 @@
           type="text"
           placeholder="1d10 + 1"
           class="text-center"
+          error={errors?.get(`melee_attack_actions.${index}.two_handed_attack`)}
         />
       </Container>
 
@@ -855,6 +894,7 @@
           bind:value={meleeAttackAction.damage_type}
           placeholder="Select a damage type"
           items={damageTypes}
+          error={errors?.get(`melee_attack_actions.${index}.damage_type`)}
         />
       </Container>
 
@@ -878,7 +918,7 @@
       </Button>
     </div>
 
-    {#each monster.ranged_attack_actions as rangedAttackAction, index}
+    {#each monster.ranged_attack_actions as rangedAttackAction, index (rangedAttackAction)}
       <!-- Name -->
       <Container class="col-span-5">
         <Label required>Name</Label>
@@ -886,6 +926,7 @@
           bind:value={rangedAttackAction.name}
           type="text"
           placeholder="Longbow"
+          error={errors?.get(`ranged_attack_actions.${index}.name`)}
         />
       </Container>
 
@@ -897,6 +938,7 @@
           type="number"
           placeholder="5"
           class="text-center"
+          error={errors?.get(`ranged_attack_actions.${index}.hit_bonus`)}
         />
       </Container>
 
@@ -908,6 +950,7 @@
           type="text"
           placeholder="1d8 + 2"
           class="text-center"
+          error={errors?.get(`ranged_attack_actions.${index}.attack`)}
         />
       </Container>
 
@@ -935,6 +978,7 @@
           type="number"
           placeholder="150"
           class="text-center"
+          error={errors?.get(`ranged_attack_actions.${index}.normal_range`)}
         />
       </Container>
 
@@ -946,6 +990,7 @@
           type="number"
           placeholder="600"
           class="text-center"
+          error={errors?.get(`ranged_attack_actions.${index}.long_range`)}
         />
       </Container>
 
@@ -956,6 +1001,7 @@
           bind:value={rangedAttackAction.damage_type}
           placeholder="Select a damage type"
           items={damageTypes}
+          error={errors?.get(`ranged_attack_actions.${index}.damage_type`)}
         />
       </Container>
 
@@ -979,7 +1025,7 @@
       </Button>
     </div>
 
-    {#each monster.recharge_actions as rechargeAction, index}
+    {#each monster.recharge_actions as rechargeAction, index (rechargeAction)}
       <!-- Name -->
       <Container class="col-span-6">
         <Label required>Name</Label>
@@ -987,6 +1033,7 @@
           bind:value={rechargeAction.name}
           type="text"
           placeholder="Martial Advantage"
+          error={errors?.get(`recharge_actions.${index}.name`)}
         />
       </Container>
 
@@ -997,6 +1044,7 @@
           bind:value={rechargeAction.recharge}
           placeholder="Select a recharge dice"
           items={recharges}
+          error={errors?.get(`recharge_actions.${index}.recharge`)}
         />
       </Container>
 
@@ -1019,6 +1067,7 @@
         <TextArea
           bind:value={rechargeAction.description}
           placeholder="Write a description for the recharge action.."
+          error={errors?.get(`recharge_actions.${index}.description`)}
         />
       </Container>
 
@@ -1041,7 +1090,7 @@
       </Button>
     </div>
 
-    {#each monster.bonus_actions as bonusAction, index}
+    {#each monster.bonus_actions as bonusAction, index (bonusAction)}
       <!-- Name -->
       <Container class="col-span-9">
         <Label required>Name</Label>
@@ -1049,6 +1098,7 @@
           bind:value={bonusAction.name}
           type="text"
           placeholder="Martial Advantage"
+          error={errors?.get(`bonus_actions.${index}.name`)}
         />
       </Container>
 
@@ -1071,6 +1121,7 @@
         <TextArea
           bind:value={bonusAction.description}
           placeholder="Write a description for the bonus action.."
+          error={errors?.get(`bonus_actions.${index}.description`)}
         />
       </Container>
 
@@ -1093,7 +1144,7 @@
       </Button>
     </div>
 
-    {#each monster.reactions as reaction, index}
+    {#each monster.reactions as reaction, index (reaction)}
       <!-- Name -->
       <Container class="col-span-9">
         <Label required>Name</Label>
@@ -1101,6 +1152,7 @@
           bind:value={reaction.name}
           type="text"
           placeholder="Martial Advantage"
+          error={errors?.get(`reactions.${index}.name`)}
         />
       </Container>
 
@@ -1123,6 +1175,7 @@
         <TextArea
           bind:value={reaction.description}
           placeholder="Write a description for the reaction.."
+          error={errors?.get(`reactions.${index}.description`)}
         />
       </Container>
 
@@ -1154,12 +1207,13 @@
           type="number"
           placeholder="3"
           class="text-center"
+          error={errors?.get("available_legendary_actions_per_turn")}
         />
       </Container>
       <div class="col-span-7"></div>
     {/if}
 
-    {#each monster.legendary_actions as legendaryAction, index}
+    {#each monster.legendary_actions as legendaryAction, index (legendaryAction)}
       <!-- Name -->
       <Container class="col-span-7">
         <Label required>Name</Label>
@@ -1167,6 +1221,7 @@
           bind:value={legendaryAction.name}
           type="text"
           placeholder="Martial Advantage"
+          error={errors?.get(`legendary_actions.${index}.name`)}
         />
       </Container>
 
@@ -1178,6 +1233,7 @@
           type="number"
           placeholder="3"
           class="text-center"
+          error={errors?.get(`legendary_actions.${index}.cost`)}
         />
       </Container>
 
@@ -1200,6 +1256,7 @@
         <TextArea
           bind:value={legendaryAction.description}
           placeholder="Write a description for the reaction.."
+          error={errors?.get(`legendary_actions.${index}.description`)}
         />
       </Container>
 
@@ -1222,7 +1279,7 @@
       </Button>
     </div>
 
-    {#each monster.lair_actions as lairAction, index}
+    {#each monster.lair_actions as lairAction, index (lairAction)}
       <!-- Name -->
       <Container class="col-span-9">
         <Label required>Name</Label>
@@ -1230,6 +1287,7 @@
           bind:value={lairAction.name}
           type="text"
           placeholder="Martial Advantage"
+          error={errors?.get(`lair_actions.${index}.name`)}
         />
       </Container>
 
@@ -1252,6 +1310,7 @@
         <TextArea
           bind:value={lairAction.description}
           placeholder="Write a description for the reaction.."
+          error={errors?.get(`lair_actions.${index}.description`)}
         />
       </Container>
 
@@ -1274,6 +1333,7 @@
         type="number"
         class="text-center"
         placeholder="15"
+        error={errors?.get("spellcasting.level")}
       />
     </Container>
 
@@ -1284,6 +1344,7 @@
         bind:value={monster.spellcasting!.attribute}
         placeholder="Select an attribute"
         items={attributes}
+        error={errors?.get("spellcasting.attribute")}
       />
     </Container>
 
@@ -1295,6 +1356,7 @@
         type="number"
         class="text-center"
         placeholder="18"
+        error={errors?.get("spellcasting.dc")}
       />
     </Container>
 
@@ -1306,6 +1368,7 @@
         type="number"
         class="text-center"
         placeholder="9"
+        error={errors?.get("spellcasting.attack_bonus")}
       />
     </Container>
 
@@ -1396,11 +1459,6 @@
     </ScrollArea>
   </Tabs.Content>
 </Tabs.Root>
-
-<!-- Valiation Errors -->
-<div class="flex justify-center">
-  <Errors title="Unable to create spell" bind:errors />
-</div>
 
 <div class="h-[100px]"></div>
 

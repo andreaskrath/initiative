@@ -1,12 +1,13 @@
 import { type Monster } from "$types";
 import { Validate } from "$monster/validate";
 import { PrepareForValidation } from "$lib/shared/utils/validate";
+import type { FieldErrors } from "$utils/error";
 
 export const MonsterService = {
-  Create: async (monster: Monster): Promise<number | string[]> => {
+  Create: async (monster: Monster): Promise<number | FieldErrors> => {
     const preparedMonster = PrepareForValidation(monster);
     let errors = await Validate(preparedMonster);
-    if (errors.length > 0) {
+    if (errors) {
       return errors;
     }
 

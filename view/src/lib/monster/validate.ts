@@ -15,18 +15,21 @@ import {
   type Monster,
 } from "$types";
 import { spellSchema } from "$spell/validate";
+import { CreateFieldErrors, type FieldErrors } from "$lib/shared/utils/error";
 
 /*
  * Validate that a monster fits the expected data structure and values for the backend.
  */
-export const Validate = async (monster: Monster): Promise<string[]> => {
+export const Validate = async (
+  monster: Monster,
+): Promise<FieldErrors | null> => {
   const result = await schema.safeParseAsync(monster);
 
   if (!result.success) {
-    return result.error.issues.map((issue) => issue.message);
+    return CreateFieldErrors(result.error);
   }
 
-  return [];
+  return null;
 };
 
 const schema = z.object({
@@ -41,12 +44,12 @@ const schema = z.object({
   monster_type: z.enum(MonsterType, "A monster type must be specified"),
   species: z.string().optional(),
   alignment: z.enum(Alignment, "An alignment must be specified"),
-  strength: z.number("A strength attribute must be specified"),
-  dexterity: z.number("A dexterity attribute must be specified"),
-  constitution: z.number("A constitution attribute must be specified"),
-  intelligence: z.number("An intelligence attribute must be specified"),
-  wisdom: z.number("A wisdom attribute must be specified"),
-  charisma: z.number("A charisma attribute must be specified"),
+  strength: z.number("A strength must be specified"),
+  dexterity: z.number("A dexterity must be specified"),
+  constitution: z.number("A constitution must be specified"),
+  intelligence: z.number("An intelligence must be specified"),
+  wisdom: z.number("A wisdom must be specified"),
+  charisma: z.number("A charisma must be specified"),
   hit_points: z.number("Hit points must be specified"),
   rollable_hit_points: z
     .string("Rollable hit points must be specified")
@@ -73,18 +76,15 @@ const schema = z.object({
   ),
   visions: z.array(
     z.object({
-      sight: z.enum(Sight, "A sight type must be specified for a vision"),
-      range: z.number("A range must be specified for a vision"),
+      sight: z.enum(Sight, "A sight type must be specified"),
+      range: z.number("A range must be specified"),
     }),
   ),
   passive_perception: z.number("A passive perception must be specified"),
   speeds: z.array(
     z.object({
-      movement: z.enum(
-        Movement,
-        "A movement type must be specified for a speed",
-      ),
-      distance: z.number("A distance must be specified for a speed"),
+      movement: z.enum(Movement, "A movement type must be specified"),
+      distance: z.number("A distance must be specified"),
     }),
   ),
   languages: z.array(z.enum(Language)),
@@ -96,43 +96,39 @@ const schema = z.object({
   ),
   traits: z.array(
     z.object({
-      name: z.string("A name must be specified for a trait"),
-      description: z.string("A description must be specified for a trait"),
+      name: z.string("A name must be specified"),
+      description: z.string("A description must be specified"),
     }),
   ),
   regular_actions: z.array(
     z.object({
-      name: z.string("A name must be specified for a regular action"),
-      description: z.string(
-        "A description must be specified for a regular action",
-      ),
+      name: z.string("A name must be specified action"),
+      description: z.string("A description must be specified action"),
     }),
   ),
   melee_attack_actions: z
     .array(
       z.object({
-        name: z.string("A name must be specified for a melee attack action"),
-        hit_bonus: z.number(
-          "A bonus to hit must be specified for a melee attack action",
-        ),
-        reach: z.number("A reach must be specified for a melee attack action"),
+        name: z.string("A name must be specified attack action"),
+        hit_bonus: z.number("A bonus to hit must be specified attack action"),
+        reach: z.number("A reach must be specified attack action"),
         one_handed_attack: z
           .string()
           .regex(
             /^\d+d\d+([+-]\d+)?$/,
-            "Invalid dice roll format for a melee attack action",
+            "Invalid dice roll format attack action",
           )
           .optional(),
         two_handed_attack: z
           .string()
           .regex(
             /^\d+d\d+([+-]\d+)?$/,
-            "Invalid dice roll format for a melee attack action",
+            "Invalid dice roll format attack action",
           )
           .optional(),
         damage_type: z.enum(
           DamageType,
-          "A damage type must be specified for a melee attack action",
+          "A damage type must be specified attack action",
         ),
       }),
     )
@@ -149,67 +145,50 @@ const schema = z.object({
     }),
   ranged_attack_actions: z.array(
     z.object({
-      name: z.string("A name must be specified for a ranged attack action"),
-      hit_bonus: z.number(
-        "A bonus to hit must be specified for a ranged attack action",
-      ),
-      normal_range: z.number(
-        "A normal range must be specified for a ranged attack action",
-      ),
-      long_range: z.number(
-        "A long range must be specified for a ranged attack action",
-      ),
+      name: z.string("A name must be specified attack action"),
+      hit_bonus: z.number("A bonus to hit must be specified attack action"),
+      normal_range: z.number("A normal range must be specified attack action"),
+      long_range: z.number("A long range must be specified attack action"),
       attack: z
-        .string("An attack roll must be specified for a ranged attack action")
-        .regex(
-          /^\d+d\d+([+-]\d+)?$/,
-          "Invalid dice roll format for a ranged attack action",
-        ),
+        .string("An attack roll must be specified attack action")
+        .regex(/^\d+d\d+([+-]\d+)?$/, "Invalid dice roll format attack action"),
       damage_type: z.enum(
         DamageType,
-        "A damage type must be specified for a melee attack action",
+        "A damage type must be specified attack action",
       ),
     }),
   ),
   recharge_actions: z.array(
     z.object({
-      name: z.string("A name must be specified for a recharge action"),
+      name: z.string("A name must be specified action"),
       recharge: z.string("A recharge must be specified for at recharge action"),
-      description: z.string(
-        "A description must be specified for a recharge action",
-      ),
+      description: z.string("A description must be specified action"),
     }),
   ),
   bonus_actions: z.array(
     z.object({
-      name: z.string("A name must be specified for a bonus action"),
-      description: z.string(
-        "A description must be specified for a bonus action",
-      ),
+      name: z.string("A name must be specified action"),
+      description: z.string("A description must be specified action"),
     }),
   ),
   reactions: z.array(
     z.object({
-      name: z.string("A name must be specified for a reaction"),
-      description: z.string("A description must be specified for a reaction"),
+      name: z.string("A name must be specified"),
+      description: z.string("A description must be specified"),
     }),
   ),
   available_legendary_actions_per_turn: z.number().optional(),
   legendary_actions: z.array(
     z.object({
-      name: z.string("A name must be specified for a legendary action"),
-      cost: z.number("A cost must be specified for a legendary action"),
-      description: z.string(
-        "A description must be specified for a legendary action",
-      ),
+      name: z.string("A name must be specified action"),
+      cost: z.number("A cost must be specified action"),
+      description: z.string("A description must be specified action"),
     }),
   ),
   lair_actions: z.array(
     z.object({
-      name: z.string("A name must be specified for a lair action"),
-      description: z.string(
-        "A description must be specified for a lair action",
-      ),
+      name: z.string("A name must be specified action"),
+      description: z.string("A description must be specified action"),
     }),
   ),
   spellcasting: z
@@ -250,7 +229,7 @@ const schema = z.object({
           code: "custom",
           message:
             "All spellcasting fields must be set together, or none at all.",
-          path: ["spellcastingLevel"],
+          path: ["level"],
         });
       }
 
