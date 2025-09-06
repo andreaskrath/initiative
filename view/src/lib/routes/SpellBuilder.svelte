@@ -35,7 +35,8 @@
   import { toast } from "svelte-sonner";
   import Toggle from "$components/Toggle.svelte";
   import Required from "$components/Required.svelte";
-  import type { FieldErrors } from "$utils/error";
+  import { CreateFieldErrors, type FieldErrors } from "$utils/error";
+  import { SpellSchema } from "$lib/spell/validate";
 
   let spell = $state(SpellActions.EmptySpell());
   let classRestrictions = $state(RecordFactory(SpellcastingClasses, false));
@@ -81,7 +82,26 @@
     }
   };
 
-  $inspect(spell);
+  const validateField = async (pickObj: Record<string, true>) => {
+    const keys = Object.keys(pickObj);
+
+    const partial = SpellSchema.pick(pickObj as Object);
+    const result = await partial.safeParseAsync(spell);
+
+    const next = new Map(errors ?? []);
+
+    for (const k of keys) next.delete(k);
+
+    if (!result.success) {
+      const newErrs = CreateFieldErrors(result.error);
+
+      for (const [k, msg] of newErrs) {
+        if (keys.includes(k)) next.set(k, msg);
+      }
+    }
+
+    errors = next.size ? next : null;
+  };
 </script>
 
 <div class="mx-auto mt-5 w-[1000px] space-y-5">
@@ -96,6 +116,7 @@
         placeholder="Fireball"
         type="text"
         error={errors?.get("name")}
+        validateCallback={(_) => validateField({ name: true })}
       />
     </Container>
 
@@ -107,6 +128,7 @@
         placeholder="Select a spell level"
         items={spellLevels}
         error={errors?.get("level")}
+        validateCallback={(_) => validateField({ level: true })}
       />
     </Container>
 
@@ -118,6 +140,7 @@
         placeholder="Select a school of magic"
         items={schools}
         error={errors?.get("school")}
+        validateCallback={(_) => validateField({ school: true })}
       />
     </Container>
 
@@ -129,6 +152,7 @@
         placeholder="Select a casting time"
         items={castingTimes}
         error={errors?.get("casting_time")}
+        validateCallback={() => validateField({ casting_time: true })}
       />
     </Container>
 
@@ -140,6 +164,7 @@
         placeholder="Select a duration"
         items={durations}
         error={errors?.get("duration")}
+        validateCallback={() => validateField({ duration: true })}
       />
     </Container>
 
@@ -151,6 +176,7 @@
         placeholder="Select a range"
         items={ranges}
         error={errors?.get("range")}
+        validateCallback={() => validateField({ range: true })}
       />
     </Container>
 
@@ -167,6 +193,7 @@
         placeholder="Select a shape"
         items={shapes}
         error={errors?.get("shape")}
+        validateCallback={() => validateField({ shape: true })}
       />
     </Container>
 
@@ -178,6 +205,7 @@
         placeholder="Select a area"
         items={areas}
         error={errors?.get("area")}
+        validateCallback={() => validateField({ area: true })}
       />
     </Container>
 
@@ -190,6 +218,7 @@
 
 The fire spreads around corners. It ignites flammable objects in the area that aren't being worn or carried."
         error={errors?.get("description")}
+        validateCallback={() => validateField({ description: true })}
       />
     </Container>
 
@@ -201,6 +230,7 @@ The fire spreads around corners. It ignites flammable objects in the area that a
         type="text"
         placeholder="The damage increases by 1d6 for each spell slot level above 3rd."
         error={errors?.get("at_higher_levels")}
+        validateCallback={() => validateField({ at_higher_levels: true })}
       />
     </Container>
   </div>
@@ -245,6 +275,7 @@ The fire spreads around corners. It ignites flammable objects in the area that a
           placeholder="a tiny ball of bat guano and sulfur"
           type="text"
           error={errors?.get("material")}
+          validateCallback={() => validateField({ material: true })}
         />
       </Container>
     {/if}
