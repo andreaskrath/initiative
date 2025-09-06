@@ -2,16 +2,19 @@
   import { cn } from "$shared/utils/utils";
   import { Textarea } from "$components/ui/textarea/index";
   import Error from "$components/Error.svelte";
+  import type { FocusEventHandler } from "svelte/elements";
 
   let {
     value = $bindable(),
     placeholder,
     error = "",
+    validateCallback,
     class: className,
   }: {
     value?: string;
     placeholder: string;
     error?: string;
+    validateCallback?: FocusEventHandler<HTMLTextAreaElement>;
     class?: string;
   } = $props();
 
@@ -27,6 +30,7 @@
     bind:value
     {placeholder}
     class={cn("w-full", className, errorClasses)}
+    onfocusout={validateCallback}
     rows={5}
   />
 

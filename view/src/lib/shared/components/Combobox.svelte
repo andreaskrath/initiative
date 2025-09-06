@@ -8,17 +8,20 @@
   import { cn } from "$shared/utils/utils";
   import { tick } from "svelte";
   import Error from "$components/Error.svelte";
+  import type { FocusEventHandler } from "svelte/elements";
 
   let {
     value = $bindable(),
     placeholder,
     items,
     error = "",
+    validateCallback,
   }: {
     value?: string;
     placeholder: string;
     items: { label: string; value: string }[];
     error?: string;
+    validateCallback?: FocusEventHandler<HTMLDivElement>;
   } = $props();
 
   let open = $state(false);
@@ -93,7 +96,15 @@
       {/if}
     </div>
   </Popover.Trigger>
-  <Popover.Content class="mt-1 p-0">
+  <Popover.Content
+    class="mt-1 p-0"
+    onfocusout={async (e) => {
+      await new Promise((resolve) => setTimeout(resolve, 100));
+      if (validateCallback) {
+        validateCallback(e);
+      }
+    }}
+  >
     <Command.Root shouldFilter={false}>
       <Command.Input
         placeholder="Search"
