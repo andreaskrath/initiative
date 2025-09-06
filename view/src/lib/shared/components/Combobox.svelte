@@ -23,36 +23,39 @@
 
   let open = $state(false);
   let inputValue = $state("");
-
   let selectedItem = $derived(items.find((f) => f.value === value));
   let displayValue = $derived(selectedItem ? selectedItem.label : value);
-
   let filteredItems = $derived(
     items.filter((item) =>
       item.label.toLowerCase().includes(inputValue.toLowerCase()),
     ),
   );
-
   let isCustomValue = $derived(
     inputValue &&
       !items.some((f) => f.label.toLowerCase() === inputValue.toLowerCase()),
   );
+  let displayClasses = $derived(displayValue ? "" : "text-muted-foreground");
+  let errorClasses = $derived(
+    error
+      ? "!ring-destructive/20 !dark:ring-destructive/40 !border-destructive"
+      : "",
+  );
 
-  function handleSelect(currentValue: string) {
+  const handleSelect = (currentValue: string) => {
     value = currentValue;
     inputValue = "";
     open = false;
-  }
+  };
 
-  function handleCustomValue() {
+  const handleCustomValue = () => {
     if (inputValue) {
       value = inputValue;
       inputValue = "";
       open = false;
     }
-  }
+  };
 
-  async function handleOpenChange(isOpen: boolean) {
+  const handleOpenChange = async (isOpen: boolean) => {
     open = isOpen;
     if (isOpen) {
       await tick();
@@ -62,14 +65,7 @@
         input.focus();
       }
     }
-  }
-
-  let displayClasses = $derived(displayValue ? "" : "text-muted-foreground");
-  let errorClasses = $derived(
-    error
-      ? "!ring-destructive/20 !dark:ring-destructive/40 !border-destructive"
-      : "",
-  );
+  };
 </script>
 
 <Popover.Root bind:open onOpenChange={handleOpenChange}>
@@ -80,7 +76,7 @@
         role="combobox"
         aria-expanded={open}
         class={cn(
-          "invalid  w-full justify-between truncate",
+          "w-full justify-between truncate",
           displayClasses,
           errorClasses,
         )}
