@@ -2,8 +2,10 @@ import { CreateFieldErrors, type FieldErrors } from "$lib/shared/utils/error";
 import { Class, MagicSchool, SpellLevel, type Spell } from "$types";
 import * as z from "zod";
 
-export const Validate = async (spell: Spell): Promise<FieldErrors | null> => {
-  const result = await spellSchema.safeParseAsync(spell);
+export const ValidateSpell = async (
+  spell: Spell,
+): Promise<FieldErrors | null> => {
+  const result = await SpellSchema.safeParseAsync(spell);
 
   if (!result.success) {
     return CreateFieldErrors(result.error);
@@ -12,16 +14,16 @@ export const Validate = async (spell: Spell): Promise<FieldErrors | null> => {
   return null;
 };
 
-export const spellSchema = z
+export const SpellSchema = z
   .object({
     id: z.uuid().optional(),
     name: z
-      .string("The name must be specified")
-      .min(1, "The name must be at least a single character long"),
+      .string("A name must be specified")
+      .min(1, "A name must be at least a single character long"),
     school: z.enum(MagicSchool, "A school of magic must be specified"),
     level: z.enum(SpellLevel, "A spell level must be specified"),
     casting_time: z
-      .string("The casting time must be specified")
+      .string("A casting time must be specified")
       .min(1, "A casting time must be at least a single character long"),
     verbal: z.boolean(),
     somatic: z.boolean(),
@@ -30,20 +32,20 @@ export const spellSchema = z
     ritual: z.boolean(),
     concentration: z.boolean(),
     duration: z
-      .string("The duration must be specified")
+      .string("A duration must be specified")
       .min(1, "A duration must be at least a single character long"),
     range: z
-      .string("The range must be specified")
+      .string("A range must be specified")
       .min(1, "A range must be at least a single character long"),
     area: z
-      .string("The area must be specified")
+      .string("A area must be specified")
       .min(1, "An area must be at least a single character long"),
     shape: z.string().optional(),
     classes: z
       .array(z.enum(Class))
       .min(1, "At least a single class must be specified"),
     description: z
-      .string("The description must be specified")
+      .string("A description must be specified")
       .min(1, "A description must be at least a single character long"),
     at_higher_levels: z.string().optional(),
   })

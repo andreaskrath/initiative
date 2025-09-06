@@ -14,7 +14,7 @@ import {
   SpellLevels,
   type Monster,
 } from "$types";
-import { spellSchema } from "$spell/validate";
+import { SpellSchema } from "$spell/validate";
 import { CreateFieldErrors, type FieldErrors } from "$lib/shared/utils/error";
 
 /*
@@ -208,7 +208,7 @@ const schema = z.object({
           ),
         }),
       ),
-      spells: z.array(spellSchema),
+      spells: z.array(SpellSchema),
     })
     .superRefine((spellcasting, ctx) => {
       const spellcastingProps = [
