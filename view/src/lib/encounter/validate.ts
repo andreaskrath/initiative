@@ -3,7 +3,7 @@ import {
   Attribute,
   Condition,
   ExhaustionLevel,
-  SaveTrigger,
+  Trigger,
   type PlayerEntity,
 } from "$types";
 import * as z from "zod";
@@ -34,7 +34,7 @@ const combatConditionSchema = z.object({
   ),
   source: z.string().optional(),
   cause: z.string().optional(),
-  save_trigger: z.enum(SaveTrigger, "A save trigger must be specified"),
+  save_trigger: z.enum(Trigger, "A save trigger must be specified"),
 });
 
 const playerEntitySchema = z.object({

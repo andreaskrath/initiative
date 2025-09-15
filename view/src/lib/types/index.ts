@@ -17,7 +17,13 @@ export { MonsterType, MonsterTypes, DisplayMonsterType } from "./MonsterType";
 export { Movement, Movements, DisplayMovement } from "./Movement";
 export { Range, Ranges } from "./Range";
 export { Recharge, Recharges } from "./Recharge";
-export { SaveTrigger, SaveTriggers, DisplaySaveTrigger } from "./SaveTrigger";
+export {
+  Trigger,
+  SaveTriggers,
+  DisplayTrigger,
+  TurnTriggers,
+  RoundTriggers,
+} from "./Trigger";
 export { Shape, Shapes } from "./Shape";
 export { Sight, Sights, DisplaySight } from "./Sight";
 export { Size, Sizes, DisplaySize } from "./Size";
