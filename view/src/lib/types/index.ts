@@ -36,10 +36,18 @@ export { type EncounterEntity } from "./EncounterEntity";
 export { type Monster, MonsterActions } from "./Monster";
 export { type MonsterEntity } from "./MonsterEntity";
 export { type PlayerEntity, PlayerEntityActions } from "./PlayerEntity";
-export { type ReminderEntity } from "./ReminderEntity";
+export { type ReminderEntity, ReminderActions } from "./ReminderEntity";
 export { type Spell, SpellActions } from "./Spell";
 export {
   ExhaustionLevel,
   ExhaustionLevels,
   DisplayExhaustionLevel,
 } from "./ExhaustionLevel";
+export { type TurnReminder } from "./TurnReminder";
+export { type InitiativeReminder } from "./InitiativeReminder";
+export { type RoundReminder } from "./RoundReminder";
+export {
+  ReminderType,
+  ReminderTypes,
+  DisplayReminderType,
+} from "./ReminderType";

@@ -1,4 +1,5 @@
 import type { CombatEntity } from "./CombatEntity";
+import { ExhaustionLevel } from "./ExhaustionLevel";
 import type { Monster } from "./Monster";
 
 export interface MonsterEntity extends CombatEntity {
@@ -15,7 +16,7 @@ export const MonsterEntityActions = {
     initiative: undefined,
     is_active: undefined,
     concentration: false,
-    exhaustion_level: undefined,
+    exhaustion_level: ExhaustionLevel.None,
     conditions: [],
     type: "monster",
     current_hp: undefined,

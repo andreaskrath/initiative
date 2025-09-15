@@ -3,6 +3,7 @@ import { type Entity } from "./Entity";
 import type { ExhaustionLevel } from "./ExhaustionLevel";
 
 export interface CombatEntity extends Entity {
+  initiative?: number;
   concentration: boolean;
   exhaustion_level: ExhaustionLevel;
   conditions: CombatCondition[];
