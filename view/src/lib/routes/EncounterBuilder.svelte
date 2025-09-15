@@ -9,7 +9,8 @@
     DisplayCondition,
     DisplayExhaustionLevel,
     DisplayMonsterType,
-    DisplaySaveTrigger,
+    DisplayReminderType,
+    DisplayTrigger,
     EncounterActions,
     ExhaustionLevel,
     ExhaustionLevels,
@@ -17,12 +18,22 @@
     MonsterType,
     MonsterTypes,
     PlayerEntityActions,
+    ReminderActions,
+    ReminderType,
+    ReminderTypes,
+    RoundTriggers,
     SaveTriggers,
+    Trigger,
+    TurnTriggers,
     type CombatCondition,
     type CombatEntity,
     type EncounterEntity,
+    type InitiativeReminder,
     type Monster,
+    type MonsterEntity,
     type PlayerEntity,
+    type RoundReminder,
+    type TurnReminder,
   } from "$types";
 
   import { Button } from "$components/ui/button/index";
@@ -35,14 +46,17 @@
   import Toggle from "$components/Toggle.svelte";
   import Dialog from "$components/Dialog.svelte";
   import Select from "$components/Select.svelte";
+  import { ScrollArea } from "$components/ui/scroll-area/index";
   import { ToLabelValueWith } from "$utils/factories";
   import { CreateFieldErrors, type FieldErrors } from "$utils/error";
   import Combobox from "$components/Combobox.svelte";
   import { ValidatePlayerEntity } from "$encounter/validate";
   import ConcentrationIcon from "$lib/shared/components/ConcentrationIcon.svelte";
+  import CircleX from "@lucide/svelte/icons/circle-x";
 
   let addPlayerDialogOpen = $state(false);
   let addMonsterDialogOpen = $state(false);
+  let addReminderDialogOpen = $state(false);
   let playerFormErrors: FieldErrors | null = $state(null);
 
   let encounter = $state(EncounterActions.EmptyEncounter());
@@ -63,14 +77,45 @@
     DisplayCondition,
   );
   const selectAttributes = ToLabelValueWith(Attributes, DisplayAttribute);
-  const selectSaveTriggers = ToLabelValueWith(SaveTriggers, DisplaySaveTrigger);
+  const selectSaveTriggers = ToLabelValueWith(SaveTriggers, DisplayTrigger);
   const selectExhaustLevels = ToLabelValueWith(
     ExhaustionLevels,
     DisplayExhaustionLevel,
   );
+  const selectReminderTypes = ToLabelValueWith(
+    ReminderTypes,
+    DisplayReminderType,
+  );
+  const selectTurnReminderTriggers = ToLabelValueWith(
+    TurnTriggers,
+    DisplayTrigger,
+  );
+  const selectRoundReminderTriggers = ToLabelValueWith(
+    RoundTriggers,
+    DisplayTrigger,
+  );
+  let selectTurnReminderTargets: { label: string; value: string }[] = $derived(
+    encounter.entities
+      .filter((entity) => entity.type === "player" || entity.type === "monster")
+      .map((entity) => ({
+        label: entity.name!,
+        value: entity.id!,
+      })),
+  );
 
   let playerForm: PlayerEntity = $state(
     PlayerEntityActions.EmptyPlayerEntity(),
+  );
+
+  let reminderName: string | undefined = $state(undefined);
+  let reminderType: "initiative" | "turn" | "round" | undefined =
+    $state(undefined);
+  let initiativeReminder: InitiativeReminder = $state(
+    ReminderActions.EmptyInitiativeReminder(),
+  );
+  let turnReminder: TurnReminder = $state(ReminderActions.EmptyTurnReminder());
+  let roundReminder: RoundReminder = $state(
+    ReminderActions.EmptyRoundReminder(),
   );
 
   encounter.entities.push({
@@ -140,22 +185,64 @@
   encounter.entities.push({
     id: "reminder1",
     name: "House",
-    initiative: 20,
     is_active: false,
     type: "reminder",
     description:
       "The house is falling apart and two random squares on the battle map become holes that you can fall through.",
-    win_initiative_tie: false,
+    reminder_type: "initiative",
+    initiative: 15,
+  });
+  encounter.entities.push({
+    id: "reminder11",
+    name: "House I",
+    is_active: false,
+    type: "reminder",
+    description:
+      "The house is falling apart and two random squares on the battle map become holes that you can fall through.",
+    reminder_type: "initiative",
+    initiative: 14,
   });
   encounter.entities.push({
     id: "reminder2",
     name: "Rats",
-    initiative: 20,
     is_active: false,
     type: "reminder",
     description:
       "2 swarm of rats enter the house through the broken walls and floor.",
-    win_initiative_tie: true,
+    reminder_type: "turn",
+    trigger: Trigger.StartOfTurn,
+    targets: [],
+  });
+  encounter.entities.push({
+    id: "reminder22",
+    name: "Rats I",
+    is_active: false,
+    type: "reminder",
+    description:
+      "2 swarm of rats enter the house through the broken walls and floor.",
+    reminder_type: "turn",
+    trigger: Trigger.EndOfTurn,
+    targets: [],
+  });
+  encounter.entities.push({
+    id: "reminder3",
+    name: "Cats I",
+    is_active: false,
+    type: "reminder",
+    description:
+      "2 swarm of rats enter the house through the broken walls and floor.",
+    reminder_type: "round",
+    trigger: Trigger.StartOfRound,
+  });
+  encounter.entities.push({
+    id: "reminder33",
+    name: "Cats II",
+    is_active: false,
+    type: "reminder",
+    description:
+      "2 swarm of rats enter the house through the broken walls and floor.",
+    reminder_type: "round",
+    trigger: Trigger.EndOfRound,
   });
 
   const AddPlayer = async () => {
@@ -591,34 +678,199 @@
   </section>
 
   <!-- Reminders Section -->
-  <Title variant="default">Reminders</Title>
+  <div class="flex justify-between">
+    <Title variant="default" class="relative top-1">Reminders</Title>
+    <Dialog
+      title="Add a new reminder"
+      description="Add a new reminder to the encounter, click the button at the bottom when you are done."
+      bind:open={addReminderDialogOpen}
+    >
+      {#snippet trigger()}
+        <Button
+          variant="ghost"
+          class="text-green-500 hover:text-green-300 dark:text-green-300 dark:hover:text-green-500"
+        >
+          <CirclePlus />
+        </Button>
+      {/snippet}
+
+      {#snippet content()}
+        <div class="flex w-full gap-5">
+          <!-- Name -->
+          <Container class="flex-3">
+            <Label required>Name</Label>
+            <Input
+              type="text"
+              placeholder="Reminder 1"
+              error={playerFormErrors?.get("name")}
+              bind:value={reminderName}
+            />
+          </Container>
+
+          <Container class="flex-3">
+            <Label required>Type</Label>
+            <Select
+              bind:value={reminderType}
+              placeholder="Select a type of reminder"
+              items={selectReminderTypes}
+            />
+          </Container>
+        </div>
+
+        {#if reminderType === ReminderType.Initiative}
+          <div class="flex w-full gap-5">
+            <!-- Initiative -->
+            <Container class="flex-3">
+              <Label required>Initiative</Label>
+              <Input
+                type="number"
+                placeholder="15"
+                error={playerFormErrors?.get("name")}
+                bind:value={initiativeReminder.initiative}
+                class="text-center"
+              />
+            </Container>
+          </div>
+        {:else if reminderType === ReminderType.Turn}
+          <div class="flex w-full gap-5">
+            <Container class="flex-1">
+              <Label required>Trigger</Label>
+              <Select
+                bind:value={turnReminder.trigger}
+                placeholder="Select a trigger"
+                items={selectTurnReminderTriggers}
+              />
+            </Container>
+          </div>
+
+          <div class="flex w-full gap-5">
+            <!-- Pick Targets -->
+            <Command.Root class="h-[300px] flex-1 rounded-lg border">
+              <Command.Input placeholder="Search for a spell" />
+              <Command.List>
+                <Command.Empty>No results found.</Command.Empty>
+                <!-- Player -->
+                <Command.Group heading="Players">
+                  {#each encounter.entities.filter((entity) => entity.type === "player") as player}
+                    <Command.Item
+                      class="flex justify-between"
+                      value={player.name}
+                      onclick={(_) => turnReminder.targets.push(player.id!)}
+                      disabled={turnReminder.targets.includes(player.id!)}
+                    >
+                      <span>{player.name}</span>
+                    </Command.Item>
+                  {/each}
+                </Command.Group>
+
+                <Command.Separator />
+
+                <!-- Monsters -->
+                <Command.Group heading="Monsters">
+                  {#each encounter.entities.filter((entity) => entity.type === "monster") as monster}
+                    <Command.Item
+                      class="flex justify-between"
+                      value={monster.name}
+                      onclick={(_) => turnReminder.targets.push(monster.id!)}
+                      disabled={turnReminder.targets.includes(monster.id!)}
+                    >
+                      <span>{monster.name}</span>
+                    </Command.Item>
+                  {/each}
+                </Command.Group>
+              </Command.List>
+            </Command.Root>
+
+            <!-- List Targets -->
+            <ScrollArea
+              class="h-[300px] flex-1 rounded-md border"
+              scrollbarYClasses="hidden"
+            >
+              {#each encounter.entities
+                .filter((entity) => turnReminder.targets.includes(entity.id!))
+                .sort((a, b) => a.name!.localeCompare(b.name!)) as entity}
+                <div class="mx-2 my-3 flex justify-between text-sm">
+                  <span>{entity.name!}</span>
+                  <div class="flex gap-x-2">
+                    <CircleX
+                      class="text-red-300 hover:text-red-600"
+                      size="18"
+                      onclick={(_: MouseEvent) =>
+                        ReminderActions.RemoveTarget(turnReminder, entity.id!)}
+                    />
+                  </div>
+                </div>
+              {/each}
+            </ScrollArea>
+          </div>
+        {:else if reminderType === ReminderType.Round}
+          <div class="flex w-full gap-5">
+            <Container class="flex-3">
+              <Label required>Trigger</Label>
+              <Select
+                bind:value={roundReminder.trigger}
+                placeholder="Select a trigger"
+                items={selectRoundReminderTriggers}
+              />
+            </Container>
+
+            <!-- Duration -->
+          </div>
+        {:else}
+          <div class="mt-5 flex w-full justify-center gap-5">
+            Select a reminder type to load more options.
+          </div>
+        {/if}
+      {/snippet}
+
+      {#snippet footer()}
+        <div class="flex w-full flex-col gap-2">
+          <div class="flex justify-end">
+            <Button
+              variant="default"
+              class="w-fit"
+              onclick={(_) => AddPlayer()}
+            >
+              Add Reminder
+            </Button>
+          </div>
+        </div>
+      {/snippet}
+    </Dialog>
+  </div>
   <section class="mt-5 rounded-lg border">
     <!-- Header -->
     <div
-      class="mt-5 mb-5 grid grid-cols-[2fr_1fr_1fr_5fr_1fr] px-6 py-1 text-xs font-medium tracking-wider uppercase"
+      class="mt-5 mb-5 flex px-6 py-1 text-xs font-medium tracking-wider uppercase"
     >
-      <div>Name</div>
-      <div class="text-center">Initiative</div>
-      <div class="text-center">Wins Tie</div>
-      <div class="text-center">Description</div>
-      <div class="text-center">Actions</div>
+      <div class="flex-2">Name</div>
+      <div class="flex-1 text-center">Trigger</div>
+      <div class="flex-1 text-center">Details</div>
+      <div class="flex-5 text-center">Description</div>
+      <div class="flex-1 text-center">Actions</div>
     </div>
     <hr />
 
     <!-- Reminders Rows -->
     {#each reminderEntities as reminder, index (reminder.id!)}
-      <div class="grid min-h-[50px] grid-cols-[2fr_1fr_1fr_5fr_1fr] px-6 py-2">
-        <div class="flex items-center text-sm font-medium">{reminder.name}</div>
-        <div class="flex items-center justify-center text-center text-sm">
-          {reminder.initiative}
+      <div class="flex min-h-[50px] px-6 py-2">
+        <div class="flex flex-2 items-center text-sm font-medium">
+          {reminder.name}
         </div>
-        <div class="flex items-center justify-center text-center text-sm">
-          {reminder.win_initiative_tie ? "Yes" : "No"}
+        <div
+          class="flex flex-1 items-center justify-center text-center text-sm"
+        >
+          {ReminderActions.GetTrigger(reminder)}
         </div>
-        <div class="flex items-center text-sm font-medium">
+        <div
+          class="flex flex-1 items-center justify-center text-center text-sm"
+        >
+          {ReminderActions.GetDetails(reminder)}
+        </div>
+        <div class="flex flex-5 items-center text-sm font-medium">
           {reminder.description}
         </div>
-        <div class="flex items-center justify-center text-sm">
+        <div class="flex flex-1 items-center justify-center text-sm">
           {@render ActionsButton(reminder)}
         </div>
       </div>
@@ -635,31 +887,4 @@
   <Button onclick={async (e: MouseEvent) => console.log("button 2")}>
     Create Encounter
   </Button>
-</div>
-
-<div class="mx-auto mt-5 grid w-[1000px] grid-cols-3">
-  <!-- Input Section -->
-  <!-- <div class="col-span-2"> -->
-  <!--   Input Section -->
-  <!---->
-  <!--   <Command.Root class="col-span-8 w-full rounded-lg border"> -->
-  <!--     <Command.Input placeholder="Search for a monster" /> -->
-  <!--     <Command.List class="max-h-[800px]"> -->
-  <!--       <Command.Empty>No results found.</Command.Empty> -->
-  <!--       {#each MonsterTypes as monsterType, index} -->
-  <!--         {@render MonsterPickSection( -->
-  <!--           DisplayMonsterType[monsterType], -->
-  <!--           monsterType, -->
-  <!--         )} -->
-  <!---->
-  <!--         {#if index !== MonsterTypes.length - 1} -->
-  <!--           <Command.Separator /> -->
-  <!--         {/if} -->
-  <!--       {/each} -->
-  <!--     </Command.List> -->
-  <!--   </Command.Root> -->
-  <!-- </div> -->
-
-  <!-- View Section -->
-  <!-- <div class="col-span-1">View Section</div> -->
 </div>
