@@ -1,4 +1,4 @@
-import { PrepareForValidation } from "$lib/shared/utils/validate";
+import { PrepareForValidation } from "$utils/validate";
 import {
   Attribute,
   Condition,

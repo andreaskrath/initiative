@@ -15,7 +15,7 @@ import {
   type Monster,
 } from "$types";
 import { SpellSchema } from "$spell/validate";
-import { CreateFieldErrors, type FieldErrors } from "$lib/shared/utils/error";
+import { CreateFieldErrors, type FieldErrors } from "$utils/error";
 
 /*
  * Validate that a monster fits the expected data structure and values for the backend.

@@ -1,4 +1,4 @@
-import { CreateFieldErrors, type FieldErrors } from "$lib/shared/utils/error";
+import { CreateFieldErrors, type FieldErrors } from "$utils/error";
 import { Class, MagicSchool, SpellLevel, type Spell } from "$types";
 import * as z from "zod";
 
