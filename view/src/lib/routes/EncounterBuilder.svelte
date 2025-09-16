@@ -1,6 +1,7 @@
 <script lang="ts">
   import Ellipsis from "@lucide/svelte/icons/ellipsis";
   import CirclePlus from "@lucide/svelte/icons/circle-plus";
+  import Dices from "@lucide/svelte/icons/dices";
   import {
     Attributes,
     CombatEntityActions,
@@ -257,6 +258,16 @@
     playerForm = PlayerEntityActions.EmptyPlayerEntity();
     addPlayerDialogOpen = false;
     playerFormErrors = null;
+  };
+
+  const handleRollInitiative = () => {
+    let roll = Math.round(Math.random() * 20);
+
+    if (roll === 0) {
+      roll = 1;
+    }
+
+    initiativeReminder.initiative = roll;
   };
 </script>
 
@@ -720,15 +731,20 @@
         {#if reminderType === ReminderType.Initiative}
           <div class="flex w-full gap-5">
             <!-- Initiative -->
-            <Container class="flex-3">
+            <Container>
               <Label required>Initiative</Label>
-              <Input
-                type="number"
-                placeholder="15"
-                error={playerFormErrors?.get("name")}
-                bind:value={initiativeReminder.initiative}
-                class="text-center"
-              />
+              <div class="flex w-1/2 gap-2">
+                <Input
+                  type="number"
+                  placeholder="15"
+                  error={playerFormErrors?.get("name")}
+                  bind:value={initiativeReminder.initiative}
+                  class="text-center"
+                />
+                <Button onclick={(_) => handleRollInitiative()} class="mr-2">
+                  <Dices />
+                </Button>
+              </div>
             </Container>
           </div>
         {:else if reminderType === ReminderType.Turn}
