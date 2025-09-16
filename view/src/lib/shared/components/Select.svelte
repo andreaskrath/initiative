@@ -25,7 +25,7 @@
   );
 </script>
 
-<div class="relative">
+<div class="relative w-full">
   <Select.Root type="single" bind:value>
     <Select.Trigger
       onfocusout={validateCallback}

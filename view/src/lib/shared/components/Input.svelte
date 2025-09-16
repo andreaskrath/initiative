@@ -21,7 +21,7 @@
   } = $props();
 </script>
 
-<div class="relative">
+<div class="relative w-full">
   <Input
     class={cn("w-full", className)}
     {type}
