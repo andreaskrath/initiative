@@ -2,11 +2,13 @@ import type { InitiativeReminder } from "./InitiativeReminder";
 import type { RoundReminder } from "./RoundReminder";
 import { DisplayTrigger } from "./Trigger";
 import type { TurnReminder } from "./TurnReminder";
+import { v4 as uuid } from "uuid";
 
 export type ReminderEntity = InitiativeReminder | TurnReminder | RoundReminder;
 
 export const ReminderActions = {
   EmptyInitiativeReminder: (): InitiativeReminder => ({
+    id: uuid(),
     name: undefined,
     type: "reminder",
     reminder_type: "initiative",
@@ -15,6 +17,7 @@ export const ReminderActions = {
   }),
 
   EmptyTurnReminder: (): TurnReminder => ({
+    id: uuid(),
     name: undefined,
     type: "reminder",
     reminder_type: "turn",
@@ -24,6 +27,7 @@ export const ReminderActions = {
   }),
 
   EmptyRoundReminder: (): RoundReminder => ({
+    id: uuid(),
     name: undefined,
     type: "reminder",
     reminder_type: "round",
