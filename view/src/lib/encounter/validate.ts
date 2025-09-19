@@ -5,6 +5,7 @@ import {
   ExhaustionLevel,
   Trigger,
   type PlayerEntity,
+  type ReminderEntity,
 } from "$types";
 import * as z from "zod";
 
@@ -23,7 +24,20 @@ export const ValidatePlayerEntity = async (
 
 export const ValidateMonsterEntity = {};
 
-export const ValidateReminderEntity = {};
+export const ValidateReminderEntity = async (
+  reminderEntity: ReminderEntity,
+): Promise<z.ZodError | null> => {
+  const preparedReminderEntity = PrepareForValidation(reminderEntity);
+  const result = await reminderEntitySchema.safeParseAsync(
+    preparedReminderEntity,
+  );
+
+  if (!result.success) {
+    return result.error;
+  }
+
+  return null;
+};
 
 const combatConditionSchema = z.object({
   condition: z.enum(Condition, "A condition type must be specified"),
@@ -54,3 +68,40 @@ const playerEntitySchema = z.object({
     "Conditions must be specified for a player, even if empty",
   ),
 });
+
+const initiativeReminderSchema = z.object({
+  id: z.uuid().optional(),
+  type: z.literal("reminder", "The type of a reminder must be 'reminder'"),
+  reminder_type: z.literal("initiative"),
+  name: z.string("A name must be specified"),
+  initiative: z.number("An initiative must be specified"),
+});
+
+const roundReminderSchema = z.object({
+  id: z.uuid().optional(),
+  type: z.literal("reminder", "The type of a reminder must be 'reminder'"),
+  reminder_type: z.literal("round"),
+  name: z.string("A name must be specified"),
+  trigger: z.union([
+    z.literal(Trigger.StartOfRound),
+    z.literal(Trigger.EndOfRound),
+  ]),
+});
+
+const turnReminderSchema = z.object({
+  id: z.uuid().optional(),
+  type: z.literal("reminder", "The type of a reminder must be 'reminder'"),
+  reminder_type: z.literal("turn"),
+  name: z.string("A name must be specified"),
+  trigger: z.union([
+    z.literal(Trigger.StartOfTurn),
+    z.literal(Trigger.EndOfTurn),
+  ]),
+  targets: z.array(z.uuid()),
+});
+
+const reminderEntitySchema = z.discriminatedUnion("reminder_type", [
+  initiativeReminderSchema,
+  roundReminderSchema,
+  turnReminderSchema,
+]);
