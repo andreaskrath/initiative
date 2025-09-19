@@ -33,6 +33,7 @@
     type Monster,
     type MonsterEntity,
     type PlayerEntity,
+    type ReminderEntity,
     type RoundReminder,
     type TurnReminder,
   } from "$types";
@@ -51,7 +52,10 @@
   import { ToLabelValueWith } from "$utils/factories";
   import { CreateFieldErrors, type FieldErrors } from "$utils/error";
   import Combobox from "$components/Combobox.svelte";
-  import { ValidatePlayerEntity } from "$encounter/validate";
+  import {
+    ValidatePlayerEntity,
+    ValidateReminderEntity,
+  } from "$encounter/validate";
   import ConcentrationIcon from "$lib/shared/components/ConcentrationIcon.svelte";
   import CircleX from "@lucide/svelte/icons/circle-x";
 
@@ -59,6 +63,7 @@
   let addMonsterDialogOpen = $state(false);
   let addReminderDialogOpen = $state(false);
   let playerFormErrors: FieldErrors | null = $state(null);
+  let reminderFormErrors: FieldErrors | null = $state(null);
 
   let encounter = $state(EncounterActions.EmptyEncounter());
   let playerEntities = $derived(
@@ -258,6 +263,42 @@
     playerForm = PlayerEntityActions.EmptyPlayerEntity();
     addPlayerDialogOpen = false;
     playerFormErrors = null;
+  };
+
+  const AddReminder = async () => {
+    let reminder;
+
+    switch (reminderType) {
+      case "initiative":
+        reminder = initiativeReminder;
+        break;
+      case "turn":
+        reminder = turnReminder;
+        break;
+      case "round":
+        reminder = roundReminder;
+        break;
+      default:
+        return; // Should probably handle better in future.
+    }
+
+    reminder.name = reminderName;
+
+    const result = await ValidateReminderEntity(reminder);
+
+    if (result) {
+      reminderFormErrors = CreateFieldErrors(result);
+      return;
+    }
+
+    encounter.entities.push(reminder);
+    reminderName = undefined;
+    reminderType = undefined;
+    initiativeReminder = ReminderActions.EmptyInitiativeReminder();
+    turnReminder = ReminderActions.EmptyTurnReminder();
+    roundReminder = ReminderActions.EmptyRoundReminder();
+    addReminderDialogOpen = false;
+    reminderFormErrors = null;
   };
 
   const handleRollInitiative = () => {
@@ -713,7 +754,7 @@
             <Input
               type="text"
               placeholder="Reminder 1"
-              error={playerFormErrors?.get("name")}
+              error={reminderFormErrors?.get("name")}
               bind:value={reminderName}
             />
           </Container>
@@ -724,6 +765,7 @@
               bind:value={reminderType}
               placeholder="Select a type of reminder"
               items={selectReminderTypes}
+              error={reminderFormErrors?.get("reminder_type")}
             />
           </Container>
         </div>
@@ -737,7 +779,7 @@
                 <Input
                   type="number"
                   placeholder="15"
-                  error={playerFormErrors?.get("name")}
+                  error={reminderFormErrors?.get("initiative")}
                   bind:value={initiativeReminder.initiative}
                   class="text-center"
                 />
@@ -755,6 +797,7 @@
                 bind:value={turnReminder.trigger}
                 placeholder="Select a trigger"
                 items={selectTurnReminderTriggers}
+                error={reminderFormErrors?.get("trigger")}
               />
             </Container>
           </div>
@@ -762,7 +805,7 @@
           <div class="flex w-full gap-5">
             <!-- Pick Targets -->
             <Command.Root class="h-[300px] flex-1 rounded-lg border">
-              <Command.Input placeholder="Search for a spell" />
+              <Command.Input placeholder="Search for a creature" />
               <Command.List>
                 <Command.Empty>No results found.</Command.Empty>
                 <!-- Player -->
@@ -827,6 +870,7 @@
                 bind:value={roundReminder.trigger}
                 placeholder="Select a trigger"
                 items={selectRoundReminderTriggers}
+                error={reminderFormErrors?.get("trigger")}
               />
             </Container>
 
@@ -845,7 +889,8 @@
             <Button
               variant="default"
               class="w-fit"
-              onclick={(_) => AddPlayer()}
+              onclick={(_) => AddReminder()}
+              disabled={!reminderType}
             >
               Add Reminder
             </Button>
@@ -898,9 +943,9 @@
   </section>
 </div>
 
-<!-- Create Spell Button -->
+<!-- Create Encounter Button -->
 <div class="fixed inset-x-0 bottom-0 mx-auto flex w-[1000px] justify-end pb-10">
-  <Button onclick={async (e: MouseEvent) => console.log("button 2")}>
+  <Button onclick={async (_: MouseEvent) => console.log("button 2")}>
     Create Encounter
   </Button>
 </div>
