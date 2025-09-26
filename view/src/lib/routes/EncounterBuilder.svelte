@@ -2,6 +2,7 @@
   import Ellipsis from "@lucide/svelte/icons/ellipsis";
   import CirclePlus from "@lucide/svelte/icons/circle-plus";
   import Dices from "@lucide/svelte/icons/dices";
+  import { DiceRoll } from "@dice-roller/rpg-dice-roller";
   import {
     Attributes,
     CombatEntityActions,
@@ -36,6 +37,7 @@
     type ReminderEntity,
     type RoundReminder,
     type TurnReminder,
+    MonsterEntityActions,
   } from "$types";
 
   import { Button } from "$components/ui/button/index";
@@ -53,17 +55,23 @@
   import { CreateFieldErrors, type FieldErrors } from "$utils/error";
   import Combobox from "$components/Combobox.svelte";
   import {
+    ValidateMonsterEntity,
     ValidatePlayerEntity,
     ValidateReminderEntity,
   } from "$encounter/validate";
-  import ConcentrationIcon from "$lib/shared/components/ConcentrationIcon.svelte";
+  import ConcentrationIcon from "$components/ConcentrationIcon.svelte";
   import CircleX from "@lucide/svelte/icons/circle-x";
+  import { MonsterService } from "$monster/service";
+  import { onMount } from "svelte";
+  import { GetModifier } from "$utils/convert";
 
   let addPlayerDialogOpen = $state(false);
   let addMonsterDialogOpen = $state(false);
   let addReminderDialogOpen = $state(false);
+
   let playerFormErrors: FieldErrors | null = $state(null);
   let reminderFormErrors: FieldErrors | null = $state(null);
+  let monsterFormErrors: FieldErrors | null = $state(null);
 
   let encounter = $state(EncounterActions.EmptyEncounter());
   let playerEntities = $derived(
@@ -100,18 +108,22 @@
     RoundTriggers,
     DisplayTrigger,
   );
-  let selectTurnReminderTargets: { label: string; value: string }[] = $derived(
-    encounter.entities
-      .filter((entity) => entity.type === "player" || entity.type === "monster")
-      .map((entity) => ({
-        label: entity.name!,
-        value: entity.id!,
-      })),
+  let selectMonsters: { label: string; value: string }[] = $derived(
+    monsters.map((monster) => ({
+      label: monster.name!,
+      value: monster.id!,
+    })),
   );
-
   let playerForm: PlayerEntity = $state(
     PlayerEntityActions.EmptyPlayerEntity(),
   );
+
+  let monsterId: string | undefined = $state(undefined);
+  let selectedMonster = $derived(
+    monsters.find((monster) => monster.id === monsterId),
+  );
+  let repeatMonster: number | undefined = $state(undefined);
+  let monsterName: string | undefined = $state(undefined);
 
   let reminderName: string | undefined = $state(undefined);
   let reminderType: "initiative" | "turn" | "round" | undefined =
@@ -123,133 +135,6 @@
   let roundReminder: RoundReminder = $state(
     ReminderActions.EmptyRoundReminder(),
   );
-
-  encounter.entities.push({
-    id: "player1",
-    name: "Roberto",
-    initiative: 15,
-    is_active: false,
-    concentration: true,
-    type: "player",
-    conditions: [],
-    exhaustion_level: ExhaustionLevel.None,
-  });
-  encounter.entities.push({
-    id: "player2",
-    name: "Dixie",
-    initiative: 4,
-    is_active: false,
-    concentration: false,
-    type: "player",
-    conditions: [],
-    exhaustion_level: ExhaustionLevel.None,
-  });
-
-  encounter.entities.push({
-    id: "monster1",
-    name: "Goblin #1",
-    initiative: 4,
-    is_active: false,
-    current_hp: 50,
-    max_hp: 60,
-    temporary_hp: 20,
-    concentration: true,
-    type: "monster",
-    monster: MonsterActions.EmptyMonster(),
-    conditions: [],
-    exhaustion_level: ExhaustionLevel.None,
-  });
-  encounter.entities.push({
-    id: "monster2",
-    name: "Goblin #2",
-    initiative: 5,
-    is_active: false,
-    current_hp: 60,
-    max_hp: 160,
-    temporary_hp: 0,
-    concentration: false,
-    type: "monster",
-    monster: MonsterActions.EmptyMonster(),
-    conditions: [],
-    exhaustion_level: ExhaustionLevel.None,
-  });
-  encounter.entities.push({
-    id: "monster3",
-    name: "Goblin #3",
-    initiative: 8,
-    is_active: false,
-    current_hp: 10,
-    max_hp: 160,
-    temporary_hp: 0,
-    concentration: false,
-    type: "monster",
-    monster: MonsterActions.EmptyMonster(),
-    conditions: [],
-    exhaustion_level: ExhaustionLevel.None,
-  });
-
-  encounter.entities.push({
-    id: "reminder1",
-    name: "House",
-    is_active: false,
-    type: "reminder",
-    description:
-      "The house is falling apart and two random squares on the battle map become holes that you can fall through.",
-    reminder_type: "initiative",
-    initiative: 15,
-  });
-  encounter.entities.push({
-    id: "reminder11",
-    name: "House I",
-    is_active: false,
-    type: "reminder",
-    description:
-      "The house is falling apart and two random squares on the battle map become holes that you can fall through.",
-    reminder_type: "initiative",
-    initiative: 14,
-  });
-  encounter.entities.push({
-    id: "reminder2",
-    name: "Rats",
-    is_active: false,
-    type: "reminder",
-    description:
-      "2 swarm of rats enter the house through the broken walls and floor.",
-    reminder_type: "turn",
-    trigger: Trigger.StartOfTurn,
-    targets: [],
-  });
-  encounter.entities.push({
-    id: "reminder22",
-    name: "Rats I",
-    is_active: false,
-    type: "reminder",
-    description:
-      "2 swarm of rats enter the house through the broken walls and floor.",
-    reminder_type: "turn",
-    trigger: Trigger.EndOfTurn,
-    targets: [],
-  });
-  encounter.entities.push({
-    id: "reminder3",
-    name: "Cats I",
-    is_active: false,
-    type: "reminder",
-    description:
-      "2 swarm of rats enter the house through the broken walls and floor.",
-    reminder_type: "round",
-    trigger: Trigger.StartOfRound,
-  });
-  encounter.entities.push({
-    id: "reminder33",
-    name: "Cats II",
-    is_active: false,
-    type: "reminder",
-    description:
-      "2 swarm of rats enter the house through the broken walls and floor.",
-    reminder_type: "round",
-    trigger: Trigger.EndOfRound,
-  });
 
   const AddPlayer = async () => {
     const result = await ValidatePlayerEntity(playerForm);
@@ -301,15 +186,41 @@
     reminderFormErrors = null;
   };
 
-  const handleRollInitiative = () => {
-    let roll = Math.round(Math.random() * 20);
-
-    if (roll === 0) {
-      roll = 1;
+  const AddMonster = async () => {
+    if (!monsterName || !selectedMonster) {
+      return;
     }
 
-    initiativeReminder.initiative = roll;
+    const addMonster = async (name: string) => {
+      let monsterForm = MonsterEntityActions.EmptyMonsterEntity();
+      monsterForm.name = name;
+      const hp = new DiceRoll(selectedMonster!.rollable_hit_points!);
+      monsterForm.max_hp = hp.total;
+      monsterForm.current_hp = hp.total;
+      monsterForm.initiative = new DiceRoll(
+        `1d20+${GetModifier(selectedMonster.dexterity!)}`,
+      ).total;
+      encounter.entities.push(monsterForm);
+    };
+
+    if (repeatMonster) {
+      for (let i = 0; i < repeatMonster; i++) {
+        let name = `${monsterName} #${i + 1}`;
+        addMonster(name);
+      }
+    } else {
+      addMonster(monsterName);
+    }
+
+    addMonsterDialogOpen = false;
+    monsterName = undefined;
+    monsterId = undefined;
+    repeatMonster = undefined;
   };
+
+  onMount(async () => {
+    monsters = await MonsterService.GetAll();
+  });
 </script>
 
 {#snippet ConditionsSection(
@@ -640,34 +551,32 @@
             <Label required>Name</Label>
             <Input
               type="text"
-              placeholder="Player 1"
-              error={playerFormErrors?.get("name")}
-              bind:value={playerForm.name}
+              placeholder="Monster 1"
+              bind:value={monsterName}
             />
           </Container>
 
-          <!-- Initiative -->
+          <!-- Monster -->
+          <Container class="flex-3">
+            <Label>Monster</Label>
+            <Combobox
+              placeholder="Select a monster"
+              items={selectMonsters}
+              bind:value={monsterId}
+            />
+          </Container>
+
+          <!-- Repeat Monster -->
           <Container class="flex-1">
-            <Label required>Initiative</Label>
+            <Label>Number</Label>
             <Input
-              class="text-center"
               type="number"
-              placeholder="16"
-              error={playerFormErrors?.get("initiative")}
-              bind:value={playerForm.initiative}
+              placeholder=""
+              bind:value={repeatMonster}
+              class="text-center"
             />
           </Container>
-
-          <!-- Concentration -->
-          <div class="flex flex-col justify-end">
-            <Toggle bind:checked={playerForm.concentration}>
-              Concentration
-            </Toggle>
-          </div>
         </div>
-
-        <!-- Conditions -->
-        {@render ConditionsSection(playerForm, playerFormErrors)}
       {/snippet}
 
       {#snippet footer()}
@@ -676,7 +585,7 @@
             <Button
               variant="default"
               class="w-fit"
-              onclick={(_) => AddPlayer()}
+              onclick={(_) => AddMonster()}
             >
               Add Player
             </Button>
@@ -783,7 +692,13 @@
                   bind:value={initiativeReminder.initiative}
                   class="text-center"
                 />
-                <Button onclick={(_) => handleRollInitiative()} class="mr-2">
+                <Button
+                  onclick={(_) =>
+                    (initiativeReminder.initiative = new DiceRoll(
+                      "1d20",
+                    ).total)}
+                  class="mr-2"
+                >
                   <Dices />
                 </Button>
               </div>
