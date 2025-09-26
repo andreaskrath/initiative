@@ -1,6 +1,7 @@
 import type { CombatEntity } from "./CombatEntity";
 import { ExhaustionLevel } from "./ExhaustionLevel";
 import type { Monster } from "./Monster";
+import { v4 as uuid } from "uuid";
 
 export interface MonsterEntity extends CombatEntity {
   type: "monster";
@@ -12,6 +13,7 @@ export interface MonsterEntity extends CombatEntity {
 
 export const MonsterEntityActions = {
   EmptyMonsterEntity: (): MonsterEntity => ({
+    id: uuid(),
     name: undefined,
     initiative: undefined,
     is_active: undefined,
