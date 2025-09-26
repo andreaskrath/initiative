@@ -23,6 +23,15 @@ export const MonsterService = {
 
     return result.status;
   },
+
+  GetAll: async (): Promise<Monster[]> => {
+    const response = await fetch("/api/monsters", {
+      method: "GET",
+    });
+    const monsters = (await response.json()) as Monster[];
+
+    return monsters;
+  },
 };
 
 /*
