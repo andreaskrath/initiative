@@ -34,7 +34,7 @@ export { type CombatEntity, CombatEntityActions } from "./CombatEntity";
 export { type Encounter, EncounterActions } from "./Encounter";
 export { type EncounterEntity } from "./EncounterEntity";
 export { type Monster, MonsterActions } from "./Monster";
-export { type MonsterEntity } from "./MonsterEntity";
+export { type MonsterEntity, MonsterEntityActions } from "./MonsterEntity";
 export { type PlayerEntity, PlayerEntityActions } from "./PlayerEntity";
 export { type ReminderEntity, ReminderActions } from "./ReminderEntity";
 export { type Spell, SpellActions } from "./Spell";
