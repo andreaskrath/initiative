@@ -33,6 +33,7 @@
     "vite": "^6.2.0"
   },
   "dependencies": {
+    "@dice-roller/rpg-dice-roller": "^5.5.1",
     "@mateothegreat/svelte5-router": "^2.15.3",
     "@tailwindcss/vite": "^4.1.11",
     "change-case": "^5.4.4",
