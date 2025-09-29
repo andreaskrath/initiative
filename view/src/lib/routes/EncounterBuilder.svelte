@@ -47,6 +47,7 @@
   import Input from "$components/Input.svelte";
   import Title from "$components/Title.svelte";
   import Container from "$components/Container.svelte";
+  import { toast } from "svelte-sonner";
   import Toggle from "$components/Toggle.svelte";
   import Dialog from "$components/Dialog.svelte";
   import Select from "$components/Select.svelte";
@@ -64,6 +65,9 @@
   import { MonsterService } from "$monster/service";
   import { onMount } from "svelte";
   import { GetModifier } from "$utils/convert";
+  import { EncounterService } from "$encounter/service";
+  import { StatusCodes } from "http-status-codes";
+  import { goto } from "@mateothegreat/svelte5-router";
 
   let addPlayerDialogOpen = $state(false);
   let addMonsterDialogOpen = $state(false);
@@ -216,6 +220,30 @@
     monsterName = undefined;
     monsterId = undefined;
     repeatMonster = undefined;
+  };
+
+  const CreateEncounter = async () => {
+    encounter.name = "Some encounter";
+    encounter.active = 0;
+    const result = await EncounterService.Create(encounter);
+
+    if (typeof result === "number") {
+      // errors = null;
+      switch (result) {
+        case StatusCodes.CREATED:
+          toast.success("Successfully created encounter");
+          goto("/encounters");
+          break;
+        case StatusCodes.INTERNAL_SERVER_ERROR:
+          toast.success("Internal server error");
+          break;
+        default:
+          toast.error("An unknown error occured");
+      }
+    } else {
+      // errors = result;
+      toast.error("There is an issue with the defined defined encounter");
+    }
   };
 
   onMount(async () => {
@@ -869,7 +897,5 @@
 
 <!-- Create Encounter Button -->
 <div class="fixed inset-x-0 bottom-0 mx-auto flex w-[1000px] justify-end pb-10">
-  <Button onclick={async (_: MouseEvent) => console.log("button 2")}>
-    Create Encounter
-  </Button>
+  <Button onclick={async (_) => CreateEncounter()}>Create Encounter</Button>
 </div>
