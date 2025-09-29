@@ -2,7 +2,7 @@ use axum::{
     Router,
     routing::{get, post},
 };
-use combat_tracker::{monster, spell};
+use combat_tracker::{encounter, monster, spell};
 use sqlx::postgres::PgPoolOptions;
 use std::env;
 use tokio::net::TcpListener;
@@ -31,6 +31,7 @@ async fn async_main() {
         .route("/api/spells", get(spell::handler::get))
         .route("/api/monsters/create", post(monster::handler::create))
         .route("/api/monsters", get(monster::handler::get))
+        .route("/api/encounters/create", post(encounter::handler::create))
         .fallback(combat_tracker::index)
         .with_state(pool);
 
