@@ -3,13 +3,17 @@ import type { PlayerEntity } from "./PlayerEntity";
 
 export type Encounter = {
   id?: string;
+  name?: string;
   entities: EncounterEntity[];
+  active?: number;
 };
 
 export const EncounterActions = {
   EmptyEncounter: (): Encounter => ({
     id: undefined,
+    name: undefined,
     entities: [],
+    active: undefined,
   }),
 
   AddPlayer: (encounter: Encounter, player: PlayerEntity): void => {

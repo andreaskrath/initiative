@@ -16,7 +16,6 @@ export const MonsterEntityActions = {
     id: uuid(),
     name: undefined,
     initiative: undefined,
-    is_active: undefined,
     concentration: false,
     exhaustion_level: ExhaustionLevel.None,
     conditions: [],
