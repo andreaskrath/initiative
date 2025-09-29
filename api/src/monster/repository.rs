@@ -12,8 +12,6 @@ impl MonsterRepository {
     }
 
     pub async fn create(&self, monster: Monster) -> Result<Uuid, sqlx::Error> {
-        let mut transaction = self.pool.begin().await?;
-
         let monster_id: sqlx::types::Uuid = sqlx::query_scalar(
             r#"
             INSERT INTO monsters (
@@ -97,10 +95,8 @@ impl MonsterRepository {
                 .bind(Json(monster.traits))
                 .bind(Json(monster.visions))
                 .bind(Json(monster.spellcasting))
-        .fetch_one(&mut *transaction)
+        .fetch_one(&self.pool)
         .await?;
-
-        transaction.commit().await?;
 
         Ok(monster_id)
     }
