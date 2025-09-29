@@ -501,7 +501,10 @@
       <div class="text-center">Details</div>
       <div class="text-center">Actions</div>
     </div>
-    <hr />
+
+    {#if playerEntities.length > 0}
+      <hr />
+    {/if}
 
     <!-- Player Rows -->
     {#each playerEntities as player, index (player.id!)}
@@ -605,7 +608,10 @@
       <div class="text-center">HP</div>
       <div class="text-center">Actions</div>
     </div>
-    <hr />
+
+    {#if monsterEntities.length > 0}
+      <hr />
+    {/if}
 
     <!-- Monster Rows -->
     {#each monsterEntities as monster, index (monster.id!)}
@@ -825,7 +831,10 @@
       <div class="flex-5 text-center">Description</div>
       <div class="flex-1 text-center">Actions</div>
     </div>
-    <hr />
+
+    {#if reminderEntities.length > 0}
+      <hr />
+    {/if}
 
     <!-- Reminders Rows -->
     {#each reminderEntities as reminder, index (reminder.id!)}
