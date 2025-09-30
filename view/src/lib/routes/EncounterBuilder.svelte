@@ -223,8 +223,6 @@
   };
 
   const CreateEncounter = async () => {
-    encounter.name = "Some encounter";
-    encounter.active = 0;
     const result = await EncounterService.Create(encounter);
 
     if (typeof result === "number") {
@@ -450,6 +448,19 @@
 {/snippet}
 
 <div class="mx-auto mt-5 w-[1000px] space-y-5">
+  <!-- Encounter Name -->
+  <div class="flex w-full gap-5">
+    <!-- Name -->
+    <Container>
+      <Label required>Name</Label>
+      <Input
+        type="text"
+        placeholder="Encounter 1"
+        bind:value={encounter.name}
+      />
+    </Container>
+  </div>
+
   <!-- Players Section -->
   <div class="flex justify-between">
     <Title variant="default" class="relative top-1">Players</Title>
