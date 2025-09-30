@@ -51,3 +51,8 @@ export {
   ReminderTypes,
   DisplayReminderType,
 } from "./ReminderType";
+export {
+  RollStrategy,
+  DisplayRollStrategy,
+  RollStrategies,
+} from "./RollStrategy";
