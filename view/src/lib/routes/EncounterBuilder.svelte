@@ -38,6 +38,9 @@
     type RoundReminder,
     type TurnReminder,
     MonsterEntityActions,
+    RollStrategy,
+    RollStrategies,
+    DisplayRollStrategy,
   } from "$types";
 
   import { Button } from "$components/ui/button/index";
@@ -55,6 +58,7 @@
   import { ToLabelValueWith } from "$utils/factories";
   import { CreateFieldErrors, type FieldErrors } from "$utils/error";
   import Combobox from "$components/Combobox.svelte";
+  import * as ToggleGroup from "$components/ui/toggle-group/index";
   import {
     ValidateMonsterEntity,
     ValidatePlayerEntity,
@@ -68,6 +72,7 @@
   import { EncounterService } from "$encounter/service";
   import { StatusCodes } from "http-status-codes";
   import { goto } from "@mateothegreat/svelte5-router";
+  import { Roll } from "$lib/shared/utils/roll";
 
   let addPlayerDialogOpen = $state(false);
   let addMonsterDialogOpen = $state(false);
@@ -128,6 +133,7 @@
   );
   let repeatMonster: number | undefined = $state(undefined);
   let monsterName: string | undefined = $state(undefined);
+  let monsterRollStrategy: RollStrategy = $state(RollStrategy.Random);
 
   let reminderName: string | undefined = $state(undefined);
   let reminderType: "initiative" | "turn" | "round" | undefined =
@@ -198,9 +204,12 @@
     const addMonster = async (name: string) => {
       let monsterForm = MonsterEntityActions.EmptyMonsterEntity();
       monsterForm.name = name;
-      const hp = new DiceRoll(selectedMonster!.rollable_hit_points!);
-      monsterForm.max_hp = hp.total;
-      monsterForm.current_hp = hp.total;
+      const hp = Roll(
+        selectedMonster!.rollable_hit_points!,
+        monsterRollStrategy,
+      );
+      monsterForm.max_hp = hp;
+      monsterForm.current_hp = hp;
       monsterForm.initiative = new DiceRoll(
         `1d20+${GetModifier(selectedMonster.dexterity!)}`,
       ).total;
@@ -220,6 +229,7 @@
     monsterName = undefined;
     monsterId = undefined;
     repeatMonster = undefined;
+    monsterRollStrategy = RollStrategy.Random;
   };
 
   const CreateEncounter = async () => {
@@ -619,6 +629,23 @@
             />
           </Container>
         </div>
+
+        <!-- Roll Strategy for Monster HP -->
+        <Container>
+          <Label>HP Roll Strategy</Label>
+          <ToggleGroup.Root
+            type="single"
+            variant="outline"
+            class="w-full"
+            bind:value={monsterRollStrategy}
+          >
+            {#each RollStrategies as rollStrategy}
+              <ToggleGroup.Item value={rollStrategy}>
+                {DisplayRollStrategy[rollStrategy]}
+              </ToggleGroup.Item>
+            {/each}
+          </ToggleGroup.Root>
+        </Container>
       {/snippet}
 
       {#snippet footer()}
