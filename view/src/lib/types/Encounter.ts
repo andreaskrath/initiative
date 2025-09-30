@@ -5,7 +5,7 @@ export type Encounter = {
   id?: string;
   name?: string;
   entities: EncounterEntity[];
-  active?: number;
+  active: number;
 };
 
 export const EncounterActions = {
@@ -13,7 +13,7 @@ export const EncounterActions = {
     id: undefined,
     name: undefined,
     entities: [],
-    active: undefined,
+    active: 0,
   }),
 
   AddPlayer: (encounter: Encounter, player: PlayerEntity): void => {
