@@ -4,10 +4,23 @@ import {
   Condition,
   ExhaustionLevel,
   Trigger,
+  type Encounter,
   type PlayerEntity,
   type ReminderEntity,
 } from "$types";
 import * as z from "zod";
+
+export const ValidateEncounter = async (
+  encounter: Encounter,
+): Promise<z.ZodError | null> => {
+  const result = await encounterSchema.safeParseAsync(encounter);
+
+  if (!result.success) {
+    return result.error;
+  }
+
+  return null;
+};
 
 export const ValidatePlayerEntity = async (
   playerEntity: PlayerEntity,
@@ -21,8 +34,6 @@ export const ValidatePlayerEntity = async (
 
   return null;
 };
-
-export const ValidateMonsterEntity = {};
 
 export const ValidateReminderEntity = async (
   reminderEntity: ReminderEntity,
@@ -38,6 +49,13 @@ export const ValidateReminderEntity = async (
 
   return null;
 };
+
+const encounterSchema = z.object({
+  id: z.uuid().optional(),
+  name: z.string("A name must be specified"),
+  entities: z.array(z.object({})),
+  active: z.number("An active entity must be specified"),
+});
 
 const combatConditionSchema = z.object({
   condition: z.enum(Condition, "A condition type must be specified"),

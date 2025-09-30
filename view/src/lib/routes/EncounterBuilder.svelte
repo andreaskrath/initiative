@@ -60,7 +60,6 @@
   import Combobox from "$components/Combobox.svelte";
   import * as ToggleGroup from "$components/ui/toggle-group/index";
   import {
-    ValidateMonsterEntity,
     ValidatePlayerEntity,
     ValidateReminderEntity,
   } from "$encounter/validate";
@@ -78,6 +77,7 @@
   let addMonsterDialogOpen = $state(false);
   let addReminderDialogOpen = $state(false);
 
+  let encounterErrors: FieldErrors | null = $state(null);
   let playerFormErrors: FieldErrors | null = $state(null);
   let reminderFormErrors: FieldErrors | null = $state(null);
   let monsterFormErrors: FieldErrors | null = $state(null);
@@ -236,7 +236,7 @@
     const result = await EncounterService.Create(encounter);
 
     if (typeof result === "number") {
-      // errors = null;
+      encounterErrors = null;
       switch (result) {
         case StatusCodes.CREATED:
           toast.success("Successfully created encounter");
@@ -249,7 +249,7 @@
           toast.error("An unknown error occured");
       }
     } else {
-      // errors = result;
+      encounterErrors = result;
       toast.error("There is an issue with the defined defined encounter");
     }
   };
@@ -467,6 +467,7 @@
         type="text"
         placeholder="Encounter 1"
         bind:value={encounter.name}
+        error={encounterErrors?.get("name")}
       />
     </Container>
   </div>
