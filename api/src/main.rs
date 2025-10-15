@@ -2,7 +2,7 @@ use axum::{
     Router,
     routing::{get, post},
 };
-use combat_tracker::{encounter, monster, spell};
+use initiative::{encounter, monster, spell};
 use sqlx::postgres::PgPoolOptions;
 use std::env;
 use tokio::net::TcpListener;
@@ -25,14 +25,14 @@ async fn async_main() {
     sqlx::migrate!().run(&pool).await.unwrap();
 
     let app = Router::new()
-        .route("/assets/{*path}", get(combat_tracker::assets))
-        .route("/images/{*path}", get(combat_tracker::images))
+        .route("/assets/{*path}", get(initiative::assets))
+        .route("/images/{*path}", get(initiative::images))
         .route("/api/spells/create", post(spell::handler::create))
         .route("/api/spells", get(spell::handler::get))
         .route("/api/monsters/create", post(monster::handler::create))
         .route("/api/monsters", get(monster::handler::get))
         .route("/api/encounters/create", post(encounter::handler::create))
-        .fallback(combat_tracker::index)
+        .fallback(initiative::index)
         .with_state(pool);
 
     let listener = TcpListener::bind("127.0.0.1:5173")
