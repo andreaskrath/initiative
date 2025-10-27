@@ -24,6 +24,7 @@
     DisplaySight,
     DisplaySize,
     DisplaySkill,
+    DisplayTrigger,
     Language,
     Languages,
     MonsterActions,
@@ -36,6 +37,7 @@
     Skills,
     SpellLevel,
     SpellLevels,
+    TurnTriggers,
     type Spell,
   } from "$types";
 
@@ -73,6 +75,7 @@
   const recharges = ToLabelValue(Recharges);
   const sights = ToLabelValueWith(Sights, DisplaySight);
   const sizes = ToLabelValueWith(Sizes, DisplaySize);
+  const turnTriggers = ToLabelValueWith(TurnTriggers, DisplayTrigger);
 
   let monster = $state(MonsterActions.EmptyMonster());
   let spells: Spell[] = $state([]);
@@ -252,7 +255,7 @@
     <Tabs.List class="flex w-full justify-center">
       <Tabs.Trigger value="basic">Basic Information</Tabs.Trigger>
       <Tabs.Trigger value="defensive">Defensive</Tabs.Trigger>
-      <Tabs.Trigger value="traits">Traits</Tabs.Trigger>
+      <Tabs.Trigger value="traits">Traits & Reminders</Tabs.Trigger>
       <Tabs.Trigger value="actions">Actions</Tabs.Trigger>
       <Tabs.Trigger value="spellcasting">Spellcasting</Tabs.Trigger>
     </Tabs.List>
@@ -686,62 +689,123 @@
       {/each}
     </div>
   </Tabs.Content>
-  <Tabs.Content value="traits" class="mt-5">
-    <div class="grid grid-cols-10 gap-x-2 gap-y-5">
-      <!-- Traits -->
-      <Title variant="muted" class="col-span-9">Traits</Title>
-      <!-- Add Trait Button -->
+  <Tabs.Content value="traits" class="mt-5 grid grid-cols-10 gap-x-2 gap-y-5">
+    <!-- Traits -->
+    <Title variant="muted" class="col-span-9">Traits</Title>
+    <div class="col-span-1 col-start-10 flex justify-center">
+      <Button
+        variant="ghost"
+        size="icon"
+        class="w-full text-green-300 hover:text-green-600"
+        onclick={(_) => MonsterActions.AddTrait(monster)}
+      >
+        <CirclePlus />
+      </Button>
+    </div>
+
+    {#each monster.traits as trait, index (trait)}
+      <!-- Name -->
+      <Container class="col-span-9">
+        <Label required>Name</Label>
+        <Input
+          bind:value={trait.name}
+          type="text"
+          placeholder="Martial Advantage"
+          error={errors?.get(`traits.${index}.name`)}
+        />
+      </Container>
+
+      <!-- Remove Trait Button -->
       <div class="col-span-1 col-start-10 flex justify-center">
         <Button
           variant="ghost"
           size="icon"
-          class="w-full text-green-300 hover:text-green-600"
-          onclick={(e: MouseEvent) => MonsterActions.AddTrait(monster, e)}
+          class="mt-5 w-full text-red-300 hover:text-red-600"
+          onclick={(_: MouseEvent) =>
+            MonsterActions.RemoveTrait(monster, trait)}
         >
-          <CirclePlus />
+          <CircleX />
         </Button>
       </div>
 
-      {#each monster.traits as trait, index (trait)}
-        <!-- Name -->
-        <Container class="col-span-9">
-          <Label required>Name</Label>
-          <Input
-            bind:value={trait.name}
-            type="text"
-            placeholder="Martial Advantage"
-            error={errors?.get(`traits.${index}.name`)}
-          />
-        </Container>
+      <!-- Description -->
+      <Container class="col-span-10">
+        <Label required>Description</Label>
+        <TextArea
+          bind:value={trait.description}
+          placeholder="Write a description for the trait.."
+          error={errors?.get(`traits.${index}.description`)}
+        />
+      </Container>
 
-        <!-- Remove Trait Button -->
-        <div class="col-span-1 col-start-10 flex justify-center">
-          <Button
-            variant="ghost"
-            size="icon"
-            class="mt-5 w-full text-red-300 hover:text-red-600"
-            onclick={(_: MouseEvent) =>
-              MonsterActions.RemoveTrait(monster, trait)}
-          >
-            <CircleX />
-          </Button>
-        </div>
+      {#if index !== monster.traits.length - 1}
+        <hr class="col-span-10" />
+      {/if}
+    {/each}
 
-        <!-- Description -->
-        <Container class="col-span-10">
-          <Label required>Description</Label>
-          <TextArea
-            bind:value={trait.description}
-            placeholder="Write a description for the trait.."
-            error={errors?.get(`traits.${index}.description`)}
-          />
-        </Container>
-
-        {#if index !== monster.traits.length - 1}
-          <hr class="col-span-10" />
-        {/if}
-      {/each}
+    <!-- Reminders -->
+    <Title variant="muted" class="col-span-9">Reminders</Title>
+    <div class="col-span-1 col-start-10 flex justify-center">
+      <Button
+        variant="ghost"
+        size="icon"
+        class="w-full text-green-300 hover:text-green-600"
+        onclick={(_) => MonsterActions.AddReminder(monster)}
+      >
+        <CirclePlus />
+      </Button>
     </div>
+
+    {#each monster.reminders as reminder, index (reminder)}
+      <!-- Name -->
+      <Container class="col-span-4">
+        <Label required>Name</Label>
+        <Input
+          bind:value={reminder.name}
+          type="text"
+          placeholder="Martial Advantage"
+          error={errors?.get(`reminders.${index}.name`)}
+        />
+      </Container>
+
+      <!-- Trigger Type -->
+      <Container class="col-span-5">
+        <Label required>Trigger</Label>
+        <Select
+          bind:value={reminder.trigger}
+          placeholder="Select a trigger type"
+          items={turnTriggers}
+          error={errors?.get(`reminders.${index}.trigger`)}
+        />
+      </Container>
+
+      <!-- Remove Reminder Button -->
+      <div class="col-span-1 col-start-10 flex justify-center">
+        <Button
+          variant="ghost"
+          size="icon"
+          class="mt-5 w-full text-red-300 hover:text-red-600"
+          onclick={(_: MouseEvent) =>
+            MonsterActions.RemoveReminder(monster, reminder)}
+        >
+          <CircleX />
+        </Button>
+      </div>
+
+      <!-- Description -->
+      <Container class="col-span-10">
+        <Label required>Description</Label>
+        <TextArea
+          bind:value={reminder.description}
+          placeholder="Write a description for the reminder.."
+          error={errors?.get(`reminders.${index}.description`)}
+        />
+      </Container>
+
+      {#if index !== monster.reminders.length - 1}
+        <hr class="col-span-10" />
+      {/if}
+    {/each}
   </Tabs.Content>
   <Tabs.Content value="actions" class="mt-5 grid grid-cols-10 gap-x-2 gap-y-5">
     <!-- Regular Actions -->
