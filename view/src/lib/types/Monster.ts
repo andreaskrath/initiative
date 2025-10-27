@@ -10,6 +10,7 @@ import {
   Size,
   Skill,
   SpellLevel,
+  type CreatureReminder,
   type Spell,
 } from "$types";
 
@@ -106,6 +107,7 @@ export type Monster = {
     }[];
     spells: Spell[];
   };
+  reminders: CreatureReminder[];
 };
 
 export const MonsterActions = {
@@ -156,6 +158,7 @@ export const MonsterActions = {
       spell_slots: [],
       spells: [],
     },
+    reminders: [],
   }),
 
   AddVision: (monster: Monster, event: MouseEvent): void => {
@@ -211,6 +214,24 @@ export const MonsterActions = {
   },
 
   AddRegularAction: (monster: Monster, event: MouseEvent) => {
+  AddReminder: (monster: Monster) => {
+    monster.reminders = [
+      ...monster.reminders,
+      {
+        name: undefined,
+        type: "reminder",
+        description: undefined,
+        trigger: undefined,
+      },
+    ];
+  },
+
+  RemoveReminder: (monster: Monster, reminderToRemove: CreatureReminder) => {
+    monster.reminders = monster.reminders.filter(
+      (reminder) => reminder !== reminderToRemove,
+    );
+  },
+
     monster.regular_actions = [
       ...monster.regular_actions,
       { name: undefined, description: undefined },

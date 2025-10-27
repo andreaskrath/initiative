@@ -24,5 +24,6 @@ export const MonsterEntityActions = {
     max_hp: undefined,
     temporary_hp: undefined,
     monster: undefined,
+    reminders: [],
   }),
 };

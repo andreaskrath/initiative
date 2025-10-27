@@ -12,6 +12,7 @@ import {
   Skill,
   SpellLevel,
   SpellLevels,
+  TurnTriggers,
   type Monster,
 } from "$types";
 import { SpellSchema } from "$spell/validate";
@@ -189,6 +190,14 @@ const schema = z.object({
     z.object({
       name: z.string("A name must be specified action"),
       description: z.string("A description must be specified action"),
+    }),
+  ),
+  reminders: z.array(
+    z.object({
+      name: z.string("A name must be specified"),
+      type: z.literal("reminder"),
+      trigger: z.enum(TurnTriggers, "A trigger must be specified"),
+      description: z.string("A description must be specified"),
     }),
   ),
   spellcasting: z

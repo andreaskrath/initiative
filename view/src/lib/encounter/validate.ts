@@ -106,20 +106,7 @@ const roundReminderSchema = z.object({
   ]),
 });
 
-const turnReminderSchema = z.object({
-  id: z.uuid().optional(),
-  type: z.literal("reminder", "The type of a reminder must be 'reminder'"),
-  reminder_type: z.literal("turn"),
-  name: z.string("A name must be specified"),
-  trigger: z.union([
-    z.literal(Trigger.StartOfTurn),
-    z.literal(Trigger.EndOfTurn),
-  ]),
-  targets: z.array(z.uuid()),
-});
-
 const reminderEntitySchema = z.discriminatedUnion("reminder_type", [
   initiativeReminderSchema,
   roundReminderSchema,
-  turnReminderSchema,
 ]);

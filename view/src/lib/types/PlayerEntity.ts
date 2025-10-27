@@ -15,5 +15,6 @@ export const PlayerEntityActions = {
     exhaustion_level: ExhaustionLevel.None,
     concentration: false,
     conditions: [],
+    reminders: [],
   }),
 };

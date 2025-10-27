@@ -1,8 +1,6 @@
 import type { BaseReminder } from "./BaseReminder";
 import type { Trigger } from "./Trigger";
 
-export interface TurnReminder extends BaseReminder {
-  reminder_type: "turn";
+export interface CreatureReminder extends BaseReminder {
   trigger?: Trigger.StartOfTurn | Trigger.EndOfTurn;
-  targets: string[];
 }

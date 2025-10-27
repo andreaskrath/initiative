@@ -1,4 +1,5 @@
 import type { CombatCondition } from "./CombatCondition";
+import type { CreatureReminder } from "./CreatureReminder";
 import { type Entity } from "./Entity";
 import type { ExhaustionLevel } from "./ExhaustionLevel";
 
@@ -7,6 +8,7 @@ export interface CombatEntity extends Entity {
   concentration: boolean;
   exhaustion_level: ExhaustionLevel;
   conditions: CombatCondition[];
+  reminders: CreatureReminder[];
 }
 
 export const CombatEntityActions = {

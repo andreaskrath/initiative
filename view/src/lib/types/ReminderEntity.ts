@@ -1,10 +1,9 @@
 import type { InitiativeReminder } from "./InitiativeReminder";
 import type { RoundReminder } from "./RoundReminder";
 import { DisplayTrigger } from "./Trigger";
-import type { TurnReminder } from "./TurnReminder";
 import { v4 as uuid } from "uuid";
 
-export type ReminderEntity = InitiativeReminder | TurnReminder | RoundReminder;
+export type ReminderEntity = InitiativeReminder | RoundReminder;
 
 export const ReminderActions = {
   EmptyInitiativeReminder: (): InitiativeReminder => ({
@@ -14,16 +13,6 @@ export const ReminderActions = {
     reminder_type: "initiative",
     initiative: undefined,
     description: undefined,
-  }),
-
-  EmptyTurnReminder: (): TurnReminder => ({
-    id: uuid(),
-    name: undefined,
-    type: "reminder",
-    reminder_type: "turn",
-    trigger: undefined,
-    description: undefined,
-    targets: [],
   }),
 
   EmptyRoundReminder: (): RoundReminder => ({
@@ -41,7 +30,6 @@ export const ReminderActions = {
       case "initiative":
         reminderTrigger = "Initiative";
         break;
-      case "turn":
       case "round":
         reminderTrigger = DisplayTrigger[reminder.trigger!];
         break;
@@ -59,9 +47,6 @@ export const ReminderActions = {
       case "initiative":
         details = `${reminder.initiative!}`;
         break;
-      case "turn":
-        details = "Targets";
-        break;
       case "round":
         break;
       default:
@@ -69,15 +54,5 @@ export const ReminderActions = {
     }
 
     return details;
-  },
-
-  RemoveTarget: (turnReminder: TurnReminder, targetToRemove: string) => {
-    turnReminder.targets = turnReminder.targets.filter(
-      (target) => target !== targetToRemove,
-    );
-
-    return function (event: MouseEvent) {
-      event.preventDefault();
-    };
   },
 };

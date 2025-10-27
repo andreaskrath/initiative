@@ -43,7 +43,7 @@ export {
   ExhaustionLevels,
   DisplayExhaustionLevel,
 } from "./ExhaustionLevel";
-export { type TurnReminder } from "./TurnReminder";
+export { type CreatureReminder } from "./CreatureReminder";
 export { type InitiativeReminder } from "./InitiativeReminder";
 export { type RoundReminder } from "./RoundReminder";
 export {
