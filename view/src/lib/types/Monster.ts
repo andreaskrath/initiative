@@ -161,59 +161,41 @@ export const MonsterActions = {
     reminders: [],
   }),
 
-  AddVision: (monster: Monster, event: MouseEvent): void => {
+  AddVision: (monster: Monster): void => {
     monster.visions = [
       ...monster.visions,
       { sight: undefined, range: undefined },
     ];
-
-    event.preventDefault();
   },
 
   RemoveVision: (monster: Monster, visionToRemove: Vision) => {
     monster.visions = monster.visions.filter(
       (vision) => vision !== visionToRemove,
     );
-
-    return function (event: MouseEvent) {
-      event.preventDefault();
-    };
   },
 
-  AddSpeed: (monster: Monster, event: MouseEvent) => {
+  AddSpeed: (monster: Monster) => {
     monster.speeds = [
       ...monster.speeds,
       { movement: undefined, distance: undefined },
     ];
-
-    event.preventDefault();
   },
 
   RemoveSpeed: (monster: Monster, speedToRemove: Speed) => {
     monster.speeds = monster.speeds.filter((speed) => speed !== speedToRemove);
-
-    return function (event: MouseEvent) {
-      event.preventDefault();
-    };
   },
 
-  AddTrait: (monster: Monster, event: MouseEvent) => {
+  AddTrait: (monster: Monster) => {
     monster.traits = [
       ...monster.traits,
       { name: undefined, description: undefined },
     ];
-
-    event.preventDefault();
   },
 
   RemoveTrait: (monster: Monster, traitToRemove: NamedDescription) => {
     monster.traits = monster.traits.filter((trait) => trait !== traitToRemove);
-    return function (event: MouseEvent) {
-      event.preventDefault();
-    };
   },
 
-  AddRegularAction: (monster: Monster, event: MouseEvent) => {
   AddReminder: (monster: Monster) => {
     monster.reminders = [
       ...monster.reminders,
@@ -232,12 +214,11 @@ export const MonsterActions = {
     );
   },
 
+  AddRegularAction: (monster: Monster) => {
     monster.regular_actions = [
       ...monster.regular_actions,
       { name: undefined, description: undefined },
     ];
-
-    event.preventDefault();
   },
 
   RemoveRegularAction: (
@@ -247,13 +228,9 @@ export const MonsterActions = {
     monster.regular_actions = monster.regular_actions.filter(
       (regularAction) => regularAction !== regularActionToRemove,
     );
-
-    return function (event: MouseEvent) {
-      event.preventDefault();
-    };
   },
 
-  AddMeleeAttackAction: (monster: Monster, event: MouseEvent) => {
+  AddMeleeAttackAction: (monster: Monster) => {
     monster.melee_attack_actions = [
       ...monster.melee_attack_actions,
       {
@@ -265,8 +242,6 @@ export const MonsterActions = {
         damage_type: undefined,
       },
     ];
-
-    event.preventDefault();
   },
 
   RemoveMeleeAttackAction: (
@@ -276,12 +251,9 @@ export const MonsterActions = {
     monster.melee_attack_actions = monster.melee_attack_actions.filter(
       (meleeAttackAction) => meleeAttackAction !== meleeAttackActionToRemove,
     );
-    return function (event: MouseEvent) {
-      event.preventDefault();
-    };
   },
 
-  AddRangedAttackAction: (monster: Monster, event: MouseEvent) => {
+  AddRangedAttackAction: (monster: Monster) => {
     monster.ranged_attack_actions = [
       ...monster.ranged_attack_actions,
       {
@@ -293,8 +265,6 @@ export const MonsterActions = {
         damage_type: undefined,
       },
     ];
-
-    event.preventDefault();
   },
 
   RemoveRangedAttackAction: (
@@ -304,12 +274,9 @@ export const MonsterActions = {
     monster.ranged_attack_actions = monster.ranged_attack_actions.filter(
       (rangedAttackAction) => rangedAttackAction !== rangedAttackActionToRemove,
     );
-    return function (event: MouseEvent) {
-      event.preventDefault();
-    };
   },
 
-  AddRechargeAction: (monster: Monster, event: MouseEvent) => {
+  AddRechargeAction: (monster: Monster) => {
     monster.recharge_actions = [
       ...monster.recharge_actions,
       {
@@ -318,8 +285,6 @@ export const MonsterActions = {
         description: undefined,
       },
     ];
-
-    event.preventDefault();
   },
 
   RemoveRechargeAction: (
@@ -329,18 +294,13 @@ export const MonsterActions = {
     monster.recharge_actions = monster.recharge_actions.filter(
       (rechargeAction) => rechargeAction !== rechargeActionToRemove,
     );
-    return function (event: MouseEvent) {
-      event.preventDefault();
-    };
   },
 
-  AddBonusAction: (monster: Monster, event: MouseEvent) => {
+  AddBonusAction: (monster: Monster) => {
     monster.bonus_actions = [
       ...monster.bonus_actions,
       { name: undefined, description: undefined },
     ];
-
-    event.preventDefault();
   },
 
   RemoveBonusAction: (
@@ -350,38 +310,26 @@ export const MonsterActions = {
     monster.bonus_actions = monster.bonus_actions.filter(
       (bonusAction) => bonusAction !== bonusActionToRemove,
     );
-
-    return function (event: MouseEvent) {
-      event.preventDefault();
-    };
   },
 
-  AddReaction: (monster: Monster, event: MouseEvent) => {
+  AddReaction: (monster: Monster) => {
     monster.reactions = [
       ...monster.reactions,
       { name: undefined, description: undefined },
     ];
-
-    event.preventDefault();
   },
 
   RemoveReaction: (monster: Monster, reactionToRemove: NamedDescription) => {
     monster.reactions = monster.reactions.filter(
       (reaction) => reaction !== reactionToRemove,
     );
-
-    return function (event: MouseEvent) {
-      event.preventDefault();
-    };
   },
 
-  AddLegendaryAction: (monster: Monster, event: MouseEvent) => {
+  AddLegendaryAction: (monster: Monster) => {
     monster.legendary_actions = [
       ...monster.legendary_actions,
       { name: undefined, cost: undefined, description: undefined },
     ];
-
-    event.preventDefault();
   },
 
   RemoveLegendaryAction: (
@@ -396,19 +344,13 @@ export const MonsterActions = {
     if (monster.legendary_actions.length === 0) {
       monster.available_legendary_actions_per_turn = undefined;
     }
-
-    return function (event: MouseEvent) {
-      event.preventDefault();
-    };
   },
 
-  AddLairAction: (monster: Monster, event: MouseEvent) => {
+  AddLairAction: (monster: Monster) => {
     monster.lair_actions = [
       ...monster.lair_actions,
       { name: undefined, description: undefined },
     ];
-
-    event.preventDefault();
   },
 
   RemoveLairAction: (
@@ -418,19 +360,11 @@ export const MonsterActions = {
     monster.lair_actions = monster.lair_actions.filter(
       (lairAction) => lairAction !== lairActionToRemove,
     );
-
-    return function (event: MouseEvent) {
-      event.preventDefault();
-    };
   },
 
   RemoveSpell: (monster: Monster, spellToRemove: Spell) => {
     monster.spellcasting!.spells = monster.spellcasting!.spells.filter(
       (spell) => spell !== spellToRemove,
     );
-
-    return function (event: MouseEvent) {
-      event.preventDefault();
-    };
   },
 };

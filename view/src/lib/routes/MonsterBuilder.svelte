@@ -50,7 +50,6 @@
 
   import * as Command from "$components/ui/command/index";
   import Container from "$components/Container.svelte";
-  import Error from "$components/Error.svelte";
   import Input from "$components/Input.svelte";
   import Label from "$components/Label.svelte";
   import { ScrollArea } from "$components/ui/scroll-area/index";
@@ -66,6 +65,7 @@
   import { goto } from "@mateothegreat/svelte5-router";
   import Combobox from "$lib/shared/components/Combobox.svelte";
   import type { FieldErrors } from "$utils/error";
+  import AddButton from "$lib/shared/components/AddButton.svelte";
 
   const alignments = ToLabelValueWith(Alignments, DisplayAlignment);
   const attributes = ToLabelValueWith(Attributes, DisplayAttribute);
@@ -478,7 +478,7 @@
               variant="ghost"
               size="icon"
               class="text-green-300 hover:text-green-600"
-              onclick={(e: MouseEvent) => MonsterActions.AddVision(monster, e)}
+              onclick={(_) => MonsterActions.AddVision(monster)}
             >
               <CirclePlus />
             </Button>
@@ -535,7 +535,7 @@
               variant="ghost"
               size="icon"
               class="text-green-300 hover:text-green-600"
-              onclick={(e: MouseEvent) => MonsterActions.AddSpeed(monster, e)}
+              onclick={(_) => MonsterActions.AddSpeed(monster)}
             >
               <CirclePlus />
             </Button>
@@ -816,7 +816,7 @@
         variant="ghost"
         size="icon"
         class="w-full text-green-300 hover:text-green-600"
-        onclick={(e: MouseEvent) => MonsterActions.AddRegularAction(monster, e)}
+        onclick={(_) => MonsterActions.AddRegularAction(monster)}
       >
         <CirclePlus />
       </Button>
@@ -870,8 +870,7 @@
         variant="ghost"
         size="icon"
         class="w-full text-green-300 hover:text-green-600"
-        onclick={(e: MouseEvent) =>
-          MonsterActions.AddMeleeAttackAction(monster, e)}
+        onclick={(_) => MonsterActions.AddMeleeAttackAction(monster)}
       >
         <CirclePlus />
       </Button>
@@ -974,8 +973,7 @@
         variant="ghost"
         size="icon"
         class="w-full text-green-300 hover:text-green-600"
-        onclick={(e: MouseEvent) =>
-          MonsterActions.AddRangedAttackAction(monster, e)}
+        onclick={(_) => MonsterActions.AddRangedAttackAction(monster)}
       >
         <CirclePlus />
       </Button>
@@ -1081,8 +1079,7 @@
         variant="ghost"
         size="icon"
         class="w-full text-green-300 hover:text-green-600"
-        onclick={(e: MouseEvent) =>
-          MonsterActions.AddRechargeAction(monster, e)}
+        onclick={(_) => MonsterActions.AddRechargeAction(monster)}
       >
         <CirclePlus />
       </Button>
@@ -1147,7 +1144,7 @@
         variant="ghost"
         size="icon"
         class="w-full text-green-300 hover:text-green-600"
-        onclick={(e: MouseEvent) => MonsterActions.AddBonusAction(monster, e)}
+        onclick={(_) => MonsterActions.AddBonusAction(monster)}
       >
         <CirclePlus />
       </Button>
@@ -1201,7 +1198,7 @@
         variant="ghost"
         size="icon"
         class="w-full text-green-300 hover:text-green-600"
-        onclick={(e: MouseEvent) => MonsterActions.AddReaction(monster, e)}
+        onclick={(_) => MonsterActions.AddReaction(monster)}
       >
         <CirclePlus />
       </Button>
@@ -1255,8 +1252,7 @@
         variant="ghost"
         size="icon"
         class="w-full text-green-300 hover:text-green-600"
-        onclick={(e: MouseEvent) =>
-          MonsterActions.AddLegendaryAction(monster, e)}
+        onclick={(_) => MonsterActions.AddLegendaryAction(monster)}
       >
         <CirclePlus />
       </Button>
@@ -1336,7 +1332,7 @@
         variant="ghost"
         size="icon"
         class="w-full text-green-300 hover:text-green-600"
-        onclick={(e: MouseEvent) => MonsterActions.AddLairAction(monster, e)}
+        onclick={(_) => MonsterActions.AddLairAction(monster)}
       >
         <CirclePlus />
       </Button>
@@ -1477,7 +1473,7 @@
           {@render SpellPickSection("9th level", SpellLevel.Ninth)}
         </Command.List>
       </Command.Root>
-    {:catch error}
+    {:catch _}
       <div class="col-span-8 h-[300px] w-full rounded-lg border">
         <p class="mt-5 text-center">
           An error occurred while loading the spells.
