@@ -71,6 +71,7 @@
   import { StatusCodes } from "http-status-codes";
   import { goto } from "@mateothegreat/svelte5-router";
   import { Roll } from "$utils/roll";
+  import TextArea from "$components/TextArea.svelte";
   import AddButton from "$components/AddButton.svelte";
 
   let addPlayerDialogOpen = $state(false);
@@ -134,6 +135,7 @@
   let reminderName: string | undefined = $state(undefined);
   let reminderType: "initiative" | "turn" | "round" | undefined =
     $state(undefined);
+  let reminderDescription: string | undefined = $state(undefined);
   let initiativeReminder: InitiativeReminder = $state(
     ReminderActions.EmptyInitiativeReminder(),
   );
@@ -170,6 +172,7 @@
     }
 
     reminder.name = reminderName;
+    reminder.description = reminderDescription;
 
     const result = await ValidateReminderEntity(reminder);
 
@@ -713,6 +716,15 @@
             />
           </Container>
         </div>
+
+        <Container>
+          <Label required>Description</Label>
+          <TextArea
+            bind:value={reminderDescription}
+            placeholder=""
+            error={reminderFormErrors?.get("description")}
+          />
+        </Container>
 
         {#if reminderType === ReminderType.Initiative}
           <div class="flex w-full gap-5">

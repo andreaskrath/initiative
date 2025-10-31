@@ -93,6 +93,7 @@ const initiativeReminderSchema = z.object({
   reminder_type: z.literal("initiative"),
   name: z.string("A name must be specified"),
   initiative: z.number("An initiative must be specified"),
+  description: z.string("A description must be specified"),
 });
 
 const roundReminderSchema = z.object({
@@ -104,6 +105,7 @@ const roundReminderSchema = z.object({
     z.literal(Trigger.StartOfRound),
     z.literal(Trigger.EndOfRound),
   ]),
+  description: z.string("A description must be specified"),
 });
 
 const reminderEntitySchema = z.discriminatedUnion("reminder_type", [
