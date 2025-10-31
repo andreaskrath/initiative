@@ -65,7 +65,7 @@
   import { goto } from "@mateothegreat/svelte5-router";
   import Combobox from "$lib/shared/components/Combobox.svelte";
   import type { FieldErrors } from "$utils/error";
-  import AddButton from "$lib/shared/components/AddButton.svelte";
+  import AddButton from "$components/AddButton.svelte";
 
   const alignments = ToLabelValueWith(Alignments, DisplayAlignment);
   const attributes = ToLabelValueWith(Attributes, DisplayAttribute);
@@ -474,14 +474,7 @@
           <Title variant="muted">Vision</Title>
           <!-- Add Vission Button -->
           <div class="col-span-1 col-start-10 flex justify-center">
-            <Button
-              variant="ghost"
-              size="icon"
-              class="text-green-300 hover:text-green-600"
-              onclick={(_) => MonsterActions.AddVision(monster)}
-            >
-              <CirclePlus />
-            </Button>
+            <AddButton onclick={(_) => MonsterActions.AddVision(monster)} />
           </div>
 
           <!-- Vision List -->
@@ -531,14 +524,7 @@
           <Title variant="muted">Speed</Title>
           <!-- Add Speed Button -->
           <div class="col-span-1 col-start-10 flex justify-center">
-            <Button
-              variant="ghost"
-              size="icon"
-              class="text-green-300 hover:text-green-600"
-              onclick={(_) => MonsterActions.AddSpeed(monster)}
-            >
-              <CirclePlus />
-            </Button>
+            <AddButton onclick={(_) => MonsterActions.AddSpeed(monster)} />
           </div>
 
           <!-- Speed List -->
@@ -693,14 +679,7 @@
     <!-- Traits -->
     <Title variant="muted" class="col-span-9">Traits</Title>
     <div class="col-span-1 col-start-10 flex justify-center">
-      <Button
-        variant="ghost"
-        size="icon"
-        class="w-full text-green-300 hover:text-green-600"
-        onclick={(_) => MonsterActions.AddTrait(monster)}
-      >
-        <CirclePlus />
-      </Button>
+      <AddButton onclick={(_) => MonsterActions.AddTrait(monster)} />
     </div>
 
     {#each monster.traits as trait, index (trait)}
@@ -746,14 +725,7 @@
     <!-- Reminders -->
     <Title variant="muted" class="col-span-9">Reminders</Title>
     <div class="col-span-1 col-start-10 flex justify-center">
-      <Button
-        variant="ghost"
-        size="icon"
-        class="w-full text-green-300 hover:text-green-600"
-        onclick={(_) => MonsterActions.AddReminder(monster)}
-      >
-        <CirclePlus />
-      </Button>
+      <AddButton onclick={(_) => MonsterActions.AddReminder(monster)} />
     </div>
 
     {#each monster.reminders as reminder, index (reminder)}
@@ -812,14 +784,7 @@
     <Title variant="muted" class="col-span-9">Regular Actions</Title>
     <!-- Add Regular Action Button -->
     <div class="col-span-1 col-start-10 flex justify-center">
-      <Button
-        variant="ghost"
-        size="icon"
-        class="w-full text-green-300 hover:text-green-600"
-        onclick={(_) => MonsterActions.AddRegularAction(monster)}
-      >
-        <CirclePlus />
-      </Button>
+      <AddButton onclick={(_) => MonsterActions.AddRegularAction(monster)} />
     </div>
 
     {#each monster.regular_actions as regularAction, index (regularAction)}
@@ -866,14 +831,9 @@
     <Title variant="muted" class="col-span-9">Melee Attack Actions</Title>
     <!-- Add Melee Attack Action Button -->
     <div class="col-span-1 col-start-10 flex justify-center">
-      <Button
-        variant="ghost"
-        size="icon"
-        class="w-full text-green-300 hover:text-green-600"
+      <AddButton
         onclick={(_) => MonsterActions.AddMeleeAttackAction(monster)}
-      >
-        <CirclePlus />
-      </Button>
+      />
     </div>
 
     {#each monster.melee_attack_actions as meleeAttackAction, index (meleeAttackAction)}
@@ -969,14 +929,9 @@
     <Title variant="muted" class="col-span-9">Ranged Attack Actions</Title>
     <!-- Add Ranged Attack Action Button -->
     <div class="col-span-1 col-start-10 flex justify-center">
-      <Button
-        variant="ghost"
-        size="icon"
-        class="w-full text-green-300 hover:text-green-600"
+      <AddButton
         onclick={(_) => MonsterActions.AddRangedAttackAction(monster)}
-      >
-        <CirclePlus />
-      </Button>
+      />
     </div>
 
     {#each monster.ranged_attack_actions as rangedAttackAction, index (rangedAttackAction)}
@@ -1075,14 +1030,7 @@
     <Title variant="muted" class="col-span-9">Recharge Actions</Title>
     <!-- Add Recharge Action Button -->
     <div class="col-span-1 col-start-10 flex justify-center">
-      <Button
-        variant="ghost"
-        size="icon"
-        class="w-full text-green-300 hover:text-green-600"
-        onclick={(_) => MonsterActions.AddRechargeAction(monster)}
-      >
-        <CirclePlus />
-      </Button>
+      <AddButton onclick={(_) => MonsterActions.AddRechargeAction(monster)} />
     </div>
 
     {#each monster.recharge_actions as rechargeAction, index (rechargeAction)}
@@ -1140,14 +1088,7 @@
     <Title variant="muted" class="col-span-9">Bonus Actions</Title>
     <!-- Add Bonus Action Button -->
     <div class="col-span-1 col-start-10 flex justify-center">
-      <Button
-        variant="ghost"
-        size="icon"
-        class="w-full text-green-300 hover:text-green-600"
-        onclick={(_) => MonsterActions.AddBonusAction(monster)}
-      >
-        <CirclePlus />
-      </Button>
+      <AddButton onclick={(_) => MonsterActions.AddBonusAction(monster)} />
     </div>
 
     {#each monster.bonus_actions as bonusAction, index (bonusAction)}
@@ -1194,14 +1135,7 @@
     <Title variant="muted" class="col-span-9">Reactions</Title>
     <!-- Add Reaction Button -->
     <div class="col-span-1 col-start-10 flex justify-center">
-      <Button
-        variant="ghost"
-        size="icon"
-        class="w-full text-green-300 hover:text-green-600"
-        onclick={(_) => MonsterActions.AddReaction(monster)}
-      >
-        <CirclePlus />
-      </Button>
+      <AddButton onclick={(_) => MonsterActions.AddReaction(monster)} />
     </div>
 
     {#each monster.reactions as reaction, index (reaction)}
@@ -1248,14 +1182,7 @@
     <Title variant="muted" class="col-span-9">Legendary Actions</Title>
     <!-- Add Legendary Action Button -->
     <div class="col-span-1 col-start-10 flex justify-center">
-      <Button
-        variant="ghost"
-        size="icon"
-        class="w-full text-green-300 hover:text-green-600"
-        onclick={(_) => MonsterActions.AddLegendaryAction(monster)}
-      >
-        <CirclePlus />
-      </Button>
+      <AddButton onclick={(_) => MonsterActions.AddLegendaryAction(monster)} />
     </div>
 
     {#if monster.legendary_actions.length > 0}
@@ -1328,14 +1255,7 @@
     <Title variant="muted" class="col-span-9">Lair Actions</Title>
     <!-- Add Lair Action Button -->
     <div class="col-span-1 col-start-10 flex justify-center">
-      <Button
-        variant="ghost"
-        size="icon"
-        class="w-full text-green-300 hover:text-green-600"
-        onclick={(_) => MonsterActions.AddLairAction(monster)}
-      >
-        <CirclePlus />
-      </Button>
+      <AddButton onclick={(_) => MonsterActions.AddLairAction(monster)} />
     </div>
 
     {#each monster.lair_actions as lairAction, index (lairAction)}

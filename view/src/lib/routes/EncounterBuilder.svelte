@@ -72,6 +72,7 @@
   import { StatusCodes } from "http-status-codes";
   import { goto } from "@mateothegreat/svelte5-router";
   import { Roll } from "$lib/shared/utils/roll";
+  import AddButton from "$components/AddButton.svelte";
 
   let addPlayerDialogOpen = $state(false);
   let addMonsterDialogOpen = $state(false);
@@ -481,12 +482,7 @@
       bind:open={addPlayerDialogOpen}
     >
       {#snippet trigger()}
-        <Button
-          variant="ghost"
-          class="text-green-500 hover:text-green-300 dark:text-green-300 dark:hover:text-green-500"
-        >
-          <CirclePlus />
-        </Button>
+        <AddButton />
       {/snippet}
 
       {#snippet content()}
@@ -589,12 +585,7 @@
       bind:open={addMonsterDialogOpen}
     >
       {#snippet trigger()}
-        <Button
-          variant="ghost"
-          class="text-green-500 hover:text-green-300 dark:text-green-300 dark:hover:text-green-500"
-        >
-          <CirclePlus />
-        </Button>
+        <AddButton />
       {/snippet}
 
       {#snippet content()}
@@ -720,12 +711,7 @@
       bind:open={addReminderDialogOpen}
     >
       {#snippet trigger()}
-        <Button
-          variant="ghost"
-          class="text-green-500 hover:text-green-300 dark:text-green-300 dark:hover:text-green-500"
-        >
-          <CirclePlus />
-        </Button>
+        <AddButton />
       {/snippet}
 
       {#snippet content()}
