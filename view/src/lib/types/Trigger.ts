@@ -18,9 +18,9 @@ export const RoundTriggers: Trigger[] = [
 
 export const DisplayTrigger: Readonly<Record<Trigger, string>> = {
   [Trigger.Nothing]: "Nothing",
-  [Trigger.StartOfTurn]: "Start of the affected creatures turn",
-  [Trigger.EndOfTurn]: "End of the affected creatures turn",
-  [Trigger.StartOfRound]: "Start of a new round",
-  [Trigger.EndOfRound]: "End of the current round",
-  [Trigger.Damage]: "When the affected creature takes damage",
+  [Trigger.StartOfTurn]: "Start of turn",
+  [Trigger.EndOfTurn]: "End of turn",
+  [Trigger.StartOfRound]: "Start of round",
+  [Trigger.EndOfRound]: "End of round",
+  [Trigger.Damage]: "On damage taken",
 } as const;
