@@ -70,7 +70,7 @@
   import { EncounterService } from "$encounter/service";
   import { StatusCodes } from "http-status-codes";
   import { goto } from "@mateothegreat/svelte5-router";
-  import { Roll } from "$lib/shared/utils/roll";
+  import { Roll } from "$utils/roll";
   import AddButton from "$components/AddButton.svelte";
 
   let addPlayerDialogOpen = $state(false);
@@ -693,7 +693,7 @@
       {#snippet content()}
         <div class="flex w-full gap-5">
           <!-- Name -->
-          <Container class="flex-3">
+          <Container>
             <Label required>Name</Label>
             <Input
               type="text"
@@ -703,7 +703,7 @@
             />
           </Container>
 
-          <Container class="flex-3">
+          <Container>
             <Label required>Type</Label>
             <Select
               bind:value={reminderType}
