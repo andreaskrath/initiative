@@ -388,20 +388,6 @@
   </DropdownMenu.Root>
 {/snippet}
 
-<!-- Creates a section for picking spells to add to a monster. -->
-{#snippet MonsterPickSection(title: string, monsterType: MonsterType)}
-  <Command.Group heading={title}>
-    {#each monsters.filter((monster) => monster.monster_type === monsterType) as monster}
-      <Command.Item class="flex justify-between" value={monster.name}>
-        <span>{monster.challenge_rating}</span>
-        <span class="text-muted-foreground">
-          {DisplayMonsterType[monsterType]}
-        </span>
-      </Command.Item>
-    {/each}
-  </Command.Group>
-{/snippet}
-
 <!-- Health bar for monsters showing current, temp and max hit points. -->
 {#snippet HealthBar(current: number, max: number, temp: number = 0)}
   {@const actualPercentage = Math.round((current / max) * 100)}
