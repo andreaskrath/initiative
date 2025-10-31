@@ -36,7 +36,6 @@
     type PlayerEntity,
     type ReminderEntity,
     type RoundReminder,
-    type TurnReminder,
     MonsterEntityActions,
     RollStrategy,
     RollStrategies,
@@ -110,10 +109,6 @@
     ReminderTypes,
     DisplayReminderType,
   );
-  const selectTurnReminderTriggers = ToLabelValueWith(
-    TurnTriggers,
-    DisplayTrigger,
-  );
   const selectRoundReminderTriggers = ToLabelValueWith(
     RoundTriggers,
     DisplayTrigger,
@@ -142,7 +137,6 @@
   let initiativeReminder: InitiativeReminder = $state(
     ReminderActions.EmptyInitiativeReminder(),
   );
-  let turnReminder: TurnReminder = $state(ReminderActions.EmptyTurnReminder());
   let roundReminder: RoundReminder = $state(
     ReminderActions.EmptyRoundReminder(),
   );
@@ -168,9 +162,6 @@
       case "initiative":
         reminder = initiativeReminder;
         break;
-      case "turn":
-        reminder = turnReminder;
-        break;
       case "round":
         reminder = roundReminder;
         break;
@@ -191,7 +182,6 @@
     reminderName = undefined;
     reminderType = undefined;
     initiativeReminder = ReminderActions.EmptyInitiativeReminder();
-    turnReminder = ReminderActions.EmptyTurnReminder();
     roundReminder = ReminderActions.EmptyRoundReminder();
     addReminderDialogOpen = false;
     reminderFormErrors = null;
@@ -762,79 +752,6 @@
                 </Button>
               </div>
             </Container>
-          </div>
-        {:else if reminderType === ReminderType.Turn}
-          <div class="flex w-full gap-5">
-            <Container class="flex-1">
-              <Label required>Trigger</Label>
-              <Select
-                bind:value={turnReminder.trigger}
-                placeholder="Select a trigger"
-                items={selectTurnReminderTriggers}
-                error={reminderFormErrors?.get("trigger")}
-              />
-            </Container>
-          </div>
-
-          <div class="flex w-full gap-5">
-            <!-- Pick Targets -->
-            <Command.Root class="h-[300px] flex-1 rounded-lg border">
-              <Command.Input placeholder="Search for a creature" />
-              <Command.List>
-                <Command.Empty>No results found.</Command.Empty>
-                <!-- Player -->
-                <Command.Group heading="Players">
-                  {#each encounter.entities.filter((entity) => entity.type === "player") as player}
-                    <Command.Item
-                      class="flex justify-between"
-                      value={player.name}
-                      onclick={(_) => turnReminder.targets.push(player.id!)}
-                      disabled={turnReminder.targets.includes(player.id!)}
-                    >
-                      <span>{player.name}</span>
-                    </Command.Item>
-                  {/each}
-                </Command.Group>
-
-                <Command.Separator />
-
-                <!-- Monsters -->
-                <Command.Group heading="Monsters">
-                  {#each encounter.entities.filter((entity) => entity.type === "monster") as monster}
-                    <Command.Item
-                      class="flex justify-between"
-                      value={monster.name}
-                      onclick={(_) => turnReminder.targets.push(monster.id!)}
-                      disabled={turnReminder.targets.includes(monster.id!)}
-                    >
-                      <span>{monster.name}</span>
-                    </Command.Item>
-                  {/each}
-                </Command.Group>
-              </Command.List>
-            </Command.Root>
-
-            <!-- List Targets -->
-            <ScrollArea
-              class="h-[300px] flex-1 rounded-md border"
-              scrollbarYClasses="hidden"
-            >
-              {#each encounter.entities
-                .filter((entity) => turnReminder.targets.includes(entity.id!))
-                .sort((a, b) => a.name!.localeCompare(b.name!)) as entity}
-                <div class="mx-2 my-3 flex justify-between text-sm">
-                  <span>{entity.name!}</span>
-                  <div class="flex gap-x-2">
-                    <CircleX
-                      class="text-red-300 hover:text-red-600"
-                      size="18"
-                      onclick={(_: MouseEvent) =>
-                        ReminderActions.RemoveTarget(turnReminder, entity.id!)}
-                    />
-                  </div>
-                </div>
-              {/each}
-            </ScrollArea>
           </div>
         {:else if reminderType === ReminderType.Round}
           <div class="flex w-full gap-5">
