@@ -184,6 +184,7 @@
     encounter.entities.push(reminder);
     reminderName = undefined;
     reminderType = undefined;
+    reminderDescription = undefined;
     initiativeReminder = ReminderActions.EmptyInitiativeReminder();
     roundReminder = ReminderActions.EmptyRoundReminder();
     addReminderDialogOpen = false;
