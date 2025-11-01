@@ -73,6 +73,7 @@
   import { Roll } from "$utils/roll";
   import TextArea from "$components/TextArea.svelte";
   import AddButton from "$components/AddButton.svelte";
+  import { CompareEncounterEntities } from "$utils/sort";
 
   let addPlayerDialogOpen = $state(false);
   let addMonsterDialogOpen = $state(false);

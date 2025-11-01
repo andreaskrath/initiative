@@ -66,6 +66,8 @@
   import Combobox from "$lib/shared/components/Combobox.svelte";
   import type { FieldErrors } from "$utils/error";
   import AddButton from "$components/AddButton.svelte";
+  import TraitForm from "$monster/components/TraitForm.svelte";
+  import ReminderForm from "$monster/components/ReminderForm.svelte";
 
   const alignments = ToLabelValueWith(Alignments, DisplayAlignment);
   const attributes = ToLabelValueWith(Attributes, DisplayAttribute);
@@ -683,43 +685,13 @@
     </div>
 
     {#each monster.traits as trait, index (trait)}
-      <!-- Name -->
-      <Container class="col-span-9">
-        <Label required>Name</Label>
-        <Input
-          bind:value={trait.name}
-          type="text"
-          placeholder="Martial Advantage"
-          error={errors?.get(`traits.${index}.name`)}
-        />
-      </Container>
-
-      <!-- Remove Trait Button -->
-      <div class="col-span-1 col-start-10 flex justify-center">
-        <Button
-          variant="ghost"
-          size="icon"
-          class="mt-5 w-full text-red-300 hover:text-red-600"
-          onclick={(_: MouseEvent) =>
-            MonsterActions.RemoveTrait(monster, trait)}
-        >
-          <CircleX />
-        </Button>
-      </div>
-
-      <!-- Description -->
-      <Container class="col-span-10">
-        <Label required>Description</Label>
-        <TextArea
-          bind:value={trait.description}
-          placeholder="Write a description for the trait.."
-          error={errors?.get(`traits.${index}.description`)}
-        />
-      </Container>
-
-      {#if index !== monster.traits.length - 1}
-        <hr class="col-span-10" />
-      {/if}
+      <TraitForm
+        bind:trait={monster.traits[index]}
+        {index}
+        {errors}
+        onRemove={() => MonsterActions.RemoveTrait(monster, trait)}
+        showSeparator={index !== monster.traits.length - 1}
+      />
     {/each}
 
     <!-- Reminders -->
@@ -729,54 +701,14 @@
     </div>
 
     {#each monster.reminders as reminder, index (reminder)}
-      <!-- Name -->
-      <Container class="col-span-4">
-        <Label required>Name</Label>
-        <Input
-          bind:value={reminder.name}
-          type="text"
-          placeholder="Martial Advantage"
-          error={errors?.get(`reminders.${index}.name`)}
-        />
-      </Container>
-
-      <!-- Trigger Type -->
-      <Container class="col-span-5">
-        <Label required>Trigger</Label>
-        <Select
-          bind:value={reminder.trigger}
-          placeholder="Select a trigger type"
-          items={turnTriggers}
-          error={errors?.get(`reminders.${index}.trigger`)}
-        />
-      </Container>
-
-      <!-- Remove Reminder Button -->
-      <div class="col-span-1 col-start-10 flex justify-center">
-        <Button
-          variant="ghost"
-          size="icon"
-          class="mt-5 w-full text-red-300 hover:text-red-600"
-          onclick={(_: MouseEvent) =>
-            MonsterActions.RemoveReminder(monster, reminder)}
-        >
-          <CircleX />
-        </Button>
-      </div>
-
-      <!-- Description -->
-      <Container class="col-span-10">
-        <Label required>Description</Label>
-        <TextArea
-          bind:value={reminder.description}
-          placeholder="Write a description for the reminder.."
-          error={errors?.get(`reminders.${index}.description`)}
-        />
-      </Container>
-
-      {#if index !== monster.reminders.length - 1}
-        <hr class="col-span-10" />
-      {/if}
+      <ReminderForm
+        bind:reminder={monster.reminders[index]}
+        {index}
+        triggerOptions={turnTriggers}
+        {errors}
+        onRemove={() => MonsterActions.RemoveReminder(monster, reminder)}
+        showSeparator={index !== monster.reminders.length - 1}
+      />
     {/each}
   </Tabs.Content>
   <Tabs.Content value="actions" class="mt-5 grid grid-cols-10 gap-x-2 gap-y-5">

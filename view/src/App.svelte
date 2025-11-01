@@ -16,6 +16,7 @@
   import MonsterBuilder from "$routes/MonsterBuilder.svelte";
   import EncounterList from "$routes/EncounterList.svelte";
   import EncounterBuilder from "$routes/EncounterBuilder.svelte";
+  import EncounterView from "$routes/EncounterView.svelte";
   import SpellList from "$routes/SpellList.svelte";
   import SpellBuilder from "$routes/SpellBuilder.svelte";
 
@@ -44,6 +45,10 @@
       component: EncounterBuilder,
     },
     {
+      path: "encounters/view",
+      component: EncounterView,
+    },
+    {
       path: "spells",
       component: SpellList,
     },
@@ -66,16 +71,14 @@
 <Toaster duration={5000} position="bottom-right" />
 <Navbar />
 <main>
-  <div class="mx-auto w-[1200px] py-2">
-    <Router
-      {routes}
-      statuses={{
-        [StatusCode.NotFound]: (_: RouteResult) => {
-          return {
-            component: NotFound,
-          };
-        },
-      }}
-    />
-  </div>
+  <Router
+    {routes}
+    statuses={{
+      [StatusCode.NotFound]: (_: RouteResult) => {
+        return {
+          component: NotFound,
+        };
+      },
+    }}
+  />
 </main>
