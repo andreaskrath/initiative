@@ -64,3 +64,17 @@ pub async fn get_by_id(
         }
     }
 }
+
+pub async fn delete(
+    State(pool): State<PgPool>,
+    Path(id): Path<Uuid>,
+) -> StatusCode {
+    let encounter_repository = EncounterRepository::new(pool);
+
+    if let Err(err) = encounter_repository.delete(id).await {
+        println!("{err:?}");
+        return StatusCode::INTERNAL_SERVER_ERROR;
+    }
+
+    StatusCode::NO_CONTENT
+}

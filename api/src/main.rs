@@ -1,6 +1,6 @@
 use axum::{
     Router,
-    routing::{get, post, put},
+    routing::{delete, get, post, put},
 };
 use initiative::{encounter, monster, spell};
 use sqlx::postgres::PgPoolOptions;
@@ -35,6 +35,7 @@ async fn async_main() {
         .route("/api/encounters", get(encounter::handler::get_all))
         .route("/api/encounter/{*id}", get(encounter::handler::get_by_id))
         .route("/api/encounter/{*id}", put(encounter::handler::update))
+        .route("/api/encounter/{*id}", delete(encounter::handler::delete))
         .fallback(initiative::index)
         .with_state(pool);
 

@@ -31,7 +31,7 @@ export { Skill, Skills, DisplaySkill } from "./Skill";
 export { SpellLevel, SpellLevels, DisplaySpellLevel } from "./SpellLevel";
 export { type CombatCondition } from "./CombatCondition";
 export { type CombatEntity, CombatEntityActions } from "./CombatEntity";
-export { type Encounter, EncounterActions } from "./Encounter";
+export { type Encounter, EncounterActions, type Wall, type EntityPosition, type BattleMap } from "./Encounter";
 export { type EncounterEntity } from "./EncounterEntity";
 export { type Monster, MonsterActions } from "./Monster";
 export { type MonsterEntity, MonsterEntityActions } from "./MonsterEntity";

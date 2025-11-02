@@ -6,7 +6,9 @@
   import { goto } from "@mateothegreat/svelte5-router";
   import Eye from "@lucide/svelte/icons/eye";
   import Plus from "@lucide/svelte/icons/plus";
+  import Trash from "@lucide/svelte/icons/trash-2";
   import type { Encounter } from "$types";
+  import { toast } from "svelte-sonner";
 
   let props = $props();
 
@@ -29,6 +31,28 @@
       loading = false;
     }
   });
+
+  const deleteEncounter = async (encounterId: string, encounterName: string) => {
+    if (!confirm(`Are you sure you want to delete "${encounterName}"?`)) {
+      return;
+    }
+
+    try {
+      const response = await fetch(`/api/encounter/${encounterId}`, {
+        method: "DELETE",
+      });
+
+      if (response.ok || response.status === 204) {
+        encounters = encounters.filter(e => e.id !== encounterId);
+        toast.success("Encounter deleted successfully");
+      } else {
+        toast.error("Failed to delete encounter");
+      }
+    } catch (error) {
+      console.error("Failed to delete encounter:", error);
+      toast.error("Failed to delete encounter");
+    }
+  };
 </script>
 
 <Container class="mx-auto max-w-[1000px] py-4">
@@ -66,6 +90,16 @@
             >
               <Eye class="mr-2 h-4 w-4" />
               View
+            </Button>
+            <Button
+              variant="destructive"
+              size="sm"
+              onclick={(e) => {
+                e.stopPropagation();
+                deleteEncounter(encounter.id!, encounter.name ?? "Unnamed Encounter");
+              }}
+            >
+              <Trash class="h-4 w-4" />
             </Button>
           </div>
         </div>

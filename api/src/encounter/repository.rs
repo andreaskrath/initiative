@@ -80,4 +80,13 @@ impl EncounterRepository {
 
         Ok(state)
     }
+
+    pub async fn delete(&self, id: Uuid) -> Result<(), sqlx::Error> {
+        sqlx::query("DELETE FROM encounters WHERE id = $1;")
+            .bind(id)
+            .execute(&self.pool)
+            .await?;
+
+        Ok(())
+    }
 }

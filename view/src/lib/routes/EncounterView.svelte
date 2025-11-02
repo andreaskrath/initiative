@@ -68,13 +68,19 @@
   import { CompareEncounterEntities } from "$utils/sort";
   import { useAutoSave } from "$utils/autosave.svelte";
   import { EncounterActions } from "$types";
+  import BattleMap from "$encounter/components/BattleMap.svelte";
+  import Map from "@lucide/svelte/icons/map";
 
   // Extract encounter ID directly from URL path
   // URL format: /encounters/view/{id}
   const getEncounterIdFromUrl = (): string | null => {
-    const pathParts = window.location.pathname.split('/').filter(p => p);
+    const pathParts = window.location.pathname.split("/").filter((p) => p);
     // pathParts should be: ['encounters', 'view', 'id']
-    if (pathParts.length >= 3 && pathParts[0] === 'encounters' && pathParts[1] === 'view') {
+    if (
+      pathParts.length >= 3 &&
+      pathParts[0] === "encounters" &&
+      pathParts[1] === "view"
+    ) {
       return pathParts[2];
     }
     return null;
@@ -336,8 +342,14 @@
   // Sort entities by initiative (descending)
   let sortedEntities = $derived(
     [...encounter.entities].sort((a, b) => {
-      const aInit = a.type === "reminder" && a.reminder_type === "round" ? -1 : (a.initiative ?? 0);
-      const bInit = b.type === "reminder" && b.reminder_type === "round" ? -1 : (b.initiative ?? 0);
+      const aInit =
+        a.type === "reminder" && a.reminder_type === "round"
+          ? -1
+          : (a.initiative ?? 0);
+      const bInit =
+        b.type === "reminder" && b.reminder_type === "round"
+          ? -1
+          : (b.initiative ?? 0);
       return bInit - aInit;
     }),
   );
@@ -354,6 +366,7 @@
   let conditionDialogOpen = $state(false);
   let reminderManagementDialogOpen = $state(false);
   let addEntityDialogOpen = $state(false);
+  let battleMapDialogOpen = $state(false);
   let damageAmount = $state<number | undefined>(undefined);
   let damageType = $state<string | undefined>(undefined);
   let healAmount = $state<number | undefined>(undefined);
@@ -372,7 +385,9 @@
   let entityReminderTrigger = $state<string | undefined>(undefined);
 
   // Add entity form state
-  let playerForm: PlayerEntity = $state(PlayerEntityActions.EmptyPlayerEntity());
+  let playerForm: PlayerEntity = $state(
+    PlayerEntityActions.EmptyPlayerEntity(),
+  );
   let monsterName: string | undefined = $state(undefined);
   let monsterId: string | undefined = $state(undefined);
   let repeatMonster: number | undefined = $state(undefined);
@@ -383,7 +398,9 @@
   let initiativeReminder: InitiativeReminder = $state(
     ReminderActions.EmptyInitiativeReminder(),
   );
-  let roundReminder: RoundReminder = $state(ReminderActions.EmptyRoundReminder());
+  let roundReminder: RoundReminder = $state(
+    ReminderActions.EmptyRoundReminder(),
+  );
 
   // Monster list for selection
   let monsters: Monster[] = $state([]);
@@ -416,10 +433,16 @@
   }));
 
   // Reminder type options
-  const reminderTypeOptions = ToLabelValueWith(ReminderTypes, DisplayReminderType);
+  const reminderTypeOptions = ToLabelValueWith(
+    ReminderTypes,
+    DisplayReminderType,
+  );
   const roundTriggerOptions = ToLabelValueWith(RoundTriggers, DisplayTrigger);
   const turnTriggerOptions = ToLabelValueWith(TurnTriggers, DisplayTrigger);
-  const rollStrategyOptions = ToLabelValueWith(RollStrategies, DisplayRollStrategy);
+  const rollStrategyOptions = ToLabelValueWith(
+    RollStrategies,
+    DisplayRollStrategy,
+  );
 
   // Load monsters and encounter on mount
   onMount(async () => {
@@ -439,10 +462,17 @@
           encounter = await response.json();
           console.log("Loaded encounter:", encounter);
           console.log("Monsters map from DB:", encounter.monsters);
-          console.log("Monster entities:", encounter.entities.filter(e => e.type === "monster"));
+          console.log(
+            "Monster entities:",
+            encounter.entities.filter((e) => e.type === "monster"),
+          );
         } else {
           const errorText = await response.text();
-          console.error("Failed to fetch encounter:", response.status, errorText);
+          console.error(
+            "Failed to fetch encounter:",
+            response.status,
+            errorText,
+          );
           toast.error("Failed to load encounter");
         }
       } catch (error) {
@@ -513,7 +543,12 @@
       monsterEntity.name = name;
       monsterEntity.monster_id = selectedMonster.id;
 
-      console.log("Adding monster to encounter:", name, "with ID:", selectedMonster.id);
+      console.log(
+        "Adding monster to encounter:",
+        name,
+        "with ID:",
+        selectedMonster.id,
+      );
 
       // Add monster to the encounter's monsters map if not already there
       if (selectedMonster.id && !encounter.monsters[selectedMonster.id]) {
@@ -523,7 +558,10 @@
         console.log("Monster already in map or no ID");
       }
 
-      const hp = Roll(selectedMonster.rollable_hit_points!, monsterRollStrategy);
+      const hp = Roll(
+        selectedMonster.rollable_hit_points!,
+        monsterRollStrategy,
+      );
       monsterEntity.max_hp = hp;
       monsterEntity.current_hp = hp;
       monsterEntity.initiative = new DiceRoll(
@@ -621,12 +659,16 @@
       source: newConditionSource || undefined,
       cause: newConditionCause || undefined,
       saving_throw_dc: newConditionSaveDC,
-      saving_throw_attribute: newConditionSaveAttribute as Attribute | undefined,
+      saving_throw_attribute: newConditionSaveAttribute as
+        | Attribute
+        | undefined,
     };
 
     entity.conditions.push(newCondition);
 
-    toast.success(`Added ${DisplayCondition[newConditionType as Condition]} condition`);
+    toast.success(
+      `Added ${DisplayCondition[newConditionType as Condition]} condition`,
+    );
 
     // Reset form
     newConditionType = undefined;
@@ -645,7 +687,9 @@
     const removed = entity.conditions[conditionIndex];
     entity.conditions.splice(conditionIndex, 1);
 
-    toast.success(`Removed ${removed.condition ? DisplayCondition[removed.condition] : "condition"}`);
+    toast.success(
+      `Removed ${removed.condition ? DisplayCondition[removed.condition] : "condition"}`,
+    );
   };
 
   const handleManageReminders = (index: number) => {
@@ -658,7 +702,12 @@
   };
 
   const addEntityReminder = () => {
-    if (entityBeingModified === null || !entityReminderName || !entityReminderDescription || !entityReminderTrigger) {
+    if (
+      entityBeingModified === null ||
+      !entityReminderName ||
+      !entityReminderDescription ||
+      !entityReminderTrigger
+    ) {
       toast.error("Please fill in all required fields");
       return;
     }
@@ -714,7 +763,9 @@
     const entity = sortedEntities[entityBeingModified];
     if (entity.type === "monster") {
       const monsterEntity = entity as MonsterEntity;
-      const monsterData = monsterEntity.monster_id ? encounter.monsters[monsterEntity.monster_id] : null;
+      const monsterData = monsterEntity.monster_id
+        ? encounter.monsters[monsterEntity.monster_id]
+        : null;
       let actualDamage = damageAmount;
       let damageMessage = "";
 
@@ -724,7 +775,9 @@
         damageMessage = `${monsterEntity.name ?? "Monster"} is immune to ${DisplayDamageType[damageType as DamageType]} damage!`;
       }
       // Check for resistance (half damage, rounded down)
-      else if (monsterData?.damage_resistances?.includes(damageType as DamageType)) {
+      else if (
+        monsterData?.damage_resistances?.includes(damageType as DamageType)
+      ) {
         actualDamage = Math.floor(damageAmount / 2);
         damageMessage = `${monsterEntity.name ?? "Monster"} resisted ${DisplayDamageType[damageType as DamageType]} damage and took ${actualDamage} damage (${damageAmount} halved)`;
       }
@@ -752,7 +805,10 @@
     const entity = sortedEntities[entityBeingModified];
     if (entity.type === "monster") {
       const monster = entity as MonsterEntity;
-      const newHp = Math.min((monster.max_hp ?? 0), (monster.current_hp ?? 0) + healAmount);
+      const newHp = Math.min(
+        monster.max_hp ?? 0,
+        (monster.current_hp ?? 0) + healAmount,
+      );
       monster.current_hp = newHp;
 
       toast.success(`${monster.name ?? "Monster"} healed ${healAmount} HP`);
@@ -774,53 +830,66 @@
     <div class="mb-4 flex items-center justify-between">
       <div>
         <Title variant="default">{encounter.name ?? "Unnamed Encounter"}</Title>
-        <p class="ml-1 text-sm text-muted-foreground">Round {currentRound}</p>
+        <p class="text-muted-foreground ml-1 text-sm">Round {currentRound}</p>
       </div>
-    <div class="flex items-center gap-3">
-      {#if isSaving}
-        <span class="text-sm font-medium text-primary">Saving...</span>
-      {/if}
-      <div class="flex gap-2">
-        <Button variant="outline" onclick={() => (addEntityDialogOpen = true)}>
-          <Plus class="mr-2 h-4 w-4" />
-          Add Entity
-        </Button>
-        <Button variant="outline" onclick={previousTurn}>Previous</Button>
-        <Button onclick={nextTurn}>
-          Next Turn
-          <ChevronRight class="ml-2 h-4 w-4" />
-        </Button>
+      <div class="flex items-center gap-3">
+        {#if isSaving}
+          <span class="text-primary text-sm font-medium">Saving...</span>
+        {/if}
+        <div class="flex gap-2">
+          <Button
+            variant="outline"
+            onclick={() => (addEntityDialogOpen = true)}
+          >
+            <Plus class="mr-2 h-4 w-4" />
+            Add Entity
+          </Button>
+          <Button
+            variant="outline"
+            onclick={() => (battleMapDialogOpen = true)}
+          >
+            <Map class="mr-2 h-4 w-4" />
+            Battle Map
+          </Button>
+          <Button variant="outline" onclick={previousTurn}>Previous</Button>
+          <Button onclick={nextTurn}>
+            Next Turn
+            <ChevronRight class="ml-2 h-4 w-4" />
+          </Button>
+        </div>
       </div>
-    </div>
-  </div>
-
-  <div class="grid h-[calc(100vh-120px)] grid-cols-12 gap-4">
-    <!-- Left Side: Initiative Order -->
-    <div class="col-span-4">
-      <InitiativeList
-        entities={sortedEntities}
-        activeIndex={encounter.active}
-        selectedIndex={selectedEntityIndex}
-        onSelectEntity={(index) => (selectedEntityIndex = index)}
-        onToggleConcentration={handleToggleConcentration}
-        onManageConditions={handleManageConditions}
-        onManageReminders={handleManageReminders}
-        onTakeDamage={handleTakeDamage}
-        onHeal={handleHeal}
-      />
     </div>
 
-    <!-- Right Side: Entity Details -->
-    <div class="col-span-8">
-      {#if selectedEntity}
-        <EntityDetailsPanel entity={selectedEntity} monsters={encounter.monsters} />
-      {:else}
-        <Container class="flex h-full items-center justify-center">
-          <p class="text-muted-foreground">No entity selected</p>
-        </Container>
-      {/if}
+    <div class="grid h-[calc(100vh-120px)] grid-cols-12 gap-4">
+      <!-- Left Side: Initiative Order -->
+      <div class="col-span-4">
+        <InitiativeList
+          entities={sortedEntities}
+          activeIndex={encounter.active}
+          selectedIndex={selectedEntityIndex}
+          onSelectEntity={(index) => (selectedEntityIndex = index)}
+          onToggleConcentration={handleToggleConcentration}
+          onManageConditions={handleManageConditions}
+          onManageReminders={handleManageReminders}
+          onTakeDamage={handleTakeDamage}
+          onHeal={handleHeal}
+        />
+      </div>
+
+      <!-- Right Side: Entity Details -->
+      <div class="col-span-8">
+        {#if selectedEntity}
+          <EntityDetailsPanel
+            entity={selectedEntity}
+            monsters={encounter.monsters}
+          />
+        {:else}
+          <Container class="flex h-full items-center justify-center">
+            <p class="text-muted-foreground">No entity selected</p>
+          </Container>
+        {/if}
+      </div>
     </div>
-  </div>
   {/if}
 </Container>
 
@@ -851,7 +920,10 @@
         <Button variant="outline" onclick={() => (damageDialogOpen = false)}>
           Cancel
         </Button>
-        <Button onclick={applyDamage} disabled={!damageAmount || damageAmount <= 0 || !damageType}>
+        <Button
+          onclick={applyDamage}
+          disabled={!damageAmount || damageAmount <= 0 || !damageType}
+        >
           Apply
         </Button>
       </div>
@@ -942,7 +1014,11 @@
                 />
               </div>
             </div>
-            <Button onclick={addCondition} disabled={!newConditionType} class="w-full">
+            <Button
+              onclick={addCondition}
+              disabled={!newConditionType}
+              class="w-full"
+            >
               Add Condition
             </Button>
           </div>
@@ -958,13 +1034,15 @@
             {#if entity.type !== "reminder" && entity.conditions && entity.conditions.length > 0}
               <div class="space-y-2">
                 {#each entity.conditions as condition, index}
-                  <div class="rounded-lg border bg-card p-3">
+                  <div class="bg-card rounded-lg border p-3">
                     <div class="flex items-start justify-between">
                       <div class="flex-1 space-y-1">
                         <div class="font-semibold">
-                          {condition.condition ? DisplayCondition[condition.condition] : "Unknown"}
+                          {condition.condition
+                            ? DisplayCondition[condition.condition]
+                            : "Unknown"}
                         </div>
-                        <div class="space-y-0.5 text-sm text-muted-foreground">
+                        <div class="text-muted-foreground space-y-0.5 text-sm">
                           {#if condition.source}
                             <div>Source: {condition.source}</div>
                           {/if}
@@ -975,7 +1053,9 @@
                             <div>
                               Save DC: {condition.saving_throw_dc}
                               {#if condition.saving_throw_attribute}
-                                ({DisplayAttribute[condition.saving_throw_attribute]})
+                                ({DisplayAttribute[
+                                  condition.saving_throw_attribute
+                                ]})
                               {/if}
                             </div>
                           {/if}
@@ -994,7 +1074,9 @@
                 {/each}
               </div>
             {:else}
-              <div class="rounded-lg border border-dashed p-4 text-center text-sm text-muted-foreground">
+              <div
+                class="text-muted-foreground rounded-lg border border-dashed p-4 text-center text-sm"
+              >
                 No conditions currently active
               </div>
             {/if}
@@ -1061,13 +1143,17 @@
             {#if entity.type !== "reminder" && entity.reminders && entity.reminders.length > 0}
               <div class="space-y-2">
                 {#each entity.reminders as reminder, index}
-                  <div class="rounded-lg border bg-card p-3">
+                  <div class="bg-card rounded-lg border p-3">
                     <div class="flex items-start justify-between">
                       <div class="flex-1 space-y-1">
-                        <div class="font-semibold">{reminder.name ?? "Unnamed Reminder"}</div>
-                        <div class="space-y-0.5 text-sm text-muted-foreground">
+                        <div class="font-semibold">
+                          {reminder.name ?? "Unnamed Reminder"}
+                        </div>
+                        <div class="text-muted-foreground space-y-0.5 text-sm">
                           {#if reminder.trigger}
-                            <div>Trigger: {DisplayTrigger[reminder.trigger]}</div>
+                            <div>
+                              Trigger: {DisplayTrigger[reminder.trigger]}
+                            </div>
                           {/if}
                           {#if reminder.description}
                             <div>{reminder.description}</div>
@@ -1087,7 +1173,9 @@
                 {/each}
               </div>
             {:else}
-              <div class="rounded-lg border border-dashed p-4 text-center text-sm text-muted-foreground">
+              <div
+                class="text-muted-foreground rounded-lg border border-dashed p-4 text-center text-sm"
+              >
                 No reminders currently active
               </div>
             {/if}
@@ -1096,7 +1184,10 @@
       </div>
     </ScrollArea>
     <div class="mt-4 flex justify-end">
-      <Button variant="outline" onclick={() => (reminderManagementDialogOpen = false)}>
+      <Button
+        variant="outline"
+        onclick={() => (reminderManagementDialogOpen = false)}
+      >
         Close
       </Button>
     </div>
@@ -1139,16 +1230,15 @@
                 />
                 <Button
                   variant="outline"
-                  onclick={() => (playerForm.initiative = new DiceRoll("1d20").total)}
+                  onclick={() =>
+                    (playerForm.initiative = new DiceRoll("1d20").total)}
                 >
                   <Dices class="h-4 w-4" />
                 </Button>
               </div>
             </div>
           </div>
-          <Button onclick={addPlayer} class="w-full">
-            Add Player
-          </Button>
+          <Button onclick={addPlayer} class="w-full">Add Player</Button>
         </Tabs.Content>
 
         <!-- Monster Tab -->
@@ -1191,18 +1281,17 @@
             </div>
           </div>
           {#if selectedMonster}
-            <div class="rounded-lg border bg-muted p-3">
+            <div class="bg-muted rounded-lg border p-3">
               <div class="text-sm">
                 <div class="font-semibold">{selectedMonster.name}</div>
                 <div class="text-muted-foreground">
-                  CR {selectedMonster.challenge_rating} • AC {selectedMonster.armor_class} • HP {selectedMonster.hit_points}
+                  CR {selectedMonster.challenge_rating} • AC {selectedMonster.armor_class}
+                  • HP {selectedMonster.hit_points}
                 </div>
               </div>
             </div>
           {/if}
-          <Button onclick={addMonster} class="w-full">
-            Add Monster
-          </Button>
+          <Button onclick={addMonster} class="w-full">Add Monster</Button>
         </Tabs.Content>
 
         <!-- Reminder Tab -->
@@ -1244,7 +1333,10 @@
                 />
                 <Button
                   variant="outline"
-                  onclick={() => (initiativeReminder.initiative = new DiceRoll("1d20").total)}
+                  onclick={() =>
+                    (initiativeReminder.initiative = new DiceRoll(
+                      "1d20",
+                    ).total)}
                 >
                   <Dices class="h-4 w-4" />
                 </Button>
@@ -1268,6 +1360,24 @@
     </ScrollArea>
     <div class="mt-4 flex justify-end">
       <Button variant="outline" onclick={() => (addEntityDialogOpen = false)}>
+        Close
+      </Button>
+    </div>
+  </Dialog.Content>
+</Dialog.Root>
+
+<!-- Battle Map Dialog -->
+<Dialog.Root bind:open={battleMapDialogOpen}>
+  <Dialog.Content class="sm:max-w-none w-fit max-w-[96vw]">
+    <Dialog.Header>
+      <Dialog.Title>Battle Map</Dialog.Title>
+      <Dialog.Description>
+        Manage entity positions and terrain on the battle map
+      </Dialog.Description>
+    </Dialog.Header>
+    <BattleMap {encounter} />
+    <div class="mt-4 flex justify-end">
+      <Button variant="outline" onclick={() => (battleMapDialogOpen = false)}>
         Close
       </Button>
     </div>
