@@ -26,6 +26,7 @@
   import ConcentrationIcon from "$components/ConcentrationIcon.svelte";
   import ChevronDown from "@lucide/svelte/icons/chevron-down";
   import ChevronRight from "@lucide/svelte/icons/chevron-right";
+  import * as Tabs from "$components/ui/tabs/index";
 
   interface Props {
     entity: EncounterEntity;
@@ -98,9 +99,17 @@
 
       <!-- Monster Details -->
       {#if isMonster && monster && monsterEntity}
+        <Tabs.Root value="info" class="w-full">
+          <Tabs.List class="grid w-full grid-cols-3">
+            <Tabs.Trigger value="info">Info</Tabs.Trigger>
+            <Tabs.Trigger value="actions">Actions</Tabs.Trigger>
+            <Tabs.Trigger value="spellcasting">Spellcasting</Tabs.Trigger>
+          </Tabs.List>
 
-        <!-- Basic Info -->
-        <div class="grid grid-cols-2 gap-4 text-sm">
+          <!-- Info Tab -->
+          <Tabs.Content value="info" class="space-y-4 mt-4">
+            <!-- Basic Info -->
+            <div class="grid grid-cols-2 gap-4 text-sm">
           <div>
             <span class="font-semibold">Type:</span>
             {monster.monster_type ? DisplayMonsterType[monster.monster_type] : "Unknown"}
@@ -401,7 +410,10 @@
           </div>
           <Separator />
         {/if}
+          </Tabs.Content>
 
+          <!-- Actions Tab -->
+          <Tabs.Content value="actions" class="space-y-4 mt-4">
         <!-- Actions -->
         {#if monster.regular_actions && monster.regular_actions.length > 0}
           <div>
@@ -596,7 +608,10 @@
           </div>
           <Separator />
         {/if}
+          </Tabs.Content>
 
+          <!-- Spellcasting Tab -->
+          <Tabs.Content value="spellcasting" class="space-y-4 mt-4">
         <!-- Spellcasting -->
         {#if monster.spellcasting}
           <div>
@@ -765,6 +780,8 @@
           </div>
           <Separator />
         {/if}
+          </Tabs.Content>
+        </Tabs.Root>
       {/if}
 
       <!-- Player Details -->
