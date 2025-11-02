@@ -45,7 +45,7 @@
       component: EncounterBuilder,
     },
     {
-      path: "encounters/view",
+      path: "encounters/view/(.*?)",
       component: EncounterView,
     },
     {

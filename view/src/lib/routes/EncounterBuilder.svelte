@@ -200,6 +200,18 @@
     const addMonster = async (name: string) => {
       let monsterForm = MonsterEntityActions.EmptyMonsterEntity();
       monsterForm.name = name;
+      monsterForm.monster_id = selectedMonster!.id;
+
+      console.log("Adding monster:", name, "with ID:", selectedMonster!.id);
+
+      // Add monster to the encounter's monsters map if not already there
+      if (selectedMonster!.id && !encounter.monsters[selectedMonster!.id]) {
+        encounter.monsters[selectedMonster!.id] = selectedMonster!;
+        console.log("Added monster to map:", selectedMonster!.name);
+      } else {
+        console.log("Monster already in map or no ID");
+      }
+
       const hp = Roll(
         selectedMonster!.rollable_hit_points!,
         monsterRollStrategy,
@@ -229,17 +241,23 @@
   };
 
   const CreateEncounter = async () => {
+    console.log("Creating encounter with data:", encounter);
+    console.log("Monsters map:", encounter.monsters);
+    console.log("Monster entities:", encounter.entities.filter(e => e.type === "monster"));
+
     const result = await EncounterService.Create(encounter);
 
-    if (typeof result === "number") {
+    if (typeof result === "object" && "id" in result) {
+      // Successfully created, navigate to view page
+      encounterErrors = null;
+      toast.success("Successfully created encounter");
+      console.log("Created encounter with ID:", result.id); // Debug log
+      goto(`/encounters/view/${result.id}`);
+    } else if (typeof result === "number") {
       encounterErrors = null;
       switch (result) {
-        case StatusCodes.CREATED:
-          toast.success("Successfully created encounter");
-          goto("/encounters");
-          break;
         case StatusCodes.INTERNAL_SERVER_ERROR:
-          toast.success("Internal server error");
+          toast.error("Internal server error");
           break;
         default:
           toast.error("An unknown error occured");

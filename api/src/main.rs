@@ -1,6 +1,6 @@
 use axum::{
     Router,
-    routing::{get, post},
+    routing::{get, post, put},
 };
 use initiative::{encounter, monster, spell};
 use sqlx::postgres::PgPoolOptions;
@@ -32,6 +32,9 @@ async fn async_main() {
         .route("/api/monsters/create", post(monster::handler::create))
         .route("/api/monsters", get(monster::handler::get))
         .route("/api/encounters/create", post(encounter::handler::create))
+        .route("/api/encounters", get(encounter::handler::get_all))
+        .route("/api/encounter/{*id}", get(encounter::handler::get_by_id))
+        .route("/api/encounter/{*id}", put(encounter::handler::update))
         .fallback(initiative::index)
         .with_state(pool);
 

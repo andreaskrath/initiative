@@ -8,11 +8,13 @@
   import Sparkles from "@lucide/svelte/icons/sparkles";
   import Shield from "@lucide/svelte/icons/shield";
   import Eye from "@lucide/svelte/icons/eye";
+  import Bell from "@lucide/svelte/icons/bell";
 
   interface Props {
     entity: EncounterEntity;
     onToggleConcentration?: () => void;
     onManageConditions?: () => void;
+    onManageReminders?: () => void;
     onTakeDamage?: () => void;
     onHeal?: () => void;
   }
@@ -21,6 +23,7 @@
     entity,
     onToggleConcentration,
     onManageConditions,
+    onManageReminders,
     onTakeDamage,
     onHeal,
   }: Props = $props();
@@ -60,6 +63,10 @@
       <DropdownMenu.Item onclick={(e) => { e.stopPropagation(); onManageConditions?.(); }}>
         <Shield class="mr-2 h-4 w-4" />
         Manage Conditions
+      </DropdownMenu.Item>
+      <DropdownMenu.Item onclick={(e) => { e.stopPropagation(); onManageReminders?.(); }}>
+        <Bell class="mr-2 h-4 w-4" />
+        Manage Reminders
       </DropdownMenu.Item>
     </DropdownMenu.Content>
   </DropdownMenu.Root>

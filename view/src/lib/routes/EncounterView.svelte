@@ -14,6 +14,7 @@
     type MonsterEntity,
     type PlayerEntity,
     type CombatCondition,
+    type CreatureReminder,
     MonsterType,
     Size,
     Alignment,
@@ -37,6 +38,7 @@
     ReminderTypes,
     DisplayTrigger,
     RoundTriggers,
+    TurnTriggers,
     RollStrategy,
     RollStrategies,
     DisplayRollStrategy,
@@ -64,8 +66,28 @@
   import { DiceRoll } from "@dice-roller/rpg-dice-roller";
   import { ToLabelValueWith } from "$utils/factories";
   import { CompareEncounterEntities } from "$utils/sort";
+  import { useAutoSave } from "$utils/autosave.svelte";
+  import { EncounterActions } from "$types";
 
-  // Dummy encounter data for testing
+  // Extract encounter ID directly from URL path
+  // URL format: /encounters/view/{id}
+  const getEncounterIdFromUrl = (): string | null => {
+    const pathParts = window.location.pathname.split('/').filter(p => p);
+    // pathParts should be: ['encounters', 'view', 'id']
+    if (pathParts.length >= 3 && pathParts[0] === 'encounters' && pathParts[1] === 'view') {
+      return pathParts[2];
+    }
+    return null;
+  };
+
+  const encounterId = getEncounterIdFromUrl();
+
+  // Initialize with empty encounter, will load from backend if ID exists
+  let encounter = $state<Encounter>(EncounterActions.EmptyEncounter());
+  let loading = $state(true);
+
+  // Old dummy encounter for reference (will be removed)
+  /*
   let encounter = $state<Encounter>({
     id: uuid(),
     name: "Goblin Ambush",
@@ -237,7 +259,15 @@
           reactions: [],
           legendary_actions: [],
           lair_actions: [],
-          reminders: [],
+          reminders: [
+            {
+              id: uuid(),
+              type: "reminder",
+              name: "Goblin Regeneration",
+              description: "The goblin boss regains 5 hit points at the start of its turn.",
+              trigger: Trigger.StartOfTurn,
+            },
+          ],
           spellcasting: undefined,
         },
       } satisfies MonsterEntity,
@@ -301,6 +331,7 @@
       } satisfies MonsterEntity,
     ],
   });
+  */
 
   // Sort entities by initiative (descending)
   let sortedEntities = $derived(
@@ -321,6 +352,7 @@
   let damageDialogOpen = $state(false);
   let healDialogOpen = $state(false);
   let conditionDialogOpen = $state(false);
+  let reminderManagementDialogOpen = $state(false);
   let addEntityDialogOpen = $state(false);
   let damageAmount = $state<number | undefined>(undefined);
   let damageType = $state<string | undefined>(undefined);
@@ -333,6 +365,11 @@
   let newConditionCause = $state<string>("");
   let newConditionSaveDC = $state<number | undefined>(undefined);
   let newConditionSaveAttribute = $state<string | undefined>(undefined);
+
+  // Entity reminder management form state (turn-based only)
+  let entityReminderName = $state<string | undefined>(undefined);
+  let entityReminderDescription = $state<string | undefined>(undefined);
+  let entityReminderTrigger = $state<string | undefined>(undefined);
 
   // Add entity form state
   let playerForm: PlayerEntity = $state(PlayerEntityActions.EmptyPlayerEntity());
@@ -381,12 +418,45 @@
   // Reminder type options
   const reminderTypeOptions = ToLabelValueWith(ReminderTypes, DisplayReminderType);
   const roundTriggerOptions = ToLabelValueWith(RoundTriggers, DisplayTrigger);
+  const turnTriggerOptions = ToLabelValueWith(TurnTriggers, DisplayTrigger);
   const rollStrategyOptions = ToLabelValueWith(RollStrategies, DisplayRollStrategy);
 
-  // Load monsters on mount
+  // Load monsters and encounter on mount
   onMount(async () => {
+    console.log("EncounterView mounted");
+    console.log("Current URL:", window.location.pathname);
+    console.log("Extracted encounter ID:", encounterId);
+
     monsters = await MonsterService.GetAll();
+
+    // Load encounter from backend if ID is provided
+    if (encounterId) {
+      console.log(`Fetching encounter from: /api/encounter/${encounterId}`);
+      try {
+        const response = await fetch(`/api/encounter/${encounterId}`);
+        console.log("Fetch response status:", response.status);
+        if (response.ok) {
+          encounter = await response.json();
+          console.log("Loaded encounter:", encounter);
+          console.log("Monsters map from DB:", encounter.monsters);
+          console.log("Monster entities:", encounter.entities.filter(e => e.type === "monster"));
+        } else {
+          const errorText = await response.text();
+          console.error("Failed to fetch encounter:", response.status, errorText);
+          toast.error("Failed to load encounter");
+        }
+      } catch (error) {
+        console.error("Failed to load encounter:", error);
+        toast.error("Failed to load encounter");
+      }
+    } else {
+      console.warn("No encounter ID found in URL!");
+    }
+    loading = false;
   });
+
+  // Auto-save encounter state
+  const { isSaving } = useAutoSave(() => encounter, "/api/encounter", 2000);
 
   // Get current active entity (for turn tracking)
   let activeEntity = $derived(sortedEntities[encounter.active] ?? null);
@@ -441,7 +511,18 @@
     const addSingleMonster = (name: string) => {
       let monsterEntity = MonsterEntityActions.EmptyMonsterEntity();
       monsterEntity.name = name;
-      monsterEntity.monster = selectedMonster;
+      monsterEntity.monster_id = selectedMonster.id;
+
+      console.log("Adding monster to encounter:", name, "with ID:", selectedMonster.id);
+
+      // Add monster to the encounter's monsters map if not already there
+      if (selectedMonster.id && !encounter.monsters[selectedMonster.id]) {
+        encounter.monsters[selectedMonster.id] = selectedMonster;
+        console.log("Added monster to encounters map:", selectedMonster.name);
+      } else {
+        console.log("Monster already in map or no ID");
+      }
+
       const hp = Roll(selectedMonster.rollable_hit_points!, monsterRollStrategy);
       monsterEntity.max_hp = hp;
       monsterEntity.current_hp = hp;
@@ -567,6 +648,53 @@
     toast.success(`Removed ${removed.condition ? DisplayCondition[removed.condition] : "condition"}`);
   };
 
+  const handleManageReminders = (index: number) => {
+    entityBeingModified = index;
+    // Reset form
+    entityReminderName = undefined;
+    entityReminderDescription = undefined;
+    entityReminderTrigger = undefined;
+    reminderManagementDialogOpen = true;
+  };
+
+  const addEntityReminder = () => {
+    if (entityBeingModified === null || !entityReminderName || !entityReminderDescription || !entityReminderTrigger) {
+      toast.error("Please fill in all required fields");
+      return;
+    }
+
+    const entity = sortedEntities[entityBeingModified];
+    if (entity.type === "reminder") return;
+
+    const reminder: CreatureReminder = {
+      id: uuid(),
+      type: "reminder",
+      name: entityReminderName,
+      description: entityReminderDescription,
+      trigger: entityReminderTrigger as Trigger.StartOfTurn | Trigger.EndOfTurn,
+    };
+
+    entity.reminders.push(reminder);
+    toast.success(`Added reminder: ${entityReminderName}`);
+
+    // Reset form
+    entityReminderName = undefined;
+    entityReminderDescription = undefined;
+    entityReminderTrigger = undefined;
+  };
+
+  const removeEntityReminder = (reminderIndex: number) => {
+    if (entityBeingModified === null) return;
+
+    const entity = sortedEntities[entityBeingModified];
+    if (entity.type === "reminder") return;
+
+    const removed = entity.reminders[reminderIndex];
+    entity.reminders.splice(reminderIndex, 1);
+
+    toast.success(`Removed reminder: ${removed.name ?? "Reminder"}`);
+  };
+
   const handleTakeDamage = (index: number) => {
     entityBeingModified = index;
     damageAmount = undefined;
@@ -585,27 +713,28 @@
 
     const entity = sortedEntities[entityBeingModified];
     if (entity.type === "monster") {
-      const monster = entity as MonsterEntity;
+      const monsterEntity = entity as MonsterEntity;
+      const monsterData = monsterEntity.monster_id ? encounter.monsters[monsterEntity.monster_id] : null;
       let actualDamage = damageAmount;
       let damageMessage = "";
 
       // Check for immunity (no damage)
-      if (monster.monster?.damage_immunities?.includes(damageType as DamageType)) {
+      if (monsterData?.damage_immunities?.includes(damageType as DamageType)) {
         actualDamage = 0;
-        damageMessage = `${monster.name ?? "Monster"} is immune to ${DisplayDamageType[damageType as DamageType]} damage!`;
+        damageMessage = `${monsterEntity.name ?? "Monster"} is immune to ${DisplayDamageType[damageType as DamageType]} damage!`;
       }
       // Check for resistance (half damage, rounded down)
-      else if (monster.monster?.damage_resistances?.includes(damageType as DamageType)) {
+      else if (monsterData?.damage_resistances?.includes(damageType as DamageType)) {
         actualDamage = Math.floor(damageAmount / 2);
-        damageMessage = `${monster.name ?? "Monster"} resisted ${DisplayDamageType[damageType as DamageType]} damage and took ${actualDamage} damage (${damageAmount} halved)`;
+        damageMessage = `${monsterEntity.name ?? "Monster"} resisted ${DisplayDamageType[damageType as DamageType]} damage and took ${actualDamage} damage (${damageAmount} halved)`;
       }
       // Normal damage
       else {
-        damageMessage = `${monster.name ?? "Monster"} took ${actualDamage} ${DisplayDamageType[damageType as DamageType]} damage`;
+        damageMessage = `${monsterEntity.name ?? "Monster"} took ${actualDamage} ${DisplayDamageType[damageType as DamageType]} damage`;
       }
 
-      const newHp = Math.max(0, (monster.current_hp ?? 0) - actualDamage);
-      monster.current_hp = newHp;
+      const newHp = Math.max(0, (monsterEntity.current_hp ?? 0) - actualDamage);
+      monsterEntity.current_hp = newHp;
 
       if (actualDamage === 0) {
         toast.info(damageMessage);
@@ -632,22 +761,36 @@
   };
 </script>
 
-<Container class="mx-auto h-screen max-w-[1400px] py-4">
-  <div class="mb-4 flex items-center justify-between">
-    <div>
-      <Title variant="default">{encounter.name}</Title>
-      <p class="ml-1 text-sm text-muted-foreground">Round {currentRound}</p>
+<Container class="mx-auto h-screen max-w-[1000px] py-4">
+  {#if loading}
+    <div class="flex h-full items-center justify-center">
+      <p class="text-muted-foreground">Loading encounter...</p>
     </div>
-    <div class="flex gap-2">
-      <Button variant="outline" onclick={() => (addEntityDialogOpen = true)}>
-        <Plus class="mr-2 h-4 w-4" />
-        Add Entity
-      </Button>
-      <Button variant="outline" onclick={previousTurn}>Previous</Button>
-      <Button onclick={nextTurn}>
-        Next Turn
-        <ChevronRight class="ml-2 h-4 w-4" />
-      </Button>
+  {:else if !encounterId}
+    <div class="flex h-full items-center justify-center">
+      <p class="text-muted-foreground">No encounter ID provided</p>
+    </div>
+  {:else}
+    <div class="mb-4 flex items-center justify-between">
+      <div>
+        <Title variant="default">{encounter.name ?? "Unnamed Encounter"}</Title>
+        <p class="ml-1 text-sm text-muted-foreground">Round {currentRound}</p>
+      </div>
+    <div class="flex items-center gap-3">
+      {#if isSaving}
+        <span class="text-sm font-medium text-primary">Saving...</span>
+      {/if}
+      <div class="flex gap-2">
+        <Button variant="outline" onclick={() => (addEntityDialogOpen = true)}>
+          <Plus class="mr-2 h-4 w-4" />
+          Add Entity
+        </Button>
+        <Button variant="outline" onclick={previousTurn}>Previous</Button>
+        <Button onclick={nextTurn}>
+          Next Turn
+          <ChevronRight class="ml-2 h-4 w-4" />
+        </Button>
+      </div>
     </div>
   </div>
 
@@ -661,6 +804,7 @@
         onSelectEntity={(index) => (selectedEntityIndex = index)}
         onToggleConcentration={handleToggleConcentration}
         onManageConditions={handleManageConditions}
+        onManageReminders={handleManageReminders}
         onTakeDamage={handleTakeDamage}
         onHeal={handleHeal}
       />
@@ -669,7 +813,7 @@
     <!-- Right Side: Entity Details -->
     <div class="col-span-8">
       {#if selectedEntity}
-        <EntityDetailsPanel entity={selectedEntity} />
+        <EntityDetailsPanel entity={selectedEntity} monsters={encounter.monsters} />
       {:else}
         <Container class="flex h-full items-center justify-center">
           <p class="text-muted-foreground">No entity selected</p>
@@ -677,6 +821,7 @@
       {/if}
     </div>
   </div>
+  {/if}
 </Container>
 
 <!-- Damage Dialog -->
@@ -859,6 +1004,99 @@
     </ScrollArea>
     <div class="mt-4 flex justify-end">
       <Button variant="outline" onclick={() => (conditionDialogOpen = false)}>
+        Close
+      </Button>
+    </div>
+  </Dialog.Content>
+</Dialog.Root>
+
+<!-- Reminder Management Dialog -->
+<Dialog.Root bind:open={reminderManagementDialogOpen}>
+  <Dialog.Content class="max-h-[90vh] max-w-2xl">
+    <Dialog.Header>
+      <Dialog.Title>Manage Reminders</Dialog.Title>
+    </Dialog.Header>
+    <ScrollArea class="max-h-[70vh]">
+      <div class="space-y-6 pr-4">
+        <!-- Add New Reminder Form -->
+        <div class="space-y-4">
+          <h3 class="font-semibold">Add New Reminder</h3>
+          <div class="space-y-3">
+            <div>
+              <Label required>Name</Label>
+              <Input
+                type="text"
+                bind:value={entityReminderName}
+                placeholder="Reminder name"
+              />
+            </div>
+            <div>
+              <Label required>Trigger</Label>
+              <Select
+                bind:value={entityReminderTrigger}
+                placeholder="Select trigger"
+                items={turnTriggerOptions}
+              />
+            </div>
+            <div>
+              <Label required>Description</Label>
+              <TextArea
+                bind:value={entityReminderDescription}
+                placeholder="What should you be reminded of?"
+              />
+            </div>
+            <Button onclick={addEntityReminder} class="w-full">
+              Add Reminder
+            </Button>
+          </div>
+        </div>
+
+        <Separator />
+
+        <!-- Current Reminders List -->
+        <div class="space-y-4">
+          <h3 class="font-semibold">Current Reminders</h3>
+          {#if entityBeingModified !== null && sortedEntities[entityBeingModified].type !== "reminder"}
+            {@const entity = sortedEntities[entityBeingModified]}
+            {#if entity.type !== "reminder" && entity.reminders && entity.reminders.length > 0}
+              <div class="space-y-2">
+                {#each entity.reminders as reminder, index}
+                  <div class="rounded-lg border bg-card p-3">
+                    <div class="flex items-start justify-between">
+                      <div class="flex-1 space-y-1">
+                        <div class="font-semibold">{reminder.name ?? "Unnamed Reminder"}</div>
+                        <div class="space-y-0.5 text-sm text-muted-foreground">
+                          {#if reminder.trigger}
+                            <div>Trigger: {DisplayTrigger[reminder.trigger]}</div>
+                          {/if}
+                          {#if reminder.description}
+                            <div>{reminder.description}</div>
+                          {/if}
+                        </div>
+                      </div>
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        class="h-8 w-8"
+                        onclick={() => removeEntityReminder(index)}
+                      >
+                        <X class="h-4 w-4" />
+                      </Button>
+                    </div>
+                  </div>
+                {/each}
+              </div>
+            {:else}
+              <div class="rounded-lg border border-dashed p-4 text-center text-sm text-muted-foreground">
+                No reminders currently active
+              </div>
+            {/if}
+          {/if}
+        </div>
+      </div>
+    </ScrollArea>
+    <div class="mt-4 flex justify-end">
+      <Button variant="outline" onclick={() => (reminderManagementDialogOpen = false)}>
         Close
       </Button>
     </div>

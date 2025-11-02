@@ -1,11 +1,13 @@
 import type { EncounterEntity } from "./EncounterEntity";
 import type { PlayerEntity } from "./PlayerEntity";
+import type { Monster } from "./Monster";
 
 export type Encounter = {
   id?: string;
   name?: string;
   entities: EncounterEntity[];
   active: number;
+  monsters: Record<string, Monster>;
 };
 
 export const EncounterActions = {
@@ -14,6 +16,7 @@ export const EncounterActions = {
     name: undefined,
     entities: [],
     active: 0,
+    monsters: {},
   }),
 
   AddPlayer: (encounter: Encounter, player: PlayerEntity): void => {

@@ -4,7 +4,7 @@ import { ValidateEncounter } from "./validate";
 import { CreateFieldErrors, type FieldErrors } from "$utils/error";
 
 export const EncounterService = {
-  Create: async (encounter: Encounter): Promise<number | FieldErrors> => {
+  Create: async (encounter: Encounter): Promise<{ id: string } | number | FieldErrors> => {
     const preparedEncounter = PrepareForValidation(encounter);
     let errors = await ValidateEncounter(preparedEncounter);
 
@@ -19,6 +19,11 @@ export const EncounterService = {
       },
       body: JSON.stringify(preparedEncounter),
     });
+
+    if (result.ok) {
+      const data = await result.json();
+      return data; // Returns { id: "..." }
+    }
 
     return result.status;
   },

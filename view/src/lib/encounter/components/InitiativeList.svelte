@@ -18,6 +18,7 @@
     onSelectEntity: (index: number) => void;
     onToggleConcentration: (index: number) => void;
     onManageConditions: (index: number) => void;
+    onManageReminders: (index: number) => void;
     onTakeDamage: (index: number) => void;
     onHeal: (index: number) => void;
   }
@@ -29,6 +30,7 @@
     onSelectEntity,
     onToggleConcentration,
     onManageConditions,
+    onManageReminders,
     onTakeDamage,
     onHeal,
   }: Props = $props();
@@ -131,6 +133,7 @@
                 {entity}
                 onToggleConcentration={() => onToggleConcentration(index)}
                 onManageConditions={() => onManageConditions(index)}
+                onManageReminders={() => onManageReminders(index)}
                 onTakeDamage={() => onTakeDamage(index)}
                 onHeal={() => onHeal(index)}
               />

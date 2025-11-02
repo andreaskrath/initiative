@@ -8,7 +8,7 @@ export interface MonsterEntity extends CombatEntity {
   current_hp?: number;
   max_hp?: number;
   temporary_hp?: number;
-  monster?: Monster;
+  monster_id?: string;
 }
 
 export const MonsterEntityActions = {
@@ -23,7 +23,7 @@ export const MonsterEntityActions = {
     current_hp: undefined,
     max_hp: undefined,
     temporary_hp: undefined,
-    monster: undefined,
+    monster_id: undefined,
     reminders: [],
   }),
 };

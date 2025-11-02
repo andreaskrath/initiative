@@ -60,6 +60,8 @@ pub struct Monster {
     pub lair_actions: Vec<LairAction>,
     #[sqlx(json)]
     pub spellcasting: Option<Spellcasting>,
+    #[sqlx(json)]
+    pub reminders: Vec<TurnReminder>,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
@@ -164,4 +166,20 @@ pub struct Spellcasting {
 pub struct SpellSlot {
     pub level: SpellLevel,
     pub slots: i16,
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+#[serde(rename_all = "snake_case")]
+pub enum Trigger {
+    StartOfTurn,
+    EndOfTurn,
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+pub struct TurnReminder {
+    pub name: String,
+    pub description: String,
+    #[serde(rename = "type")]
+    pub kind: String,
+    pub trigger: Trigger,
 }

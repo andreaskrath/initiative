@@ -37,7 +37,8 @@ CREATE TABLE IF NOT EXISTS monsters (
     speeds jsonb NOT NULL DEFAULT '[]'::jsonb,
     traits jsonb NOT NULL DEFAULT '[]'::jsonb,
     visions jsonb NOT NULL DEFAULT '[]'::jsonb,
-    spellcasting jsonb
+    spellcasting jsonb,
+    reminders jsonb NOT NULL DEFAULT '[]'::jsonb
 );
 
 CREATE INDEX IF NOT EXISTS idx_monsters_challenge_rating ON monsters(challenge_rating);
