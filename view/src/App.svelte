@@ -14,6 +14,7 @@
   import Settings from "$routes/Settings.svelte";
   import MonsterList from "$routes/MonsterList.svelte";
   import MonsterBuilder from "$routes/MonsterBuilder.svelte";
+  import MonsterView from "$routes/MonsterView.svelte";
   import EncounterList from "$routes/EncounterList.svelte";
   import EncounterBuilder from "$routes/EncounterBuilder.svelte";
   import EncounterView from "$routes/EncounterView.svelte";
@@ -35,6 +36,10 @@
     {
       path: "monsters/create",
       component: MonsterBuilder,
+    },
+    {
+      path: "monsters/view/(.*?)",
+      component: MonsterView,
     },
     {
       path: "encounters",

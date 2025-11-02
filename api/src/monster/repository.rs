@@ -108,4 +108,22 @@ impl MonsterRepository {
 
         Ok(monsters.into_boxed_slice())
     }
+
+    pub async fn get_by_id(&self, id: Uuid) -> Result<Monster, sqlx::Error> {
+        let monster: Monster = query_as("SELECT * FROM monsters WHERE id = $1;")
+            .bind(id)
+            .fetch_one(&self.pool)
+            .await?;
+
+        Ok(monster)
+    }
+
+    pub async fn delete(&self, id: Uuid) -> Result<(), sqlx::Error> {
+        sqlx::query("DELETE FROM monsters WHERE id = $1;")
+            .bind(id)
+            .execute(&self.pool)
+            .await?;
+
+        Ok(())
+    }
 }

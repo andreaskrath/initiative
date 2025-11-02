@@ -31,6 +31,8 @@ async fn async_main() {
         .route("/api/spells", get(spell::handler::get))
         .route("/api/monsters/create", post(monster::handler::create))
         .route("/api/monsters", get(monster::handler::get))
+        .route("/api/monster/{*id}", get(monster::handler::get_by_id))
+        .route("/api/monster/{*id}", delete(monster::handler::delete))
         .route("/api/encounters/create", post(encounter::handler::create))
         .route("/api/encounters", get(encounter::handler::get_all))
         .route("/api/encounter/{*id}", get(encounter::handler::get_by_id))
