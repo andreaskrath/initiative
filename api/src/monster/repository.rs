@@ -1,5 +1,6 @@
 use crate::types::Monster;
 use sqlx::{PgPool, query_as, types::Json};
+use tracing::{debug, instrument};
 use uuid::Uuid;
 
 pub struct MonsterRepository {
@@ -11,7 +12,9 @@ impl MonsterRepository {
         Self { pool }
     }
 
+    #[instrument(skip(self, monster), fields(monster_name = %monster.name))]
     pub async fn create(&self, monster: Monster) -> Result<Uuid, sqlx::Error> {
+        debug!("Inserting monster into database");
         let monster_id: sqlx::types::Uuid = sqlx::query_scalar(
             r#"
             INSERT INTO monsters (
@@ -98,32 +101,42 @@ impl MonsterRepository {
         .fetch_one(&self.pool)
         .await?;
 
+        debug!("Successfully inserted monster into database with id: {}", monster_id);
         Ok(monster_id)
     }
 
+    #[instrument(skip(self))]
     pub async fn get_all(&self) -> Result<Box<[Monster]>, sqlx::Error> {
+        debug!("Querying all monsters from database");
         let monsters: Vec<Monster> = query_as("SELECT * FROM monsters;")
             .fetch_all(&self.pool)
             .await?;
 
+        debug!("Successfully retrieved {} monsters from database", monsters.len());
         Ok(monsters.into_boxed_slice())
     }
 
+    #[instrument(skip(self))]
     pub async fn get_by_id(&self, id: Uuid) -> Result<Monster, sqlx::Error> {
+        debug!("Querying monster from database");
         let monster: Monster = query_as("SELECT * FROM monsters WHERE id = $1;")
             .bind(id)
             .fetch_one(&self.pool)
             .await?;
 
+        debug!("Successfully retrieved monster: {}", monster.name);
         Ok(monster)
     }
 
+    #[instrument(skip(self))]
     pub async fn delete(&self, id: Uuid) -> Result<(), sqlx::Error> {
+        debug!("Deleting monster from database");
         sqlx::query("DELETE FROM monsters WHERE id = $1;")
             .bind(id)
             .execute(&self.pool)
             .await?;
 
+        debug!("Successfully deleted monster from database");
         Ok(())
     }
 }

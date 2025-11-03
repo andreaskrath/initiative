@@ -26,7 +26,7 @@ pub async fn assets(Path(path): Path<String>) -> Response {
 
     let content_type_value = match HeaderValue::try_from(content_type) {
         Ok(v) => v,
-        Err(err) => todo!(),
+        Err(err) => unreachable!("all content types are predefined, but error: {err}"),
     };
 
     let (status_code, body) = match ASSETS_DIR.get_file(path) {
@@ -47,7 +47,7 @@ pub async fn images(Path(path): Path<String>) -> Response {
 
     let content_type_value = match HeaderValue::try_from(content_type) {
         Ok(v) => v,
-        Err(err) => todo!(),
+        Err(err) => unreachable!("all content types are predefined, but error: {err}"),
     };
 
     let (status_code, body) = match IMAGES_DIR.get_file(path) {
