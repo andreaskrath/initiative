@@ -29,6 +29,8 @@ async fn async_main() {
         .route("/images/{*path}", get(initiative::images))
         .route("/api/spells/create", post(spell::handler::create))
         .route("/api/spells", get(spell::handler::get))
+        .route("/api/spell/{*id}", get(spell::handler::get_by_id))
+        .route("/api/spell/{*id}", delete(spell::handler::delete))
         .route("/api/monsters/create", post(monster::handler::create))
         .route("/api/monsters", get(monster::handler::get))
         .route("/api/monster/{*id}", get(monster::handler::get_by_id))

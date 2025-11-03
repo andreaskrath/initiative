@@ -24,7 +24,7 @@ import { CreateFieldErrors, type FieldErrors } from "$utils/error";
 export const Validate = async (
   monster: Monster,
 ): Promise<FieldErrors | null> => {
-  const result = await schema.safeParseAsync(monster);
+  const result = await MonsterSchema.safeParseAsync(monster);
 
   if (!result.success) {
     return CreateFieldErrors(result.error);
@@ -33,7 +33,7 @@ export const Validate = async (
   return null;
 };
 
-const schema = z.object({
+export const MonsterSchema = z.object({
   id: z.uuid().optional(),
   name: z
     .string("A name must be specified")

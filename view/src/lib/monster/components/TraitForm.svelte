@@ -13,6 +13,7 @@
     errors?: FieldErrors | null;
     onRemove: () => void;
     showSeparator?: boolean;
+    validateCallback?: () => void;
   }
 
   let {
@@ -21,6 +22,7 @@
     errors = null,
     onRemove,
     showSeparator = false,
+    validateCallback,
   }: Props = $props();
 </script>
 
@@ -32,6 +34,7 @@
     type="text"
     placeholder="Martial Advantage"
     error={errors?.get(`traits.${index}.name`)}
+    validateCallback={validateCallback}
   />
 </Container>
 
@@ -54,6 +57,7 @@
     bind:value={trait.description}
     placeholder="Write a description for the trait.."
     error={errors?.get(`traits.${index}.description`)}
+    validateCallback={validateCallback}
   />
 </Container>
 

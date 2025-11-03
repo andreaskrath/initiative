@@ -65,9 +65,11 @@
   import { goto } from "@mateothegreat/svelte5-router";
   import Combobox from "$lib/shared/components/Combobox.svelte";
   import type { FieldErrors } from "$utils/error";
+  import { CreateFieldErrors } from "$utils/error";
   import AddButton from "$components/AddButton.svelte";
   import TraitForm from "$monster/components/TraitForm.svelte";
   import ReminderForm from "$monster/components/ReminderForm.svelte";
+  import { MonsterSchema } from "$monster/validate";
 
   const alignments = ToLabelValueWith(Alignments, DisplayAlignment);
   const attributes = ToLabelValueWith(Attributes, DisplayAttribute);
@@ -108,6 +110,27 @@
   const getSpells = async (): Promise<void> => {
     let all_spells = await GetAllSpells();
     spells = all_spells.sort((a, b) => a.name!.localeCompare(b.name!));
+  };
+
+  const validateField = async (pickObj: Record<string, true>) => {
+    const keys = Object.keys(pickObj);
+
+    const partial = MonsterSchema.pick(pickObj as Object);
+    const result = await partial.safeParseAsync(monster);
+
+    const next = new Map(errors ?? []);
+
+    for (const k of keys) next.delete(k);
+
+    if (!result.success) {
+      const newErrs = CreateFieldErrors(result.error);
+
+      for (const [k, msg] of newErrs) {
+        if (keys.includes(k)) next.set(k, msg);
+      }
+    }
+
+    errors = next.size ? next : null;
   };
 
   const handleCreateMonster = async (event: MouseEvent): Promise<void> => {
@@ -274,6 +297,7 @@
           type="text"
           placeholder="Goblin"
           error={errors?.get("name")}
+          validateCallback={() => validateField({ name: true })}
         />
       </Container>
 
@@ -286,6 +310,7 @@
           placeholder="0.5"
           class="text-center"
           error={errors?.get("challenge_rating")}
+          validateCallback={() => validateField({ challenge_rating: true })}
         />
       </Container>
 
@@ -298,6 +323,7 @@
           placeholder="100"
           class="text-center"
           error={errors?.get("xp")}
+          validateCallback={() => validateField({ xp: true })}
         />
       </Container>
 
@@ -310,6 +336,7 @@
           placeholder="2"
           class="text-center"
           error={errors?.get("proficiency_bonus")}
+          validateCallback={() => validateField({ proficiency_bonus: true })}
         />
       </Container>
 
@@ -321,6 +348,7 @@
           type="text"
           placeholder="Goblinoid"
           error={errors?.get("species")}
+          validateCallback={() => validateField({ species: true })}
         />
       </Container>
 
@@ -332,6 +360,7 @@
           placeholder="Select a type"
           items={monsterTypes}
           error={errors?.get("monster_type")}
+          validateCallback={() => validateField({ monster_type: true })}
         />
       </Container>
 
@@ -343,6 +372,7 @@
           placeholder="Select a size"
           items={sizes}
           error={errors?.get("size")}
+          validateCallback={() => validateField({ size: true })}
         />
       </Container>
 
@@ -354,6 +384,7 @@
           placeholder="Select an alignment"
           items={alignments}
           error={errors?.get("alignment")}
+          validateCallback={() => validateField({ alignment: true })}
         />
       </Container>
 
@@ -366,6 +397,7 @@
           placeholder="13"
           class="text-center"
           error={errors?.get("passive_perception")}
+          validateCallback={() => validateField({ passive_perception: true })}
         />
       </Container>
     </div>
@@ -382,6 +414,7 @@
           placeholder="13"
           class="text-center"
           error={errors?.get("strength")}
+          validateCallback={() => validateField({ strength: true })}
         />
       </Container>
 
@@ -393,6 +426,7 @@
           placeholder="13"
           class="text-center"
           error={errors?.get("dexterity")}
+          validateCallback={() => validateField({ dexterity: true })}
         />
       </Container>
 
@@ -404,6 +438,7 @@
           placeholder="13"
           class="text-center"
           error={errors?.get("constitution")}
+          validateCallback={() => validateField({ constitution: true })}
         />
       </Container>
 
@@ -415,6 +450,7 @@
           placeholder="13"
           class="text-center"
           error={errors?.get("intelligence")}
+          validateCallback={() => validateField({ intelligence: true })}
         />
       </Container>
 
@@ -426,6 +462,7 @@
           placeholder="13"
           class="text-center"
           error={errors?.get("wisdom")}
+          validateCallback={() => validateField({ wisdom: true })}
         />
       </Container>
 
@@ -437,6 +474,7 @@
           placeholder="13"
           class="text-center"
           error={errors?.get("charisma")}
+          validateCallback={() => validateField({ charisma: true })}
         />
       </Container>
     </div>
@@ -490,6 +528,7 @@
                 placeholder="60"
                 class="text-center"
                 error={errors?.get(`visions.${index}.range`)}
+                validateCallback={() => validateField({ visions: true })}
               />
             </Container>
 
@@ -501,6 +540,7 @@
                 placeholder="Select a vision type"
                 items={sights}
                 error={errors?.get(`visions.${index}.sight`)}
+                validateCallback={() => validateField({ visions: true })}
               />
             </Container>
 
@@ -540,6 +580,7 @@
                 placeholder="30"
                 class="text-center"
                 error={errors?.get(`speeds.${index}.distance`)}
+                validateCallback={() => validateField({ speeds: true })}
               />
             </Container>
 
@@ -551,6 +592,7 @@
                 placeholder="Select a movement type"
                 items={movements}
                 error={errors?.get(`speeds.${index}.movement`)}
+                validateCallback={() => validateField({ speeds: true })}
               />
             </Container>
 
@@ -585,6 +627,7 @@
           placeholder="11"
           class="text-center"
           error={errors?.get("hit_points")}
+          validateCallback={() => validateField({ hit_points: true })}
         />
       </Container>
 
@@ -597,6 +640,7 @@
           placeholder="2d8 + 6"
           class="text-center"
           error={errors?.get("rollable_hit_points")}
+          validateCallback={() => validateField({ rollable_hit_points: true })}
         />
       </Container>
 
@@ -609,6 +653,7 @@
           placeholder="18"
           class="text-center"
           error={errors?.get("armor_class")}
+          validateCallback={() => validateField({ armor_class: true })}
         />
       </Container>
 
@@ -620,6 +665,7 @@
           type="text"
           placeholder="chain mail, shield"
           error={errors?.get("armor_type")}
+          validateCallback={() => validateField({ armor_type: true })}
         />
       </Container>
     </div>
@@ -691,6 +737,7 @@
         {errors}
         onRemove={() => MonsterActions.RemoveTrait(monster, trait)}
         showSeparator={index !== monster.traits.length - 1}
+        validateCallback={() => validateField({ traits: true })}
       />
     {/each}
 
@@ -708,6 +755,7 @@
         {errors}
         onRemove={() => MonsterActions.RemoveReminder(monster, reminder)}
         showSeparator={index !== monster.reminders.length - 1}
+        validateCallback={() => validateField({ reminders: true })}
       />
     {/each}
   </Tabs.Content>
@@ -728,6 +776,7 @@
           type="text"
           placeholder="Martial Advantage"
           error={errors?.get(`regular_actions.${index}.name`)}
+          validateCallback={() => validateField({ regular_actions: true })}
         />
       </Container>
 
@@ -751,6 +800,7 @@
           bind:value={regularAction.description}
           placeholder="Write a description for the regular action.."
           error={errors?.get(`regular_actions.${index}.description`)}
+          validateCallback={() => validateField({ regular_actions: true })}
         />
       </Container>
 
@@ -777,6 +827,7 @@
           type="text"
           placeholder="Longsword"
           error={errors?.get(`melee_attack_actions.${index}.name`)}
+          validateCallback={() => validateField({ melee_attack_actions: true })}
         />
       </Container>
 
@@ -789,6 +840,7 @@
           placeholder="5"
           class="text-center"
           error={errors?.get(`melee_attack_actions.${index}.hit_bonus`)}
+          validateCallback={() => validateField({ melee_attack_actions: true })}
         />
       </Container>
 
@@ -801,6 +853,7 @@
           placeholder="5"
           class="text-center"
           error={errors?.get(`melee_attack_actions.${index}.reach`)}
+          validateCallback={() => validateField({ melee_attack_actions: true })}
         />
       </Container>
 
@@ -826,6 +879,7 @@
           placeholder="1d8 + 1"
           class="text-center"
           error={errors?.get(`melee_attack_actions.${index}.one_handed_attack`)}
+          validateCallback={() => validateField({ melee_attack_actions: true })}
         />
       </Container>
 
@@ -838,6 +892,7 @@
           placeholder="1d10 + 1"
           class="text-center"
           error={errors?.get(`melee_attack_actions.${index}.two_handed_attack`)}
+          validateCallback={() => validateField({ melee_attack_actions: true })}
         />
       </Container>
 
@@ -849,6 +904,7 @@
           placeholder="Select a damage type"
           items={damageTypes}
           error={errors?.get(`melee_attack_actions.${index}.damage_type`)}
+          validateCallback={() => validateField({ melee_attack_actions: true })}
         />
       </Container>
 
@@ -875,6 +931,7 @@
           type="text"
           placeholder="Longbow"
           error={errors?.get(`ranged_attack_actions.${index}.name`)}
+          validateCallback={() => validateField({ ranged_attack_actions: true })}
         />
       </Container>
 
@@ -887,6 +944,7 @@
           placeholder="5"
           class="text-center"
           error={errors?.get(`ranged_attack_actions.${index}.hit_bonus`)}
+          validateCallback={() => validateField({ ranged_attack_actions: true })}
         />
       </Container>
 
@@ -899,6 +957,7 @@
           placeholder="1d8 + 2"
           class="text-center"
           error={errors?.get(`ranged_attack_actions.${index}.attack`)}
+          validateCallback={() => validateField({ ranged_attack_actions: true })}
         />
       </Container>
 
@@ -927,6 +986,7 @@
           placeholder="150"
           class="text-center"
           error={errors?.get(`ranged_attack_actions.${index}.normal_range`)}
+          validateCallback={() => validateField({ ranged_attack_actions: true })}
         />
       </Container>
 
@@ -939,6 +999,7 @@
           placeholder="600"
           class="text-center"
           error={errors?.get(`ranged_attack_actions.${index}.long_range`)}
+          validateCallback={() => validateField({ ranged_attack_actions: true })}
         />
       </Container>
 
@@ -950,6 +1011,7 @@
           placeholder="Select a damage type"
           items={damageTypes}
           error={errors?.get(`ranged_attack_actions.${index}.damage_type`)}
+          validateCallback={() => validateField({ ranged_attack_actions: true })}
         />
       </Container>
 
@@ -974,6 +1036,7 @@
           type="text"
           placeholder="Martial Advantage"
           error={errors?.get(`recharge_actions.${index}.name`)}
+          validateCallback={() => validateField({ recharge_actions: true })}
         />
       </Container>
 
@@ -985,6 +1048,7 @@
           placeholder="Select a recharge dice"
           items={recharges}
           error={errors?.get(`recharge_actions.${index}.recharge`)}
+          validateCallback={() => validateField({ recharge_actions: true })}
         />
       </Container>
 
@@ -1008,6 +1072,7 @@
           bind:value={rechargeAction.description}
           placeholder="Write a description for the recharge action.."
           error={errors?.get(`recharge_actions.${index}.description`)}
+          validateCallback={() => validateField({ recharge_actions: true })}
         />
       </Container>
 
@@ -1032,6 +1097,7 @@
           type="text"
           placeholder="Martial Advantage"
           error={errors?.get(`bonus_actions.${index}.name`)}
+          validateCallback={() => validateField({ bonus_actions: true })}
         />
       </Container>
 
@@ -1055,6 +1121,7 @@
           bind:value={bonusAction.description}
           placeholder="Write a description for the bonus action.."
           error={errors?.get(`bonus_actions.${index}.description`)}
+          validateCallback={() => validateField({ bonus_actions: true })}
         />
       </Container>
 
@@ -1079,6 +1146,7 @@
           type="text"
           placeholder="Martial Advantage"
           error={errors?.get(`reactions.${index}.name`)}
+          validateCallback={() => validateField({ reactions: true })}
         />
       </Container>
 
@@ -1102,6 +1170,7 @@
           bind:value={reaction.description}
           placeholder="Write a description for the reaction.."
           error={errors?.get(`reactions.${index}.description`)}
+          validateCallback={() => validateField({ reactions: true })}
         />
       </Container>
 
@@ -1126,6 +1195,7 @@
           placeholder="3"
           class="text-center"
           error={errors?.get("available_legendary_actions_per_turn")}
+          validateCallback={() => validateField({ available_legendary_actions_per_turn: true })}
         />
       </Container>
       <div class="col-span-7"></div>
@@ -1140,6 +1210,7 @@
           type="text"
           placeholder="Martial Advantage"
           error={errors?.get(`legendary_actions.${index}.name`)}
+          validateCallback={() => validateField({ legendary_actions: true })}
         />
       </Container>
 
@@ -1152,6 +1223,7 @@
           placeholder="3"
           class="text-center"
           error={errors?.get(`legendary_actions.${index}.cost`)}
+          validateCallback={() => validateField({ legendary_actions: true })}
         />
       </Container>
 
@@ -1175,6 +1247,7 @@
           bind:value={legendaryAction.description}
           placeholder="Write a description for the reaction.."
           error={errors?.get(`legendary_actions.${index}.description`)}
+          validateCallback={() => validateField({ legendary_actions: true })}
         />
       </Container>
 
@@ -1199,6 +1272,7 @@
           type="text"
           placeholder="Martial Advantage"
           error={errors?.get(`lair_actions.${index}.name`)}
+          validateCallback={() => validateField({ lair_actions: true })}
         />
       </Container>
 
@@ -1222,6 +1296,7 @@
           bind:value={lairAction.description}
           placeholder="Write a description for the reaction.."
           error={errors?.get(`lair_actions.${index}.description`)}
+          validateCallback={() => validateField({ lair_actions: true })}
         />
       </Container>
 
@@ -1245,6 +1320,7 @@
         class="text-center"
         placeholder="15"
         error={errors?.get("spellcasting.level")}
+        validateCallback={() => validateField({ "spellcasting.level": true })}
       />
     </Container>
 
@@ -1256,6 +1332,7 @@
         placeholder="Select an attribute"
         items={attributes}
         error={errors?.get("spellcasting.attribute")}
+        validateCallback={() => validateField({ "spellcasting.attribute": true })}
       />
     </Container>
 
@@ -1268,6 +1345,7 @@
         class="text-center"
         placeholder="18"
         error={errors?.get("spellcasting.dc")}
+        validateCallback={() => validateField({ "spellcasting.dc": true })}
       />
     </Container>
 
@@ -1280,6 +1358,7 @@
         class="text-center"
         placeholder="9"
         error={errors?.get("spellcasting.attack_bonus")}
+        validateCallback={() => validateField({ "spellcasting.attack_bonus": true })}
       />
     </Container>
 

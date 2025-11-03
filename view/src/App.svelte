@@ -11,7 +11,6 @@
 
   import Home from "$routes/Home.svelte";
   import NotFound from "$routes/NotFound.svelte";
-  import Settings from "$routes/Settings.svelte";
   import MonsterList from "$routes/MonsterList.svelte";
   import MonsterBuilder from "$routes/MonsterBuilder.svelte";
   import MonsterView from "$routes/MonsterView.svelte";
@@ -20,6 +19,7 @@
   import EncounterView from "$routes/EncounterView.svelte";
   import SpellList from "$routes/SpellList.svelte";
   import SpellBuilder from "$routes/SpellBuilder.svelte";
+  import SpellView from "$routes/SpellView.svelte";
 
   import Navbar from "$components/Navbar.svelte";
   import { Toaster } from "$components/ui/sonner";
@@ -62,8 +62,8 @@
       component: SpellBuilder,
     },
     {
-      path: "settings",
-      component: Settings,
+      path: "spells/view/(.*?)",
+      component: SpellView,
     },
   ];
 

@@ -86,4 +86,22 @@ impl SpellRepository {
 
         Ok(spells.into_boxed_slice())
     }
+
+    pub async fn get_by_id(&self, id: Uuid) -> Result<Spell, sqlx::Error> {
+        let spell: Spell = query_as("SELECT * FROM v_spells WHERE id = $1;")
+            .bind(id)
+            .fetch_one(&self.pool)
+            .await?;
+
+        Ok(spell)
+    }
+
+    pub async fn delete(&self, id: Uuid) -> Result<(), sqlx::Error> {
+        sqlx::query("DELETE FROM spells WHERE id = $1;")
+            .bind(id)
+            .execute(&self.pool)
+            .await?;
+
+        Ok(())
+    }
 }

@@ -16,6 +16,7 @@
     errors?: FieldErrors | null;
     onRemove: () => void;
     showSeparator?: boolean;
+    validateCallback?: () => void;
   }
 
   let {
@@ -25,6 +26,7 @@
     errors = null,
     onRemove,
     showSeparator = false,
+    validateCallback,
   }: Props = $props();
 </script>
 
@@ -36,6 +38,7 @@
     type="text"
     placeholder="Martial Advantage"
     error={errors?.get(`reminders.${index}.name`)}
+    validateCallback={validateCallback}
   />
 </Container>
 
@@ -47,6 +50,7 @@
     placeholder="Select a trigger type"
     items={triggerOptions}
     error={errors?.get(`reminders.${index}.trigger`)}
+    validateCallback={validateCallback}
   />
 </Container>
 
@@ -69,6 +73,7 @@
     bind:value={reminder.description}
     placeholder="Write a description for the reminder.."
     error={errors?.get(`reminders.${index}.description`)}
+    validateCallback={validateCallback}
   />
 </Container>
 

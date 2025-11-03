@@ -98,19 +98,6 @@
           </ul>
         </NavigationMenu.Content>
       </NavigationMenu.Item>
-
-      <!-- Settings -->
-      <NavigationMenu.Item>
-        <NavigationMenu.Link>
-          {#snippet child()}
-            <Link
-              href="/settings"
-              label="Settings"
-              class={navigationMenuTriggerStyle()}
-            />
-          {/snippet}
-        </NavigationMenu.Link>
-      </NavigationMenu.Item>
     </NavigationMenu.List>
   </NavigationMenu.Root>
   <div class="absolute top-1/2 right-4 -translate-y-1/2">
