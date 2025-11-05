@@ -367,9 +367,11 @@
   let reminderManagementDialogOpen = $state(false);
   let addEntityDialogOpen = $state(false);
   let battleMapDialogOpen = $state(false);
+  let editInitiativeDialogOpen = $state(false);
   let damageAmount = $state<number | undefined>(undefined);
   let damageType = $state<string | undefined>(undefined);
   let healAmount = $state<number | undefined>(undefined);
+  let newInitiativeValue = $state<number | undefined>(undefined);
   let entityBeingModified = $state<number | null>(null);
 
   // New condition form state
@@ -757,6 +759,15 @@
     healDialogOpen = true;
   };
 
+  const handleEditInitiative = (index: number) => {
+    entityBeingModified = index;
+    const entity = sortedEntities[index];
+    if (entity.type !== "reminder" || entity.reminder_type === "initiative") {
+      newInitiativeValue = entity.initiative;
+    }
+    editInitiativeDialogOpen = true;
+  };
+
   const applyDamage = () => {
     if (entityBeingModified === null || !damageAmount || !damageType) return;
 
@@ -814,6 +825,57 @@
       toast.success(`${monster.name ?? "Monster"} healed ${healAmount} HP`);
       healDialogOpen = false;
     }
+  };
+
+  const applyInitiativeChange = () => {
+    if (entityBeingModified === null || newInitiativeValue === undefined) return;
+
+    const entity = sortedEntities[entityBeingModified];
+
+    // Only allow initiative changes for combat entities and initiative reminders
+    if (entity.type === "reminder" && entity.reminder_type !== "initiative") {
+      toast.error("Round reminders don't have initiative");
+      return;
+    }
+
+    const oldInitiative = entity.initiative;
+    entity.initiative = newInitiativeValue;
+
+    // Re-sort entities after initiative change
+    encounter.entities.sort(CompareEncounterEntities);
+
+    toast.success(
+      `${entity.name ?? "Entity"}'s initiative changed from ${oldInitiative ?? "unset"} to ${newInitiativeValue}`,
+    );
+    editInitiativeDialogOpen = false;
+  };
+
+  const handleRemoveEntity = (index: number) => {
+    const entity = sortedEntities[index];
+    const entityName = entity.name ?? "Entity";
+
+    // Find the entity in the original encounter.entities array
+    const entityIndex = encounter.entities.findIndex((e) => e.id === entity.id);
+
+    if (entityIndex === -1) {
+      toast.error("Entity not found");
+      return;
+    }
+
+    // Remove the entity
+    encounter.entities.splice(entityIndex, 1);
+
+    // Adjust active index if necessary
+    if (encounter.active >= sortedEntities.length - 1) {
+      encounter.active = Math.max(0, sortedEntities.length - 2);
+    }
+
+    // Adjust selected index if necessary
+    if (selectedEntityIndex >= sortedEntities.length - 1) {
+      selectedEntityIndex = Math.max(0, sortedEntities.length - 2);
+    }
+
+    toast.success(`Removed ${entityName} from encounter`);
   };
 </script>
 
@@ -873,6 +935,8 @@
           onManageReminders={handleManageReminders}
           onTakeDamage={handleTakeDamage}
           onHeal={handleHeal}
+          onEditInitiative={handleEditInitiative}
+          onRemoveEntity={handleRemoveEntity}
         />
       </div>
 
@@ -951,6 +1015,48 @@
           Cancel
         </Button>
         <Button onclick={applyHeal} disabled={!healAmount || healAmount <= 0}>
+          Apply
+        </Button>
+      </div>
+    </div>
+  </Dialog.Content>
+</Dialog.Root>
+
+<!-- Edit Initiative Dialog -->
+<Dialog.Root bind:open={editInitiativeDialogOpen}>
+  <Dialog.Content>
+    <Dialog.Header>
+      <Dialog.Title>Edit Initiative</Dialog.Title>
+    </Dialog.Header>
+    <div class="space-y-4">
+      <div>
+        <Label required>Initiative Value</Label>
+        <div class="flex gap-2">
+          <Input
+            type="number"
+            bind:value={newInitiativeValue}
+            placeholder="Enter initiative value"
+            class="text-center"
+          />
+          <Button
+            variant="outline"
+            onclick={() => (newInitiativeValue = new DiceRoll("1d20").total)}
+          >
+            <Dices class="h-4 w-4" />
+          </Button>
+        </div>
+      </div>
+      <div class="flex justify-end gap-2">
+        <Button
+          variant="outline"
+          onclick={() => (editInitiativeDialogOpen = false)}
+        >
+          Cancel
+        </Button>
+        <Button
+          onclick={applyInitiativeChange}
+          disabled={newInitiativeValue === undefined}
+        >
           Apply
         </Button>
       </div>

@@ -9,6 +9,8 @@
   import Shield from "@lucide/svelte/icons/shield";
   import Eye from "@lucide/svelte/icons/eye";
   import Bell from "@lucide/svelte/icons/bell";
+  import Hash from "@lucide/svelte/icons/hash";
+  import Trash2 from "@lucide/svelte/icons/trash-2";
 
   interface Props {
     entity: EncounterEntity;
@@ -17,6 +19,8 @@
     onManageReminders?: () => void;
     onTakeDamage?: () => void;
     onHeal?: () => void;
+    onEditInitiative?: () => void;
+    onRemoveEntity?: () => void;
   }
 
   let {
@@ -26,6 +30,8 @@
     onManageReminders,
     onTakeDamage,
     onHeal,
+    onEditInitiative,
+    onRemoveEntity,
   }: Props = $props();
 
   const isMonster = $derived(entity.type === "monster");
@@ -44,7 +50,13 @@
       <DropdownMenu.Label>Actions</DropdownMenu.Label>
       <DropdownMenu.Separator />
 
+      <DropdownMenu.Item onclick={(e) => { e.stopPropagation(); onEditInitiative?.(); }}>
+        <Hash class="mr-2 h-4 w-4" />
+        Edit Initiative
+      </DropdownMenu.Item>
+
       {#if isMonster}
+        <DropdownMenu.Separator />
         <DropdownMenu.Item onclick={(e) => { e.stopPropagation(); onTakeDamage?.(); }}>
           <Skull class="mr-2 h-4 w-4" />
           Take Damage
@@ -53,8 +65,9 @@
           <Heart class="mr-2 h-4 w-4" />
           Heal
         </DropdownMenu.Item>
-        <DropdownMenu.Separator />
       {/if}
+
+      <DropdownMenu.Separator />
 
       <DropdownMenu.Item onclick={(e) => { e.stopPropagation(); onToggleConcentration?.(); }}>
         <Sparkles class="mr-2 h-4 w-4" />
@@ -67,6 +80,16 @@
       <DropdownMenu.Item onclick={(e) => { e.stopPropagation(); onManageReminders?.(); }}>
         <Bell class="mr-2 h-4 w-4" />
         Manage Reminders
+      </DropdownMenu.Item>
+
+      <DropdownMenu.Separator />
+
+      <DropdownMenu.Item
+        onclick={(e) => { e.stopPropagation(); onRemoveEntity?.(); }}
+        class="text-destructive focus:text-destructive"
+      >
+        <Trash2 class="mr-2 h-4 w-4" />
+        Remove from Encounter
       </DropdownMenu.Item>
     </DropdownMenu.Content>
   </DropdownMenu.Root>

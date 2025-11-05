@@ -21,6 +21,8 @@
     onManageReminders: (index: number) => void;
     onTakeDamage: (index: number) => void;
     onHeal: (index: number) => void;
+    onEditInitiative: (index: number) => void;
+    onRemoveEntity: (index: number) => void;
   }
 
   let {
@@ -33,6 +35,8 @@
     onManageReminders,
     onTakeDamage,
     onHeal,
+    onEditInitiative,
+    onRemoveEntity,
   }: Props = $props();
 
   const getConditionColor = (condition: string): string => {
@@ -136,6 +140,8 @@
                 onManageReminders={() => onManageReminders(index)}
                 onTakeDamage={() => onTakeDamage(index)}
                 onHeal={() => onHeal(index)}
+                onEditInitiative={() => onEditInitiative(index)}
+                onRemoveEntity={() => onRemoveEntity(index)}
               />
             </div>
           </div>
