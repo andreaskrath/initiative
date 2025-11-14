@@ -1,0 +1,15 @@
+[package]
+name = "state"
+version = "0.1.0"
+publish.workspace = true
+edition.workspace = true
+
+[dependencies]
+# External crates
+gpui.workspace = true
+
+# Internal crates
+types.workspace = true
+
+[lints]
+workspace = true

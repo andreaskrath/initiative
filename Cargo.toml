@@ -3,6 +3,7 @@ resolver = "2"
 members = [
   "crates/assets",
   "crates/logging",
+  "crates/state",
   "crates/types",
 ]
 
@@ -21,6 +22,7 @@ tracing-subscriber = "=0.3.20"
 # Internal crates
 assets = { path = "crates/assets" }
 logging = { path = "crates/logging" }
+state = { path = "crates/state" }
 types = { path = "crates/types" }
 
 [workspace.lints.rust]
