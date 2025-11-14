@@ -2,14 +2,6 @@
 default:
     @just --list
 
-# Runs the frontend with hot reload.
-dev:
-    @npm run dev --prefix view
-
-# Runs the backend with whatever frontend artifacts exist.
+# Runs the desktop application in debug mode.
 run:
-    @cargo run
-
-# Runs the backend after building a new frontend bundle.
-full:
-    @BUILD_FRONTEND=true cargo run
+    @INITIATIVE_LOG=trace cargo run
