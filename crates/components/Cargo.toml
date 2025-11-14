@@ -1,5 +1,5 @@
 [package]
-name = "views"
+name = "components"
 version = "0.1.0"
 publish.workspace = true
 edition.workspace = true
@@ -8,11 +8,9 @@ edition.workspace = true
 # External crates
 gpui.workspace = true
 gpui-component.workspace = true
-variant_count.workspace = true
 
 # Internal crates
-components.workspace = true
-state.workspace = true
+
 
 [lints]
 workspace = true

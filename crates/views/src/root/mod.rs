@@ -1,18 +1,15 @@
 mod navigation;
 
+use components::hr;
 use gpui::{
-    AppContext, Context, Entity, IntoElement, ParentElement, Render, Styled, Window, div,
-    prelude::FluentBuilder, px, rgb,
+    AppContext, Context, Entity, IntoElement, ParentElement, Render, Styled, Window, div, px,
 };
 
 use gpui_component::{
-    Icon, IconName, Sizable, StyledExt,
+    ActiveTheme, Icon, IconName, StyledExt,
     breadcrumb::{Breadcrumb, BreadcrumbItem},
     button::{Button, ButtonVariant, ButtonVariants},
-    h_flex,
-    popover::Popover,
-    sidebar::SidebarToggleButton,
-    v_flex,
+    h_flex, v_flex,
 };
 use navigation::NavigationMenu;
 
@@ -30,6 +27,7 @@ impl RootView {
 
 impl Render for RootView {
     fn render(&mut self, _: &mut Window, cx: &mut Context<Self>) -> impl IntoElement {
+        let theme = cx.theme();
         let is_collapsed = self.navigation_menu.read(cx).collapsed();
         let navigation_button_icon = match is_collapsed {
             true => Icon::new(IconName::PanelLeftOpen),
@@ -52,10 +50,9 @@ impl Render for RootView {
                 .item(BreadcrumbItem::new("breadcrumb-item-5", "Item 5")),
         );
 
-        let vertical_split = v_flex().size_full().children([
-            div().p(px(5.0)).child(topbar),
-            div().h(px(1.0)).w_full().bg(rgb(0xcccccc)),
-        ]);
+        let vertical_split = v_flex()
+            .size_full()
+            .children([div().p(px(5.0)).child(topbar).bg(theme.sidebar), hr(theme)]);
 
         div()
             .w_full()
