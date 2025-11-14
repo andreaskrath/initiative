@@ -2,6 +2,7 @@
 resolver = "2"
 members = [
   "crates/assets",
+  "crates/initiative",
   "crates/logging",
   "crates/state",
   "crates/types",
@@ -14,8 +15,10 @@ edition = "2024"
 
 [workspace.dependencies]
 # External crates
+anyhow = "=1.0.100"
 gpui = "=0.2.2"
 gpui-component = "=0.3.1"
+parking_lot = "=0.12.5"
 rust-embed = "=8.9.0"
 thiserror = "=2.0.17"
 variant_count = "=1.2.0"
