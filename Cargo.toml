@@ -1,1 +1,16 @@
 [workspace]
+resolver = "2"
+
+[workspace.package]
+publish = false
+edition = "2024"
+
+[workspace.lints.rust]
+unsafe_code = "deny"
+
+[workspace.lints.clippy]
+dbg_macro = "deny"
+todo = "deny"
+allow_attributes = "deny"
+allow_attributes_without_reason = "deny"
+indexing_slicing = "deny"
