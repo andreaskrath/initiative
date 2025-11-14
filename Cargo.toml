@@ -3,6 +3,7 @@ resolver = "2"
 members = [
   "crates/assets",
   "crates/logging",
+  "crates/types",
 ]
 
 [workspace.package]
@@ -20,6 +21,7 @@ tracing-subscriber = "=0.3.20"
 # Internal crates
 assets = { path = "crates/assets" }
 logging = { path = "crates/logging" }
+types = { path = "crates/types" }
 
 [workspace.lints.rust]
 unsafe_code = "deny"
