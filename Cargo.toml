@@ -1,9 +1,22 @@
 [workspace]
 resolver = "2"
+members = [
+  "crates/assets",
+]
 
 [workspace.package]
 publish = false
 edition = "2024"
+
+[workspace.dependencies]
+# External crates
+gpui = "=0.2.2"
+rust-embed = "=8.9.0"
+thiserror = "=2.0.17"
+tracing = "=0.1.41"
+
+# Internal crates
+assets = { path = "crates/assets" }
 
 [workspace.lints.rust]
 unsafe_code = "deny"
