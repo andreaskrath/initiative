@@ -1,0 +1,17 @@
+[package]
+name = "views"
+version = "0.1.0"
+publish.workspace = true
+edition.workspace = true
+
+[dependencies]
+# External crates
+gpui.workspace = true
+gpui-component.workspace = true
+variant_count.workspace = true
+
+# Internal crates
+state.workspace = true
+
+[lints]
+workspace = true
