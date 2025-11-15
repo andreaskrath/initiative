@@ -1,9 +1,11 @@
 use std::ops::{Index, IndexMut};
 
-use gpui::{BorrowAppContext, Context, IntoElement, ParentElement, Render, Window, px};
+use gpui::{
+    BorrowAppContext, Context, InteractiveElement, IntoElement, ParentElement, Render,
+    StatefulInteractiveElement, Styled, Window, div, prelude::FluentBuilder, px,
+};
 use gpui_component::{
-    Icon, IconName, Side,
-    button::Button,
+    Icon, IconName, Side, StyledExt,
     sidebar::{Sidebar, SidebarGroup, SidebarHeader, SidebarMenu, SidebarMenuItem},
 };
 use state::AppState;
@@ -195,11 +197,18 @@ impl NavigationMenu {
 
 impl Render for NavigationMenu {
     fn render(&mut self, _: &mut Window, cx: &mut Context<Self>) -> impl IntoElement {
-        let header_button =
-            Button::new("navigation-header-button").on_click(cx.listener(|_, _, _, cx| {
-                cx.update_global(|state: &mut AppState, _| state.view = View::Index)
-            }));
-        let header = SidebarHeader::new().child(header_button);
+        let header = SidebarHeader::new().child(
+            div()
+                .id("navigation-header")
+                .size_full()
+                .h_flex()
+                .gap_2()
+                .child(Icon::new(IconName::WindowRestore))
+                .when(!self.collapsed, |this| this.child("Initiative"))
+                .on_click(cx.listener(|_, _, _, cx| {
+                    cx.update_global(|state: &mut AppState, _| state.view = View::Index)
+                })),
+        );
 
         let tools = SidebarGroup::new("Tools").child(SidebarMenu::new().children([
             self.encounters(cx),
