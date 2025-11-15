@@ -5,9 +5,9 @@ use gpui_component::{
     Icon, IconName, Side,
     sidebar::{Sidebar, SidebarGroup, SidebarHeader, SidebarMenu, SidebarMenuItem},
 };
-use variant_count::VariantCount;
+use strum::EnumCount;
 
-#[derive(PartialEq, Clone, Copy, VariantCount)]
+#[derive(PartialEq, Clone, Copy, EnumCount)]
 enum NavigationItem {
     Encounters,
     Monsters,
@@ -17,7 +17,7 @@ enum NavigationItem {
     SpellsSchools,
 }
 
-impl Index<NavigationItem> for [bool; NavigationItem::VARIANT_COUNT] {
+impl Index<NavigationItem> for [bool; NavigationItem::COUNT] {
     type Output = bool;
 
     #[expect(
@@ -29,7 +29,7 @@ impl Index<NavigationItem> for [bool; NavigationItem::VARIANT_COUNT] {
     }
 }
 
-impl IndexMut<NavigationItem> for [bool; NavigationItem::VARIANT_COUNT] {
+impl IndexMut<NavigationItem> for [bool; NavigationItem::COUNT] {
     #[expect(
         clippy::indexing_slicing,
         reason = "index is guaranteed to be safe because of enum discriminant values"
@@ -41,14 +41,14 @@ impl IndexMut<NavigationItem> for [bool; NavigationItem::VARIANT_COUNT] {
 
 pub struct NavigationMenu {
     collapsed: bool,
-    items: [bool; NavigationItem::VARIANT_COUNT],
+    items: [bool; NavigationItem::COUNT],
 }
 
 impl NavigationMenu {
     pub fn new() -> Self {
         Self {
             collapsed: false,
-            items: [false; NavigationItem::VARIANT_COUNT],
+            items: [false; NavigationItem::COUNT],
         }
     }
 
