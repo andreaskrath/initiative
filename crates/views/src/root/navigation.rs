@@ -1,11 +1,14 @@
 use std::ops::{Index, IndexMut};
 
-use gpui::{Context, IntoElement, ParentElement, Render, Window, px};
+use gpui::{BorrowAppContext, Context, IntoElement, ParentElement, Render, Window, px};
 use gpui_component::{
     Icon, IconName, Side,
+    button::Button,
     sidebar::{Sidebar, SidebarGroup, SidebarHeader, SidebarMenu, SidebarMenuItem},
 };
+use state::AppState;
 use strum::EnumCount;
+use types::{FormMode, View};
 
 #[derive(PartialEq, Clone, Copy, EnumCount)]
 enum NavigationItem {
@@ -124,7 +127,15 @@ impl NavigationMenu {
                 SidebarMenuItem::new("Transmutation"),
             ]);
 
-        let create = SidebarMenuItem::new("Create new").suffix(Icon::new(IconName::Plus));
+        let create = SidebarMenuItem::new("Create new")
+            .suffix(Icon::new(IconName::Plus))
+            .on_click(cx.listener(|_, _, _, cx| {
+                cx.update_global(|state: &mut AppState, _| {
+                    state.view = View::SpellForm {
+                        mode: FormMode::Create,
+                    }
+                })
+            }));
 
         let spells_active = self.is_active(NavigationItem::Spells);
         SidebarMenuItem::new("Spells")
@@ -184,6 +195,12 @@ impl NavigationMenu {
 
 impl Render for NavigationMenu {
     fn render(&mut self, _: &mut Window, cx: &mut Context<Self>) -> impl IntoElement {
+        let header_button =
+            Button::new("navigation-header-button").on_click(cx.listener(|_, _, _, cx| {
+                cx.update_global(|state: &mut AppState, _| state.view = View::Index)
+            }));
+        let header = SidebarHeader::new().child(header_button);
+
         let tools = SidebarGroup::new("Tools").child(SidebarMenu::new().children([
             self.encounters(cx),
             self.monsters(cx),
@@ -192,7 +209,7 @@ impl Render for NavigationMenu {
 
         Sidebar::new(Side::Left)
             .width(px(300.0))
-            .header(SidebarHeader::new().child("Initiative"))
+            .header(header)
             .child(tools)
             .collapsible(true)
             .collapsed(self.collapsed)
