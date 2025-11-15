@@ -5,6 +5,9 @@ publish.workspace = true
 edition.workspace = true
 
 [dependencies]
+# External crates
+strum.workspace = true
+strum_macros.workspace = true
 
 [lints]
 workspace = true
