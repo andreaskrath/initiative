@@ -23,7 +23,7 @@ fn main() {
                     ..Default::default()
                 },
                 |window, cx| {
-                    let root_view = cx.new(RootView::new);
+                    let root_view = cx.new(|cx| RootView::new(window, cx));
 
                     cx.new(|cx| Root::new(root_view.into(), window, cx))
                 },
