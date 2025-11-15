@@ -27,7 +27,6 @@ impl RootView {
 
 impl Render for RootView {
     fn render(&mut self, _: &mut Window, cx: &mut Context<Self>) -> impl IntoElement {
-        let theme = cx.theme();
         let is_collapsed = self.navigation_menu.read(cx).collapsed();
         let navigation_button_icon = match is_collapsed {
             true => Icon::new(IconName::PanelLeftOpen),
@@ -52,7 +51,10 @@ impl Render for RootView {
 
         let vertical_split = v_flex()
             .size_full()
-            .children([div().p(px(5.0)).child(topbar).bg(theme.sidebar), hr(theme)]);
+            .children([
+                div().p(px(5.0)).child(topbar).bg(cx.theme().sidebar),
+                hr(cx.theme()),
+            ])
 
         div()
             .w_full()
