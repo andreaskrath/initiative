@@ -1,5 +1,5 @@
 use gpui::SharedString;
-use gpui_component::dropdown::DropdownItem;
+use gpui_component::select::SelectItem;
 use strum::{Display, VariantArray};
 
 #[derive(Display, VariantArray, Clone, Copy)]
@@ -14,7 +14,7 @@ pub enum MagicSchool {
     Transmutation,
 }
 
-impl DropdownItem for MagicSchool {
+impl SelectItem for MagicSchool {
     type Value = Self;
 
     fn title(&self) -> SharedString {

@@ -1,5 +1,5 @@
 use gpui::SharedString;
-use gpui_component::dropdown::DropdownItem;
+use gpui_component::select::SelectItem;
 use strum::{Display, VariantArray};
 
 #[derive(Display, VariantArray, Clone, Copy)]
@@ -16,7 +16,7 @@ pub enum SpellLevel {
     Ninth,
 }
 
-impl DropdownItem for SpellLevel {
+impl SelectItem for SpellLevel {
     type Value = Self;
 
     fn title(&self) -> SharedString {

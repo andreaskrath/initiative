@@ -102,14 +102,17 @@ impl Render for RootView {
                 root.navigation_menu.update(cx, |nav, _| nav.collapse())
             }))
             .size_8();
-        let topbar = h_flex().gap_2().child(navigation_expand_button).child(
-            Breadcrumb::new()
-                .item(BreadcrumbItem::new("breadcrumb-item-1", "Item 1"))
-                .item(BreadcrumbItem::new("breadcrumb-item-2", "Item 2"))
-                .item(BreadcrumbItem::new("breadcrumb-item-3", "Item 3"))
-                .item(BreadcrumbItem::new("breadcrumb-item-4", "Item 4"))
-                .item(BreadcrumbItem::new("breadcrumb-item-5", "Item 5")),
-        );
+        let topbar =
+            h_flex()
+                .gap_2()
+                .child(navigation_expand_button)
+                .child(Breadcrumb::new().children([
+                    BreadcrumbItem::new("Item 1"),
+                    BreadcrumbItem::new("Item 2"),
+                    BreadcrumbItem::new("Item 3"),
+                    BreadcrumbItem::new("Item 4"),
+                    BreadcrumbItem::new("Item 5"),
+                ]));
 
         let vertical_split = v_flex()
             .size_full()

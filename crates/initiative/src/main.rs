@@ -25,7 +25,7 @@ fn main() {
                 |window, cx| {
                     let root_view = cx.new(|cx| RootView::new(window, cx));
 
-                    cx.new(|cx| Root::new(root_view.into(), window, cx))
+                    cx.new(|cx| Root::new(root_view, window, cx))
                 },
             )?;
 
