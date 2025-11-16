@@ -25,20 +25,12 @@ enum NavigationItem {
 impl Index<NavigationItem> for [bool; NavigationItem::COUNT] {
     type Output = bool;
 
-    #[expect(
-        clippy::indexing_slicing,
-        reason = "index is guaranteed to be safe because of enum discriminant values"
-    )]
     fn index(&self, index: NavigationItem) -> &Self::Output {
         &self[index as usize]
     }
 }
 
 impl IndexMut<NavigationItem> for [bool; NavigationItem::COUNT] {
-    #[expect(
-        clippy::indexing_slicing,
-        reason = "index is guaranteed to be safe because of enum discriminant values"
-    )]
     fn index_mut(&mut self, index: NavigationItem) -> &mut Self::Output {
         &mut self[index as usize]
     }
@@ -67,10 +59,6 @@ impl NavigationMenu {
         self.collapsed = !self.collapsed;
     }
 
-    #[expect(
-        clippy::indexing_slicing,
-        reason = "index is guaranteed to be safe because of enum discriminant values"
-    )]
     /// Returns true if `item` is currently active.
     fn is_active(&self, item: NavigationItem) -> bool {
         if self.collapsed {
