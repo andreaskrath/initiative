@@ -1,6 +1,8 @@
-use strum::{Display, VariantArray};
+use std::ops::{Index, IndexMut};
 
-#[derive(Display, VariantArray, Clone, Copy)]
+use strum::{Display, EnumCount, VariantArray};
+
+#[derive(Display, VariantArray, Clone, Copy, EnumCount)]
 pub enum Class {
     Artificer,
     Barbarian,
@@ -15,4 +17,18 @@ pub enum Class {
     Sorcerer,
     Warlock,
     Wizard,
+}
+
+impl Index<Class> for [bool; Class::COUNT] {
+    type Output = bool;
+
+    fn index(&self, index: Class) -> &Self::Output {
+        &self[index as usize]
+    }
+}
+
+impl IndexMut<Class> for [bool; Class::COUNT] {
+    fn index_mut(&mut self, index: Class) -> &mut Self::Output {
+        &mut self[index as usize]
+    }
 }
