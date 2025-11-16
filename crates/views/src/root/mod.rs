@@ -96,37 +96,37 @@ impl Render for RootView {
         }
         .size_6();
         let navigation_expand_button = Button::new("navigation-button")
+            .w(px(44.0))
             .with_variant(ButtonVariant::Ghost)
             .child(navigation_button_icon)
             .on_click(cx.listener(|root, _, _, cx| {
                 root.navigation_menu.update(cx, |nav, _| nav.collapse())
-            }))
-            .size_8();
-        let topbar =
-            h_flex()
-                .gap_2()
-                .child(navigation_expand_button)
-                .child(Breadcrumb::new().children([
-                    BreadcrumbItem::new("Item 1"),
-                    BreadcrumbItem::new("Item 2"),
-                    BreadcrumbItem::new("Item 3"),
-                    BreadcrumbItem::new("Item 4"),
-                    BreadcrumbItem::new("Item 5"),
-                ]));
+            }));
+        // .size_8();
+        let topbar = h_flex()
+            .gap_2()
+            .p_1()
+            .bg(cx.theme().sidebar)
+            .child(navigation_expand_button)
+            .child(Breadcrumb::new().children([
+                BreadcrumbItem::new("Item 1"),
+                BreadcrumbItem::new("Item 2"),
+                BreadcrumbItem::new("Item 3"),
+                BreadcrumbItem::new("Item 4"),
+                BreadcrumbItem::new("Item 5"),
+            ]));
 
-        let vertical_split = v_flex()
-            .size_full()
-            .children([
-                div().p(px(5.0)).child(topbar).bg(cx.theme().sidebar),
-                hr(cx.theme()),
-            ])
+        let content_area = h_flex()
+            .flex_1()
+            .min_h_0()
+            .child(self.navigation_menu.clone())
             .child(self.view.view());
 
-        div()
+        v_flex()
             .w_full()
             .h_full()
-            .h_flex()
-            .child(self.navigation_menu.clone())
-            .child(vertical_split)
+            .child(topbar)
+            .child(hr(cx.theme()))
+            .child(content_area)
     }
 }
