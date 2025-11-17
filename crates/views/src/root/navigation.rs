@@ -176,7 +176,7 @@ impl NavigationMenu {
         let create = SidebarMenuItem::new("Create new").suffix(Icon::new(IconName::Plus));
 
         SidebarMenuItem::new("Encounters")
-            .icon(IconName::Settings)
+            .icon(IconName::Bot)
             .active(encounters_active)
             .on_click(cx.listener(|nav, _, _, _| nav.toggle(NavigationItem::Encounters)))
             .children([create])
