@@ -2,12 +2,11 @@ mod navigation;
 
 use components::hr;
 use gpui::{
-    AnyView, AppContext, Context, Entity, IntoElement, ParentElement, Render, Styled, Window, div,
-    px,
+    AnyView, AppContext, Context, Entity, IntoElement, ParentElement, Render, Styled, Window, px,
 };
 
 use gpui_component::{
-    ActiveTheme, Icon, IconName, StyledExt,
+    ActiveTheme, Icon, IconName,
     breadcrumb::{Breadcrumb, BreadcrumbItem},
     button::{Button, ButtonVariant, ButtonVariants},
     h_flex, v_flex,
@@ -82,8 +81,6 @@ impl RootView {
         };
 
         self.view = TypedAnyView::new(new_view, view_type);
-
-        // cx.notify();
     }
 }
 
@@ -97,15 +94,14 @@ impl Render for RootView {
         .size_6();
         let navigation_expand_button = Button::new("navigation-button")
             .w(px(44.0))
-            .with_variant(ButtonVariant::Ghost)
+            .with_variant(ButtonVariant::Link)
             .child(navigation_button_icon)
             .on_click(cx.listener(|root, _, _, cx| {
                 root.navigation_menu.update(cx, |nav, _| nav.collapse())
             }));
-        // .size_8();
         let topbar = h_flex()
             .gap_2()
-            .p_1()
+            .p_0p5()
             .bg(cx.theme().sidebar)
             .child(navigation_expand_button)
             .child(Breadcrumb::new().children([
