@@ -7,6 +7,7 @@ members = [
   "crates/logging",
   "crates/state",
   "crates/types",
+  "crates/validate",
   "crates/views",
 ]
 
@@ -34,6 +35,7 @@ components = { path = "crates/components" }
 logging = { path = "crates/logging" }
 state = { path = "crates/state" }
 types = { path = "crates/types" }
+validate = { path = "crates/validate" }
 views = { path = "crates/views" }
 
 [workspace.lints.rust]
