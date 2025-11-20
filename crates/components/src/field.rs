@@ -1,6 +1,6 @@
 use gpui::{
     AnyElement, App, InteractiveElement, IntoElement, ParentElement, RenderOnce, SharedString,
-    StatefulInteractiveElement, Styled, Window, div, prelude::FluentBuilder, px,
+    StatefulInteractiveElement, StyleRefinement, Styled, Window, div, prelude::FluentBuilder, px,
 };
 use gpui_component::{ActiveTheme, Icon, IconName, StyledExt, h_flex, tooltip::Tooltip, v_flex};
 
@@ -18,6 +18,7 @@ pub struct Field<T: Styled + IntoElement + 'static> {
     col_span: u16,
     col_start: Option<i16>,
     col_end: Option<i16>,
+    style: StyleRefinement,
 }
 
 impl<T: Styled + IntoElement> Field<T> {
@@ -31,6 +32,7 @@ impl<T: Styled + IntoElement> Field<T> {
             col_span: 1,
             col_start: None,
             col_end: None,
+            style: StyleRefinement::default(),
         }
     }
 
@@ -62,6 +64,13 @@ impl<T: Styled + IntoElement> Field<T> {
     pub fn col_end(mut self, col_end: i16) -> Self {
         self.col_end = Some(col_end);
         self
+    }
+}
+
+impl<T: Styled + IntoElement> Styled for Field<T> {
+    #[doc = " Returns a reference to the style memory of this element."]
+    fn style(&mut self) -> &mut StyleRefinement {
+        &mut self.style
     }
 }
 
