@@ -46,3 +46,13 @@ dbg_macro = "deny"
 todo = "deny"
 allow_attributes = "deny"
 allow_attributes_without_reason = "deny"
+
+[profile.release]
+debug = false
+strip = true
+lto = "thin"
+codegen-units = 1
+opt-level = 3
+
+[profile.dev.package."*"]
+opt-level = 3
