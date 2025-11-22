@@ -22,21 +22,14 @@
           extensions = ["rust-src" "rust-analyzer"];
         };
 
-        libraries = with pkgs; [
-          # gpui
-          xorg.libxcb
-          libxkbcommon
-          vulkan-loader
-
-          # gpui-component
-          gcc
-          clang
-          fontconfig
+        iced = with pkgs; [
           libx11
+          libxcursor
+          libxi
+          libxkbcommon
           libxcb
-          openssl
-          zstd
-          vulkan-validation-layers
+          libGL
+          vulkan-loader
         ];
       in {
         devShells.default = with pkgs;
@@ -46,13 +39,13 @@
                 rustToolchain
                 vscode-extensions.vadimcn.vscode-lldb.adapter
 
-                # Tokio
+                # tokio
                 pkg-config
                 openssl
               ]
-              ++ libraries;
+              ++ iced;
             RUST_SRC_PATH = "${rustToolchain}/lib/rustlib/src/rust/library";
-            LD_LIBRARY_PATH = "${pkgs.lib.makeLibraryPath libraries}:$LD_LIBRARY_PATH";
+            LD_LIBRARY_PATH = "${pkgs.lib.makeLibraryPath iced}:$LD_LIBRARY_PATH";
           };
       }
     );
