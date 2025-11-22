@@ -6,10 +6,12 @@ edition.workspace = true
 
 [dependencies]
 # External crates
-gpui.workspace = true
-gpui-component.workspace = true
+iced.workspace = true
+tracing.workspace = true
 
 # Internal crates
+assets.workspace = true
+types.workspace = true
 
 
 [lints]

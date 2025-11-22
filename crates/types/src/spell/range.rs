@@ -1,5 +1,3 @@
-use gpui::SharedString;
-use gpui_component::select::SelectItem;
 use strum::{Display, VariantArray};
 
 #[derive(Display, VariantArray, Clone, Copy)]
@@ -25,16 +23,4 @@ pub enum SpellRange {
     #[strum(to_string = "1 mile")]
     OneMile,
     Unlimited,
-}
-
-impl SelectItem for SpellRange {
-    type Value = Self;
-
-    fn title(&self) -> SharedString {
-        self.to_string().into()
-    }
-
-    fn value(&self) -> &Self::Value {
-        self
-    }
 }

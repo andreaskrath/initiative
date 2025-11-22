@@ -1,5 +1,3 @@
-use gpui::SharedString;
-use gpui_component::select::SelectItem;
 use strum::{Display, VariantArray};
 
 #[derive(Display, VariantArray, Clone, Copy)]
@@ -22,16 +20,4 @@ pub enum SpellDuration {
     Permanent,
     #[strum(to_string = "Until dispelled")]
     UntilDispelled,
-}
-
-impl SelectItem for SpellDuration {
-    type Value = Self;
-
-    fn title(&self) -> SharedString {
-        self.to_string().into()
-    }
-
-    fn value(&self) -> &Self::Value {
-        self
-    }
 }

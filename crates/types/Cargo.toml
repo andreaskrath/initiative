@@ -6,10 +6,7 @@ edition.workspace = true
 
 [dependencies]
 # External crates
-gpui-component.workspace = true
-gpui.workspace = true
 strum.workspace = true
-strum_macros.workspace = true
 uuid.workspace = true
 
 [lints]

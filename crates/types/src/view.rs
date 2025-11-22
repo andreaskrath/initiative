@@ -1,8 +1,8 @@
-use crate::form_mode::FormMode;
+use crate::{FormMode, SpellFilter};
 
-#[derive(Debug, Clone, PartialEq)]
-/// The dedicated views present in the application.
+#[derive(Debug, Clone)]
 pub enum View {
     Index,
     SpellForm { mode: FormMode },
+    SpellList { filter: Option<SpellFilter> },
 }

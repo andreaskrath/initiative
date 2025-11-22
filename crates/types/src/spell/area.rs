@@ -1,5 +1,3 @@
-use gpui::SharedString;
-use gpui_component::select::SelectItem;
 use strum::{Display, VariantArray};
 
 #[derive(Display, VariantArray, Clone, Copy)]
@@ -27,16 +25,4 @@ pub enum SpellArea {
     #[strum(to_string = "40 ft.")]
     Feet40,
     Unlimited,
-}
-
-impl SelectItem for SpellArea {
-    type Value = Self;
-
-    fn title(&self) -> SharedString {
-        self.to_string().into()
-    }
-
-    fn value(&self) -> &Self::Value {
-        self
-    }
 }

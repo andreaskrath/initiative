@@ -1,19 +1,21 @@
 [package]
-name = "initiative"
+name = "app"
 version = "0.1.0"
 publish.workspace = true
 edition.workspace = true
 
+[lib]
+path = "src/app.rs"
+
 [dependencies]
 # External crates
 iced.workspace = true
-tracing.workspace = true
+strum.workspace = true
 
 # Internal crates
-app.workspace = true
 assets.workspace = true
-logging.workspace = true
-views.workspace = true
+components.workspace = true
+types.workspace = true
 
 [lints]
 workspace = true
