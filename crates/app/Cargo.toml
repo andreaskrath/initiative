@@ -13,7 +13,6 @@ iced.workspace = true
 strum.workspace = true
 
 # Internal crates
-assets.workspace = true
 components.workspace = true
 types.workspace = true
 

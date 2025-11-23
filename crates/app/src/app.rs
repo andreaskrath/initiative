@@ -1,15 +1,21 @@
+mod content;
+mod message;
 mod navigation;
+mod tab;
+mod view;
 
 use components::{Icon, IconSize, icon};
 use iced::{
     Element,
     Length::Fill,
     Task,
-    widget::{button, column, horizontal_rule, horizontal_space, row, svg, text},
+    widget::{button, column, horizontal_rule, horizontal_space, row, text},
 };
-use types::{Message, NavigationMessage};
 
-use crate::navigation::Navigation;
+use crate::{
+    message::Message,
+    navigation::{Navigation, NavigationMessage},
+};
 
 pub struct Initiative {
     navigation: Navigation,

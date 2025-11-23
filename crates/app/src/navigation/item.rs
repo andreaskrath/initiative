@@ -1,5 +1,8 @@
 use components::Icon;
-use types::{ExpandableNavigationItemId, View};
+
+use crate::tab::OpenTab;
+
+use super::message::ExpandableNavigationItemId;
 
 pub(super) enum NavigationItemKind {
     Expandable {
@@ -7,7 +10,7 @@ pub(super) enum NavigationItemKind {
         children: Box<[NavigationItem]>,
     },
     Navigable {
-        target: View,
+        target: OpenTab,
         suffix: Option<Icon>,
     },
 }

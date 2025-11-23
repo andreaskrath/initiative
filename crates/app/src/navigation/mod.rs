@@ -1,4 +1,7 @@
 mod item;
+mod message;
+
+use message::ExpandableNavigationItemId;
 
 use iced::{
     Element, Fill, Task,
@@ -8,12 +11,15 @@ use iced::{
 
 use components::{Icon, IconSize, icon};
 use strum::{EnumCount, VariantArray};
-use types::{
-    ExpandableNavigationItemId, FormMode, MagicSchool, Message, NavigationMessage, SpellFilter,
-    SpellLevel, View,
+use types::{FormMode, MagicSchool, SpellFilter, SpellLevel};
+
+use crate::{
+    message::Message,
+    navigation::item::{NavigationItem, NavigationItemKind},
+    tab::OpenTab,
 };
 
-use crate::navigation::item::{NavigationItem, NavigationItemKind};
+pub use message::NavigationMessage;
 
 /// The number each level of depth indents items.
 const INDENT_STEP: u16 = 10;
@@ -160,7 +166,7 @@ impl<'a> Navigation {
                 label: level.to_string(),
                 prefix: None,
                 kind: NavigationItemKind::Navigable {
-                    target: View::SpellList {
+                    target: OpenTab::SpellList {
                         filter: Some(SpellFilter::Level(*level)),
                     },
                     suffix: None,
@@ -175,7 +181,7 @@ impl<'a> Navigation {
                 label: school.to_string(),
                 prefix: None,
                 kind: NavigationItemKind::Navigable {
-                    target: View::SpellList {
+                    target: OpenTab::SpellList {
                         filter: Some(SpellFilter::School(*school)),
                     },
                     suffix: None,
@@ -194,7 +200,7 @@ impl<'a> Navigation {
                         label: String::from("Create new"),
                         prefix: None,
                         kind: NavigationItemKind::Navigable {
-                            target: View::SpellForm {
+                            target: OpenTab::SpellForm {
                                 mode: FormMode::Create,
                             },
                             suffix: Some(Icon::Plus),

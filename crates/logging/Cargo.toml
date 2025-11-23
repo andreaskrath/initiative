@@ -8,7 +8,7 @@ edition.workspace = true
 path = "src/logging.rs"
 
 [dependencies]
-tracing-subscriber = { workspace = true, features = ["env-filter"] }
+tracing-subscriber.workspace = true
 
 [lints]
 workspace = true

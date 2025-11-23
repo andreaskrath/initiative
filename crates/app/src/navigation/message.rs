@@ -2,13 +2,13 @@ use std::ops::{Index, IndexMut};
 
 use strum::EnumCount;
 
-use crate::View;
+use crate::tab::OpenTab;
 
 #[derive(Debug, Clone)]
 pub enum NavigationMessage {
     ToggleCollapse,
     ToggleItem(ExpandableNavigationItemId),
-    Navigate(View),
+    Navigate(OpenTab),
 }
 
 #[derive(Debug, Clone, Copy, Hash, PartialEq, Eq, EnumCount)]

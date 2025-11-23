@@ -10,7 +10,7 @@ path = "src/assets.rs"
 [dependencies]
 # External crates
 iced.workspace = true
-rust-embed = { workspace = true, features = ["include-exclude"] }
+rust-embed.workspace = true
 thiserror.workspace = true
 tracing.workspace = true
 

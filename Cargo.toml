@@ -7,7 +7,6 @@ members = [
   "crates/initiative",
   "crates/logging",
   "crates/types",
-  "crates/views",
 ]
 
 [workspace.package]
@@ -18,12 +17,12 @@ edition = "2024"
 # External crates
 iced = { version = "=0.13.1", features = ["advanced", "image", "svg"] }
 parking_lot = "=0.12.5"
-rust-embed = "=8.9.0"
+rust-embed = { version = "=8.9.0", features = ["include-exclude"] }
 strum = { version = "=0.27.2", features = ["derive"] }
 strum_macros = "=0.27.2"
 thiserror = "=2.0.17"
 tracing = "=0.1.41"
-tracing-subscriber = "=0.3.20"
+tracing-subscriber = { version = "=0.3.20", features = ["env-filter"] }
 uuid = "=1.18.1"
 
 # Internal crates
@@ -32,7 +31,6 @@ assets = { path = "crates/assets" }
 components = { path = "crates/components" }
 logging = { path = "crates/logging" }
 types = { path = "crates/types" }
-views = { path = "crates/views" }
 
 [workspace.lints.rust]
 unsafe_code = "deny"
