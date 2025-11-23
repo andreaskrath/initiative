@@ -36,10 +36,40 @@
 
   const isMonster = $derived(entity.type === "monster");
   const isPlayer = $derived(entity.type === "player");
+  const isReminder = $derived(entity.type === "reminder");
   const isCombatEntity = $derived(isMonster || isPlayer);
+  const isInitiativeReminder = $derived(isReminder && entity.reminder_type === "initiative");
 </script>
 
-{#if isCombatEntity}
+{#if isReminder}
+  <DropdownMenu.Root>
+    <DropdownMenu.Trigger>
+      <Button variant="ghost" size="icon" class="h-8 w-8" onclick={(e) => e.stopPropagation()}>
+        <Ellipsis class="h-4 w-4" />
+      </Button>
+    </DropdownMenu.Trigger>
+    <DropdownMenu.Content align="end">
+      <DropdownMenu.Label>Reminder Actions</DropdownMenu.Label>
+      <DropdownMenu.Separator />
+
+      {#if isInitiativeReminder}
+        <DropdownMenu.Item onclick={(e) => { e.stopPropagation(); onEditInitiative?.(); }}>
+          <Hash class="mr-2 h-4 w-4" />
+          Edit Initiative
+        </DropdownMenu.Item>
+        <DropdownMenu.Separator />
+      {/if}
+
+      <DropdownMenu.Item
+        onclick={(e) => { e.stopPropagation(); onRemoveEntity?.(); }}
+        class="text-destructive focus:text-destructive"
+      >
+        <Trash2 class="mr-2 h-4 w-4" />
+        Remove Reminder
+      </DropdownMenu.Item>
+    </DropdownMenu.Content>
+  </DropdownMenu.Root>
+{:else if isCombatEntity}
   <DropdownMenu.Root>
     <DropdownMenu.Trigger>
       <Button variant="ghost" size="icon" class="h-8 w-8" onclick={(e) => e.stopPropagation()}>
