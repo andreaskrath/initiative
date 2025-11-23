@@ -11,6 +11,7 @@ use iced::{
     Task,
     widget::{button, column, horizontal_rule, horizontal_space, row, text},
 };
+use tracing::info;
 
 use crate::{
     message::Message,
@@ -33,8 +34,8 @@ impl Initiative {
     pub fn update(&mut self, message: Message) -> Task<Message> {
         match message {
             Message::Navigation(navigation_message) => self.navigation.update(navigation_message),
-            Message::OpenTab(view) => {
-                println!("{:?}", view);
+            Message::OpenTab(tab_request) => {
+                info!("opening tab for {:?}", tab_request);
 
                 Task::none()
             }

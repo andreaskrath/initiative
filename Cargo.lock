@@ -106,6 +106,7 @@ dependencies = [
  "components",
  "iced",
  "strum",
+ "tracing",
  "types",
 ]
 
