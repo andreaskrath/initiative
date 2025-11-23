@@ -48,7 +48,7 @@
         <Ellipsis class="h-4 w-4" />
       </Button>
     </DropdownMenu.Trigger>
-    <DropdownMenu.Content align="end">
+    <DropdownMenu.Content align="end" onCloseAutoFocus={(e) => e.preventDefault()}>
       <DropdownMenu.Label>Reminder Actions</DropdownMenu.Label>
       <DropdownMenu.Separator />
 
@@ -76,7 +76,7 @@
         <Ellipsis class="h-4 w-4" />
       </Button>
     </DropdownMenu.Trigger>
-    <DropdownMenu.Content align="end">
+    <DropdownMenu.Content align="end" onCloseAutoFocus={(e) => e.preventDefault()}>
       <DropdownMenu.Label>Actions</DropdownMenu.Label>
       <DropdownMenu.Separator />
 

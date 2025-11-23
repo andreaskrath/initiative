@@ -83,9 +83,10 @@
         {@const isPlayer = entity.type === "player"}
         {@const isReminder = entity.type === "reminder"}
 
-        <button
+        <!-- svelte-ignore a11y_no_static_element_interactions -->
+        <div
           class={cn(
-            "w-full rounded-lg border-2 p-3 text-left transition-all hover:border-primary/50",
+            "w-full cursor-pointer rounded-lg border-2 p-3 text-left transition-all hover:border-primary/50",
             isActive && isSelected
               ? "border-primary bg-primary/10"
               : isActive
@@ -95,6 +96,9 @@
                   : "border-border bg-card hover:bg-accent",
           )}
           onclick={() => onSelectEntity(index)}
+          onkeydown={(e) => { if (e.key === 'Enter' || e.key === ' ') onSelectEntity(index); }}
+          role="button"
+          tabindex="0"
         >
           <!-- Active Turn Indicator -->
           {#if isActive}
@@ -193,7 +197,7 @@
               {ReminderActions.GetTrigger(entity)}
             </div>
           {/if}
-        </button>
+        </div>
       {/each}
     </div>
   </ScrollArea>
