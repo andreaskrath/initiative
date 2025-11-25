@@ -1,2 +1,4 @@
 #[derive(Debug, Clone)]
-pub enum SpellFormMessage {}
+pub enum SpellFormMessage {
+    NameChanged(String),
+}

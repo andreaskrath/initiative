@@ -16,7 +16,7 @@ use types::{FormMode, MagicSchool, SpellFilter, SpellLevel};
 use crate::{
     message::Message,
     navigation::item::{NavigationItem, NavigationItemKind},
-    tab::OpenTab,
+    tab::TabRequest,
 };
 
 pub use message::NavigationMessage;
@@ -61,7 +61,7 @@ impl<'a> Navigation {
 
                 Task::none()
             }
-            NavigationMessage::Navigate(view) => Task::done(Message::OpenTab(view)),
+            NavigationMessage::Navigate(view) => Task::done(Message::TabRequest(view)),
         }
     }
 
@@ -166,7 +166,7 @@ impl<'a> Navigation {
                 label: level.to_string(),
                 prefix: None,
                 kind: NavigationItemKind::Navigable {
-                    target: OpenTab::SpellList {
+                    target: TabRequest::SpellList {
                         filter: Some(SpellFilter::Level(*level)),
                     },
                     suffix: None,
@@ -181,7 +181,7 @@ impl<'a> Navigation {
                 label: school.to_string(),
                 prefix: None,
                 kind: NavigationItemKind::Navigable {
-                    target: OpenTab::SpellList {
+                    target: TabRequest::SpellList {
                         filter: Some(SpellFilter::School(*school)),
                     },
                     suffix: None,
@@ -200,7 +200,7 @@ impl<'a> Navigation {
                         label: String::from("Create new"),
                         prefix: None,
                         kind: NavigationItemKind::Navigable {
-                            target: OpenTab::SpellForm {
+                            target: TabRequest::SpellForm {
                                 mode: FormMode::Create,
                             },
                             suffix: Some(Icon::Plus),

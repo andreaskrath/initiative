@@ -1,8 +1,13 @@
-use crate::{navigation::NavigationMessage, tab::OpenTab};
+use crate::{
+    navigation::NavigationMessage,
+    tab::{TabMessage, TabRequest},
+};
 
 #[derive(Debug, Clone)]
 pub enum Message {
     Navigation(NavigationMessage),
 
-    OpenTab(OpenTab),
+    TabRequest(TabRequest),
+
+    TabMessage(TabMessage),
 }

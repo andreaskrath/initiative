@@ -1,11 +1,16 @@
 mod message;
 
-use iced::{Element, Task, widget::text};
+use iced::{
+    Element,
+    Length::Fill,
+    Task,
+    widget::{container, text},
+};
 use types::{FormMode, Spell};
 
-pub use message::SpellFormMessage;
+use crate::{message::Message, tab::TabContent};
 
-use crate::message::Message;
+pub use message::SpellFormMessage;
 
 pub struct SpellForm {
     mode: FormMode,
@@ -19,12 +24,34 @@ impl SpellForm {
             spell: Spell::default(),
         }
     }
+}
 
-    pub fn update(&mut self) -> Task<Message> {
+impl TabContent for SpellForm {
+    type ContentMessage = SpellFormMessage;
+
+    fn title(&self) -> &str {
+        match self.mode {
+            FormMode::Create => "Create spell",
+            FormMode::Edit(_) => "Edit spell",
+        }
+    }
+
+    fn tab_icon(&self) -> &components::Icon {
+        todo!()
+    }
+
+    fn update(&mut self, message: Self::ContentMessage) -> Task<Message> {
+        match message {
+            SpellFormMessage::NameChanged(name) => self.spell.name = name,
+        }
+
         Task::none()
     }
 
-    pub fn view(&mut self) -> Element<'_, SpellFormMessage> {
-        text("Spell form").into()
+    fn view(&self) -> Element<'_, Self::ContentMessage> {
+        container(text("Spell form"))
+            .width(Fill)
+            .center_x(Fill)
+            .into()
     }
 }

@@ -1,6 +1,6 @@
 use components::Icon;
 
-use crate::tab::OpenTab;
+use crate::tab::TabRequest;
 
 use super::message::ExpandableNavigationItemId;
 
@@ -10,7 +10,7 @@ pub(super) enum NavigationItemKind {
         children: Box<[NavigationItem]>,
     },
     Navigable {
-        target: OpenTab,
+        target: TabRequest,
         suffix: Option<Icon>,
     },
 }

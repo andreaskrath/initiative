@@ -1,4 +1,3 @@
-mod content;
 mod message;
 mod navigation;
 mod tab;
@@ -9,23 +8,26 @@ use iced::{
     Element,
     Length::Fill,
     Task,
-    widget::{button, column, horizontal_rule, horizontal_space, row, text},
+    widget::{button, column, horizontal_rule, horizontal_space, row},
 };
 use tracing::info;
 
 use crate::{
     message::Message,
     navigation::{Navigation, NavigationMessage},
+    tab::TabManager,
 };
 
 pub struct Initiative {
     navigation: Navigation,
+    tabs: TabManager,
 }
 
 impl Default for Initiative {
     fn default() -> Self {
         Self {
             navigation: Navigation::default(),
+            tabs: TabManager::default(),
         }
     }
 }
@@ -34,11 +36,12 @@ impl Initiative {
     pub fn update(&mut self, message: Message) -> Task<Message> {
         match message {
             Message::Navigation(navigation_message) => self.navigation.update(navigation_message),
-            Message::OpenTab(tab_request) => {
+            Message::TabRequest(tab_request) => {
                 info!("opening tab for {:?}", tab_request);
 
                 Task::none()
             }
+            Message::TabMessage(tab_message) => self.tabs.update(tab_message),
         }
     }
 
@@ -57,7 +60,7 @@ impl Initiative {
         .padding(5);
 
         let navigation = self.navigation.view().map(Message::Navigation);
-        let main = text("main_view").width(Fill);
+        let main = self.tabs.view().map(Message::TabMessage);
         let container = row![navigation, main];
 
         column![topbar, horizontal_rule(0), container].into()
