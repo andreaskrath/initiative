@@ -8,6 +8,7 @@ use types::{FormMode, SpellFilter};
 /// be cloned, and cloning entire states owned by [`Tab`] is not reasonable.
 #[derive(Debug, Clone, PartialEq)]
 pub enum TabRequest {
+    Index,
     SpellForm { mode: FormMode },
     SpellList { filter: Option<SpellFilter> },
 }
