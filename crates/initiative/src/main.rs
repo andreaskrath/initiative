@@ -7,5 +7,7 @@ fn main() -> iced::Result {
 
     info!("launching initiative application");
 
-    application("Initiative", Initiative::update, Initiative::view).run()
+    application("Initiative", Initiative::update, Initiative::view)
+        .subscription(Initiative::subscription)
+        .run()
 }

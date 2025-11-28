@@ -9,6 +9,7 @@ pub enum NavigationMessage {
     ToggleCollapse,
     ToggleItem(ExpandableNavigationItemId),
     Navigate(TabRequest),
+    AnimationTick,
 }
 
 #[derive(Debug, Clone, Copy, Hash, PartialEq, Eq, EnumCount)]

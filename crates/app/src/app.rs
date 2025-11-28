@@ -7,6 +7,7 @@ use components::{Icon, IconSize, icon};
 use iced::{
     Element,
     Length::Fill,
+    Subscription,
     Task,
     widget::{button, column, horizontal_rule, horizontal_space, row},
 };
@@ -64,5 +65,11 @@ impl Initiative {
         let container = row![navigation, main];
 
         column![topbar, horizontal_rule(0), container].into()
+    }
+
+    pub fn subscription(&self) -> Subscription<Message> {
+        self.navigation
+            .subscription()
+            .map(Message::Navigation)
     }
 }

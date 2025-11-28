@@ -4,12 +4,12 @@ mod message;
 use message::ExpandableNavigationItemId;
 
 use iced::{
-    Element, Fill, Task,
+    Element, Fill, Subscription, Task,
     alignment::Vertical,
     widget::{button, column, horizontal_space, row, text, vertical_rule},
 };
 
-use components::{Icon, IconSize, icon};
+use components::{Animation, Icon, IconSize, icon};
 use strum::{EnumCount, VariantArray};
 use types::{FormMode, MagicSchool, SpellFilter, SpellLevel};
 
@@ -24,11 +24,20 @@ pub use message::NavigationMessage;
 /// The number each level of depth indents items.
 const INDENT_STEP: u16 = 10;
 
-/// The width of the `Navigation` when its expanded.
-const NAVIGATION_WIDTH: u16 = 300;
+/// The width of `Navigation` when its expanded.
+const NAVIGATION_WIDTH_EXPANDED: f32 = 300.0;
+
+/// The width of `Navigation` when its collapsed.
+const NAVIGATION_WIDTH_COLLAPSED: f32 = 0.0;
+
+/// The treshold determining at which point in the opening/closing animation of the `Navigation` that text/items are rendered.
+///
+/// A value of `0.3` means 30%.
+const TEXT_RENDER_THRESHOLD: f32 = 0.3;
 
 pub struct Navigation {
     collapsed: bool,
+    collapse_animation: Animation,
     expanded: [bool; ExpandableNavigationItemId::COUNT],
     items: Vec<NavigationItem>,
 }
@@ -37,6 +46,10 @@ impl Default for Navigation {
     fn default() -> Self {
         Self {
             collapsed: true,
+            collapse_animation: Animation::new(
+                NAVIGATION_WIDTH_COLLAPSED,
+                NAVIGATION_WIDTH_COLLAPSED,
+            ),
             expanded: [false; ExpandableNavigationItemId::COUNT],
             items: Self::build_menu(),
         }
@@ -54,6 +67,14 @@ impl<'a> Navigation {
             NavigationMessage::ToggleCollapse => {
                 self.collapsed = !self.collapsed;
 
+                let target = if self.collapsed {
+                    NAVIGATION_WIDTH_COLLAPSED
+                } else {
+                    NAVIGATION_WIDTH_EXPANDED
+                };
+
+                self.collapse_animation.retarget(target);
+
                 Task::none()
             }
             NavigationMessage::ToggleItem(id) => {
@@ -62,21 +83,40 @@ impl<'a> Navigation {
                 Task::none()
             }
             NavigationMessage::Navigate(view) => Task::done(Message::TabRequest(view)),
+            NavigationMessage::AnimationTick => {
+                self.collapse_animation.tick();
+
+                Task::none()
+            }
         }
     }
 
     pub fn view(&self) -> Element<'_, NavigationMessage> {
-        if self.collapsed {
+        if self.collapsed && !self.collapse_animation.in_progress() {
             return horizontal_space().width(0).into();
+        }
+
+        let width = self.collapse_animation.current();
+        let divider = vertical_rule(1);
+
+        // Only show navigation content when width is large enough to display properly
+        // This prevents text wrapping/squishing during animation
+        if width < NAVIGATION_WIDTH_EXPANDED * TEXT_RENDER_THRESHOLD {
+            return row![horizontal_space(), divider].width(width).into();
         }
 
         let navigation_menu = column(self.items.iter().map(|item| self.render_item(item, 0)));
 
-        let divider = vertical_rule(1);
+        row![navigation_menu, divider].width(width).into()
+    }
 
-        row![navigation_menu, divider]
-            .width(NAVIGATION_WIDTH)
-            .into()
+    pub fn subscription(&self) -> Subscription<NavigationMessage> {
+        if self.collapse_animation.in_progress() {
+            iced::time::every(self.collapse_animation.tick_rate())
+                .map(|_| NavigationMessage::AnimationTick)
+        } else {
+            Subscription::none()
+        }
     }
 
     fn is_expanded(&self, id: ExpandableNavigationItemId) -> bool {
