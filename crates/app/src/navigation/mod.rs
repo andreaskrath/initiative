@@ -49,7 +49,8 @@ impl Default for Navigation {
             collapse_animation: Animation::new(
                 NAVIGATION_WIDTH_COLLAPSED,
                 NAVIGATION_WIDTH_COLLAPSED,
-            ),
+            )
+            .with_speed(0.1),
             expanded: [false; ExpandableNavigationItemId::COUNT],
             items: Self::build_menu(),
         }
