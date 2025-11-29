@@ -7,9 +7,9 @@ use components::{Icon, IconSize, icon};
 use iced::{
     Element,
     Length::Fill,
-    Subscription,
-    Task,
-    widget::{button, column, horizontal_rule, horizontal_space, row},
+    Subscription, Task,
+    alignment::Horizontal,
+    widget::{button, column, container, horizontal_rule, horizontal_space, row, stack},
 };
 use tracing::info;
 
@@ -61,15 +61,18 @@ impl Initiative {
         .padding(5);
 
         let navigation = self.navigation.view().map(Message::Navigation);
-        let main = self.tabs.view().map(Message::TabMessage);
-        let container = row![navigation, main];
+        let current_view = container(self.tabs.view().map(Message::TabMessage))
+            .align_x(Horizontal::Center)
+            .width(Fill)
+            .height(Fill);
+        let topbar = column![topbar, horizontal_rule(0)];
 
-        column![topbar, horizontal_rule(0), container].into()
+        let main = stack![current_view, navigation];
+
+        column![topbar, main].into()
     }
 
     pub fn subscription(&self) -> Subscription<Message> {
-        self.navigation
-            .subscription()
-            .map(Message::Navigation)
+        self.navigation.subscription().map(Message::Navigation)
     }
 }
