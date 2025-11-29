@@ -94,21 +94,17 @@ impl<'a> Navigation {
 
     pub fn view(&self) -> Element<'_, NavigationMessage> {
         if self.collapsed && !self.collapse_animation.in_progress() {
-            return horizontal_space().width(0).into();
+            horizontal_space().into()
+        } else {
+            let width = self.collapse_animation.current();
+            let divider = vertical_rule(1);
+            let navigation_menu = column(self.items.iter().map(|item| self.render_item(item, 0)));
+
+            row![navigation_menu, divider]
+                .width(width)
+                .height(Fill)
+                .into()
         }
-
-        let width = self.collapse_animation.current();
-        let divider = vertical_rule(1);
-
-        // Only show navigation content when width is large enough to display properly
-        // This prevents text wrapping/squishing during animation
-        if width < NAVIGATION_WIDTH_EXPANDED * TEXT_RENDER_THRESHOLD {
-            return row![horizontal_space(), divider].width(width).into();
-        }
-
-        let navigation_menu = column(self.items.iter().map(|item| self.render_item(item, 0)));
-
-        row![navigation_menu, divider].width(width).into()
     }
 
     pub fn subscription(&self) -> Subscription<NavigationMessage> {
