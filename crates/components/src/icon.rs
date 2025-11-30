@@ -5,7 +5,7 @@ use iced::{
 };
 use tracing::error;
 
-pub fn icon<M: 'static>(icon: Icon, size: IconSize) -> Element<'static, M> {
+pub fn icon<'a, M: 'a>(icon: Icon, size: IconSize) -> Element<'a, M> {
     let Some(embedded_icon) = Assets::get(icon.path()) else {
         error!("failed to load icon '{}'", icon.path());
         return Space::new(0, 0).into();
