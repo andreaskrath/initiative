@@ -37,10 +37,10 @@ impl Initiative {
     pub fn update(&mut self, message: Message) -> Task<Message> {
         match message {
             Message::Navigation(navigation_message) => self.navigation.update(navigation_message),
-            Message::TabRequest(tab_request) => {
-                info!("opening tab for {:?}", tab_request);
+            Message::TabRequest(request) => {
+                info!("requesting opening of tab: {:?}", request);
 
-                Task::none()
+                self.tabs.handle_request(request)
             }
             Message::TabMessage(tab_message) => self.tabs.update(tab_message),
         }
