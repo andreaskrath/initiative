@@ -22,6 +22,7 @@ pub fn icon<M: 'static>(icon: Icon, size: IconSize) -> Element<'static, M> {
 pub enum Icon {
     ChevronDown,
     ChevronRight,
+    Error,
     Monster,
     NavigationClose,
     NavigationOpen,
@@ -32,6 +33,7 @@ pub enum Icon {
 impl Icon {
     fn path(&self) -> &'static str {
         match self {
+            Icon::Error => "icons/error.svg",
             Icon::ChevronDown => "icons/chevron-down.svg",
             Icon::ChevronRight => "icons/chevron-right.svg",
             Icon::Monster => "icons/monster.svg",
