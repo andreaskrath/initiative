@@ -130,7 +130,12 @@ impl TabManager {
 
                 self.active = tab.id();
             }
-            TabRequest::SpellForm { mode } => todo!(),
+            TabRequest::SpellForm { mode } => {
+                let id = Self::unique();
+                let form = SpellForm::new(id, mode);
+                self.tabs.push(Tab::SpellForm(form));
+                self.active = id;
+            }
             TabRequest::SpellList { filter } => todo!(),
         }
 
