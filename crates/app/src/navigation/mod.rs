@@ -6,7 +6,7 @@ use message::ExpandableNavigationItemId;
 use iced::{
     Element, Fill, Subscription, Task,
     alignment::Vertical,
-    widget::{button, column, horizontal_space, row, text, vertical_rule},
+    widget::{button, column, row, rule, space, text, text::Wrapping},
 };
 
 use components::{Animation, Icon, IconSize, icon};
@@ -22,7 +22,7 @@ use crate::{
 pub use message::NavigationMessage;
 
 /// The number each level of depth indents items.
-const INDENT_STEP: u16 = 10;
+const INDENT_STEP: u32 = 10;
 
 /// The width of `Navigation` when its expanded.
 const NAVIGATION_WIDTH_EXPANDED: f32 = 300.0;
@@ -94,16 +94,16 @@ impl<'a> Navigation {
 
     pub fn view(&self) -> Element<'_, NavigationMessage> {
         if self.collapsed && !self.collapse_animation.in_progress() {
-            horizontal_space().into()
+            space::horizontal().into()
         } else {
             let width = self.collapse_animation.current();
-            let divider = vertical_rule(1);
-            let navigation_menu = column(self.items.iter().map(|item| self.render_item(item, 0)));
 
-            row![navigation_menu, divider]
-                .width(width)
-                .height(Fill)
-                .into()
+            let navigation_menu =
+                column(self.items.iter().map(|item| self.render_item(item, 0))).width(width);
+
+            let divider = rule::vertical(1);
+
+            row![navigation_menu, divider].height(Fill).into()
         }
     }
 
@@ -127,13 +127,13 @@ impl<'a> Navigation {
     fn render_item(
         &'a self,
         item: &'a NavigationItem,
-        depth: u16,
+        depth: u32,
     ) -> Element<'a, NavigationMessage> {
-        let indent = horizontal_space().width(depth * INDENT_STEP);
+        let indent = space::horizontal().width(depth * INDENT_STEP);
 
         let prefix = match item.prefix {
             Some(prefix_icon) => icon(prefix_icon, IconSize::Medium),
-            None => horizontal_space().width(16).into(),
+            None => space::horizontal().width(16).into(),
         };
 
         let (suffix, on_press) = match &item.kind {
@@ -143,7 +143,7 @@ impl<'a> Navigation {
                 let suffix = match (has_children, is_expanded) {
                     (true, true) => icon(Icon::ChevronDown, IconSize::Medium),
                     (true, false) => icon(Icon::ChevronRight, IconSize::Medium),
-                    (false, false) => horizontal_space().width(16).into(),
+                    (false, false) => space::horizontal().width(16).into(),
                     (false, true) => {
                         unreachable!("an item cannot be expanded and have no children")
                     }
@@ -156,7 +156,7 @@ impl<'a> Navigation {
             NavigationItemKind::Navigable { target, suffix } => {
                 let suffix = match suffix {
                     Some(suffix_icon) => icon(*suffix_icon, IconSize::Medium),
-                    None => horizontal_space().width(16).into(),
+                    None => space::horizontal().width(16).into(),
                 };
 
                 let on_press = NavigationMessage::Navigate(target.clone());
@@ -168,19 +168,18 @@ impl<'a> Navigation {
         let navigation_label = row![
             indent,
             prefix,
-            horizontal_space().width(10),
-            text(&item.label),
-            horizontal_space().width(Fill),
+            space::horizontal().width(10),
+            text(&item.label).wrapping(Wrapping::None),
+            space::horizontal().width(Fill),
             suffix
         ]
         .align_y(Vertical::Center);
 
         let navigation_item = button(navigation_label)
             .style(button::text)
-            .width(Fill)
             .on_press(on_press);
 
-        let column = column![navigation_item].width(Fill);
+        let column = column![navigation_item].clip(true);
 
         if let NavigationItemKind::Expandable { id, children } = &item.kind
             && self.is_expanded(*id)

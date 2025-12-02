@@ -102,7 +102,7 @@ impl TabManager {
         let Some(tab) = self.get(self.active) else {
             error!("could not find tab '{:?}'", self.active);
 
-            return Space::new(0, 0).into();
+            return Space::new().into();
         };
 
         match tab {

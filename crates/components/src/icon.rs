@@ -8,7 +8,7 @@ use tracing::error;
 pub fn icon<'a, M: 'a>(icon: Icon, size: IconSize) -> Element<'a, M> {
     let Some(embedded_icon) = Assets::get(icon.path()) else {
         error!("failed to load icon '{}'", icon.path());
-        return Space::new(0, 0).into();
+        return Space::new().into();
     };
 
     let handle = Handle::from_memory(embedded_icon.data);
@@ -57,7 +57,7 @@ pub enum IconSize {
 }
 
 impl IconSize {
-    fn wh(self) -> (u16, u16) {
+    fn wh(self) -> (u32, u32) {
         match self {
             IconSize::Small => (12, 12),
             IconSize::Medium => (16, 16),

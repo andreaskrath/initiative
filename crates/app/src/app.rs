@@ -9,7 +9,7 @@ use iced::{
     Length::Fill,
     Subscription, Task,
     alignment::Horizontal,
-    widget::{button, column, container, horizontal_rule, horizontal_space, row, stack},
+    widget::{button, column, container, row, rule, space, stack},
 };
 use tracing::info;
 
@@ -56,7 +56,7 @@ impl Initiative {
             button(icon)
                 .style(button::text)
                 .on_press(Message::Navigation(NavigationMessage::ToggleCollapse)),
-            horizontal_space().width(Fill)
+            space::horizontal().width(Fill)
         ]
         .padding(5);
 
@@ -65,7 +65,7 @@ impl Initiative {
             .align_x(Horizontal::Center)
             .width(Fill)
             .height(Fill);
-        let topbar = column![topbar, horizontal_rule(0)];
+        let topbar = column![topbar, rule::horizontal(1)];
 
         let main = stack![current_view, navigation];
 

@@ -3,7 +3,7 @@ use std::marker::PhantomData;
 use iced::{
     Color, Element,
     Length::Fill,
-    widget::{column, horizontal_space, row, text, tooltip, tooltip::Position},
+    widget::{column, row, space, text, tooltip, tooltip::Position},
 };
 
 use crate::{Icon, IconSize, icon};
@@ -51,18 +51,20 @@ where
     fn from(field: Field<'a, T, M>) -> Self {
         let icon = icon(Icon::Error, IconSize::Small);
 
-        let tooltip = field
+        let potential_tooltip = field
             .error
             .map(|err| tooltip(icon, text(err), Position::Bottom));
 
         let required: Element<'a, M> = if field.required {
-            text("*").color(Color::new(1.0, 0.0, 0.0, 1.0)).into()
+            text("*").color(Color::from_rgb(1.0, 0.0, 0.0)).into()
         } else {
-            horizontal_space().into()
+            space::horizontal().into()
         };
 
-        let label = row![text(field.label), required, horizontal_space().width(Fill)];
-        let label = label.push_maybe(tooltip);
+        let mut label = row![text(field.label), required, space::horizontal().width(Fill)];
+        if let Some(tooltip) = potential_tooltip {
+            label = label.push(tooltip);
+        }
 
         let input = field.input.into();
 
