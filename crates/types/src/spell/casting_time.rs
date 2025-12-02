@@ -1,6 +1,6 @@
 use strum::{Display, VariantArray};
 
-#[derive(Display, VariantArray, Clone, Copy)]
+#[derive(Debug, Display, VariantArray, Clone, Copy, PartialEq)]
 pub enum SpellCastingTime {
     #[strum(to_string = "1 action")]
     Action,
@@ -10,6 +10,8 @@ pub enum SpellCastingTime {
     Reaction,
     #[strum(to_string = "1 minute")]
     OneMinute,
+    #[strum(to_string = "10 minutes")]
+    TenMinutes,
     #[strum(to_string = "1 hour")]
     OneHour,
     #[strum(to_string = "8 hours")]

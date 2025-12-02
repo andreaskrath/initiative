@@ -1,6 +1,6 @@
 use strum::{Display, VariantArray};
 
-#[derive(Display, VariantArray, Clone, Copy)]
+#[derive(Debug, Display, VariantArray, Clone, Copy, PartialEq)]
 pub enum SpellRange {
     #[strum(to_string = "Self")]
     Caster,
