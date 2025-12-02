@@ -9,7 +9,7 @@ use iced::{
     widget::{button, column, row, rule, space, text, text::Wrapping},
 };
 
-use components::{Animation, Icon, IconSize, icon};
+use components::{Animation, Icon, IconName};
 use strum::{EnumCount, VariantArray};
 use types::{FormMode, MagicSchool, SpellFilter, SpellLevel};
 
@@ -126,8 +126,8 @@ impl<'a> Navigation {
     ) -> Element<'a, NavigationMessage> {
         let indent = space::horizontal().width(depth * INDENT_STEP);
 
-        let prefix = match item.prefix {
-            Some(prefix_icon) => icon(prefix_icon, IconSize::Medium),
+        let prefix: Element<'a, NavigationMessage> = match &item.prefix {
+            Some(prefix_icon) => prefix_icon.clone().into(),
             None => space::horizontal().width(16).into(),
         };
 
@@ -135,9 +135,9 @@ impl<'a> Navigation {
             NavigationItemKind::Expandable { id, children } => {
                 let has_children = !children.is_empty();
                 let is_expanded = self.is_expanded(*id);
-                let suffix = match (has_children, is_expanded) {
-                    (true, true) => icon(Icon::ChevronDown, IconSize::Medium),
-                    (true, false) => icon(Icon::ChevronRight, IconSize::Medium),
+                let suffix: Element<'a, NavigationMessage> = match (has_children, is_expanded) {
+                    (true, true) => Icon::new(IconName::ChevronDown).into(),
+                    (true, false) => Icon::new(IconName::ChevronRight).into(),
                     (false, false) => space::horizontal().width(16).into(),
                     (false, true) => {
                         unreachable!("an item cannot be expanded and have no children")
@@ -149,8 +149,8 @@ impl<'a> Navigation {
                 (suffix, on_press)
             }
             NavigationItemKind::Navigable { target, suffix } => {
-                let suffix = match suffix {
-                    Some(suffix_icon) => icon(*suffix_icon, IconSize::Medium),
+                let suffix: Element<'a, NavigationMessage> = match suffix {
+                    Some(suffix_icon) => suffix_icon.clone().into(),
                     None => space::horizontal().width(16).into(),
                 };
 
@@ -223,7 +223,7 @@ impl<'a> Navigation {
 
         let spells_menu = NavigationItem {
             label: String::from("Spells"),
-            prefix: Some(Icon::Spell),
+            prefix: Some(Icon::new(IconName::Spell)),
             kind: NavigationItemKind::Expandable {
                 id: ExpandableNavigationItemId::Spell,
                 children: Box::new([
@@ -234,7 +234,7 @@ impl<'a> Navigation {
                             target: TabRequest::SpellForm {
                                 mode: FormMode::Create,
                             },
-                            suffix: Some(Icon::Plus),
+                            suffix: Some(Icon::new(IconName::Plus)),
                         },
                     },
                     NavigationItem {

@@ -6,7 +6,7 @@ use iced::{
     widget::{column, row, space, text, tooltip, tooltip::Position},
 };
 
-use crate::{Icon, IconSize, icon};
+use crate::{Icon, IconName};
 
 pub struct Field<'a, T, M>
 where
@@ -49,7 +49,7 @@ where
     T: Into<Element<'a, M>>,
 {
     fn from(field: Field<'a, T, M>) -> Self {
-        let icon = icon(Icon::Error, IconSize::Small);
+        let icon = Icon::new(IconName::Error).color(Color::from_rgb(1.0, 0.0, 0.0));
 
         let potential_tooltip = field
             .error

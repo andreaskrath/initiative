@@ -3,7 +3,7 @@ mod navigation;
 mod tab;
 mod view;
 
-use components::{Icon, IconSize, icon};
+use components::{Icon, IconName, IconSize};
 use iced::{
     Element,
     Length::Fill,
@@ -48,9 +48,9 @@ impl Initiative {
 
     pub fn view(&self) -> Element<'_, Message> {
         let icon = if self.navigation.collapsed() {
-            icon(Icon::NavigationOpen, IconSize::Large)
+            Icon::new(IconName::NavigationOpen).size(IconSize::Large)
         } else {
-            icon(Icon::NavigationClose, IconSize::Large)
+            Icon::new(IconName::NavigationClose).size(IconSize::Large)
         };
         let topbar = row![
             button(icon)
