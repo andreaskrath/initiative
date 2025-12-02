@@ -30,11 +30,6 @@ const NAVIGATION_WIDTH_EXPANDED: f32 = 300.0;
 /// The width of `Navigation` when its collapsed.
 const NAVIGATION_WIDTH_COLLAPSED: f32 = 0.0;
 
-/// The treshold determining at which point in the opening/closing animation of the `Navigation` that text/items are rendered.
-///
-/// A value of `0.3` means 30%.
-const TEXT_RENDER_THRESHOLD: f32 = 0.3;
-
 pub struct Navigation {
     collapsed: bool,
     collapse_animation: Animation,
