@@ -8,22 +8,16 @@ use iced::{
 
 use crate::{Icon, IconName};
 
-pub struct Field<'a, T, M>
-where
-    T: Into<Element<'a, M>>,
-{
-    label: &'a str,
-    input: T,
+pub struct Field<'a, Input, Message, Label> {
+    label: Label,
+    input: Input,
     required: bool,
     error: Option<&'a str>,
-    _marker: PhantomData<&'a M>,
+    _marker: PhantomData<&'a Message>,
 }
 
-impl<'a, T, M> Field<'a, T, M>
-where
-    T: Into<Element<'a, M>>,
-{
-    pub fn new(label: &'a str, input: T) -> Self {
+impl<'a, Input, Message, Label> Field<'a, Input, Message, Label> {
+    pub fn new(label: Label, input: Input) -> Self {
         Self {
             label,
             input,
@@ -38,31 +32,35 @@ where
         self
     }
 
-    pub fn error(mut self, error: &'a str) -> Self {
-        self.error = Some(error);
+    pub fn error(mut self, error: Option<&'a str>) -> Self {
+        self.error = error;
         self
     }
 }
 
-impl<'a, T, M> From<Field<'a, T, M>> for Element<'a, M>
+impl<'a, Input, Message, Label> From<Field<'a, Input, Message, Label>> for Element<'a, Message>
 where
-    T: Into<Element<'a, M>>,
+    Input: Into<Element<'a, Message>>,
+    Label: Into<&'a str>,
 {
-    fn from(field: Field<'a, T, M>) -> Self {
-        let icon = Icon::new(IconName::Error).color(Color::from_rgb(1.0, 0.0, 0.0));
-
-        let potential_tooltip = field
-            .error
-            .map(|err| tooltip(icon, text(err), Position::Bottom));
-
-        let required: Element<'a, M> = if field.required {
+    fn from(field: Field<'a, Input, Message, Label>) -> Self {
+        let required: Element<'a, Message> = if field.required {
             text("*").color(Color::from_rgb(1.0, 0.0, 0.0)).into()
         } else {
             space::horizontal().into()
         };
 
-        let mut label = row![text(field.label), required, space::horizontal().width(Fill)];
-        if let Some(tooltip) = potential_tooltip {
+        let mut label = row![
+            text(field.label.into()),
+            required,
+            space::horizontal().width(Fill)
+        ];
+
+        if let Some(err) = field.error {
+            let icon = Icon::new(IconName::Error).color(Color::from_rgb(1.0, 0.0, 0.0));
+
+            let tooltip = tooltip(icon, text(err), Position::Bottom);
+
             label = label.push(tooltip);
         }
 
