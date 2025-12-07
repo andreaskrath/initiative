@@ -5,7 +5,7 @@ use widgets::{Select, TextArea, TextAreaRule, TextInput, TextInputRule, Toggle};
 
 use crate::view::SpellFormMessage;
 
-pub struct SpellFormData {
+pub struct SpellFormFields {
     pub name: TextInput<SpellFormMessage>,
     pub school: Select<MagicSchool, SpellFormMessage>,
     pub level: Select<SpellLevel, SpellFormMessage>,
@@ -21,7 +21,7 @@ pub struct SpellFormData {
     pub materials: TextInput<SpellFormMessage>,
 }
 
-impl Default for SpellFormData {
+impl Default for SpellFormFields {
     fn default() -> Self {
         Self {
             name: TextInput::new("Name", String::new())

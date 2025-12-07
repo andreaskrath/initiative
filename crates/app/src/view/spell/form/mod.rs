@@ -1,4 +1,4 @@
-mod data;
+mod fields;
 mod message;
 
 use iced::{
@@ -11,7 +11,7 @@ use types::FormMode;
 use crate::{
     message::Message,
     tab::{TabContent, TabId},
-    view::spell::form::data::SpellFormData,
+    view::spell::form::fields::SpellFormFields,
 };
 
 pub use message::SpellFormMessage;
@@ -19,7 +19,7 @@ pub use message::SpellFormMessage;
 pub struct SpellForm {
     id: TabId,
     mode: FormMode,
-    data: SpellFormData,
+    fields: SpellFormFields,
 }
 
 impl SpellForm {
@@ -27,7 +27,7 @@ impl SpellForm {
         Self {
             id,
             mode,
-            data: SpellFormData::default(),
+            fields: SpellFormFields::default(),
         }
     }
 }
@@ -51,61 +51,61 @@ impl TabContent for SpellForm {
 
         match message {
             SpellFormMessage::NameChanged(name) => {
-                self.data.name.set(name);
-                self.data.name.validate();
+                self.fields.name.set(name);
+                self.fields.name.validate();
             }
-            SpellFormMessage::SchoolSelected(school) => self.data.school.select(Some(school)),
-            SpellFormMessage::LevelSelected(level) => self.data.level.select(Some(level)),
+            SpellFormMessage::SchoolSelected(school) => self.fields.school.select(Some(school)),
+            SpellFormMessage::LevelSelected(level) => self.fields.level.select(Some(level)),
             SpellFormMessage::CastingTimeSelected(casting_time) => {
-                self.data.casting_time.select(Some(casting_time));
+                self.fields.casting_time.select(Some(casting_time));
             }
             SpellFormMessage::DurationSelected(duration) => {
-                self.data.duration.select(Some(duration))
+                self.fields.duration.select(Some(duration))
             }
-            SpellFormMessage::RangeSelected(range) => self.data.range.select(Some(range)),
-            SpellFormMessage::DescriptionChanged(action) => self.data.description.update(action),
+            SpellFormMessage::RangeSelected(range) => self.fields.range.select(Some(range)),
+            SpellFormMessage::DescriptionChanged(action) => self.fields.description.update(action),
             SpellFormMessage::AtHigherLevelsChanged(action) => {
-                self.data.at_higher_levels.update(action);
+                self.fields.at_higher_levels.update(action);
             }
-            SpellFormMessage::RitualToggled => self.data.ritual.toggle(),
-            SpellFormMessage::ConcentrationToggled => self.data.concentration.toggle(),
-            SpellFormMessage::VerbalToggled => self.data.verbal.toggle(),
-            SpellFormMessage::SomaticToggled => self.data.somatic.toggle(),
-            SpellFormMessage::MaterialsChanged(materials) => self.data.materials.set(materials),
+            SpellFormMessage::RitualToggled => self.fields.ritual.toggle(),
+            SpellFormMessage::ConcentrationToggled => self.fields.concentration.toggle(),
+            SpellFormMessage::VerbalToggled => self.fields.verbal.toggle(),
+            SpellFormMessage::SomaticToggled => self.fields.somatic.toggle(),
+            SpellFormMessage::MaterialsChanged(materials) => self.fields.materials.set(materials),
         }
 
         Task::none()
     }
 
     fn view(&self) -> Element<'_, Self::ContentMessage> {
-        let name = self.data.name.view();
+        let name = self.fields.name.view();
 
-        let school = self.data.school.view();
+        let school = self.fields.school.view();
 
-        let level = self.data.level.view();
+        let level = self.fields.level.view();
 
-        let casting_time = self.data.casting_time.view();
+        let casting_time = self.fields.casting_time.view();
 
-        let duration = self.data.duration.view();
+        let duration = self.fields.duration.view();
 
-        let range = self.data.range.view();
+        let range = self.fields.range.view();
 
         let first_row = row![name, school, level].spacing(10);
         let second_row = row![casting_time, duration, range].spacing(10);
 
-        let description = self.data.description.view();
+        let description = self.fields.description.view();
 
-        let at_higher_levels = self.data.at_higher_levels.view();
+        let at_higher_levels = self.fields.at_higher_levels.view();
 
-        let ritual = self.data.ritual.view();
+        let ritual = self.fields.ritual.view();
 
-        let concentration = self.data.concentration.view();
+        let concentration = self.fields.concentration.view();
 
-        let verbal = self.data.verbal.view();
+        let verbal = self.fields.verbal.view();
 
-        let somatic = self.data.somatic.view();
+        let somatic = self.fields.somatic.view();
 
-        let materials = self.data.materials.view();
+        let materials = self.fields.materials.view();
 
         let third_row = row![verbal, somatic, materials, ritual, concentration]
             .spacing(10)
