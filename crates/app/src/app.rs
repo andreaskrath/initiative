@@ -3,7 +3,6 @@ mod navigation;
 mod tab;
 mod view;
 
-use components::{Icon, IconName, IconSize};
 use iced::{
     Element,
     Length::Fill,
@@ -12,6 +11,7 @@ use iced::{
     widget::{button, column, container, row, rule, space, stack},
 };
 use tracing::info;
+use widgets::{Icon, IconName, IconSize};
 
 use crate::{
     message::Message,

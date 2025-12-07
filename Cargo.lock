@@ -119,11 +119,11 @@ checksum = "a23eb6b1614318a8071c9b2521f36b424b2c83db5eb3a0fead4a6c0809af6e61"
 name = "app"
 version = "0.1.0"
 dependencies = [
- "components",
  "iced",
  "strum",
  "tracing",
  "types",
+ "widgets",
 ]
 
 [[package]]
@@ -668,16 +668,6 @@ checksum = "ba5a308b75df32fe02788e748662718f03fde005016435c444eea572398219fd"
 dependencies = [
  "bytes",
  "memchr",
-]
-
-[[package]]
-name = "components"
-version = "0.1.0"
-dependencies = [
- "assets",
- "iced",
- "tracing",
- "types",
 ]
 
 [[package]]
@@ -3913,6 +3903,7 @@ name = "types"
 version = "0.1.0"
 dependencies = [
  "strum",
+ "thiserror 2.0.17",
  "uuid",
 ]
 
@@ -4449,6 +4440,16 @@ dependencies = [
  "log",
  "thiserror 2.0.17",
  "web-sys",
+]
+
+[[package]]
+name = "widgets"
+version = "0.1.0"
+dependencies = [
+ "assets",
+ "iced",
+ "thiserror 2.0.17",
+ "tracing",
 ]
 
 [[package]]

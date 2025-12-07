@@ -1,21 +1,20 @@
 [package]
-name = "app"
+name = "widgets"
 version = "0.1.0"
 publish.workspace = true
 edition.workspace = true
 
 [lib]
-path = "src/app.rs"
+path = "src/widgets.rs"
 
 [dependencies]
+# Internal crates
+assets.workspace = true
+
 # External crates
 iced.workspace = true
-strum.workspace = true
+thiserror.workspace = true
 tracing.workspace = true
-
-# Internal crates
-types.workspace = true
-widgets.workspace = true
 
 [lints]
 workspace = true

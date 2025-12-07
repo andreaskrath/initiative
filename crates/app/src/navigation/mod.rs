@@ -9,9 +9,9 @@ use iced::{
     widget::{button, column, row, rule, space, text, text::Wrapping},
 };
 
-use components::{Animation, Icon, IconName};
 use strum::{EnumCount, VariantArray};
 use types::{FormMode, MagicSchool, SpellFilter, SpellLevel};
+use widgets::{Animation, Icon, IconName};
 
 use crate::{
     message::Message,

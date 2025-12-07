@@ -3,10 +3,10 @@ resolver = "2"
 members = [
   "crates/app",
   "crates/assets",
-  "crates/components",
   "crates/initiative",
   "crates/logging",
   "crates/types",
+  "crates/widgets",
 ]
 
 [workspace.package]
@@ -33,9 +33,9 @@ uuid = "=1.18.1"
 # Internal crates
 app = { path = "crates/app" }
 assets = { path = "crates/assets" }
-components = { path = "crates/components" }
 logging = { path = "crates/logging" }
 types = { path = "crates/types" }
+widgets = { path = "crates/widgets" }
 
 [workspace.lints.rust]
 unsafe_code = "deny"

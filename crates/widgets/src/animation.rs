@@ -33,7 +33,7 @@ impl Animation {
     ///
     /// # Examples
     /// ```rust
-    /// use components::Animation;
+    /// use widgets::Animation;
     ///
     /// // create a new animation
     /// let animation = Animation::new(0.0, 50.0);
@@ -53,7 +53,7 @@ impl Animation {
     ///
     /// # Examples
     /// ```rust
-    /// use components::Animation;
+    /// use widgets::Animation;
     ///
     /// // create a new animation
     /// let mut animation = Animation::new(0.0, 50.0);
@@ -80,7 +80,7 @@ impl Animation {
     ///
     /// # Examples
     /// ```rust
-    /// use components::Animation;
+    /// use widgets::Animation;
     ///
     /// // create a new animation with custom speed
     /// let animation = Animation::new(0.0, 50.0).with_speed(0.3);
@@ -100,7 +100,7 @@ impl Animation {
     ///
     /// # Examples
     /// ```rust
-    /// use components::Animation;
+    /// use widgets::Animation;
     ///
     /// // create a new animation with custom frame rate
     /// let animation = Animation::new(0.0, 50.0).with_frame_rate(100);

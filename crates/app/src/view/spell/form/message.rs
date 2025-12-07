@@ -11,9 +11,9 @@ pub enum SpellFormMessage {
     RangeSelected(SpellRange),
     DescriptionChanged(Action),
     AtHigherLevelsChanged(Action),
-    RitualToggled(bool),
-    ConcentrationToggled(bool),
-    VerbalToggled(bool),
-    SomaticToggled(bool),
+    RitualToggled,
+    ConcentrationToggled,
+    VerbalToggled,
+    SomaticToggled,
     MaterialsChanged(String),
 }

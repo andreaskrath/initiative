@@ -1,4 +1,4 @@
-use components::Icon;
+use widgets::Icon;
 
 use crate::tab::TabRequest;
 
