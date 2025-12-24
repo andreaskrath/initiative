@@ -1,4 +1,4 @@
-use types::{FormMode, SpellFilter};
+use types::FormMode;
 
 /// This enum defines "requests" to open a new tab.
 ///
@@ -10,5 +10,5 @@ use types::{FormMode, SpellFilter};
 pub enum TabRequest {
     Index,
     SpellForm { mode: FormMode },
-    SpellList { filter: Option<SpellFilter> },
+    SpellList,
 }

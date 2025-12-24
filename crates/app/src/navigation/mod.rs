@@ -1,28 +1,20 @@
+mod group;
 mod item;
 mod message;
 
-use message::ExpandableNavigationItemId;
-
 use iced::{
     Element, Fill, Subscription, Task,
-    alignment::Vertical,
-    widget::{button, column, row, rule, space, text, text::Wrapping},
+    widget::{column, row, rule, space},
 };
 
-use strum::{EnumCount, VariantArray};
-use types::{FormMode, MagicSchool, SpellFilter, SpellLevel};
-use widgets::{Animation, Icon, IconName};
+use widgets::{Animation, IconName};
 
 use crate::{
     message::Message,
-    navigation::item::{NavigationItem, NavigationItemKind},
-    tab::TabRequest,
+    navigation::{group::NavigationGroup, item::NavigationItem},
 };
 
 pub use message::NavigationMessage;
-
-/// The number each level of depth indents items.
-const INDENT_STEP: u32 = 10;
 
 /// The width of `Navigation` when its expanded.
 const NAVIGATION_WIDTH_EXPANDED: f32 = 300.0;
@@ -33,8 +25,7 @@ const NAVIGATION_WIDTH_COLLAPSED: f32 = 0.0;
 pub struct Navigation {
     collapsed: bool,
     collapse_animation: Animation,
-    expanded: [bool; ExpandableNavigationItemId::COUNT],
-    items: Vec<NavigationItem>,
+    groups: Box<[NavigationGroup]>,
 }
 
 impl Default for Navigation {
@@ -46,13 +37,12 @@ impl Default for Navigation {
                 NAVIGATION_WIDTH_COLLAPSED,
             )
             .with_speed(0.1),
-            expanded: [false; ExpandableNavigationItemId::COUNT],
-            items: Self::build_menu(),
+            groups: groups(),
         }
     }
 }
 
-impl<'a> Navigation {
+impl Navigation {
     /// Whether the sidebar is currently collapsed.
     pub fn collapsed(&self) -> bool {
         self.collapsed
@@ -73,17 +63,19 @@ impl<'a> Navigation {
 
                 Task::none()
             }
-            NavigationMessage::ToggleItem(id) => {
-                self.toggle_item(id);
-
-                Task::none()
-            }
-            NavigationMessage::Navigate(view) => Task::done(Message::TabRequest(view)),
             NavigationMessage::AnimationTick => {
                 self.collapse_animation.tick();
 
                 Task::none()
             }
+            NavigationMessage::ToggleGroup(id) => {
+                if let Some(group) = self.groups.iter_mut().find(|g| g.id() == id) {
+                    group.toggle_expansion();
+                }
+
+                Task::none()
+            }
+            NavigationMessage::Navigate(view) => Task::done(Message::TabRequest(view)),
         }
     }
 
@@ -93,12 +85,14 @@ impl<'a> Navigation {
         } else {
             let width = self.collapse_animation.current();
 
-            let navigation_menu =
-                column(self.items.iter().map(|item| self.render_item(item, 0))).width(width);
+            let groups = column(self.groups.iter().map(|group| group.view()))
+                .width(width)
+                .spacing(50)
+                .padding(15);
 
             let divider = rule::vertical(1);
 
-            row![navigation_menu, divider].height(Fill).into()
+            row![groups, divider].height(Fill).into()
         }
     }
 
@@ -110,153 +104,16 @@ impl<'a> Navigation {
             Subscription::none()
         }
     }
+}
 
-    fn is_expanded(&self, id: ExpandableNavigationItemId) -> bool {
-        self.expanded[id]
-    }
+fn groups() -> Box<[NavigationGroup]> {
+    let reference_items = [NavigationItem::new(
+        "Spells",
+        IconName::Spell,
+        crate::tab::TabRequest::SpellList,
+    )];
 
-    fn toggle_item(&mut self, id: ExpandableNavigationItemId) {
-        self.expanded[id] = !self.expanded[id];
-    }
+    let reference_group = NavigationGroup::new("Reference", reference_items);
 
-    fn render_item(
-        &'a self,
-        item: &'a NavigationItem,
-        depth: u32,
-    ) -> Element<'a, NavigationMessage> {
-        let indent = space::horizontal().width(depth * INDENT_STEP);
-
-        let prefix: Element<'a, NavigationMessage> = match &item.prefix {
-            Some(prefix_icon) => prefix_icon.clone().into(),
-            None => space::horizontal().width(16).into(),
-        };
-
-        let (suffix, on_press) = match &item.kind {
-            NavigationItemKind::Expandable { id, children } => {
-                let has_children = !children.is_empty();
-                let is_expanded = self.is_expanded(*id);
-                let suffix: Element<'a, NavigationMessage> = match (has_children, is_expanded) {
-                    (true, true) => Icon::new(IconName::ChevronDown).into(),
-                    (true, false) => Icon::new(IconName::ChevronRight).into(),
-                    (false, false) => space::horizontal().width(16).into(),
-                    (false, true) => {
-                        unreachable!("an item cannot be expanded and have no children")
-                    }
-                };
-
-                let on_press = NavigationMessage::ToggleItem(*id);
-
-                (suffix, on_press)
-            }
-            NavigationItemKind::Navigable { target, suffix } => {
-                let suffix: Element<'a, NavigationMessage> = match suffix {
-                    Some(suffix_icon) => suffix_icon.clone().into(),
-                    None => space::horizontal().width(16).into(),
-                };
-
-                let on_press = NavigationMessage::Navigate(target.clone());
-
-                (suffix, on_press)
-            }
-        };
-
-        let navigation_label = row![
-            indent,
-            prefix,
-            space::horizontal().width(10),
-            text(&item.label).wrapping(Wrapping::None),
-            space::horizontal().width(Fill),
-            suffix
-        ]
-        .align_y(Vertical::Center);
-
-        let navigation_item = button(navigation_label)
-            .style(button::text)
-            .on_press(on_press);
-
-        let column = column![navigation_item].clip(true);
-
-        if let NavigationItemKind::Expandable { id, children } = &item.kind
-            && self.is_expanded(*id)
-        {
-            let child_elements: Vec<Element<NavigationMessage>> = children
-                .iter()
-                .map(|child| self.render_item(child, depth + 1))
-                .collect();
-
-            column.extend(child_elements).into()
-        } else {
-            column.into()
-        }
-    }
-
-    fn build_menu() -> Vec<NavigationItem> {
-        let spell_levels = SpellLevel::VARIANTS
-            .iter()
-            .map(|level| NavigationItem {
-                label: level.to_string(),
-                prefix: None,
-                kind: NavigationItemKind::Navigable {
-                    target: TabRequest::SpellList {
-                        filter: Some(SpellFilter::Level(*level)),
-                    },
-                    suffix: None,
-                },
-            })
-            .collect::<Vec<NavigationItem>>()
-            .into_boxed_slice();
-
-        let spell_schools = MagicSchool::VARIANTS
-            .iter()
-            .map(|school| NavigationItem {
-                label: school.to_string(),
-                prefix: None,
-                kind: NavigationItemKind::Navigable {
-                    target: TabRequest::SpellList {
-                        filter: Some(SpellFilter::School(*school)),
-                    },
-                    suffix: None,
-                },
-            })
-            .collect::<Vec<NavigationItem>>()
-            .into_boxed_slice();
-
-        let spells_menu = NavigationItem {
-            label: String::from("Spells"),
-            prefix: Some(Icon::new(IconName::Spell)),
-            kind: NavigationItemKind::Expandable {
-                id: ExpandableNavigationItemId::Spell,
-                children: Box::new([
-                    NavigationItem {
-                        label: String::from("Create new"),
-                        prefix: None,
-                        kind: NavigationItemKind::Navigable {
-                            target: TabRequest::SpellForm {
-                                mode: FormMode::Create,
-                            },
-                            suffix: Some(Icon::new(IconName::Plus)),
-                        },
-                    },
-                    NavigationItem {
-                        label: String::from("Level"),
-                        prefix: None,
-                        kind: NavigationItemKind::Expandable {
-                            id: ExpandableNavigationItemId::SpellLevel,
-                            children: spell_levels,
-                        },
-                    },
-                    NavigationItem {
-                        label: String::from("School"),
-                        prefix: None,
-                        kind: NavigationItemKind::Expandable {
-                            id: ExpandableNavigationItemId::SpellSchool,
-                            children: spell_schools,
-                        },
-                    },
-                ]),
-            },
-        };
-
-        vec![spells_menu]
-    }
+    Box::new([reference_group])
 }

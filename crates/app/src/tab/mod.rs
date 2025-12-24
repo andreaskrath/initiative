@@ -136,7 +136,7 @@ impl TabManager {
                 self.tabs.push(Tab::SpellForm(form));
                 self.active = id;
             }
-            TabRequest::SpellList { filter } => todo!(),
+            TabRequest::SpellList => todo!(),
         }
 
         Task::none()
