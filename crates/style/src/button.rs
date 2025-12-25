@@ -52,6 +52,6 @@ pub fn ghost(theme: &Theme, status: Status) -> Style {
         text_color,
         border,
         shadow,
-        snap: false,
+        snap: true,
     }
 }
