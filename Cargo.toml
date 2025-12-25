@@ -15,12 +15,7 @@ edition = "2024"
 
 [workspace.dependencies]
 # External crates
-iced = { git = "https://github.com/iced-rs/iced.git", branch = "master", features = [
-  "advanced",
-  "image",
-  "svg",
-  "tokio",
-] }
+iced = { version = "=0.14.0", features = ["advanced", "image", "svg", "tokio"] }
 parking_lot = "=0.12.5"
 rust-embed = { version = "=8.9.0", features = ["include-exclude"] }
 strum = { version = "=0.27.2", features = ["derive"] }
