@@ -4,7 +4,8 @@ mod message;
 
 use iced::{
     Element, Fill, Subscription, Task,
-    widget::{column, row, rule, space},
+    theme::Palette,
+    widget::{column, container, row, rule, space},
 };
 
 use widgets::{Animation, IconName};
@@ -79,20 +80,25 @@ impl Navigation {
         }
     }
 
-    pub fn view(&self) -> Element<'_, NavigationMessage> {
+    pub fn view(&self, palette: &Palette) -> Element<'_, NavigationMessage> {
         if self.collapsed && !self.collapse_animation.in_progress() {
             space::horizontal().into()
         } else {
             let width = self.collapse_animation.current();
 
-            let groups = column(self.groups.iter().map(|group| group.view()))
-                .width(width)
+            let groups = column(self.groups.iter().map(|group| group.view(palette)))
                 .spacing(50)
                 .padding(15);
 
+            let groups_container = container(groups)
+                .width(width)
+                .clip(true);
+
             let divider = rule::vertical(1);
 
-            row![groups, divider].height(Fill).into()
+            row![groups_container, divider]
+                .height(Fill)
+                .into()
         }
     }
 
@@ -113,7 +119,7 @@ fn groups() -> Box<[NavigationGroup]> {
         crate::tab::TabRequest::SpellList,
     )];
 
-    let reference_group = NavigationGroup::new("Reference", reference_items);
+    let reference_group = NavigationGroup::new("reference", reference_items);
 
     Box::new([reference_group])
 }

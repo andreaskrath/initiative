@@ -1,10 +1,13 @@
 use std::sync::atomic::{AtomicU64, Ordering};
 
 use iced::{
-    Alignment, Color, Element,
+    Alignment, Element,
     Length::Fill,
+    advanced::text::Shaping,
+    theme::Palette,
     widget::{self, column, row},
 };
+use style::Typography;
 use widgets::{Icon, IconName};
 
 use crate::navigation::{NavigationItem, NavigationMessage};
@@ -37,7 +40,7 @@ impl NavigationGroup {
 
         Self {
             id: Self::unique(),
-            label: label.into(),
+            label: label.into().to_uppercase(),
             items,
             expanded: false,
         }
@@ -51,8 +54,12 @@ impl NavigationGroup {
         self.expanded = !self.expanded;
     }
 
-    pub fn view(&self) -> Element<'_, NavigationMessage> {
-        let label = widget::text(&self.label).color(Color::from_rgb(0.36, 0.36, 0.36));
+    pub fn view(&self, palette: &Palette) -> Element<'_, NavigationMessage> {
+        let label = widget::text(&self.label)
+            .size(12)
+            .font(Typography::heading_bold())
+            .shaping(Shaping::Advanced)
+            .color(palette.text.scale_alpha(0.6));
 
         let space = widget::space::horizontal().width(Fill);
 

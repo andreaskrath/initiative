@@ -67,7 +67,7 @@ impl Initiative {
         ]
         .padding(5);
 
-        let navigation = self.navigation.view().map(Message::Navigation);
+        let navigation = self.navigation.view(&palette).map(Message::Navigation);
 
         let current_view = container(self.tabs.view().map(Message::TabMessage))
             .align_x(Horizontal::Center)
