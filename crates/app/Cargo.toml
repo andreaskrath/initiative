@@ -14,6 +14,7 @@ strum.workspace = true
 tracing.workspace = true
 
 # Internal crates
+style.workspace = true
 types.workspace = true
 widgets.workspace = true
 

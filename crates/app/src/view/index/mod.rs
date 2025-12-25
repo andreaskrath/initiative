@@ -1,4 +1,5 @@
-use iced::{Task, widget::text};
+use iced::{Task, widget};
+use style::Typography;
 
 use crate::{
     message::Message,
@@ -37,6 +38,9 @@ impl TabContent for Index {
     }
 
     fn view(&self) -> iced::Element<'_, Self::ContentMessage> {
-        text("Index").into()
+        widget::text("Index")
+            .font(Typography::heading_bold())
+            .size(24)
+            .into()
     }
 }

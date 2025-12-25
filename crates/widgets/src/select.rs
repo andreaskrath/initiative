@@ -3,6 +3,7 @@ use iced::{
     Length::{self, Fill},
     widget::{self, tooltip::Position},
 };
+use style::Typography;
 
 use crate::{Icon, IconName};
 
@@ -71,6 +72,7 @@ where
     pub fn view(&'a self) -> Element<'a, Message> {
         let required: Element<'a, Message> = if self.required {
             widget::text("*")
+                .font(Typography::body())
                 .color(Color::from_rgb(1.0, 0.0, 0.0))
                 .into()
         } else {
@@ -78,7 +80,7 @@ where
         };
 
         let mut label = iced::widget::row![
-            widget::text(&self.label),
+            widget::text(&self.label).font(Typography::body()),
             required,
             widget::space::horizontal().width(Fill)
         ];
@@ -86,7 +88,11 @@ where
         if let Some(err) = self.error() {
             let icon = Icon::new(IconName::Error).color(Color::from_rgb(1.0, 0.0, 0.0));
 
-            let tooltip = widget::tooltip(icon, widget::text(err), Position::Bottom);
+            let tooltip = widget::tooltip(
+                icon,
+                widget::text(err).font(Typography::body()),
+                Position::Bottom
+            );
 
             label = label.push(tooltip);
         }

@@ -5,6 +5,7 @@ members = [
   "crates/assets",
   "crates/initiative",
   "crates/logging",
+  "crates/style",
   "crates/types",
   "crates/widgets",
 ]
@@ -29,6 +30,7 @@ uuid = "=1.18.1"
 app = { path = "crates/app" }
 assets = { path = "crates/assets" }
 logging = { path = "crates/logging" }
+style = { path = "crates/style" }
 types = { path = "crates/types" }
 widgets = { path = "crates/widgets" }
 

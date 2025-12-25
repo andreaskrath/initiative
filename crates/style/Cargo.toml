@@ -1,0 +1,13 @@
+[package]
+name = "style"
+version = "0.1.0"
+publish.workspace = true
+edition.workspace = true
+
+[dependencies]
+# External crates
+iced.workspace = true
+parking_lot.workspace = true
+
+[lints]
+workspace = true
