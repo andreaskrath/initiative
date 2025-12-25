@@ -7,7 +7,7 @@ use iced::{
     theme::Palette,
     widget::{column, container, row, rule, space},
 };
-
+use style;
 use widgets::{Animation, IconName};
 
 use crate::{
@@ -94,7 +94,7 @@ impl Navigation {
                 .width(width)
                 .clip(true);
 
-            let divider = rule::vertical(1);
+            let divider = rule::vertical(1).style(style::rule::default);
 
             row![groups_container, divider]
                 .height(Fill)

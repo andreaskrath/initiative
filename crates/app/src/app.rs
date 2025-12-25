@@ -74,7 +74,7 @@ impl Initiative {
             .width(Fill)
             .height(Fill);
 
-        let topbar = column![topbar, rule::horizontal(1)];
+        let topbar = column![topbar, rule::horizontal(1).style(style::rule::default)];
 
         let main = stack![current_view, navigation];
 
