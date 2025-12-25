@@ -1,3 +1,4 @@
+pub mod button;
 pub mod theme;
 pub mod typography;
 
