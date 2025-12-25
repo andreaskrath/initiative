@@ -27,7 +27,7 @@ pub struct TabId(u64);
 /// This enum defines the actual elements that can be shown as tabs.
 pub enum Tab {
     Index(Index),
-    SpellForm(SpellForm),
+    SpellForm(Box<SpellForm>),
 }
 
 impl Tab {
@@ -133,7 +133,7 @@ impl TabManager {
             TabRequest::SpellForm { mode } => {
                 let id = Self::unique();
                 let form = SpellForm::new(id, mode);
-                self.tabs.push(Tab::SpellForm(form));
+                self.tabs.push(Tab::SpellForm(Box::new(form)));
                 self.active = id;
             }
             TabRequest::SpellList => todo!(),
