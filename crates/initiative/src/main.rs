@@ -9,5 +9,6 @@ fn main() -> iced::Result {
 
     application(Initiative::default, Initiative::update, Initiative::view)
         .subscription(Initiative::subscription)
+        .theme(Initiative::theme)
         .run()
 }

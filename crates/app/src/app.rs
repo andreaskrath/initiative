@@ -6,10 +6,11 @@ mod view;
 use iced::{
     Element,
     Length::Fill,
-    Subscription, Task,
+    Subscription, Task, Theme,
     alignment::Horizontal,
     widget::{button, column, container, row, rule, space, stack},
 };
+use style::ThemeVariant;
 use tracing::info;
 use widgets::{Icon, IconName, IconSize};
 
@@ -20,6 +21,7 @@ use crate::{
 };
 
 pub struct Initiative {
+    theme: Theme,
     navigation: Navigation,
     tabs: TabManager,
 }
@@ -27,6 +29,7 @@ pub struct Initiative {
 impl Default for Initiative {
     fn default() -> Self {
         Self {
+            theme: ThemeVariant::default().into(),
             navigation: Navigation::default(),
             tabs: TabManager::default(),
         }
@@ -47,11 +50,15 @@ impl Initiative {
     }
 
     pub fn view(&self) -> Element<'_, Message> {
+        let palette = self.theme.palette();
+
         let icon = if self.navigation.collapsed() {
             Icon::new(IconName::NavigationOpen).size(IconSize::Large)
         } else {
             Icon::new(IconName::NavigationClose).size(IconSize::Large)
-        };
+        }
+        .color(palette.text);
+
         let topbar = row![
             button(icon)
                 .style(button::text)
@@ -61,10 +68,12 @@ impl Initiative {
         .padding(5);
 
         let navigation = self.navigation.view().map(Message::Navigation);
+
         let current_view = container(self.tabs.view().map(Message::TabMessage))
             .align_x(Horizontal::Center)
             .width(Fill)
             .height(Fill);
+
         let topbar = column![topbar, rule::horizontal(1)];
 
         let main = stack![current_view, navigation];
@@ -74,5 +83,9 @@ impl Initiative {
 
     pub fn subscription(&self) -> Subscription<Message> {
         self.navigation.subscription().map(Message::Navigation)
+    }
+
+    pub fn theme(&self) -> Option<Theme> {
+        Some(self.theme.clone())
     }
 }
