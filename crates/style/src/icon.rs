@@ -1,5 +1,7 @@
 use iced::{Theme, widget::svg::Style};
 
+use crate::MUTED_SCALE;
+
 pub fn default(theme: &Theme) -> Style {
     Style {
         color: Some(theme.palette().text),
@@ -8,7 +10,7 @@ pub fn default(theme: &Theme) -> Style {
 
 pub fn muted(theme: &Theme) -> Style {
     Style {
-        color: Some(theme.palette().text.scale_alpha(0.6)),
+        color: Some(theme.palette().text.scale_alpha(MUTED_SCALE)),
     }
 }
 

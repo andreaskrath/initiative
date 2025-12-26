@@ -4,6 +4,8 @@ use iced::{
     widget::button::{Status, Style},
 };
 
+use crate::MUTED_SCALE;
+
 pub fn ghost(theme: &Theme, status: Status) -> Style {
     let palette = theme.palette();
     let extended = theme.extended_palette();
@@ -19,7 +21,11 @@ pub fn ghost(theme: &Theme, status: Status) -> Style {
         ),
         Status::Hovered => (
             Some(Background::Color(
-                extended.background.weak.color.scale_alpha(0.2),
+                extended
+                    .background
+                    .weak
+                    .color
+                    .scale_alpha(MUTED_SCALE / 2.0),
             )),
             Border {
                 color: extended.background.strong.color,
@@ -29,7 +35,7 @@ pub fn ghost(theme: &Theme, status: Status) -> Style {
         ),
         Status::Pressed => (
             Some(Background::Color(
-                extended.background.strong.color.scale_alpha(0.5),
+                extended.background.strong.color.scale_alpha(MUTED_SCALE),
             )),
             Border {
                 color: extended.primary.base.color,
