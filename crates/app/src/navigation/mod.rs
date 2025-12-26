@@ -80,25 +80,21 @@ impl Navigation {
         }
     }
 
-    pub fn view(&self, palette: &Palette) -> Element<'_, NavigationMessage> {
+    pub fn view(&self) -> Element<'_, NavigationMessage> {
         if self.collapsed && !self.collapse_animation.in_progress() {
             space::horizontal().into()
         } else {
             let width = self.collapse_animation.current();
 
-            let groups = column(self.groups.iter().map(|group| group.view(palette)))
+            let groups = column(self.groups.iter().map(|group| group.view()))
                 .spacing(50)
                 .padding(15);
 
-            let groups_container = container(groups)
-                .width(width)
-                .clip(true);
+            let groups_container = container(groups).width(width).clip(true);
 
             let divider = rule::vertical(1).style(style::rule::default);
 
-            row![groups_container, divider]
-                .height(Fill)
-                .into()
+            row![groups_container, divider].height(Fill).into()
         }
     }
 

@@ -1,6 +1,7 @@
 mod animation;
 mod icon;
 mod select;
+mod text;
 mod text_area;
 mod text_input;
 mod toggle;
@@ -8,6 +9,7 @@ mod toggle;
 pub use animation::*;
 pub use icon::*;
 pub use select::*;
+pub use text::*;
 pub use text_area::*;
 pub use text_input::*;
 pub use toggle::*;
