@@ -8,6 +8,7 @@ use iced::{
     Length::Fill,
     Subscription, Task, Theme,
     alignment::Horizontal,
+    theme::Base,
     widget::{button, column, container, row, rule, space, stack},
 };
 use style::ThemeVariant;
@@ -46,24 +47,39 @@ impl Initiative {
                 self.tabs.handle_request(request)
             }
             Message::TabMessage(tab_message) => self.tabs.update(tab_message),
+            Message::ThemeChanged => {
+                self.theme = match self.theme.name() {
+                    "Parchment" => ThemeVariant::Dark.into(),
+                    "Dark Stone" => ThemeVariant::Light.into(),
+                    "Light" => ThemeVariant::Parchment.into(),
+                    unknown => unreachable!("unknown theme specified: {unknown}"),
+                };
+
+                Task::none()
+            }
         }
     }
 
     pub fn view(&self) -> Element<'_, Message> {
-        let palette = self.theme.palette();
-
         let icon = if self.navigation.collapsed() {
             Icon::new(IconName::NavigationOpen).size(IconSize::Large)
         } else {
             Icon::new(IconName::NavigationClose).size(IconSize::Large)
         }
-        .color(palette.text);
+        .style(style::icon::default);
 
         let topbar = row![
             button(icon)
                 .style(button::text)
                 .on_press(Message::Navigation(NavigationMessage::ToggleCollapse)),
-            space::horizontal().width(Fill)
+            space::horizontal().width(Fill),
+            button(
+                Icon::new(IconName::Spell)
+                    .size(IconSize::Large)
+                    .style(style::icon::primary)
+            )
+            .style(button::text)
+            .on_press(Message::ThemeChanged),
         ]
         .padding(5);
 

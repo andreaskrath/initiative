@@ -1,4 +1,5 @@
 pub mod button;
+pub mod icon;
 pub mod rule;
 pub mod text;
 pub mod theme;

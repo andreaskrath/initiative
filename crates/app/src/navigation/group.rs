@@ -60,7 +60,8 @@ impl NavigationGroup {
             Icon::new(IconName::ChevronDown)
         } else {
             Icon::new(IconName::ChevronRight)
-        };
+        }
+        .style(style::icon::default);
 
         let group_label = row![label, space, icon]
             .align_y(Alignment::Center)

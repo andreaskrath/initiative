@@ -10,4 +10,6 @@ pub enum Message {
     TabRequest(TabRequest),
 
     TabMessage(TabMessage),
+
+    ThemeChanged,
 }

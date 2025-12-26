@@ -1,4 +1,8 @@
 use assets::Assets;
+use iced::{
+    Theme,
+    widget::svg::{self, Style},
+};
 use tracing::error;
 
 #[derive(Debug, Clone)]
@@ -50,11 +54,10 @@ impl IconName {
     }
 }
 
-#[derive(Debug, Clone)]
 pub struct Icon {
     name: IconName,
     size: IconSize,
-    color: iced::Color,
+    style: Option<Box<dyn Fn(&Theme) -> Style>>,
 }
 
 impl Icon {
@@ -62,7 +65,7 @@ impl Icon {
         Self {
             name,
             size: IconSize::Medium,
-            color: iced::Color::BLACK,
+            style: None,
         }
     }
 
@@ -71,8 +74,8 @@ impl Icon {
         self
     }
 
-    pub fn color(mut self, color: iced::Color) -> Self {
-        self.color = color;
+    pub fn style(mut self, style: impl Fn(&Theme) -> svg::Style + 'static) -> Self {
+        self.style = Some(Box::new(style));
         self
     }
 }
@@ -88,12 +91,13 @@ impl<'a, Message: 'a> From<Icon> for iced::Element<'a, Message> {
 
         let (width, height) = icon.size.wh();
 
-        iced::widget::svg(handle)
-            .style(move |_, _| iced::widget::svg::Style {
-                color: Some(icon.color),
-            })
-            .width(width)
-            .height(height)
-            .into()
+        let mut svg = iced::widget::svg(handle).width(width).height(height);
+
+        if let Some(style_fn) = icon.style {
+            // TODO: Consider if the "hovered" status is relevant, probably mostly for styling, not funtionality
+            svg = svg.style(move |theme, _status| style_fn(theme));
+        }
+
+        svg.into()
     }
 }

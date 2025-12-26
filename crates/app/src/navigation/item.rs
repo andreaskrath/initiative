@@ -26,7 +26,7 @@ impl NavigationItem {
     }
 
     pub fn view(&self) -> Element<'_, NavigationMessage> {
-        let icon = Icon::new(self.icon);
+        let icon = Icon::new(self.icon).style(style::icon::default);
 
         let space = widget::space::horizontal().width(10);
 
