@@ -185,12 +185,12 @@ where
         ];
 
         if let Some(err) = self.error() {
-            let icon = Icon::new(IconName::Error).color(Color::from_rgb(1.0, 0.0, 0.0));
+            let icon = Icon::new(IconName::Error).style(style::icon::danger);
 
             let tooltip = iced::widget::tooltip(
                 icon,
                 widget::text(err).font(Typography::body()),
-                Position::Bottom
+                Position::Bottom,
             );
 
             label = label.push(tooltip);

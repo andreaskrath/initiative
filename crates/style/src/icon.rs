@@ -17,3 +17,9 @@ pub fn primary(theme: &Theme) -> Style {
         color: Some(theme.palette().primary),
     }
 }
+
+pub fn danger(theme: &Theme) -> Style {
+    Style {
+        color: Some(theme.palette().danger),
+    }
+}
