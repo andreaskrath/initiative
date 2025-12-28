@@ -37,7 +37,7 @@ impl NavigationItem {
         let item_label = row![icon, space, label].align_y(Alignment::Center);
 
         widget::button(item_label)
-            .style(style::button::ghost)
+            .style(style::button::ghost_background)
             .width(Fill)
             .on_press(NavigationMessage::Navigate(self.target.clone()))
             .into()

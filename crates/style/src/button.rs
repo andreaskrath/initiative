@@ -6,7 +6,7 @@ use iced::{
 
 use crate::MUTED_SCALE;
 
-pub fn ghost(theme: &Theme, status: Status) -> Style {
+pub fn ghost_background(theme: &Theme, status: Status) -> Style {
     let palette = theme.palette();
     let extended = theme.extended_palette();
 
