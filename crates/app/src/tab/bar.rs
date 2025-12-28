@@ -33,7 +33,7 @@ pub fn tab_bar(tabs: &[Tab], active: TabId) -> Element<'_, Message> {
             .width(TAB_BAR_WIDTH)
             .align_y(Alignment::Center);
 
-        if !matches!(tab, Tab::Index(_)) {
+        if !matches!(tab, Tab::Dashboard(_)) {
             let close_icon = Icon::new(IconName::Close).style(style::icon::default);
             let close_button = widget::button(close_icon)
                 .height(TAB_BAR_HEIGHT)

@@ -1,8 +1,8 @@
-use crate::view::{IndexMessage, SpellFormMessage, SpellListMessage};
+use crate::view::{DashboardMessage, SpellFormMessage, SpellListMessage};
 
 #[derive(Debug, Clone)]
 pub enum TabMessage {
-    Index(IndexMessage),
+    Dashboard(DashboardMessage),
     SpellForm(SpellFormMessage),
     SpellList(SpellListMessage),
 }

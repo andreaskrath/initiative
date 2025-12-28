@@ -16,7 +16,7 @@ use tracing::{debug, error};
 use crate::{
     message::Message,
     tab::bar::tab_bar,
-    view::{Index, SpellForm, SpellList},
+    view::{Dashboard, SpellForm, SpellList},
 };
 
 pub use content::*;
@@ -43,7 +43,7 @@ impl TabId {
 
 /// This enum defines the actual elements that can be shown as tabs.
 pub enum Tab {
-    Index(Index),
+    Dashboard(Dashboard),
     SpellForm(Box<SpellForm>),
     SpellList(Box<SpellList>),
 }
@@ -51,7 +51,7 @@ pub enum Tab {
 impl Tab {
     fn id(&self) -> TabId {
         match self {
-            Tab::Index(index) => index.id(),
+            Tab::Dashboard(dashboard) => dashboard.id(),
             Tab::SpellForm(spell_form) => spell_form.id(),
             Tab::SpellList(spell_list) => spell_list.id(),
         }
@@ -59,7 +59,7 @@ impl Tab {
 
     fn title(&self) -> &str {
         match self {
-            Tab::Index(index) => index.title(),
+            Tab::Dashboard(dashboard) => dashboard.title(),
             Tab::SpellForm(spell_form) => spell_form.title(),
             Tab::SpellList(spell_list) => spell_list.title(),
         }
@@ -82,7 +82,7 @@ impl Default for TabManager {
     fn default() -> Self {
         let mut tabs = Vec::with_capacity(1);
         let id = Self::unique();
-        let initial_tab = Tab::Index(Index::new(id));
+        let initial_tab = Tab::Dashboard(Dashboard::new(id));
         tabs.push(initial_tab);
 
         Self { tabs, active: id }
@@ -137,16 +137,16 @@ impl TabManager {
         };
 
         match message {
-            TabMessage::Index(index_message) => {
-                let Tab::Index(index) = tab else {
+            TabMessage::Dashboard(dashboard_message) => {
+                let Tab::Dashboard(dashboard) = tab else {
                     error!(
-                        "tab with id '{tab_id:?}' does not match message of type '{index_message:?}'"
+                        "tab with id '{tab_id:?}' does not match message of type '{dashboard_message:?}'"
                     );
 
                     return Task::none();
                 };
 
-                index.update(index_message)
+                dashboard.update(dashboard_message)
             }
             TabMessage::SpellForm(spell_form_message) => {
                 let Tab::SpellForm(spell_form) = tab else {
@@ -185,7 +185,7 @@ impl TabManager {
         };
 
         let view = match tab {
-            Tab::Index(index) => index.view().map(TabMessage::Index),
+            Tab::Dashboard(dashboard) => dashboard.view().map(TabMessage::Dashboard),
             Tab::SpellForm(spell_form) => spell_form.view().map(TabMessage::SpellForm),
             Tab::SpellList(spell_list) => spell_list.view().map(TabMessage::SpellList),
         }
@@ -203,11 +203,11 @@ impl TabManager {
         debug!("handling tab request: {request:?}");
 
         match request {
-            TabRequest::Index => {
-                // Check if index already exists
-                let Some(tab) = self.tab_exists(|tab| matches!(tab, Tab::Index(_))) else {
+            TabRequest::Dashboard => {
+                // Check if dashboard already exists
+                let Some(tab) = self.tab_exists(|tab| matches!(tab, Tab::Dashboard(_))) else {
                     let id = Self::unique();
-                    let new_tab = Tab::Index(Index::new(id));
+                    let new_tab = Tab::Dashboard(Dashboard::new(id));
                     self.tabs.push(new_tab);
                     self.active = id;
 

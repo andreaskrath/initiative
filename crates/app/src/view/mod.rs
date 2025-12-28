@@ -1,5 +1,5 @@
-mod index;
+mod dashboard;
 mod spell;
 
-pub use index::*;
+pub use dashboard::*;
 pub use spell::*;

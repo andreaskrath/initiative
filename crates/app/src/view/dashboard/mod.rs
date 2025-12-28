@@ -8,27 +8,27 @@ use crate::{
 
 mod message;
 
-pub use message::IndexMessage;
+pub use message::DashboardMessage;
 
-pub struct Index {
+pub struct Dashboard {
     id: TabId,
 }
 
-impl Index {
+impl Dashboard {
     pub fn new(id: TabId) -> Self {
         Self { id }
     }
 }
 
-impl TabContent for Index {
-    type ContentMessage = IndexMessage;
+impl TabContent for Dashboard {
+    type ContentMessage = DashboardMessage;
 
     fn id(&self) -> TabId {
         self.id
     }
 
     fn title(&self) -> &str {
-        "Index"
+        "Dashboard"
     }
 
     fn update(&mut self, message: Self::ContentMessage) -> Task<Message> {
@@ -38,7 +38,7 @@ impl TabContent for Index {
     }
 
     fn view(&self) -> iced::Element<'_, Self::ContentMessage> {
-        widget::text("Index")
+        widget::text("Dashboard")
             .font(Typography::heading_bold())
             .size(24)
             .into()
