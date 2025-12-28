@@ -11,7 +11,7 @@ use iced::{
     Task,
     widget::{self, Space, column},
 };
-use tracing::{debug, error, info};
+use tracing::{debug, error};
 
 use crate::{
     message::Message,
@@ -68,6 +68,7 @@ impl Tab {
 
 #[derive(Debug, Clone)]
 pub enum TabAction {
+    Open(TabRequest),
     Close(TabId),
     Focus(TabId),
 }
@@ -102,26 +103,27 @@ impl TabManager {
     }
 
     pub fn perform(&mut self, action: TabAction) -> Task<Message> {
+        debug!("performing tab action '{action:?}'");
+
         match action {
+            TabAction::Open(request) => return self.handle_request(request),
             TabAction::Close(tab_id) => {
                 self.tabs.retain(|tab| tab.id() != tab_id);
 
                 // Only update active if it is the tab being closed
                 if self.active == tab_id {
+                    debug!("closing active tab");
+
                     let closest_tab = self
                         .tabs
                         .iter()
                         .min_by_key(|tab| tab.id().difference(tab_id))
-                        .expect("there is at least a single tab");
+                        .expect("the dashboard cannot be closed, and always exists");
 
                     self.active = closest_tab.id();
                 }
             }
-            TabAction::Focus(tab_id) => {
-                info!("focusing '{tab_id:?}'");
-
-                self.active = tab_id;
-            }
+            TabAction::Focus(tab_id) => self.active = tab_id,
         }
 
         Task::none()

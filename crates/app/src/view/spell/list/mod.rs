@@ -4,7 +4,7 @@ use types::FormMode;
 
 use crate::{
     message::Message,
-    tab::{TabContent, TabId, TabRequest},
+    tab::{TabAction, TabContent, TabId, TabRequest},
 };
 
 mod message;
@@ -41,7 +41,7 @@ impl TabContent for SpellList {
                     mode: FormMode::Create,
                 };
 
-                Task::done(Message::TabRequest(request))
+                Task::done(Message::TabAction(TabAction::Open(request)))
             }
         }
     }

@@ -12,7 +12,6 @@ use iced::{
     widget::{button, column, container, row, rule, space, stack},
 };
 use style::ThemeVariant;
-use tracing::info;
 use widgets::{Icon, IconName, IconSize};
 
 use crate::{
@@ -41,11 +40,6 @@ impl Initiative {
     pub fn update(&mut self, message: Message) -> Task<Message> {
         match message {
             Message::Navigation(navigation_message) => self.navigation.update(navigation_message),
-            Message::TabRequest(request) => {
-                info!("requesting opening of tab: {:?}", request);
-
-                self.tabs.handle_request(request)
-            }
             Message::Tab(tab_id, tab_message) => self.tabs.update(tab_id, tab_message),
             Message::TabAction(tab_action) => self.tabs.perform(tab_action),
             Message::ThemeChanged => {

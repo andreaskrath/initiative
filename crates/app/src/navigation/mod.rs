@@ -11,6 +11,7 @@ use widgets::{Animation, IconName};
 use crate::{
     message::Message,
     navigation::{group::NavigationGroup, item::NavigationItem},
+    tab::TabAction,
 };
 
 pub use message::NavigationMessage;
@@ -74,7 +75,9 @@ impl Navigation {
 
                 Task::none()
             }
-            NavigationMessage::Navigate(view) => Task::done(Message::TabRequest(view)),
+            NavigationMessage::Navigate(view) => {
+                Task::done(Message::TabAction(TabAction::Open(view)))
+            }
         }
     }
 
