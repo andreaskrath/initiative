@@ -4,10 +4,8 @@ mod message;
 
 use iced::{
     Element, Fill, Subscription, Task,
-    theme::Palette,
     widget::{column, container, row, rule, space},
 };
-use style;
 use widgets::{Animation, IconName};
 
 use crate::{
@@ -90,11 +88,15 @@ impl Navigation {
                 .spacing(50)
                 .padding(15);
 
-            let groups_container = container(groups).width(width).clip(true);
+            let groups_container = container(groups)
+                .height(Fill)
+                .width(width)
+                .clip(true)
+                .style(style::container::background);
 
             let divider = rule::vertical(1).style(style::rule::default);
 
-            row![groups_container, divider].height(Fill).into()
+            row![groups_container, divider].into()
         }
     }
 

@@ -46,7 +46,8 @@ impl Initiative {
 
                 self.tabs.handle_request(request)
             }
-            Message::TabMessage(tab_message) => self.tabs.update(tab_message),
+            Message::Tab(tab_id, tab_message) => self.tabs.update(tab_id, tab_message),
+            Message::TabAction(tab_action) => self.tabs.perform(tab_action),
             Message::ThemeChanged => {
                 self.theme = match self.theme.name() {
                     "Parchment" => ThemeVariant::Dark.into(),
@@ -85,7 +86,7 @@ impl Initiative {
 
         let navigation = self.navigation.view().map(Message::Navigation);
 
-        let current_view = container(self.tabs.view().map(Message::TabMessage))
+        let current_view = container(self.tabs.view())
             .align_x(Horizontal::Center)
             .width(Fill)
             .height(Fill);

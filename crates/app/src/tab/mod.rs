@@ -1,22 +1,26 @@
+mod bar;
 mod content;
 mod message;
-mod payload;
 mod request;
 
 use std::sync::atomic::{AtomicU64, Ordering};
 
-use iced::{Element, Task, widget::Space};
-use tracing::error;
-use types::FormMode;
+use iced::{
+    Element,
+    Length::Fill,
+    Task,
+    widget::{self, Space, column},
+};
+use tracing::{debug, error, info};
 
 use crate::{
     message::Message,
-    view::{Index, SpellForm},
+    tab::bar::tab_bar,
+    view::{Index, SpellForm, SpellList},
 };
 
 pub use content::*;
 pub use message::*;
-pub use payload::*;
 pub use request::*;
 
 static NEXT_ID: AtomicU64 = AtomicU64::new(0);
@@ -24,10 +28,24 @@ static NEXT_ID: AtomicU64 = AtomicU64::new(0);
 #[derive(Debug, Clone, Copy, Hash, PartialEq, Eq)]
 pub struct TabId(u64);
 
+impl TabId {
+    fn raw(&self) -> u64 {
+        self.0
+    }
+
+    /// Calculate the numeric difference between two `TabId`s.
+    ///
+    /// Given that the raw value of a `TabId` is `u64`, the difference is absolute to avoid underflow issues.
+    fn difference(&self, other: TabId) -> u64 {
+        self.raw().abs_diff(other.raw())
+    }
+}
+
 /// This enum defines the actual elements that can be shown as tabs.
 pub enum Tab {
     Index(Index),
     SpellForm(Box<SpellForm>),
+    SpellList(Box<SpellList>),
 }
 
 impl Tab {
@@ -35,8 +53,23 @@ impl Tab {
         match self {
             Tab::Index(index) => index.id(),
             Tab::SpellForm(spell_form) => spell_form.id(),
+            Tab::SpellList(spell_list) => spell_list.id(),
         }
     }
+
+    fn title(&self) -> &str {
+        match self {
+            Tab::Index(index) => index.title(),
+            Tab::SpellForm(spell_form) => spell_form.title(),
+            Tab::SpellList(spell_list) => spell_list.title(),
+        }
+    }
+}
+
+#[derive(Debug, Clone)]
+pub enum TabAction {
+    Close(TabId),
+    Focus(TabId),
 }
 
 pub struct TabManager {
@@ -68,58 +101,109 @@ impl TabManager {
         self.tabs.iter_mut().find(|tab| id == tab.id())
     }
 
-    pub fn update(&mut self, message: TabMessage) -> Task<Message> {
-        let (id, payload) = message.into_inner();
-        let Some(tab) = self.get_mut(id) else {
-            error!(
-                "could not find tab '{:?}', payload '{:?}' is lost",
-                id, &payload
-            );
+    pub fn perform(&mut self, action: TabAction) -> Task<Message> {
+        match action {
+            TabAction::Close(tab_id) => {
+                self.tabs.retain(|tab| tab.id() != tab_id);
 
-            return Task::none();
-        };
+                // Only update active if it is the tab being closed
+                if self.active == tab_id {
+                    let closest_tab = self
+                        .tabs
+                        .iter()
+                        .min_by_key(|tab| tab.id().difference(tab_id))
+                        .expect("there is at least a single tab");
 
-        match (tab, payload) {
-            (Tab::Index(index), TabMessagePayload::Index(index_message)) => {
-                return index.update(index_message);
+                    self.active = closest_tab.id();
+                }
             }
-            (Tab::SpellForm(spell_form), TabMessagePayload::SpellForm(spell_form_message)) => {
-                return spell_form.update(spell_form_message);
-            }
-            (unknown_tab, unknown_payload) => {
-                error!(
-                    "invalid tab '{:?}' and payload '{:?}'",
-                    unknown_tab.id(),
-                    unknown_payload
-                );
+            TabAction::Focus(tab_id) => {
+                info!("focusing '{tab_id:?}'");
+
+                self.active = tab_id;
             }
         }
 
         Task::none()
     }
 
-    pub fn view(&self) -> Element<'_, TabMessage> {
+    pub fn update(&mut self, tab_id: TabId, message: TabMessage) -> Task<Message> {
+        let Some(tab) = self.get_mut(tab_id) else {
+            error!("could not find tab with id '{tab_id:?}'");
+
+            return Task::none();
+        };
+
+        match message {
+            TabMessage::Index(index_message) => {
+                let Tab::Index(index) = tab else {
+                    error!(
+                        "tab with id '{tab_id:?}' does not match message of type '{index_message:?}'"
+                    );
+
+                    return Task::none();
+                };
+
+                index.update(index_message)
+            }
+            TabMessage::SpellForm(spell_form_message) => {
+                let Tab::SpellForm(spell_form) = tab else {
+                    error!(
+                        "tab with id '{tab_id:?}' does not match message of type '{spell_form_message:?}'"
+                    );
+
+                    return Task::none();
+                };
+
+                spell_form.update(spell_form_message)
+            }
+            TabMessage::SpellList(spell_list_message) => {
+                let Tab::SpellList(spell_list) = tab else {
+                    error!(
+                        "tab with id '{tab_id:?}' does not match message of type '{spell_list_message:?}'"
+                    );
+
+                    return Task::none();
+                };
+
+                spell_list.update(spell_list_message)
+            }
+        }
+    }
+
+    pub fn view(&self) -> Element<'_, Message> {
+        let tab_bar = tab_bar(&self.tabs, self.active);
+
+        let divider = widget::rule::horizontal(1).style(style::rule::default);
+
         let Some(tab) = self.get(self.active) else {
             error!("could not find tab '{:?}'", self.active);
 
             return Space::new().into();
         };
 
-        match tab {
-            Tab::SpellForm(spell_form) => spell_form
-                .view()
-                .map(|m| TabMessage::new(spell_form.id(), TabMessagePayload::SpellForm(m))),
-            Tab::Index(index) => index
-                .view()
-                .map(|m| TabMessage::new(index.id(), TabMessagePayload::Index(m))),
+        let view = match tab {
+            Tab::Index(index) => index.view().map(TabMessage::Index),
+            Tab::SpellForm(spell_form) => spell_form.view().map(TabMessage::SpellForm),
+            Tab::SpellList(spell_list) => spell_list.view().map(TabMessage::SpellList),
         }
+        .map(|tm| Message::Tab(tab.id(), tm));
+
+        let constrained_view = widget::container(view)
+            .max_width(1200)
+            .width(Fill)
+            .center_x(Fill);
+
+        column![tab_bar, divider, constrained_view].into()
     }
 
     pub fn handle_request(&mut self, request: TabRequest) -> Task<Message> {
+        debug!("handling tab request: {request:?}");
+
         match request {
             TabRequest::Index => {
                 // Check if index already exists
-                let Some(tab) = self.tabs.iter().find(|tab| matches!(tab, Tab::Index(_))) else {
+                let Some(tab) = self.tab_exists(|tab| matches!(tab, Tab::Index(_))) else {
                     let id = Self::unique();
                     let new_tab = Tab::Index(Index::new(id));
                     self.tabs.push(new_tab);
@@ -136,9 +220,26 @@ impl TabManager {
                 self.tabs.push(Tab::SpellForm(Box::new(form)));
                 self.active = id;
             }
-            TabRequest::SpellList => todo!(),
+            TabRequest::SpellList => {
+                // Check if index already exists
+                let Some(tab) = self.tab_exists(|tab| matches!(tab, Tab::SpellList(_))) else {
+                    let id = Self::unique();
+                    let new_tab = Tab::SpellList(Box::new(SpellList::new(id)));
+                    self.tabs.push(new_tab);
+                    self.active = id;
+
+                    return Task::none();
+                };
+
+                self.active = tab.id();
+            }
         }
 
         Task::none()
+    }
+
+    /// Returns a reference to a `Tab` if it exists.
+    fn tab_exists(&self, predicate: impl Fn(&Tab) -> bool) -> Option<&Tab> {
+        self.tabs.iter().find(|tab| predicate(tab))
     }
 }

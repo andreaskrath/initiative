@@ -1,6 +1,6 @@
 use crate::{
     navigation::NavigationMessage,
-    tab::{TabMessage, TabRequest},
+    tab::{TabAction, TabId, TabMessage, TabRequest},
 };
 
 #[derive(Debug, Clone)]
@@ -9,7 +9,9 @@ pub enum Message {
 
     TabRequest(TabRequest),
 
-    TabMessage(TabMessage),
+    Tab(TabId, TabMessage),
+
+    TabAction(TabAction),
 
     ThemeChanged,
 }

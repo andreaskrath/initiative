@@ -1,17 +1,8 @@
-use crate::tab::{TabId, TabMessagePayload};
+use crate::view::{IndexMessage, SpellFormMessage, SpellListMessage};
 
 #[derive(Debug, Clone)]
-pub struct TabMessage {
-    id: TabId,
-    payload: TabMessagePayload,
-}
-
-impl TabMessage {
-    pub fn new(id: TabId, payload: TabMessagePayload) -> Self {
-        Self { id, payload }
-    }
-
-    pub fn into_inner(self) -> (TabId, TabMessagePayload) {
-        (self.id, self.payload)
-    }
+pub enum TabMessage {
+    Index(IndexMessage),
+    SpellForm(SpellFormMessage),
+    SpellList(SpellListMessage),
 }
