@@ -31,6 +31,7 @@ impl IconSize {
 pub enum IconName {
     ChevronDown,
     ChevronRight,
+    Close,
     Error,
     Monster,
     NavigationClose,
@@ -42,9 +43,10 @@ pub enum IconName {
 impl IconName {
     fn path(&self) -> &'static str {
         match self {
-            IconName::Error => "icons/error.svg",
             IconName::ChevronDown => "icons/chevron-down.svg",
             IconName::ChevronRight => "icons/chevron-right.svg",
+            IconName::Close => "icons/close.svg",
+            IconName::Error => "icons/error.svg",
             IconName::Monster => "icons/monster.svg",
             IconName::NavigationClose => "icons/navigation-close.svg",
             IconName::NavigationOpen => "icons/navigation-open.svg",
