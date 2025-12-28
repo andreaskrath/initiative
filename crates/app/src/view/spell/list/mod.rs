@@ -4,29 +4,23 @@ use types::FormMode;
 
 use crate::{
     message::Message,
-    tab::{TabAction, TabContent, TabId, TabRequest},
+    view::{ViewContent, ViewRequest},
 };
 
 mod message;
 
 pub use message::SpellListMessage;
 
-pub struct SpellList {
-    id: TabId,
-}
+pub struct SpellList {}
 
 impl SpellList {
-    pub fn new(id: TabId) -> Self {
-        Self { id }
+    pub fn new() -> Self {
+        Self {}
     }
 }
 
-impl TabContent for SpellList {
+impl ViewContent for SpellList {
     type ContentMessage = SpellListMessage;
-
-    fn id(&self) -> crate::tab::TabId {
-        self.id
-    }
 
     fn title(&self) -> &str {
         "Spell List"
@@ -37,11 +31,11 @@ impl TabContent for SpellList {
 
         match message {
             SpellListMessage::CreateNewSpell => {
-                let request = TabRequest::SpellForm {
+                let request = ViewRequest::SpellForm {
                     mode: FormMode::Create,
                 };
 
-                Task::done(Message::TabAction(TabAction::Open(request)))
+                Task::done(Message::Navigate(request))
             }
         }
     }

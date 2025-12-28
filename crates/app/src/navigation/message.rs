@@ -1,9 +1,9 @@
-use crate::{navigation::group::NavigationGroupId, tab::TabRequest};
+use crate::{navigation::group::NavigationGroupId, view::ViewRequest};
 
 #[derive(Debug, Clone)]
 pub enum NavigationMessage {
     ToggleCollapse,
     AnimationTick,
     ToggleGroup(NavigationGroupId),
-    Navigate(TabRequest),
+    Navigate(ViewRequest),
 }

@@ -2,17 +2,12 @@ use std::fmt::Debug;
 
 use iced::{Element, Task};
 
-use crate::{Message, tab::TabId};
+use crate::Message;
 
-/// This trait defines a common interface for all `TabContent` elements of the application.
-///
-/// A `TabContent` should be understood as a view, that can be displayed as part of a tab.
-pub trait TabContent {
+/// A common interface for all views of the application.
+pub trait ViewContent {
     /// The message type that is native to `Self`.
     type ContentMessage: Debug + Clone;
-
-    /// Returns the [`TabId`] of `Self`.
-    fn id(&self) -> TabId;
 
     /// Defines the title of `Self`, this will be utilized for the tab title, recent items
     /// name, and potentially the name of the window itself.

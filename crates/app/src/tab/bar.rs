@@ -21,10 +21,10 @@ const TAB_BAR_HEIGHT: u32 = 30;
 /// The tab bar as a whole will always fill the entire horizontal space.
 const TAB_BAR_WIDTH: u32 = 200;
 
-pub fn tab_bar(tabs: &[Tab], active: TabId) -> Element<'_, Message> {
+pub fn tab_bar(tabs: &[(TabId, Tab)], active: TabId) -> Element<'_, Message> {
     let mut tab_bar = Row::with_capacity(tabs.len());
 
-    for tab in tabs {
+    for (tab_id, tab) in tabs {
         let title_text = widgets::heading(tab.title());
         let title = widget::container(title_text).clip(true).padding(5);
 
@@ -38,21 +38,21 @@ pub fn tab_bar(tabs: &[Tab], active: TabId) -> Element<'_, Message> {
             let close_button = widget::button(close_icon)
                 .height(TAB_BAR_HEIGHT)
                 .style(style::button::ghost_danger_no_edges)
-                .on_press(Message::TabAction(TabAction::Close(tab.id())));
+                .on_press(Message::TabAction(TabAction::Close(*tab_id)));
 
             tab_element = tab_element.push(close_button);
         }
 
         let mut container = widget::container(tab_element);
 
-        if tab.id() == active {
+        if *tab_id == active {
             container = container.style(style::container::primary_muted);
         } else {
             container = container.style(style::container::background);
         }
 
         let ma =
-            widget::mouse_area(container).on_press(Message::TabAction(TabAction::Focus(tab.id())));
+            widget::mouse_area(container).on_press(Message::TabAction(TabAction::Focus(*tab_id)));
 
         tab_bar = tab_bar.push(ma);
 

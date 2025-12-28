@@ -12,6 +12,7 @@ use crate::{
     message::Message,
     navigation::{group::NavigationGroup, item::NavigationItem},
     tab::TabAction,
+    view::ViewRequest,
 };
 
 pub use message::NavigationMessage;
@@ -117,7 +118,7 @@ fn groups() -> Box<[NavigationGroup]> {
     let reference_items = [NavigationItem::new(
         "Spells",
         IconName::Spell,
-        crate::tab::TabRequest::SpellList,
+        ViewRequest::SpellList,
     )];
 
     let reference_group = NavigationGroup::new("reference", reference_items);

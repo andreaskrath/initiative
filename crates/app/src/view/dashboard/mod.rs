@@ -1,31 +1,22 @@
 use iced::{Task, widget};
 use style::Typography;
 
-use crate::{
-    message::Message,
-    tab::{TabContent, TabId},
-};
+use crate::{message::Message, view::ViewContent};
 
 mod message;
 
 pub use message::DashboardMessage;
 
-pub struct Dashboard {
-    id: TabId,
-}
+pub struct Dashboard {}
 
 impl Dashboard {
-    pub fn new(id: TabId) -> Self {
-        Self { id }
+    pub fn new() -> Self {
+        Self {}
     }
 }
 
-impl TabContent for Dashboard {
+impl ViewContent for Dashboard {
     type ContentMessage = DashboardMessage;
-
-    fn id(&self) -> TabId {
-        self.id
-    }
 
     fn title(&self) -> &str {
         "Dashboard"

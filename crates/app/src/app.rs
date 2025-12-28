@@ -17,7 +17,7 @@ use widgets::{Icon, IconName, IconSize};
 use crate::{
     message::Message,
     navigation::{Navigation, NavigationMessage},
-    tab::TabManager,
+    tab::{TabAction, TabManager},
 };
 
 pub struct Initiative {
@@ -52,6 +52,7 @@ impl Initiative {
 
                 Task::none()
             }
+            Message::Navigate(view_request) => self.tabs.perform(TabAction::Open(view_request)),
         }
     }
 

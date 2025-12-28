@@ -6,18 +6,18 @@ use iced::{
 use style::Typography;
 use widgets::{Icon, IconName};
 
-use crate::tab::TabRequest;
+use crate::view::ViewRequest;
 
 use super::message::NavigationMessage;
 
 pub(super) struct NavigationItem {
     label: String,
     icon: IconName,
-    target: TabRequest,
+    target: ViewRequest,
 }
 
 impl NavigationItem {
-    pub fn new(label: impl Into<String>, icon: IconName, target: TabRequest) -> Self {
+    pub fn new(label: impl Into<String>, icon: IconName, target: ViewRequest) -> Self {
         Self {
             label: label.into(),
             icon,
