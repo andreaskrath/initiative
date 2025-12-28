@@ -31,9 +31,7 @@ impl TabContent for Dashboard {
         "Dashboard"
     }
 
-    fn update(&mut self, message: Self::ContentMessage) -> Task<Message> {
-        match message {}
-
+    fn update(&mut self, _message: Self::ContentMessage) -> Task<Message> {
         Task::none()
     }
 

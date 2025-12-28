@@ -8,7 +8,6 @@ use types::FormMode;
 /// be cloned, and cloning entire states owned by [`Tab`] is not reasonable.
 #[derive(Debug, Clone, PartialEq)]
 pub enum TabRequest {
-    Dashboard,
     SpellForm { mode: FormMode },
     SpellList,
 }

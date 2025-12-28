@@ -203,19 +203,6 @@ impl TabManager {
         debug!("handling tab request: {request:?}");
 
         match request {
-            TabRequest::Dashboard => {
-                // Check if dashboard already exists
-                let Some(tab) = self.tab_exists(|tab| matches!(tab, Tab::Dashboard(_))) else {
-                    let id = Self::unique();
-                    let new_tab = Tab::Dashboard(Dashboard::new(id));
-                    self.tabs.push(new_tab);
-                    self.active = id;
-
-                    return Task::none();
-                };
-
-                self.active = tab.id();
-            }
             TabRequest::SpellForm { mode } => {
                 let id = Self::unique();
                 let form = SpellForm::new(id, mode);
