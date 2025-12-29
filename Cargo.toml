@@ -1,4 +1,44 @@
 [workspace]
-resolver = "3"
-members = ["api"]
-exclude = ["view"]
+resolver = "2"
+members = [
+  "crates/app",
+  "crates/assets",
+  "crates/initiative",
+  "crates/logging",
+  "crates/style",
+  "crates/types",
+  "crates/widgets",
+]
+
+[workspace.package]
+publish = false
+edition = "2024"
+
+[workspace.dependencies]
+# External crates
+iced = { version = "=0.14.0", features = ["advanced", "image", "svg", "tokio"] }
+parking_lot = "=0.12.5"
+rust-embed = { version = "=8.9.0", features = ["include-exclude"] }
+strum = { version = "=0.27.2", features = ["derive"] }
+strum_macros = "=0.27.2"
+thiserror = "=2.0.17"
+tracing = "=0.1.41"
+tracing-subscriber = { version = "=0.3.20", features = ["env-filter"] }
+uuid = "=1.18.1"
+
+# Internal crates
+app = { path = "crates/app" }
+assets = { path = "crates/assets" }
+logging = { path = "crates/logging" }
+style = { path = "crates/style" }
+types = { path = "crates/types" }
+widgets = { path = "crates/widgets" }
+
+[workspace.lints.rust]
+unsafe_code = "deny"
+
+[workspace.lints.clippy]
+dbg_macro = "deny"
+todo = "deny"
+allow_attributes = "deny"
+allow_attributes_without_reason = "deny"

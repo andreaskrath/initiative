@@ -1,0 +1,21 @@
+[package]
+name = "widgets"
+version = "0.1.0"
+publish.workspace = true
+edition.workspace = true
+
+[lib]
+path = "src/widgets.rs"
+
+[dependencies]
+# Internal crates
+assets.workspace = true
+style.workspace = true
+
+# External crates
+iced.workspace = true
+thiserror.workspace = true
+tracing.workspace = true
+
+[lints]
+workspace = true

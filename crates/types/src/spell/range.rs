@@ -1,0 +1,26 @@
+use strum::{Display, VariantArray};
+
+#[derive(Debug, Display, VariantArray, Clone, Copy, PartialEq)]
+pub enum SpellRange {
+    #[strum(to_string = "Self")]
+    Caster,
+    Touch,
+    Sight,
+    #[strum(to_string = "30 ft.")]
+    Feet30,
+    #[strum(to_string = "60 ft.")]
+    Feet60,
+    #[strum(to_string = "90 ft.")]
+    Feet90,
+    #[strum(to_string = "120 ft.")]
+    Feet120,
+    #[strum(to_string = "150 ft.")]
+    Feet150,
+    #[strum(to_string = "300 ft.")]
+    Feet300,
+    #[strum(to_string = "500 ft.")]
+    Feet500,
+    #[strum(to_string = "1 mile")]
+    OneMile,
+    Unlimited,
+}

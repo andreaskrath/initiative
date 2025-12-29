@@ -1,0 +1,22 @@
+[package]
+name = "app"
+version = "0.1.0"
+publish.workspace = true
+edition.workspace = true
+
+[lib]
+path = "src/app.rs"
+
+[dependencies]
+# External crates
+iced.workspace = true
+strum.workspace = true
+tracing.workspace = true
+
+# Internal crates
+style.workspace = true
+types.workspace = true
+widgets.workspace = true
+
+[lints]
+workspace = true

@@ -17,32 +17,35 @@
         pkgs = import nixpkgs {
           inherit system overlays;
         };
-        node_modules = with pkgs.nodePackages; [
-          npm
-          svelte-check
-          svelte-language-server
-          typescript
-          typescript-language-server
-          eslint
-        ];
 
         rustToolchain = pkgs.rust-bin.stable.latest.default.override {
           extensions = ["rust-src" "rust-analyzer"];
         };
+
+        iced = with pkgs; [
+          libx11
+          libxcursor
+          libxi
+          libxkbcommon
+          libxcb
+          libGL
+          vulkan-loader
+        ];
       in {
         devShells.default = with pkgs;
           mkShell {
-            buildInputs = [
-              rustToolchain
-              vscode-extensions.vadimcn.vscode-lldb.adapter
-              openssl
-              pkg-config
-              sqlx-cli
+            buildInputs =
+              [
+                rustToolchain
+                vscode-extensions.vadimcn.vscode-lldb.adapter
 
-              nodejs
-              node_modules
-            ];
+                # tokio
+                pkg-config
+                openssl
+              ]
+              ++ iced;
             RUST_SRC_PATH = "${rustToolchain}/lib/rustlib/src/rust/library";
+            LD_LIBRARY_PATH = "${pkgs.lib.makeLibraryPath iced}:$LD_LIBRARY_PATH";
           };
       }
     );

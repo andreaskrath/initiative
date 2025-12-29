@@ -1,0 +1,14 @@
+[package]
+name = "logging"
+version = "0.1.0"
+publish.workspace = true
+edition.workspace = true
+
+[lib]
+path = "src/logging.rs"
+
+[dependencies]
+tracing-subscriber.workspace = true
+
+[lints]
+workspace = true
