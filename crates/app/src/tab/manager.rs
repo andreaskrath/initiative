@@ -1,5 +1,5 @@
 use iced::{
-    Element,
+    Alignment, Element,
     Length::Fill,
     Task,
     widget::{self, Space, column},
@@ -11,6 +11,9 @@ use crate::{
     tab::{Tab, TabAction, TabId, TabMessage, bar::tab_bar},
     view::{Dashboard, SpellForm, SpellList, ViewContent, ViewRequest},
 };
+
+/// The maximum width a view is allowed to take up.
+const VIEW_WIDTH: f32 = 1200.0;
 
 pub struct TabManager {
     tabs: Vec<(TabId, Tab)>,
@@ -120,11 +123,14 @@ impl TabManager {
         .map(|tm| Message::Tab(self.active, tm));
 
         let constrained_view = widget::container(view)
-            .max_width(1200)
-            .width(Fill)
-            .center_x(Fill);
+            .align_x(Alignment::Center)
+            .max_width(VIEW_WIDTH);
 
-        column![tab_bar, divider, constrained_view].into()
+        column![tab_bar, divider, constrained_view]
+            .align_x(Alignment::Center)
+            .width(Fill)
+            .height(Fill)
+            .into()
     }
 
     fn get(&self, id: TabId) -> Option<&Tab> {

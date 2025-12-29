@@ -64,5 +64,6 @@ pub fn tab_bar(tabs: &[(TabId, Tab)], active: TabId) -> Element<'_, Message> {
 
     widget::scrollable(tab_bar)
         .direction(Direction::Horizontal(Scrollbar::hidden()))
+        .width(Fill)
         .into()
 }
