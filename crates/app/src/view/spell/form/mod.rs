@@ -10,34 +10,27 @@ use types::FormMode;
 
 use crate::{
     message::Message,
-    tab::{TabContent, TabId},
-    view::spell::form::fields::SpellFormFields,
+    view::{ViewContent, spell::form::fields::SpellFormFields},
 };
 
 pub use message::SpellFormMessage;
 
 pub struct SpellForm {
-    id: TabId,
     mode: FormMode,
     fields: SpellFormFields,
 }
 
 impl SpellForm {
-    pub fn new(id: TabId, mode: FormMode) -> Self {
+    pub fn new(mode: FormMode) -> Self {
         Self {
-            id,
             mode,
             fields: SpellFormFields::default(),
         }
     }
 }
 
-impl TabContent for SpellForm {
+impl ViewContent for SpellForm {
     type ContentMessage = SpellFormMessage;
-
-    fn id(&self) -> crate::tab::TabId {
-        self.id
-    }
 
     fn title(&self) -> &str {
         match self.mode {
