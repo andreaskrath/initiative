@@ -1,7 +1,7 @@
 use iced::{
     Alignment, Element,
     Length::Fill,
-    Task,
+    Padding, Task,
     widget::{self, Space, column},
 };
 use tracing::{debug, error};
@@ -123,6 +123,7 @@ impl TabManager {
         .map(|tm| Message::Tab(self.active, tm));
 
         let constrained_view = widget::container(view)
+            .padding(Padding::new(0.0).vertical(10.0))
             .align_x(Alignment::Center)
             .max_width(VIEW_WIDTH);
 
