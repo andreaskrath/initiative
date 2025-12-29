@@ -3,7 +3,7 @@ mod message;
 
 use iced::{
     Alignment, Element, Task,
-    widget::{column, container, row},
+    widget::{column, row},
 };
 use tracing::debug;
 use types::FormMode;
@@ -104,15 +104,14 @@ impl ViewContent for SpellForm {
             .spacing(10)
             .align_y(Alignment::End);
 
-        let form = column![
+        column![
             first_row,
             second_row,
             description,
             at_higher_levels,
             third_row
         ]
-        .spacing(10);
-
-        container(form).width(1200).into()
+        .spacing(10)
+        .into()
     }
 }
