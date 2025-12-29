@@ -97,3 +97,70 @@ pub fn ghost_danger_no_edges(theme: &Theme, status: Status) -> Style {
         snap: true,
     }
 }
+
+pub fn ghost_background_outline(theme: &Theme, status: Status) -> Style {
+    let palette = theme.palette();
+    let extended = theme.extended_palette();
+
+    let border = Border {
+        color: palette.text,
+        width: 1.0,
+        radius: Radius::new(0.0),
+    };
+
+    let background = match status {
+        Status::Active | Status::Disabled | Status::Hovered => None,
+        // Status::Hovered => Some(Background::Color(extended.background.base.color)),
+        Status::Pressed => Some(Background::Color(extended.background.strong.color)),
+    };
+
+    let text_color = palette.text;
+
+    let shadow = Shadow {
+        color: Color::TRANSPARENT,
+        offset: Vector::ZERO,
+        blur_radius: 0.0,
+    };
+
+    Style {
+        background,
+        text_color,
+        border,
+        shadow,
+        snap: true,
+    }
+}
+
+pub fn ghost_primary_outline(theme: &Theme, status: Status) -> Style {
+    let palette = theme.palette();
+    let extended = theme.extended_palette();
+
+    let border = Border {
+        color: palette.text,
+        width: 1.0,
+        radius: Radius::new(0.0),
+    };
+
+    let background = match status {
+        Status::Active | Status::Disabled | Status::Hovered => {
+            Some(Background::Color(extended.primary.strong.color))
+        }
+        Status::Pressed => Some(Background::Color(extended.primary.base.color)),
+    };
+
+    let text_color = palette.text;
+
+    let shadow = Shadow {
+        color: Color::TRANSPARENT,
+        offset: Vector::ZERO,
+        blur_radius: 0.0,
+    };
+
+    Style {
+        background,
+        text_color,
+        border,
+        shadow,
+        snap: true,
+    }
+}

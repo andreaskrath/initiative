@@ -38,10 +38,9 @@ where
         let label = widget::text(&self.label).font(Typography::body());
 
         let style = if self.value {
-            widget::button::primary
+            style::button::ghost_primary_outline
         } else {
-            widget::button::subtle
-            // widget::button::secondary
+            style::button::ghost_background_outline
         };
 
         widget::button(label)
