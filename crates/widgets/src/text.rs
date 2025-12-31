@@ -3,7 +3,7 @@ use iced::widget::{
     text::{IntoFragment, Shaping},
 };
 
-pub fn paragraph<'a>(text: impl IntoFragment<'a>) -> Text<'a> {
+pub fn body<'a>(text: impl IntoFragment<'a>) -> Text<'a> {
     widget::text(text)
         .font(fonts::body::regular())
         .style(style::text::default)
