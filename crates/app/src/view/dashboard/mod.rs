@@ -1,7 +1,5 @@
-use iced::{Element, Task};
-use widgets::heading;
-
 use crate::{message::Message, view::ViewContent};
+use iced::{Element, Task};
 
 mod message;
 
@@ -27,6 +25,6 @@ impl ViewContent for Dashboard {
     }
 
     fn view(&self) -> Element<'_, Self::ContentMessage> {
-        heading("Dashboard").into()
+        widgets::view_title("Dashboard").into()
     }
 }

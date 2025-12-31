@@ -71,6 +71,8 @@ impl ViewContent for SpellForm {
     }
 
     fn view(&self) -> Element<'_, Self::ContentMessage> {
+        let title = widgets::view_title("Create New Spell");
+
         let name = self.fields.name.view();
 
         let school = self.fields.school.view();
@@ -105,6 +107,7 @@ impl ViewContent for SpellForm {
             .align_y(Alignment::End);
 
         column![
+            title,
             first_row,
             second_row,
             description,

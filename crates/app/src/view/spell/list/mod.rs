@@ -1,4 +1,4 @@
-use iced::{Element, Task, widget};
+use iced::{Element, Task, widget, widget::column};
 use tracing::debug;
 use types::FormMode;
 
@@ -41,10 +41,12 @@ impl ViewContent for SpellList {
     }
 
     fn view(&self) -> Element<'_, Self::ContentMessage> {
+        let title = widgets::view_title("Spell List");
+
         let create_spell_button = widget::button("Create New Spell")
             .on_press(SpellListMessage::CreateNewSpell)
             .style(style::button::danger::ghost::default);
 
-        widget::container(create_spell_button).center_x(1200).into()
+        column![title, create_spell_button].into()
     }
 }
