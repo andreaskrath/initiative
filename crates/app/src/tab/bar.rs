@@ -37,7 +37,7 @@ pub fn tab_bar(tabs: &[(TabId, Tab)], active: TabId) -> Element<'_, Message> {
             let close_icon = Icon::new(IconName::Close).style(style::icon::default);
             let close_button = widget::button(close_icon)
                 .height(TAB_BAR_HEIGHT)
-                .style(style::button::ghost_danger_no_edges)
+                .style(style::button::danger::ghost::default)
                 .on_press(Message::TabAction(TabAction::Close(*tab_id)));
 
             tab_element = tab_element.push(close_button);

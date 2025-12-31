@@ -43,7 +43,7 @@ impl ViewContent for SpellList {
     fn view(&self) -> Element<'_, Self::ContentMessage> {
         let create_spell_button = widget::button("Create New Spell")
             .on_press(SpellListMessage::CreateNewSpell)
-            .style(style::button::ghost_danger_no_edges);
+            .style(style::button::danger::ghost::default);
 
         widget::container(create_spell_button).center_x(1200).into()
     }
