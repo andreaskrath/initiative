@@ -1,4 +1,3 @@
-use assets::Assets;
 use iced::{
     Theme,
     widget::svg::{self, Style},
@@ -84,12 +83,13 @@ impl Icon {
 
 impl<'a, Message: 'a> From<Icon> for iced::Element<'a, Message> {
     fn from(icon: Icon) -> Self {
-        let Some(embedded_icon) = Assets::get(icon.name.path()) else {
-            error!("failed to load icon '{}'", icon.name.path());
-            return iced::widget::Space::new().into();
+        let handle = match assets::icons::get(icon.name.path()) {
+            Ok(handle) => handle,
+            Err(err) => {
+                error!("{err}");
+                return iced::widget::Space::new().into();
+            }
         };
-
-        let handle = iced::widget::svg::Handle::from_memory(embedded_icon.data);
 
         let (width, height) = icon.size.wh();
 

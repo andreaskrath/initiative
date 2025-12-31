@@ -1,4 +1,3 @@
-use iced::widget::svg::Handle;
 use rust_embed::RustEmbed;
 use thiserror::Error;
 use tracing::{debug, error, warn};
@@ -13,14 +12,15 @@ pub enum AssetsError {
 #[folder = "../../assets"]
 #[include = "fonts/**/*.otf"]
 #[include = "icons/**/*.svg"]
-pub struct Assets;
+struct Assets;
 
-impl Assets {
-    pub fn icon(&self, path: &str) -> Result<Handle, AssetsError> {
-        let path = format!("icons/{path}");
-        let Some(bytes) = Self::get(&path) else {
-            error!("failed to find icon with path '{}'", path);
-            return Err(AssetsError::Load(path));
+pub mod icons {
+    use super::*;
+    use iced::widget::svg::Handle;
+
+    pub fn get(path: &str) -> Result<Handle, AssetsError> {
+        let Some(bytes) = Assets::get(path) else {
+            return Err(AssetsError::Load(path.to_string()));
         };
 
         Ok(Handle::from_memory(bytes.data))
