@@ -1,15 +1,14 @@
+use super::base;
 use iced::{
     Background, Theme,
     widget::button::{Status, Style},
 };
 
-use super::{NO_BORDER, NO_SHADOW};
-
 pub mod ghost {
+
     use super::*;
 
     pub fn default(theme: &Theme, status: Status) -> Style {
-        let palette = theme.palette();
         let extended = theme.extended_palette();
 
         let background = match status {
@@ -18,14 +17,9 @@ pub mod ghost {
             Status::Pressed => Some(Background::Color(extended.danger.strong.color)),
         };
 
-        let text_color = palette.text;
-
         Style {
             background,
-            text_color,
-            border: NO_BORDER,
-            shadow: NO_SHADOW,
-            snap: true,
+            ..base(theme, status)
         }
     }
 }

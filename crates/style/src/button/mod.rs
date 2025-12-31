@@ -1,4 +1,8 @@
-use iced::{Border, Color, Shadow, Vector, border::Radius};
+use iced::{
+    Border, Color, Shadow, Theme, Vector,
+    border::Radius,
+    widget::button::{Status, Style},
+};
 
 pub mod background;
 pub mod danger;
@@ -20,3 +24,17 @@ const NO_BORDER: Border = Border {
         bottom_left: 0.0,
     },
 };
+
+fn base(theme: &Theme, _status: Status) -> Style {
+    let palette = theme.palette();
+
+    let text_color = palette.text;
+
+    Style {
+        background: None,
+        text_color,
+        border: NO_BORDER,
+        shadow: NO_SHADOW,
+        snap: true,
+    }
+}
