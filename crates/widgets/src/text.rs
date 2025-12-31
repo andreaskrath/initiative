@@ -1,7 +1,4 @@
-use iced::widget::{
-    self, Text,
-    text::{IntoFragment, Shaping},
-};
+use iced::widget::{self, Text, text::IntoFragment};
 
 pub fn body<'a>(text: impl IntoFragment<'a>) -> Text<'a> {
     widget::text(text)
@@ -13,7 +10,6 @@ pub fn heading<'a>(text: impl IntoFragment<'a>) -> Text<'a> {
     widget::text(text)
         .size(14)
         .font(fonts::heading::regular())
-        .shaping(Shaping::Advanced)
         .style(style::text::default)
 }
 
@@ -21,7 +17,6 @@ pub fn muted_heading<'a>(text: impl IntoFragment<'a>) -> Text<'a> {
     widget::text(text)
         .size(12)
         .font(fonts::heading::regular())
-        .shaping(Shaping::Advanced)
         .style(style::text::muted)
 }
 
