@@ -1,8 +1,8 @@
-use crate::{Icon, IconName};
+use crate::Label;
 use iced::{
-    Color, Element,
-    Length::{self, Fill},
-    widget::{self, tooltip::Position},
+    Element,
+    Length::{self},
+    widget::{self},
 };
 
 pub struct Select<Value, Message> {
@@ -70,28 +70,9 @@ where
     pub fn view(&'a self) -> Element<'a, Message> {
         let font = fonts::display::regular();
 
-        let required: Element<'a, Message> = if self.required {
-            widget::text("*")
-                .font(font)
-                .color(Color::from_rgb(1.0, 0.0, 0.0))
-                .into()
-        } else {
-            widget::space::horizontal().into()
-        };
-
-        let mut label = iced::widget::row![
-            widget::text(&self.label).font(font),
-            required,
-            widget::space::horizontal().width(Fill)
-        ];
-
-        if let Some(err) = self.error() {
-            let icon = Icon::new(IconName::Error).style(style::icon::danger);
-
-            let tooltip = widget::tooltip(icon, widget::text(err).font(font), Position::Bottom);
-
-            label = label.push(tooltip);
-        }
+        let label = Label::new(&self.label)
+            .required(self.required)
+            .error(self.error());
 
         let options = self.options.as_ref();
         let selected = self.selected;

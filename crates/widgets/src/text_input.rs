@@ -1,12 +1,9 @@
+use crate::{Label, ValidationError};
 use iced::{
     Element,
-    Length::Fill,
-    widget::{self, tooltip::Position},
+    widget::{self},
 };
 use tracing::{debug, warn};
-
-use super::{Icon, IconName};
-use crate::{ValidationError, heading, paragraph};
 
 /// Rules used to define requirements to the validation of a [`TextInput`].
 #[derive(Debug, Clone, Copy, PartialEq)]
@@ -168,29 +165,9 @@ where
     Message: Clone + 'a,
 {
     pub fn view(&'a self) -> Element<'a, Message> {
-        let required: Element<'a, Message> = if self.is_required() {
-            heading("*").style(style::text::danger::default).into()
-        } else {
-            widget::space::horizontal().into()
-        };
-
-        let mut label = iced::widget::row![
-            heading(&self.label).style(style::text::default),
-            required,
-            widget::space::horizontal().width(Fill)
-        ];
-
-        if let Some(err) = self.error() {
-            let icon = Icon::new(IconName::Error).style(style::icon::danger);
-
-            let tooltip = iced::widget::tooltip(
-                icon,
-                paragraph(err).style(style::text::danger::default),
-                Position::Bottom,
-            );
-
-            label = label.push(tooltip);
-        }
+        let label = Label::new(&self.label)
+            .required(self.is_required())
+            .error(self.error());
 
         let value = self.value();
         let placeholder = self.placeholder.as_ref().map(|p| p.as_ref()).unwrap_or("");

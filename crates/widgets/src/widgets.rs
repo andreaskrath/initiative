@@ -1,5 +1,6 @@
 mod animation;
 mod icon;
+mod label;
 mod select;
 mod text;
 mod text_area;
@@ -8,6 +9,7 @@ mod toggle;
 
 pub use animation::*;
 pub use icon::*;
+pub use label::*;
 pub use select::*;
 pub use text::*;
 pub use text_area::*;

@@ -1,16 +1,13 @@
+use crate::{Label, ValidationError};
 use iced::{
     Element, Length,
     widget::{
         self,
         text::Wrapping,
         text_editor::{Action, Content},
-        tooltip::Position,
     },
 };
 use tracing::{debug, warn};
-
-use super::{Icon, IconName};
-use crate::ValidationError;
 
 /// Rules used to define requirements to the validation of a [`TextArea`].
 #[derive(Debug, Clone, Copy, PartialEq)]
@@ -184,28 +181,9 @@ where
     pub fn view(&'a self) -> Element<'a, Message> {
         let font = fonts::display::regular();
 
-        let required: Element<'a, Message> = if self.is_required() {
-            widget::text("*")
-                .font(font)
-                .color(iced::Color::from_rgb(1.0, 0.0, 0.0))
-                .into()
-        } else {
-            widget::space::horizontal().into()
-        };
-
-        let mut label = iced::widget::row![
-            widget::text(&self.label).font(font),
-            required,
-            widget::space::horizontal().width(iced::Fill)
-        ];
-
-        if let Some(err) = self.error() {
-            let icon = Icon::new(IconName::Error).style(style::icon::danger);
-
-            let tooltip = widget::tooltip(icon, widget::text(err).font(font), Position::Bottom);
-
-            label = label.push(tooltip);
-        }
+        let label = Label::new(&self.label)
+            .required(self.is_required())
+            .error(self.error());
 
         let placeholder = self.placeholder.as_ref().map(|p| p.as_ref()).unwrap_or("");
         let on_action = self.on_action.as_ref();
