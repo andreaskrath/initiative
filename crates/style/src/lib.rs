@@ -4,6 +4,7 @@ pub mod icon;
 pub mod rule;
 pub mod text;
 pub mod theme;
+pub mod tooltip;
 
 use iced::{Border, Color, Shadow, Vector, border::Radius};
 pub use theme::ThemeVariant;
