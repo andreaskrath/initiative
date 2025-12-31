@@ -2,8 +2,9 @@ use iced::{
     Alignment, Element,
     Length::Fill,
     widget::{
-        self, Row, row,
+        self, Row, Text, row,
         scrollable::{Direction, Scrollbar},
+        text::IntoFragment,
     },
 };
 use widgets::{Icon, IconName};
@@ -25,7 +26,7 @@ pub fn tab_bar(tabs: &[(TabId, Tab)], active: TabId) -> Element<'_, Message> {
     let mut tab_bar = Row::with_capacity(tabs.len());
 
     for (tab_id, tab) in tabs {
-        let title_text = widgets::heading(tab.title());
+        let title_text = title(tab.title());
         let title = widget::container(title_text).clip(true).padding(5);
 
         let mut tab_element = row![title, widget::space::horizontal().width(Fill)]
@@ -66,4 +67,10 @@ pub fn tab_bar(tabs: &[(TabId, Tab)], active: TabId) -> Element<'_, Message> {
         .direction(Direction::Horizontal(Scrollbar::hidden()))
         .width(Fill)
         .into()
+}
+
+fn title<'a>(text: impl IntoFragment<'a>) -> Text<'a> {
+    widget::text(text)
+        .font(fonts::display::bold())
+        .style(style::text::default)
 }

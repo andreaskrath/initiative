@@ -1,0 +1,15 @@
+[package]
+name = "fonts"
+version = "0.1.0"
+publish.workspace = true
+edition.workspace = true
+
+[lib]
+path = "src/fonts.rs"
+
+[dependencies]
+# External crates
+iced.workspace = true
+
+[lints]
+workspace = true

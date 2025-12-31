@@ -1,13 +1,12 @@
 use iced::{
-    Color, Element,
+    Element,
     Length::Fill,
     widget::{self, tooltip::Position},
 };
-use style::Typography;
 use tracing::{debug, warn};
 
 use super::{Icon, IconName};
-use crate::ValidationError;
+use crate::{ValidationError, heading, paragraph};
 
 /// Rules used to define requirements to the validation of a [`TextInput`].
 #[derive(Debug, Clone, Copy, PartialEq)]
@@ -170,16 +169,13 @@ where
 {
     pub fn view(&'a self) -> Element<'a, Message> {
         let required: Element<'a, Message> = if self.is_required() {
-            widget::text("*")
-                .font(Typography::body())
-                .color(Color::from_rgb(1.0, 0.0, 0.0))
-                .into()
+            heading("*").style(style::text::danger::default).into()
         } else {
             widget::space::horizontal().into()
         };
 
         let mut label = iced::widget::row![
-            widget::text(&self.label).font(Typography::body()),
+            heading(&self.label).style(style::text::default),
             required,
             widget::space::horizontal().width(Fill)
         ];
@@ -189,7 +185,7 @@ where
 
             let tooltip = iced::widget::tooltip(
                 icon,
-                widget::text(err).font(Typography::body()),
+                paragraph(err).style(style::text::danger::default),
                 Position::Bottom,
             );
 

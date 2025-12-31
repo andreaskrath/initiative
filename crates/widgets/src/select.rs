@@ -1,11 +1,9 @@
+use crate::{Icon, IconName};
 use iced::{
     Color, Element,
     Length::{self, Fill},
     widget::{self, tooltip::Position},
 };
-use style::Typography;
-
-use crate::{Icon, IconName};
 
 pub struct Select<Value, Message> {
     label: String,
@@ -70,9 +68,11 @@ where
     Message: Clone + 'a,
 {
     pub fn view(&'a self) -> Element<'a, Message> {
+        let font = fonts::display::regular();
+
         let required: Element<'a, Message> = if self.required {
             widget::text("*")
-                .font(Typography::body())
+                .font(font)
                 .color(Color::from_rgb(1.0, 0.0, 0.0))
                 .into()
         } else {
@@ -80,7 +80,7 @@ where
         };
 
         let mut label = iced::widget::row![
-            widget::text(&self.label).font(Typography::body()),
+            widget::text(&self.label).font(font),
             required,
             widget::space::horizontal().width(Fill)
         ];
@@ -88,11 +88,7 @@ where
         if let Some(err) = self.error() {
             let icon = Icon::new(IconName::Error).style(style::icon::danger);
 
-            let tooltip = widget::tooltip(
-                icon,
-                widget::text(err).font(Typography::body()),
-                Position::Bottom,
-            );
+            let tooltip = widget::tooltip(icon, widget::text(err).font(font), Position::Bottom);
 
             label = label.push(tooltip);
         }
@@ -104,6 +100,7 @@ where
 
         let select = widget::pick_list(options, selected, on_select)
             .placeholder(placeholder)
+            .font(font)
             .width(self.width);
 
         widget::column![label, select].spacing(5).into()

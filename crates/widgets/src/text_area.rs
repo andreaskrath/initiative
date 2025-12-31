@@ -7,7 +7,6 @@ use iced::{
         tooltip::Position,
     },
 };
-use style::Typography;
 use tracing::{debug, warn};
 
 use super::{Icon, IconName};
@@ -183,9 +182,11 @@ where
     Message: Clone + 'a,
 {
     pub fn view(&'a self) -> Element<'a, Message> {
+        let font = fonts::display::regular();
+
         let required: Element<'a, Message> = if self.is_required() {
             widget::text("*")
-                .font(Typography::body())
+                .font(font)
                 .color(iced::Color::from_rgb(1.0, 0.0, 0.0))
                 .into()
         } else {
@@ -193,7 +194,7 @@ where
         };
 
         let mut label = iced::widget::row![
-            widget::text(&self.label).font(Typography::body()),
+            widget::text(&self.label).font(font),
             required,
             widget::space::horizontal().width(iced::Fill)
         ];
@@ -201,11 +202,7 @@ where
         if let Some(err) = self.error() {
             let icon = Icon::new(IconName::Error).style(style::icon::danger);
 
-            let tooltip = widget::tooltip(
-                icon,
-                widget::text(err).font(Typography::body()),
-                Position::Bottom,
-            );
+            let tooltip = widget::tooltip(icon, widget::text(err).font(font), Position::Bottom);
 
             label = label.push(tooltip);
         }
@@ -214,6 +211,7 @@ where
         let on_action = self.on_action.as_ref();
 
         let text_area = widget::text_editor(&self.value)
+            .font(font)
             .wrapping(Wrapping::WordOrGlyph)
             .placeholder(placeholder)
             .on_action(on_action)

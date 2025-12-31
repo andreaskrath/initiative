@@ -1,5 +1,4 @@
 use iced::{Element, widget};
-use style::Typography;
 
 pub struct Toggle<Message> {
     label: String,
@@ -35,7 +34,7 @@ where
     Message: Clone + 'a,
 {
     pub fn view(&'a self) -> Element<'a, Message> {
-        let label = widget::text(&self.label).font(Typography::body());
+        let label = widget::text(&self.label).font(fonts::display::regular());
 
         let style = if self.value {
             style::button::primary::ghost::outline

@@ -10,6 +10,7 @@ path = "src/widgets.rs"
 [dependencies]
 # Internal crates
 assets.workspace = true
+fonts.workspace = true
 style.workspace = true
 
 # External crates

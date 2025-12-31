@@ -3,7 +3,6 @@ use iced::{
     Length::Fill,
     widget::{self, row, text::Wrapping},
 };
-use style::Typography;
 use widgets::{Icon, IconName};
 
 use crate::view::ViewRequest;
@@ -31,7 +30,7 @@ impl NavigationItem {
         let space = widget::space::horizontal().width(10);
 
         let label = widget::text(&self.label)
-            .font(Typography::body())
+            .font(fonts::display::regular())
             .wrapping(Wrapping::None);
 
         let item_label = row![icon, space, label].align_y(Alignment::Center);

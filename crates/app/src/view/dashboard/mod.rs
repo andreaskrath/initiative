@@ -1,5 +1,5 @@
-use iced::{Task, widget};
-use style::Typography;
+use iced::{Element, Task};
+use widgets::heading;
 
 use crate::{message::Message, view::ViewContent};
 
@@ -26,10 +26,7 @@ impl ViewContent for Dashboard {
         Task::none()
     }
 
-    fn view(&self) -> iced::Element<'_, Self::ContentMessage> {
-        widget::text("Dashboard")
-            .font(Typography::heading_bold())
-            .size(24)
-            .into()
+    fn view(&self) -> Element<'_, Self::ContentMessage> {
+        heading("Dashboard").into()
     }
 }
