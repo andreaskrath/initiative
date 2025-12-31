@@ -51,7 +51,7 @@ impl From<ThemeVariant> for Theme {
 fn parchment_palette() -> Palette {
     Palette {
         // Aged parchment - warm cream with slight yellow tint
-        background: Color::from_rgb(0.95, 0.92, 0.85), // #f2ebd9
+        background: Color::from_rgb(0.88, 0.835, 0.674), // #e2d5ac
 
         // Dark sepia - like old ink on parchment
         text: Color::from_rgb(0.20, 0.16, 0.12), // #33291f
