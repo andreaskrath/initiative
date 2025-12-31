@@ -15,7 +15,13 @@ fn main() -> iced::Result {
         ..Default::default()
     };
 
-    debug!("launching initiative application with settings: {settings:?}");
+    debug!("launching initiative application with settings:");
+    debug!("               id: {:?}", settings.id);
+    debug!("     antialiasing: {}", settings.antialiasing);
+    debug!("            vsync: {}", settings.vsync);
+    debug!("     default font: {:?}", settings.default_font.family);
+    debug!("default text size: {} pixels", settings.default_text_size.0);
+    debug!("     loaded fonts: {}", settings.fonts.len());
 
     application(Initiative::default, Initiative::update, Initiative::view)
         .settings(settings)
