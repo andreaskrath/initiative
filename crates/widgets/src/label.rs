@@ -56,10 +56,7 @@ where
         if let Some(error) = label.error {
             let space = widget::space::horizontal().width(Fill);
             let icon = Icon::new(IconName::Error).style(style::icon::danger);
-            let tooltip_text = widget::text(error)
-                .size(18)
-                .font(fonts::display::regular())
-                .style(style::text::danger::strong);
+            let tooltip_text = widget::text(error).size(18).font(fonts::display::regular());
             let tooltip = widget::tooltip(icon, tooltip_text, Position::Top)
                 .gap(5)
                 .delay(Duration::from_millis(500))
