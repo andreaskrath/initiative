@@ -31,3 +31,17 @@ const NO_BORDER: Border = Border {
         bottom_left: 0.0,
     },
 };
+
+/// The default border utilized by the application.
+///
+/// This should mostly be utilized while providing a `color`.
+const DEFAULT_BORDER: Border = Border {
+    color: Color::TRANSPARENT,
+    width: 1.0,
+    radius: Radius {
+        top_left: 0.0,
+        top_right: 0.0,
+        bottom_right: 0.0,
+        bottom_left: 0.0,
+    },
+};

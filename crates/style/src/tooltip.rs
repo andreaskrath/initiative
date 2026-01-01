@@ -1,6 +1,6 @@
-use iced::{Background, Border, Theme, border::Radius, widget::container::Style};
+use iced::{Background, Border, Theme, widget::container::Style};
 
-use crate::NO_SHADOW;
+use crate::{DEFAULT_BORDER, NO_SHADOW};
 
 pub fn default(theme: &Theme) -> Style {
     let palette = theme.palette();
@@ -12,8 +12,7 @@ pub fn default(theme: &Theme) -> Style {
 
     let border = Border {
         color: palette.text,
-        width: 1.0,
-        radius: Radius::new(0.0),
+        ..DEFAULT_BORDER
     };
 
     Style {
@@ -32,8 +31,7 @@ pub fn danger(theme: &Theme) -> Style {
 
     let border = Border {
         color: extended.danger.base.color,
-        width: 1.0,
-        radius: Radius::new(0.0),
+        ..DEFAULT_BORDER
     };
 
     Style {

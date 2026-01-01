@@ -1,8 +1,9 @@
 use iced::{
     Background, Border, Color, Theme,
-    border::Radius,
     widget::text_input::{Status, Style},
 };
+
+use crate::DEFAULT_BORDER;
 
 pub fn default(theme: &Theme, status: Status) -> Style {
     let palette = theme.palette();
@@ -19,8 +20,7 @@ pub fn default(theme: &Theme, status: Status) -> Style {
 
     let border = Border {
         color: border_color,
-        width: 1.0,
-        radius: Radius::new(0.0),
+        ..DEFAULT_BORDER
     };
 
     Style {
@@ -48,8 +48,7 @@ pub fn error(theme: &Theme, status: Status) -> Style {
 
     let border = Border {
         color: border_color,
-        width: 1.0,
-        radius: Radius::new(0.0),
+        ..DEFAULT_BORDER
     };
 
     Style {

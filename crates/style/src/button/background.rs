@@ -1,12 +1,12 @@
+use super::base;
+use crate::DEFAULT_BORDER;
 use iced::{
     Background, Border, Theme,
-    border::Radius,
     widget::button::{Status, Style},
 };
 
-use super::base;
-
 pub mod ghost {
+
     use super::*;
 
     pub fn default(theme: &Theme, status: Status) -> Style {
@@ -31,8 +31,7 @@ pub mod ghost {
 
         let border = Border {
             color: palette.text,
-            width: 1.0,
-            radius: Radius::new(0.0),
+            ..DEFAULT_BORDER
         };
 
         Style {
