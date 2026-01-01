@@ -96,7 +96,7 @@ impl Navigation {
                 .height(Fill)
                 .width(width)
                 .clip(true)
-                .style(style::container::background);
+                .style(style::container::background::default);
 
             let divider = rule::vertical(1).style(style::rule::default);
 

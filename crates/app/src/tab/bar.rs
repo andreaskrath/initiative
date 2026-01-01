@@ -47,9 +47,9 @@ pub fn tab_bar(tabs: &[(TabId, Tab)], active: TabId) -> Element<'_, Message> {
         let mut container = widget::container(tab_element);
 
         if *tab_id == active {
-            container = container.style(style::container::primary_muted);
+            container = container.style(style::container::background::strong);
         } else {
-            container = container.style(style::container::background);
+            container = container.style(style::container::background::default);
         }
 
         let ma =
