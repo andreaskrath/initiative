@@ -1,8 +1,5 @@
 use crate::{Label, ValidationError};
-use iced::{
-    Element,
-    widget::{self},
-};
+use iced::{Element, widget};
 use tracing::{debug, warn};
 
 /// Rules used to define requirements to the validation of a [`TextInput`].
@@ -173,7 +170,15 @@ where
         let placeholder = self.placeholder.as_ref().map(|p| p.as_ref()).unwrap_or("");
         let on_input = self.on_input.as_ref();
 
-        let input = widget::text_input(placeholder, value).on_input_maybe(on_input);
+        let mut input = widget::text_input(placeholder, value)
+            .on_input_maybe(on_input)
+            .font(fonts::display::regular());
+
+        if self.error().is_some() {
+            input = input.style(style::text_input::error);
+        } else {
+            input = input.style(style::text_input::default);
+        }
 
         widget::column![label, input].spacing(5).into()
     }
