@@ -1,9 +1,8 @@
+use crate::{DEFAULT_BORDER, MUTED_SCALE};
 use iced::{
     Background, Border, Color, Theme,
     widget::text_input::{Status, Style},
 };
-
-use crate::DEFAULT_BORDER;
 
 pub fn default(theme: &Theme, status: Status) -> Style {
     let palette = theme.palette();
@@ -27,7 +26,7 @@ pub fn default(theme: &Theme, status: Status) -> Style {
         background,
         border,
         icon: palette.text,
-        placeholder: palette.text.scale_alpha(0.6),
+        placeholder: palette.text.scale_alpha(MUTED_SCALE),
         value: palette.text,
         selection: extended.background.strong.color,
     }
