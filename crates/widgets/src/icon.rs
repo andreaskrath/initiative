@@ -58,6 +58,8 @@ impl IconName {
 pub struct Icon {
     name: IconName,
     size: IconSize,
+
+    #[expect(clippy::type_complexity, reason = "this type is just a style function")]
     style: Option<Box<dyn Fn(&Theme) -> Style>>,
 }
 
