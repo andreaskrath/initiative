@@ -1,6 +1,6 @@
 use crate::{Icon, IconName};
 use iced::{
-    Element,
+    Alignment, Element,
     Length::Fill,
     widget::{self, row, tooltip::Position},
 };
@@ -42,7 +42,7 @@ where
             .font(fonts::display::regular())
             .style(style::text::default);
 
-        let mut row = row![text];
+        let mut row = row![text].align_y(Alignment::Center);
 
         if label.required {
             let asterisk = widget::text("*")
