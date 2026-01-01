@@ -16,7 +16,7 @@ pub fn heading<'a>(text: impl IntoFragment<'a>) -> Text<'a> {
 pub fn muted_heading<'a>(text: impl IntoFragment<'a>) -> Text<'a> {
     widget::text(text)
         .size(12)
-        .font(fonts::heading::regular())
+        .font(fonts::heading::bold())
         .style(style::text::muted)
 }
 
