@@ -94,6 +94,18 @@ impl<Message> TextArea<Message> {
         self.value.perform(action);
     }
 
+    /// Updates `Self` with the provided `action` and calls [`Self::update`] afterwards.
+    ///
+    /// This function will only call update, if the internal text state is modified.
+    pub fn update_and_validate(&mut self, action: Action) {
+        let should_update = matches!(action, Action::Edit(_));
+        self.value.perform(action);
+
+        if should_update {
+            self.validate();
+        }
+    }
+
     /// Get the value of `Self`.
     pub fn value(&self) -> String {
         self.value.text()

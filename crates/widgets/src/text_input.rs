@@ -79,6 +79,12 @@ impl<Message> TextInput<Message> {
         self.value = value;
     }
 
+    /// Sets the value of `Self` and calls [`Self::update`] afterwards.
+    pub fn set_and_validate(&mut self, value: String) {
+        self.value = value;
+        self.validate();
+    }
+
     /// Get the value of `Self`.
     pub fn value(&self) -> &str {
         &self.value

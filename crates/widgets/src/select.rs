@@ -56,6 +56,11 @@ impl<Value, Message> Select<Value, Message> {
         self.selected = selected;
     }
 
+    pub fn select_and_validate(&mut self, selected: Option<Value>) {
+        self.selected = selected;
+        self.validate();
+    }
+
     /// Get the error of `Self`.
     pub fn error(&self) -> Option<&str> {
         self.error.as_deref()

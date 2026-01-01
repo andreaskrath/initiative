@@ -43,28 +43,37 @@ impl ViewContent for SpellForm {
         debug!("updating spell form with: {:?}", message);
 
         match message {
-            SpellFormMessage::NameChanged(name) => {
-                self.fields.name.set(name);
-                self.fields.name.validate();
+            SpellFormMessage::NameChanged(name) => self.fields.name.set_and_validate(name),
+            SpellFormMessage::SchoolSelected(school) => {
+                self.fields.school.select_and_validate(Some(school))
             }
-            SpellFormMessage::SchoolSelected(school) => self.fields.school.select(Some(school)),
-            SpellFormMessage::LevelSelected(level) => self.fields.level.select(Some(level)),
+            SpellFormMessage::LevelSelected(level) => {
+                self.fields.level.select_and_validate(Some(level))
+            }
             SpellFormMessage::CastingTimeSelected(casting_time) => {
-                self.fields.casting_time.select(Some(casting_time));
+                self.fields
+                    .casting_time
+                    .select_and_validate(Some(casting_time));
             }
             SpellFormMessage::DurationSelected(duration) => {
-                self.fields.duration.select(Some(duration))
+                self.fields.duration.select_and_validate(Some(duration));
             }
-            SpellFormMessage::RangeSelected(range) => self.fields.range.select(Some(range)),
-            SpellFormMessage::DescriptionChanged(action) => self.fields.description.update(action),
+            SpellFormMessage::RangeSelected(range) => {
+                self.fields.range.select_and_validate(Some(range))
+            }
+            SpellFormMessage::DescriptionChanged(action) => {
+                self.fields.description.update_and_validate(action);
+            }
             SpellFormMessage::AtHigherLevelsChanged(action) => {
-                self.fields.at_higher_levels.update(action);
+                self.fields.at_higher_levels.update_and_validate(action);
             }
             SpellFormMessage::RitualToggled => self.fields.ritual.toggle(),
             SpellFormMessage::ConcentrationToggled => self.fields.concentration.toggle(),
             SpellFormMessage::VerbalToggled => self.fields.verbal.toggle(),
             SpellFormMessage::SomaticToggled => self.fields.somatic.toggle(),
-            SpellFormMessage::MaterialsChanged(materials) => self.fields.materials.set(materials),
+            SpellFormMessage::MaterialsChanged(materials) => {
+                self.fields.materials.set_and_validate(materials);
+            }
         }
 
         Task::none()
