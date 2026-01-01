@@ -1,6 +1,6 @@
 use crate::{Label, ValidationError};
 use iced::{Element, widget};
-use tracing::{debug, warn};
+use tracing::debug;
 
 /// Rules used to define requirements to the validation of a [`TextInput`].
 #[derive(Debug, Clone, Copy, PartialEq)]
@@ -97,11 +97,6 @@ impl<Message> TextInput<Message> {
         self.error = None;
 
         let Some(rules) = &self.rules else {
-            warn!(
-                "validate called on TextInput '{}' when no rules are defined",
-                self.label
-            );
-
             return true;
         };
 

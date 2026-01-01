@@ -7,7 +7,7 @@ use iced::{
         text_editor::{Action, Content},
     },
 };
-use tracing::{debug, warn};
+use tracing::debug;
 
 /// Rules used to define requirements to the validation of a [`TextArea`].
 #[derive(Debug, Clone, Copy, PartialEq)]
@@ -112,11 +112,6 @@ impl<Message> TextArea<Message> {
         self.error = None;
 
         let Some(rules) = &self.rules else {
-            warn!(
-                "validate called on TextInput '{}' when no rules are defined",
-                self.label
-            );
-
             return true;
         };
 
