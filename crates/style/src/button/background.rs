@@ -6,7 +6,6 @@ use iced::{
 };
 
 pub mod ghost {
-
     use super::*;
 
     pub fn default(theme: &Theme, status: Status) -> Style {
