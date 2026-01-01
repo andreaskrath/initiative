@@ -3,6 +3,7 @@ pub mod container;
 pub mod icon;
 pub mod rule;
 pub mod text;
+pub mod text_area;
 pub mod text_input;
 pub mod theme;
 pub mod tooltip;

@@ -179,8 +179,6 @@ where
     Message: Clone + 'a,
 {
     pub fn view(&'a self) -> Element<'a, Message> {
-        let font = fonts::display::regular();
-
         let label = Label::new(&self.label)
             .required(self.is_required())
             .error(self.error());
@@ -188,12 +186,18 @@ where
         let placeholder = self.placeholder.as_ref().map(|p| p.as_ref()).unwrap_or("");
         let on_action = self.on_action.as_ref();
 
-        let text_area = widget::text_editor(&self.value)
-            .font(font)
+        let mut text_area = widget::text_editor(&self.value)
+            .font(fonts::display::regular())
             .wrapping(Wrapping::WordOrGlyph)
             .placeholder(placeholder)
             .on_action(on_action)
             .height(self.height);
+
+        if self.error().is_some() {
+            text_area = text_area.style(style::text_area::error);
+        } else {
+            text_area = text_area.style(style::text_area::default);
+        }
 
         widget::column![label, text_area].spacing(5).into()
     }
