@@ -68,8 +68,6 @@ where
     Message: Clone + 'a,
 {
     pub fn view(&'a self) -> Element<'a, Message> {
-        let font = fonts::display::regular();
-
         let label = Label::new(&self.label)
             .required(self.required)
             .error(self.error());
@@ -79,10 +77,17 @@ where
         let on_select = self.on_select.as_ref();
         let placeholder = self.placeholder.as_ref().map(|p| p.as_ref()).unwrap_or("");
 
-        let select = widget::pick_list(options, selected, on_select)
+        let mut select = widget::pick_list(options, selected, on_select)
             .placeholder(placeholder)
-            .font(font)
+            .font(fonts::display::regular())
+            .menu_style(style::menu::default)
             .width(self.width);
+
+        if self.error().is_some() {
+            select = select.style(style::select::error);
+        } else {
+            select = select.style(style::select::default);
+        }
 
         widget::column![label, select].spacing(5).into()
     }
