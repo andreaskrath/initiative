@@ -1,4 +1,4 @@
-use crate::Label;
+use crate::{Label, ValidationError};
 use iced::{
     Element,
     Length::{self},
@@ -59,6 +59,15 @@ impl<Value, Message> Select<Value, Message> {
     /// Get the error of `Self`.
     pub fn error(&self) -> Option<&str> {
         self.error.as_deref()
+    }
+
+    pub fn validate(&mut self) -> bool {
+        if !self.required || self.selected.is_some() {
+            true
+        } else {
+            self.error = Some(ValidationError::Required.to_string());
+            false
+        }
     }
 }
 
