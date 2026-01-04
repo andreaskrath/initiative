@@ -9,7 +9,10 @@ pub fn default(theme: &Theme, status: Status) -> Style {
     let palette = theme.palette();
     let extended = theme.extended_palette();
 
-    let background = Background::Color(palette.background);
+    let background = match status {
+        Status::Active | Status::Hovered => Background::Color(palette.background),
+        Status::Opened { is_hovered: _ } => Background::Color(extended.background.weakest.color),
+    };
 
     let border_color = match status {
         Status::Active => extended.background.strong.color,
