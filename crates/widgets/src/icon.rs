@@ -36,6 +36,7 @@ pub enum IconName {
     NavigationClose,
     NavigationOpen,
     Plus,
+    Sparkle,
     Spell,
 }
 
@@ -50,6 +51,7 @@ impl IconName {
             IconName::NavigationClose => "icons/navigation-close.svg",
             IconName::NavigationOpen => "icons/navigation-open.svg",
             IconName::Plus => "icons/plus.svg",
+            IconName::Sparkle => "icons/sparkle.svg",
             IconName::Spell => "icons/spell.svg",
         }
     }
