@@ -46,7 +46,7 @@ pub mod heading {
     use super::*;
 
     pub fn regular() -> Font {
-        Font::with_name("Scaly Sans Caps")
+        Font::with_name("Mr Eaves SC Remake")
     }
 
     pub fn bold() -> Font {
