@@ -9,6 +9,8 @@ pub mod body {
     //! In this context, `body` means things like text paragraphs and larger coherent sections of text.
     use super::*;
 
+    pub const DEFAULT_BODY_TEXT_SIZE: u16 = 18;
+
     pub fn regular() -> Font {
         Font::with_name("Bookinsanity Remake")
     }
