@@ -44,9 +44,9 @@ impl Initiative {
             Message::TabAction(tab_action) => self.tabs.perform(tab_action),
             Message::ThemeChanged => {
                 self.theme = match self.theme.name() {
-                    "Parchment" => ThemeVariant::Dark.into(),
+                    "Default" => ThemeVariant::Dark.into(),
                     "Dark Stone" => ThemeVariant::Light.into(),
-                    "Light" => ThemeVariant::Parchment.into(),
+                    "Light" => ThemeVariant::Default.into(),
                     unknown => unreachable!("unknown theme specified: {unknown}"),
                 };
 

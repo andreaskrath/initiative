@@ -8,14 +8,14 @@ use iced::{
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Default)]
 pub enum ThemeVariant {
     #[default]
-    Parchment,
+    Default,
     Dark,
     Light,
 }
 
 impl ThemeVariant {
     pub const ALL: &'static [ThemeVariant] = &[
-        ThemeVariant::Parchment,
+        ThemeVariant::Default,
         ThemeVariant::Dark,
         ThemeVariant::Light,
     ];
@@ -23,7 +23,7 @@ impl ThemeVariant {
     /// Get the name for the theme.
     pub fn name(&self) -> &'static str {
         match self {
-            ThemeVariant::Parchment => "Parchment",
+            ThemeVariant::Default => "Default",
             ThemeVariant::Dark => "Dark Stone",
             ThemeVariant::Light => "Light",
         }
@@ -32,7 +32,7 @@ impl ThemeVariant {
     /// Get the palette for the theme.
     pub fn palette(&self) -> Palette {
         match self {
-            ThemeVariant::Parchment => parchment_palette(),
+            ThemeVariant::Default => parchment(),
             ThemeVariant::Dark => dark_palette(),
             ThemeVariant::Light => light_palette(),
         }
@@ -47,26 +47,14 @@ impl From<ThemeVariant> for Theme {
     }
 }
 
-/// Parchment theme - warm, aged manuscript feel
-fn parchment_palette() -> Palette {
+pub fn parchment() -> Palette {
     Palette {
-        // Aged parchment - warm cream with slight yellow tint
-        background: Color::from_rgb(0.88, 0.835, 0.674), // #e2d5ac
-
-        // Dark sepia - like old ink on parchment
-        text: Color::from_rgb(0.20, 0.16, 0.12), // #33291f
-
-        // Rich burgundy - like wax seals and illuminated manuscript accents
-        primary: Color::from_rgb(0.60, 0.25, 0.25), // #994040
-
-        // Muted sage green - like old heraldic colors
-        success: Color::from_rgb(0.35, 0.50, 0.40), // #598066
-
-        // Warm ochre - medieval gold leaf
-        warning: Color::from_rgb(0.75, 0.60, 0.25), // #bf9940
-
-        // Deep vermillion - urgent warnings in old tomes
-        danger: Color::from_rgb(0.70, 0.30, 0.25), // #b34d40
+        background: Color::from_rgb8(32, 30, 35), // Cool dark slate
+        text: Color::from_rgb8(225, 220, 215),    // Warm off-white
+        primary: Color::from_rgb8(180, 140, 95),  // Aged gold
+        success: Color::from_rgb8(95, 160, 120),  // Soft green
+        warning: Color::from_rgb8(210, 160, 70),  // Amber
+        danger: Color::from_rgb8(190, 85, 75),    // Muted red
     }
 }
 
