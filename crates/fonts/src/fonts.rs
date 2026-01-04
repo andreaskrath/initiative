@@ -111,6 +111,8 @@ pub mod display {
 
     use super::*;
 
+    pub const DEFAULT_DISPLAY_TEXT_SIZE: u32 = 18;
+
     pub fn regular() -> Font {
         Font::with_name("Scaly Sans Remake")
     }
