@@ -25,6 +25,6 @@ impl ViewContent for Dashboard {
     }
 
     fn view(&self) -> Element<'_, Self::ContentMessage> {
-        widgets::view_title("Dashboard").into()
+        widgets::text::view_title("Dashboard").into()
     }
 }

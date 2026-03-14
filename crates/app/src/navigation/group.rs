@@ -52,7 +52,7 @@ impl NavigationGroup {
     }
 
     pub fn view(&self) -> Element<'_, NavigationMessage> {
-        let label = widgets::muted_heading(&self.label);
+        let label = widgets::text::muted_heading(&self.label);
 
         let space = widget::space::horizontal().width(Fill);
 

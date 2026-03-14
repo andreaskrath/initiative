@@ -1,50 +1,54 @@
-use iced::{Element, widget};
+use iced::{Element, Length, widget};
 
-pub struct Toggle<Message> {
-    label: String,
+pub fn toggle<'a, Message>(label: &'a str, value: bool) -> Toggle<'a, Message> {
+    Toggle::new(label, value)
+}
+
+pub struct Toggle<'a, Message> {
+    label: &'a str,
     value: bool,
+    width: Length,
     on_toggle: Option<Message>,
 }
 
-impl<Message> Toggle<Message> {
-    pub fn new(label: impl Into<String>, value: bool) -> Self {
+impl<'a, Message> Toggle<'a, Message> {
+    pub fn new(label: &'a str, value: bool) -> Self {
         Self {
-            label: label.into(),
+            label,
             value,
+            width: Length::Shrink,
             on_toggle: None,
         }
     }
 
-    pub fn on_toggle(mut self, on_toggle: Option<Message>) -> Self {
-        self.on_toggle = on_toggle;
+    pub fn on_toggle(mut self, on_toggle: Message) -> Self {
+        self.on_toggle = Some(on_toggle);
         self
     }
 
-    pub fn value(&self) -> bool {
-        self.value
-    }
-
-    pub fn toggle(&mut self) {
-        self.value = !self.value;
+    pub fn width(mut self, width: impl Into<Length>) -> Self {
+        self.width = width.into();
+        self
     }
 }
 
-impl<'a, Message> Toggle<Message>
+impl<'a, Message> From<Toggle<'a, Message>> for Element<'a, Message>
 where
     Message: Clone + 'a,
 {
-    pub fn view(&'a self) -> Element<'a, Message> {
-        let label = widget::text(&self.label).font(fonts::display::regular());
+    fn from(widget: Toggle<'a, Message>) -> Self {
+        let label = crate::text::display(widget.label);
 
-        let style = if self.value {
-            style::button::primary::ghost::outline
+        let style = if widget.value {
+            style::button::background::default
         } else {
-            style::button::background::ghost::outline
+            style::button::background::ghost::default
         };
 
         widget::button(label)
+            .width(widget.width)
             .style(style)
-            .on_press_maybe(self.on_toggle.clone())
+            .on_press_maybe(widget.on_toggle)
             .into()
     }
 }

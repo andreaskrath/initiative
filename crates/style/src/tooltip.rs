@@ -1,6 +1,5 @@
+use crate::{DEFAULT_BORDER, NO_SHADOW, color};
 use iced::{Background, Border, Theme, widget::container::Style};
-
-use crate::{DEFAULT_BORDER, NO_SHADOW};
 
 pub fn default(theme: &Theme) -> Style {
     let palette = theme.palette();
@@ -8,10 +7,10 @@ pub fn default(theme: &Theme) -> Style {
 
     let text_color = Some(palette.text);
 
-    let background = Some(Background::Color(extended.background.base.color));
+    let background = Some(Background::Color(color::background::default(extended)));
 
     let border = Border {
-        color: palette.text,
+        color: color::border::default(extended),
         ..DEFAULT_BORDER
     };
 
@@ -25,12 +24,13 @@ pub fn default(theme: &Theme) -> Style {
 }
 
 pub fn danger(theme: &Theme) -> Style {
+    let palette = &theme.palette();
     let extended = theme.extended_palette();
 
-    let text_color = Some(extended.danger.base.color);
+    let text_color = Some(color::text::error(palette));
 
     let border = Border {
-        color: extended.danger.base.color,
+        color: color::border::error(extended),
         ..DEFAULT_BORDER
     };
 

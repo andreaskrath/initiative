@@ -1,97 +1,64 @@
-use iced::Length::Fill;
 use strum::VariantArray;
 use types::{MagicSchool, SpellCastingTime, SpellDuration, SpellLevel, SpellRange};
-use widgets::{Select, TextArea, TextAreaRule, TextInput, TextInputRule, Toggle};
-
-use crate::view::SpellFormMessage;
+use widgets::{SelectState, TextAreaRule, TextAreaState, TextInputRule, TextInputState};
 
 pub struct SpellFormFields {
-    pub name: TextInput<SpellFormMessage>,
-    pub school: Select<MagicSchool, SpellFormMessage>,
-    pub level: Select<SpellLevel, SpellFormMessage>,
-    pub casting_time: Select<SpellCastingTime, SpellFormMessage>,
-    pub duration: Select<SpellDuration, SpellFormMessage>,
-    pub range: Select<SpellRange, SpellFormMessage>,
-    pub description: TextArea<SpellFormMessage>,
-    pub at_higher_levels: TextArea<SpellFormMessage>,
-    pub ritual: Toggle<SpellFormMessage>,
-    pub concentration: Toggle<SpellFormMessage>,
-    pub verbal: Toggle<SpellFormMessage>,
-    pub somatic: Toggle<SpellFormMessage>,
-    pub materials: TextInput<SpellFormMessage>,
+    pub name: TextInputState,
+    pub school: SelectState<MagicSchool>,
+    pub level: SelectState<SpellLevel>,
+    pub casting_time: SelectState<SpellCastingTime>,
+    pub duration: SelectState<SpellDuration>,
+    pub range: SelectState<SpellRange>,
+    pub description: TextAreaState,
+    pub at_higher_levels: TextAreaState,
+    pub ritual: bool,
+    pub concentration: bool,
+    pub verbal: bool,
+    pub somatic: bool,
+    pub materials: Vec<SpellMaterialInput>,
+    pub quote_text: TextAreaState,
+    pub quote_source: TextInputState,
 }
 
 impl Default for SpellFormFields {
     fn default() -> Self {
         Self {
-            name: TextInput::new("Name", String::new())
-                .rules([TextInputRule::Required, TextInputRule::Max(50)])
-                .placeholder("Goblin")
-                .on_input(SpellFormMessage::NameChanged),
-            school: Select::new(
-                "School",
-                None,
-                MagicSchool::VARIANTS.iter().copied(),
-                SpellFormMessage::SchoolSelected,
-            )
-            .placeholder("Select a school")
-            .width(Fill)
-            .required(true),
-            level: Select::new(
-                "Level",
-                None,
-                SpellLevel::VARIANTS.iter().copied(),
-                SpellFormMessage::LevelSelected,
-            )
-            .placeholder("Select a level")
-            .width(Fill)
-            .required(true),
-            casting_time: Select::new(
-                "Casting Time",
-                None,
-                SpellCastingTime::VARIANTS.iter().copied(),
-                SpellFormMessage::CastingTimeSelected,
-            )
-            .placeholder("Select a casting time")
-            .width(Fill)
-            .required(true),
-            duration: Select::new(
-                "Duration",
-                None,
-                SpellDuration::VARIANTS.iter().copied(),
-                SpellFormMessage::DurationSelected,
-            )
-            .placeholder("Select a duration")
-            .width(Fill)
-            .required(true),
-            range: Select::new(
-                "Range",
-                None,
-                SpellRange::VARIANTS.iter().copied(),
-                SpellFormMessage::RangeSelected,
-            )
-            .placeholder("Select a range")
-            .width(Fill)
-            .required(true),
-            description: TextArea::new("Description", "", SpellFormMessage::DescriptionChanged)
-                .rules([TextAreaRule::Required])
-                .height(300),
-            at_higher_levels: TextArea::new(
-                "At Higher Levels",
-                "",
-                SpellFormMessage::AtHigherLevelsChanged,
-            )
-            .height(100),
-            ritual: Toggle::new("Ritual", false).on_toggle(Some(SpellFormMessage::RitualToggled)),
-            concentration: Toggle::new("Concentration", false)
-                .on_toggle(Some(SpellFormMessage::ConcentrationToggled)),
-            verbal: Toggle::new("Verbal", false).on_toggle(Some(SpellFormMessage::VerbalToggled)),
-            somatic: Toggle::new("Somatic", false)
-                .on_toggle(Some(SpellFormMessage::SomaticToggled)),
-            materials: TextInput::new("Materials", String::new())
-                .rules([TextInputRule::Max(200)])
-                .placeholder("")
-                .on_input(SpellFormMessage::MaterialsChanged),
+            name: TextInputState::default()
+                .rules([TextInputRule::Required, TextInputRule::Max(50)]),
+            school: SelectState::new(MagicSchool::VARIANTS.iter().copied(), None).required(true),
+            level: SelectState::new(SpellLevel::VARIANTS.iter().copied(), None).required(true),
+            casting_time: SelectState::new(SpellCastingTime::VARIANTS.iter().copied(), None)
+                .required(true),
+            duration: SelectState::new(SpellDuration::VARIANTS.iter().copied(), None)
+                .required(true),
+            range: SelectState::new(SpellRange::VARIANTS.iter().copied(), None).required(true),
+            description: TextAreaState::default().rules([TextAreaRule::Required]),
+            at_higher_levels: TextAreaState::default(),
+            ritual: false,
+            concentration: false,
+            verbal: false,
+            somatic: false,
+            materials: Vec::new(),
+            quote_text: TextAreaState::default().rules([TextAreaRule::Max(1000)]),
+            quote_source: TextInputState::default().rules([TextInputRule::Max(100)]),
+        }
+    }
+}
+
+#[derive(Debug)]
+pub struct SpellMaterialInput {
+    pub label: String,
+    pub material: TextInputState,
+    pub consumed: bool,
+}
+
+impl SpellMaterialInput {
+    pub fn new(number: usize) -> Self {
+        Self {
+            label: format!("Material {}", number),
+            material: TextInputState::new(String::new())
+                .rules([TextInputRule::Required, TextInputRule::Max(200)]),
+            consumed: false,
         }
     }
 }

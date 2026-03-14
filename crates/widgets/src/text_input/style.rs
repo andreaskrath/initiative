@@ -1,25 +1,25 @@
-use crate::{DEFAULT_BORDER, MUTED_SCALE};
 use iced::{
     Background, Border, Color, Theme,
-    widget::text_editor::{Status, Style},
+    widget::text_input::{Status, Style},
 };
+use style::{DEFAULT_BORDER, MUTED_SCALE, color};
 
 pub fn default(theme: &Theme, status: Status) -> Style {
     let palette = theme.palette();
     let extended = theme.extended_palette();
 
     let background = match status {
-        Status::Active | Status::Hovered | Status::Disabled => {
-            Background::Color(palette.background)
-        }
-        Status::Focused { is_hovered: _ } => Background::Color(extended.background.weakest.color),
+        Status::Active => Background::Color(color::background::default(extended)),
+        Status::Disabled => Background::Color(color::background::disabled(extended)),
+        Status::Hovered => Background::Color(color::background::hover(extended)),
+        Status::Focused { is_hovered: _ } => Background::Color(color::background::active(extended)),
     };
 
     let border_color = match status {
-        Status::Active => extended.background.strong.color,
-        Status::Hovered => palette.text.scale_alpha(0.4),
-        Status::Focused { is_hovered: _ } => palette.text,
-        Status::Disabled => Color::TRANSPARENT,
+        Status::Disabled => color::border::disabled(extended),
+        Status::Active => color::border::default(extended),
+        Status::Hovered => color::border::hover(extended),
+        Status::Focused { is_hovered: _ } => color::border::focus(extended),
     };
 
     let border = Border {
@@ -30,9 +30,10 @@ pub fn default(theme: &Theme, status: Status) -> Style {
     Style {
         background,
         border,
+        icon: palette.text,
         placeholder: palette.text.scale_alpha(MUTED_SCALE),
         value: palette.text,
-        selection: extended.background.strong.color,
+        selection: color::background::default(extended),
     }
 }
 

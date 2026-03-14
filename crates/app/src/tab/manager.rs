@@ -122,12 +122,17 @@ impl TabManager {
         }
         .map(|tm| Message::Tab(self.active, tm));
 
-        let constrained_view = widget::container(view)
-            .padding(Padding::new(0.0).vertical(10.0))
-            .align_x(Alignment::Center)
-            .max_width(VIEW_WIDTH);
+        let constrained_content = widget::container(view)
+            .max_width(VIEW_WIDTH)
+            .padding(Padding::new(0.0).vertical(10.0));
 
-        column![tab_bar, divider, constrained_view]
+        let centering_container = widget::container(constrained_content).center_x(Fill);
+
+        let scrollable_view = widget::scrollable(centering_container)
+            .width(Fill)
+            .height(Fill);
+
+        column![tab_bar, divider, scrollable_view]
             .align_x(Alignment::Center)
             .width(Fill)
             .height(Fill)

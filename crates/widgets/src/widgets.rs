@@ -1,8 +1,11 @@
+use thiserror::Error;
+
 mod animation;
+pub mod button;
 mod icon;
 mod label;
 mod select;
-mod text;
+pub mod text;
 mod text_area;
 mod text_input;
 mod toggle;
@@ -11,12 +14,9 @@ pub use animation::*;
 pub use icon::*;
 pub use label::*;
 pub use select::*;
-pub use text::*;
 pub use text_area::*;
 pub use text_input::*;
 pub use toggle::*;
-
-use thiserror::Error;
 
 #[derive(Debug, Error)]
 pub(crate) enum ValidationError {

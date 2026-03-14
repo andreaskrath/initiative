@@ -1,17 +1,23 @@
-mod fields;
-mod message;
-
 use iced::{
-    Alignment, Element, Task,
-    widget::{column, row},
+    Alignment, Element,
+    Length::Fill,
+    Task,
+    widget::{self, Column, column, row},
 };
 use tracing::debug;
 use types::FormMode;
+use widgets::{Icon, IconName};
 
 use crate::{
     message::Message,
-    view::{ViewContent, spell::form::fields::SpellFormFields},
+    view::{
+        ViewContent,
+        spell::form::fields::{SpellFormFields, SpellMaterialInput},
+    },
 };
+
+mod fields;
+mod message;
 
 pub use message::SpellFormMessage;
 
@@ -20,12 +26,192 @@ pub struct SpellForm {
     fields: SpellFormFields,
 }
 
-impl SpellForm {
+impl<'a> SpellForm {
     pub fn new(mode: FormMode) -> Self {
         Self {
             mode,
             fields: SpellFormFields::default(),
         }
+    }
+
+    fn art(&'a self) -> Element<'a, SpellFormMessage> {
+        let left_ruler = widget::container(widget::space::horizontal())
+            .height(2)
+            .width(Fill)
+            .style(style::container::primary::gradient_faded_edges);
+
+        let right_ruler = widget::container(widget::space::horizontal())
+            .height(2)
+            .width(Fill)
+            .style(style::container::primary::gradient_faded_edges);
+
+        let sparkle_icon = Icon::new(IconName::Sparkle).style(style::icon::primary);
+
+        row![left_ruler, sparkle_icon, right_ruler]
+            .width(500)
+            .align_y(Alignment::Center)
+            .into()
+    }
+
+    fn header(&'a self) -> Element<'a, SpellFormMessage> {
+        let title = widgets::text::view_title("Spell Forge");
+
+        let sub_title = widgets::text::view_sub_title("Inscribe thy arcane workings");
+
+        column![title, sub_title]
+            .width(Fill)
+            .align_x(Alignment::Center)
+            .into()
+    }
+
+    fn identification(&'a self) -> Element<'a, SpellFormMessage> {
+        let title = widgets::text::heading::default("IDENTIFICATION");
+
+        let name = widgets::text_input("Name", &self.fields.name)
+            .placeholder("Goblin")
+            .on_input(SpellFormMessage::NameChanged);
+
+        let school = widgets::select(
+            "School",
+            &self.fields.school,
+            SpellFormMessage::SchoolSelected,
+        )
+        .placeholder("Select a magic school")
+        .width(Fill);
+
+        let level = widgets::select("Level", &self.fields.level, SpellFormMessage::LevelSelected)
+            .placeholder("Select a spell level")
+            .width(Fill);
+
+        let row = row![name, school, level].spacing(10);
+
+        column![title, row]
+            .align_x(Alignment::Center)
+            .spacing(10)
+            .into()
+    }
+
+    fn casting_properties(&'a self) -> Element<'a, SpellFormMessage> {
+        let title = widgets::text::heading::default("CASTING PROPERTIES");
+
+        let casting_time = widgets::select(
+            "Casting Time",
+            &self.fields.casting_time,
+            SpellFormMessage::CastingTimeSelected,
+        )
+        .placeholder("Select a casting time")
+        .width(Fill);
+
+        let duration = widgets::select(
+            "Duration",
+            &self.fields.duration,
+            SpellFormMessage::DurationSelected,
+        )
+        .placeholder("Select a duration")
+        .width(Fill);
+
+        let range = widgets::select("Range", &self.fields.range, SpellFormMessage::RangeSelected)
+            .placeholder("Select a range")
+            .width(Fill);
+
+        let verbal = widgets::toggle("Verbal", self.fields.verbal)
+            .width(Fill)
+            .on_toggle(SpellFormMessage::VerbalToggled);
+
+        let somatic = widgets::toggle("Somatic", self.fields.somatic)
+            .width(Fill)
+            .on_toggle(SpellFormMessage::SomaticToggled);
+
+        let ritual = widgets::toggle("Ritual", self.fields.ritual)
+            .width(Fill)
+            .on_toggle(SpellFormMessage::RitualToggled);
+
+        let concentration = widgets::toggle("Concentration", self.fields.concentration)
+            .width(Fill)
+            .on_toggle(SpellFormMessage::ConcentrationToggled);
+
+        let add_materials_button = widget::container(
+            widgets::button::primary("Add Material").on_press(SpellFormMessage::AddMaterial),
+        )
+        .align_right(Fill);
+
+        let mut materials = Column::with_capacity(self.fields.materials.len()).spacing(10);
+        for (index, spell_material) in self.fields.materials.iter().enumerate() {
+            let material = widgets::text_input(&spell_material.label, &spell_material.material)
+                .placeholder("A bat wing")
+                .on_input(move |new_material| {
+                    SpellFormMessage::MaterialChanged(index, new_material)
+                });
+            let consumed = widgets::toggle("Consumed", spell_material.consumed)
+                .on_toggle(SpellFormMessage::MaterialConsumed(index));
+            let remove = widgets::button::danger(widgets::text::display("Remove"))
+                .on_press(SpellFormMessage::RemoveMaterial(index));
+
+            let spell_material_input = row![material, consumed, remove]
+                .spacing(10)
+                .align_y(Alignment::End);
+
+            materials = materials.push(spell_material_input);
+        }
+
+        let first_row = row![casting_time, duration, range].spacing(10);
+
+        let second_row = row![verbal, somatic, concentration, ritual,].spacing(10);
+
+        column![
+            title,
+            first_row,
+            second_row,
+            add_materials_button,
+            materials,
+        ]
+        .align_x(Alignment::Center)
+        .spacing(10)
+        .into()
+    }
+
+    fn effect(&'a self) -> Element<'a, SpellFormMessage> {
+        let title = widgets::text::heading::default("EFFECT");
+
+        let description = widgets::text_area(
+            "Description",
+            &self.fields.description,
+            SpellFormMessage::DescriptionChanged,
+        )
+        .height(300);
+
+        let at_higher_levels = widgets::text_area(
+            "At Higher Levels",
+            &self.fields.at_higher_levels,
+            SpellFormMessage::AtHigherLevelsChanged,
+        )
+        .height(100);
+
+        column![title, description, at_higher_levels]
+            .align_x(Alignment::Center)
+            .spacing(10)
+            .into()
+    }
+
+    fn quote(&'a self) -> Element<'a, SpellFormMessage> {
+        let title = widgets::text::heading::default("QUOTE");
+
+        let text = widgets::text_area(
+            "Text",
+            &self.fields.quote_text,
+            SpellFormMessage::QuoteTextChanged,
+        )
+        .placeholder("Something")
+        .height(100);
+
+        let source = widgets::text_input("Source", &self.fields.quote_source)
+            .placeholder("Someone")
+            .on_input(SpellFormMessage::QuoteSourceChanged);
+
+        column![title, text, source,]
+            .align_x(Alignment::Center)
+            .spacing(10)
+            .into()
     }
 }
 
@@ -43,36 +229,69 @@ impl ViewContent for SpellForm {
         debug!("updating spell form with: {:?}", message);
 
         match message {
-            SpellFormMessage::NameChanged(name) => self.fields.name.set_and_validate(name),
+            SpellFormMessage::NameChanged(name) => {
+                self.fields.name.set(name);
+                self.fields.name.validate();
+            }
             SpellFormMessage::SchoolSelected(school) => {
-                self.fields.school.select_and_validate(Some(school))
+                self.fields.school.set(school);
             }
             SpellFormMessage::LevelSelected(level) => {
-                self.fields.level.select_and_validate(Some(level))
+                self.fields.level.set(level);
             }
             SpellFormMessage::CastingTimeSelected(casting_time) => {
-                self.fields
-                    .casting_time
-                    .select_and_validate(Some(casting_time));
+                self.fields.casting_time.set(casting_time);
             }
             SpellFormMessage::DurationSelected(duration) => {
-                self.fields.duration.select_and_validate(Some(duration));
+                self.fields.duration.set(duration);
             }
             SpellFormMessage::RangeSelected(range) => {
-                self.fields.range.select_and_validate(Some(range))
+                self.fields.range.set(range);
             }
             SpellFormMessage::DescriptionChanged(action) => {
-                self.fields.description.update_and_validate(action);
+                if self.fields.description.perform(action) {
+                    self.fields.description.validate();
+                }
             }
             SpellFormMessage::AtHigherLevelsChanged(action) => {
-                self.fields.at_higher_levels.update_and_validate(action);
+                self.fields.at_higher_levels.perform(action);
             }
-            SpellFormMessage::RitualToggled => self.fields.ritual.toggle(),
-            SpellFormMessage::ConcentrationToggled => self.fields.concentration.toggle(),
-            SpellFormMessage::VerbalToggled => self.fields.verbal.toggle(),
-            SpellFormMessage::SomaticToggled => self.fields.somatic.toggle(),
-            SpellFormMessage::MaterialsChanged(materials) => {
-                self.fields.materials.set_and_validate(materials);
+            SpellFormMessage::RitualToggled => self.fields.ritual = !self.fields.ritual,
+            SpellFormMessage::ConcentrationToggled => {
+                self.fields.concentration = !self.fields.concentration;
+            }
+            SpellFormMessage::VerbalToggled => self.fields.verbal = !self.fields.verbal,
+            SpellFormMessage::SomaticToggled => self.fields.somatic = !self.fields.somatic,
+            SpellFormMessage::AddMaterial => {
+                self.fields
+                    .materials
+                    .push(SpellMaterialInput::new(self.fields.materials.len() + 1));
+            }
+            SpellFormMessage::RemoveMaterial(index) => {
+                self.fields.materials.remove(index);
+
+                for (i, mat) in self.fields.materials.iter_mut().enumerate() {
+                    mat.label = format!("Material {}", i + 1);
+                }
+            }
+            SpellFormMessage::MaterialChanged(index, material) => {
+                if let Some(spell_material) = self.fields.materials.get_mut(index) {
+                    spell_material.material.set(material);
+                    spell_material.material.validate();
+                }
+            }
+            SpellFormMessage::MaterialConsumed(index) => {
+                if let Some(spell_material) = self.fields.materials.get_mut(index) {
+                    spell_material.consumed = !spell_material.consumed;
+                }
+            }
+            SpellFormMessage::QuoteTextChanged(action) => {
+                self.fields.quote_text.perform(action);
+                self.fields.quote_text.validate();
+            }
+            SpellFormMessage::QuoteSourceChanged(quote_source) => {
+                self.fields.quote_source.set(quote_source);
+                self.fields.quote_source.validate();
             }
         }
 
@@ -80,50 +299,29 @@ impl ViewContent for SpellForm {
     }
 
     fn view(&self) -> Element<'_, Self::ContentMessage> {
-        let title = widgets::view_title("Create New Spell");
+        let art = self.art();
 
-        let name = self.fields.name.view();
+        let header = self.header();
 
-        let school = self.fields.school.view();
+        let identification = self.identification();
 
-        let level = self.fields.level.view();
+        let casting_properties = self.casting_properties();
 
-        let casting_time = self.fields.casting_time.view();
+        let effect = self.effect();
 
-        let duration = self.fields.duration.view();
+        let quote = self.quote();
 
-        let range = self.fields.range.view();
-
-        let first_row = row![name, school, level].spacing(10);
-        let second_row = row![casting_time, duration, range].spacing(10);
-
-        let description = self.fields.description.view();
-
-        let at_higher_levels = self.fields.at_higher_levels.view();
-
-        let ritual = self.fields.ritual.view();
-
-        let concentration = self.fields.concentration.view();
-
-        let verbal = self.fields.verbal.view();
-
-        let somatic = self.fields.somatic.view();
-
-        let materials = self.fields.materials.view();
-
-        let third_row = row![verbal, somatic, materials, ritual, concentration]
-            .spacing(10)
-            .align_y(Alignment::End);
-
-        column![
-            title,
-            first_row,
-            second_row,
-            description,
-            at_higher_levels,
-            third_row
+        let view = column![
+            art,
+            header,
+            identification,
+            casting_properties,
+            effect,
+            quote,
         ]
-        .spacing(10)
-        .into()
+        .align_x(Alignment::Center)
+        .spacing(50);
+
+        widget::scrollable(view).into()
     }
 }

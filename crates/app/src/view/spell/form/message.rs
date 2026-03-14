@@ -15,5 +15,10 @@ pub enum SpellFormMessage {
     ConcentrationToggled,
     VerbalToggled,
     SomaticToggled,
-    MaterialsChanged(String),
+    AddMaterial,
+    RemoveMaterial(usize),
+    MaterialChanged(usize, String),
+    MaterialConsumed(usize),
+    QuoteTextChanged(Action),
+    QuoteSourceChanged(String),
 }
