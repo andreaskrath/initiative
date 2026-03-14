@@ -3,6 +3,7 @@ mod casting_time;
 mod class;
 mod duration;
 mod level;
+mod material;
 mod range;
 mod school;
 mod shape;
@@ -14,6 +15,7 @@ pub use casting_time::SpellCastingTime;
 pub use class::Class;
 pub use duration::SpellDuration;
 pub use level::SpellLevel;
+pub use material::SpellMaterial;
 pub use range::SpellRange;
 pub use school::MagicSchool;
 pub use shape::SpellShape;
@@ -25,8 +27,7 @@ pub struct Spell {
     pub level: SpellLevel,
     pub verbal: bool,
     pub somatic: bool,
-    pub material: Option<String>,
-    pub material_consumed: bool,
+    pub material: Vec<SpellMaterial>,
     pub ritual: bool,
     pub concentration: bool,
     pub casting_time: SpellCastingTime,
