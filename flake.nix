@@ -23,11 +23,15 @@
         };
 
         iced = with pkgs; [
+          # Wayland
+          wayland
+          # X11
           libx11
           libxcursor
           libxi
-          libxkbcommon
           libxcb
+          # Shared
+          libxkbcommon
           libGL
           vulkan-loader
         ];
