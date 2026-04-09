@@ -1,9 +1,10 @@
-use crate::{message::Message, view::ViewContent};
-use iced::{Element, Task};
-
 mod message;
 
+use crate::{message::Message, view::ViewContent};
 pub use message::DashboardMessage;
+use widgets::Element;
+
+use iced::Task;
 
 pub struct Dashboard {}
 

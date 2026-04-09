@@ -1,10 +1,12 @@
-use crate::{Icon, IconName};
+use crate::{Element, icon::Icon, icon::IconName, text};
+
 use iced::{
-    Alignment, Element,
+    Alignment,
     Length::Fill,
     widget::{self, row, tooltip::Position},
 };
 use std::time::Duration;
+use style::{container::ContainerClass, svg::SvgClass, text::TextClass};
 
 pub struct Label<'a> {
     label: &'a str,
@@ -37,30 +39,26 @@ where
     Message: Clone + 'a,
 {
     fn from(label: Label<'a>) -> Element<'a, Message> {
-        let text = widget::text(label.label)
-            .size(18)
-            .font(fonts::display::regular())
-            .style(style::text::default);
-
+        let text = text::label(label.label);
         let mut row = row![text].align_y(Alignment::Center);
 
         if label.required {
             let asterisk = widget::text("*")
                 .size(18)
                 .font(fonts::display::regular())
-                .style(style::text::danger::default);
+                .class(TextClass::Danger);
 
             row = row.push(asterisk);
         }
 
         if let Some(error) = label.error {
             let space = widget::space::horizontal().width(Fill);
-            let icon = Icon::new(IconName::Error).style(style::icon::danger);
+            let icon = Icon::new(IconName::Error).class(SvgClass::Danger);
             let tooltip_text = widget::text(error).size(18).font(fonts::display::regular());
             let tooltip = widget::tooltip(icon, tooltip_text, Position::Top)
                 .gap(5)
                 .delay(Duration::from_millis(500))
-                .style(style::tooltip::danger);
+                .class(ContainerClass::Error);
 
             row = row.push(space);
             row = row.push(tooltip);

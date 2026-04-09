@@ -2,20 +2,19 @@ mod group;
 mod item;
 mod message;
 
-use iced::{
-    Element, Fill, Subscription, Task,
-    widget::{column, container, row, rule, space},
-};
-use widgets::{Animation, IconName};
-
 use crate::{
     message::Message,
     navigation::{group::NavigationGroup, item::NavigationItem},
     tab::TabAction,
     view::ViewRequest,
 };
-
 pub use message::NavigationMessage;
+use widgets::{Element, animation::Animation, icon::IconName};
+
+use iced::{
+    Fill, Subscription, Task,
+    widget::{column, container, row, rule, space},
+};
 
 /// The width of `Navigation` when its expanded.
 const NAVIGATION_WIDTH_EXPANDED: f32 = 300.0;
@@ -92,13 +91,9 @@ impl Navigation {
                 .spacing(50)
                 .padding(15);
 
-            let groups_container = container(groups)
-                .height(Fill)
-                .width(width)
-                .clip(true)
-                .style(style::container::background::default);
+            let groups_container = container(groups).height(Fill).width(width).clip(true);
 
-            let divider = rule::vertical(1).style(style::rule::default);
+            let divider = rule::vertical(1);
 
             row![groups_container, divider].into()
         }

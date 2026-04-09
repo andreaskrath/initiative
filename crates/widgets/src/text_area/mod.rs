@@ -1,15 +1,20 @@
-use crate::Label;
-use iced::{
-    Element, Length,
-    widget::{self, text::Wrapping, text_editor::Action},
-};
-
 mod rules;
 mod state;
-mod style;
 
 pub use rules::*;
 pub use state::*;
+
+use crate::{
+    Element,
+    form::{INPUT_PADDING, LABEL_SPACING},
+    label::Label,
+};
+use style::text_editor::TextEditorClass;
+
+use iced::{
+    Length,
+    widget::{self, text::Wrapping, text_editor::Action},
+};
 
 pub fn text_area<'a, Message>(
     label: &'a str,
@@ -64,28 +69,21 @@ where
 
         let placeholder = widget.placeholder.unwrap_or("");
 
-        let style = if widget.state.error().is_some() {
-            style::error
-        } else {
-            style::default
-        };
-
-        let text_area = widget::text_editor(widget.state.content())
+        let mut text_area = widget::text_editor(widget.state.content())
             .font(fonts::display::regular())
             .size(fonts::display::DEFAULT_DISPLAY_TEXT_SIZE)
-            .style(style)
             .wrapping(Wrapping::WordOrGlyph)
-            // TODO: This should be a custom markdown implementation to
-            // - fix performance issues
-            // - fix bleeding issues on bold and italic
-            //
-            // I will only ever use markdown in this scenariom so it is a non-issue to make a
-            // single custom implementation IMO.
-            // .highlight("markdown", iced::highlighter::Theme::InspiredGitHub)
             .placeholder(placeholder)
             .on_action(widget.on_action)
+            .padding(INPUT_PADDING)
             .height(widget.height);
 
-        widget::column![label, text_area].spacing(5).into()
+        if widget.state.error().is_some() {
+            text_area = text_area.class(TextEditorClass::Error);
+        }
+
+        widget::column![label, text_area]
+            .spacing(LABEL_SPACING)
+            .into()
     }
 }

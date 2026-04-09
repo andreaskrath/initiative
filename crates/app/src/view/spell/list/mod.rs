@@ -1,15 +1,15 @@
-use iced::{Element, Task, widget, widget::column};
-use tracing::debug;
-use types::FormMode;
+mod message;
 
 use crate::{
     message::Message,
     view::{ViewContent, ViewRequest},
 };
-
-mod message;
-
 pub use message::SpellListMessage;
+use types::FormMode;
+use widgets::Element;
+
+use iced::{Task, widget, widget::column};
+use tracing::debug;
 
 pub struct SpellList {}
 
@@ -43,9 +43,8 @@ impl ViewContent for SpellList {
     fn view(&self) -> Element<'_, Self::ContentMessage> {
         let title = widgets::text::view_title("Spell List");
 
-        let create_spell_button = widget::button("Create New Spell")
-            .on_press(SpellListMessage::CreateNewSpell)
-            .style(style::button::danger::ghost::default);
+        let create_spell_button =
+            widget::button("Create New Spell").on_press(SpellListMessage::CreateNewSpell);
 
         column![title, create_spell_button].into()
     }

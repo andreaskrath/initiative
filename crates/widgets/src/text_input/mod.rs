@@ -1,15 +1,19 @@
-use crate::Label;
-use iced::{Element, widget};
-
 mod rules;
 mod state;
-mod style;
 
+use crate::{
+    Element,
+    form::{INPUT_PADDING, LABEL_SPACING},
+    label::Label,
+};
 pub use rules::*;
 pub use state::*;
 
+use iced::widget::{self, Column};
+use style::text_input::TextInputClass;
+
 pub fn text_input<'a, Message>(
-    label: &'a str,
+    label: Option<&'a str>,
     state: &'a TextInputState,
 ) -> TextInput<'a, Message> {
     TextInput::new(label, state)
@@ -17,13 +21,13 @@ pub fn text_input<'a, Message>(
 
 pub struct TextInput<'a, Message> {
     state: &'a TextInputState,
-    label: &'a str,
+    label: Option<&'a str>,
     placeholder: Option<&'a str>,
     on_input: Option<Box<dyn Fn(String) -> Message + 'a>>,
 }
 
 impl<'a, Message> TextInput<'a, Message> {
-    pub fn new(label: &'a str, state: &'a TextInputState) -> Self {
+    pub fn new(label: Option<&'a str>, state: &'a TextInputState) -> Self {
         Self {
             state,
             label,
@@ -48,24 +52,30 @@ where
     Message: Clone + 'a,
 {
     fn from(widget: TextInput<'a, Message>) -> Self {
-        let label = Label::new(widget.label)
-            .required(widget.state.is_required())
-            .error(widget.state.error());
+        let label = widget.label.map(|label_text| {
+            Label::new(label_text)
+                .required(widget.state.is_required())
+                .error(widget.state.error())
+        });
 
         let placeholder = widget.placeholder.unwrap_or("");
 
-        let style = if widget.state.error().is_some() {
-            style::error
-        } else {
-            style::default
-        };
-
-        let input = widget::text_input(placeholder, widget.state.value())
+        let mut input = widget::text_input(placeholder, widget.state.value())
             .font(fonts::display::regular())
             .size(fonts::display::DEFAULT_DISPLAY_TEXT_SIZE)
-            .style(style)
+            .padding(INPUT_PADDING)
             .on_input_maybe(widget.on_input);
 
-        widget::column![label, input].spacing(5).into()
+        if widget.state.error().is_some() {
+            input = input.class(TextInputClass::Error);
+        }
+
+        let mut column = Column::with_capacity(2).spacing(LABEL_SPACING);
+
+        if let Some(label_element) = label {
+            column = column.push(label_element);
+        }
+
+        column.push(input).into()
     }
 }

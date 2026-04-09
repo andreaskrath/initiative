@@ -3,21 +3,24 @@ mod navigation;
 mod tab;
 mod view;
 
-use iced::{
-    Element,
-    Length::Fill,
-    Subscription, Task, Theme,
-    alignment::Horizontal,
-    theme::Base,
-    widget::{button, column, container, row, rule, space, stack},
-};
-use style::ThemeVariant;
-use widgets::{Icon, IconName, IconSize};
-
 use crate::{
     message::Message,
     navigation::{Navigation, NavigationMessage},
     tab::{TabAction, TabManager},
+};
+use style::{
+    button::ButtonClass,
+    container::ContainerClass,
+    svg::SvgClass,
+    theme::{Theme, variant::ThemeVariant},
+};
+use widgets::{Element, icon::IconName, icon::IconSize};
+
+use iced::{
+    Length::Fill,
+    Subscription, Task,
+    alignment::Horizontal,
+    widget::{button, column, container, row, rule, space, stack},
 };
 
 pub struct Initiative {
@@ -42,51 +45,35 @@ impl Initiative {
             Message::Navigation(navigation_message) => self.navigation.update(navigation_message),
             Message::Tab(tab_id, tab_message) => self.tabs.update(tab_id, tab_message),
             Message::TabAction(tab_action) => self.tabs.perform(tab_action),
-            Message::ThemeChanged => {
-                self.theme = match self.theme.name() {
-                    "Default" => ThemeVariant::Dark.into(),
-                    "Dark Stone" => ThemeVariant::Light.into(),
-                    "Light" => ThemeVariant::Default.into(),
-                    unknown => unreachable!("unknown theme specified: {unknown}"),
-                };
-
-                Task::none()
-            }
             Message::Navigate(view_request) => self.tabs.perform(TabAction::Open(view_request)),
         }
     }
 
     pub fn view(&self) -> Element<'_, Message> {
         let icon = if self.navigation.collapsed() {
-            Icon::new(IconName::NavigationOpen).size(IconSize::Large)
+            widgets::icon(IconName::NavigationOpen).size(IconSize::Large)
         } else {
-            Icon::new(IconName::NavigationClose).size(IconSize::Large)
+            widgets::icon(IconName::NavigationClose).size(IconSize::Large)
         }
-        .style(style::icon::default);
+        .class(SvgClass::Text);
 
         let topbar = row![
             button(icon)
-                .style(button::text)
+                .class(ButtonClass::Ghost)
                 .on_press(Message::Navigation(NavigationMessage::ToggleCollapse)),
             space::horizontal().width(Fill),
-            button(
-                Icon::new(IconName::Spell)
-                    .size(IconSize::Large)
-                    .style(style::icon::primary)
-            )
-            .style(button::text)
-            .on_press(Message::ThemeChanged),
         ]
         .padding(5);
 
         let navigation = self.navigation.view().map(Message::Navigation);
 
         let current_view = container(self.tabs.view())
+            .class(ContainerClass::Background)
             .align_x(Horizontal::Center)
             .width(Fill)
             .height(Fill);
 
-        let topbar = column![topbar, rule::horizontal(1).style(style::rule::default)];
+        let topbar = column![topbar, rule::horizontal(1)];
 
         let main = stack![current_view, navigation];
 

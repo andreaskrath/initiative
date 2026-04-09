@@ -1,8 +1,8 @@
-use std::fmt::Debug;
-
-use iced::{Element, Task};
-
 use crate::Message;
+use widgets::Element;
+
+use iced::Task;
+use std::fmt::Debug;
 
 /// A common interface for all views of the application.
 pub trait ViewContent {

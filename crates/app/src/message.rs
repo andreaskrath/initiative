@@ -13,6 +13,4 @@ pub enum Message {
     TabAction(TabAction),
 
     Navigate(ViewRequest),
-
-    ThemeChanged,
 }

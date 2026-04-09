@@ -1,12 +1,7 @@
-use iced::{
-    Alignment, Element,
-    Length::Fill,
-    Task,
-    widget::{self, Column, column, row},
-};
-use tracing::debug;
-use types::FormMode;
-use widgets::{Icon, IconName};
+mod fields;
+mod message;
+
+pub use message::SpellFormMessage;
 
 use crate::{
     message::Message,
@@ -15,11 +10,17 @@ use crate::{
         spell::form::fields::{SpellFormFields, SpellMaterialInput},
     },
 };
+use style::button::ButtonClass;
+use widgets::Element;
 
-mod fields;
-mod message;
-
-pub use message::SpellFormMessage;
+use iced::{
+    Alignment,
+    Length::Fill,
+    Task,
+    widget::{self, Column, column, row},
+};
+use tracing::debug;
+use types::FormMode;
 
 pub struct SpellForm {
     mode: FormMode,
@@ -34,25 +35,6 @@ impl<'a> SpellForm {
         }
     }
 
-    fn art(&'a self) -> Element<'a, SpellFormMessage> {
-        let left_ruler = widget::container(widget::space::horizontal())
-            .height(2)
-            .width(Fill)
-            .style(style::container::primary::gradient_faded_edges);
-
-        let right_ruler = widget::container(widget::space::horizontal())
-            .height(2)
-            .width(Fill)
-            .style(style::container::primary::gradient_faded_edges);
-
-        let sparkle_icon = Icon::new(IconName::Sparkle).style(style::icon::primary);
-
-        row![left_ruler, sparkle_icon, right_ruler]
-            .width(500)
-            .align_y(Alignment::Center)
-            .into()
-    }
-
     fn header(&'a self) -> Element<'a, SpellFormMessage> {
         let title = widgets::text::view_title("Spell Forge");
 
@@ -65,9 +47,9 @@ impl<'a> SpellForm {
     }
 
     fn identification(&'a self) -> Element<'a, SpellFormMessage> {
-        let title = widgets::text::heading::default("IDENTIFICATION");
+        let title = widgets::text::heading("IDENTIFICATION");
 
-        let name = widgets::text_input("Name", &self.fields.name)
+        let name = widgets::text_input(Some("Name"), &self.fields.name)
             .placeholder("Goblin")
             .on_input(SpellFormMessage::NameChanged);
 
@@ -92,7 +74,7 @@ impl<'a> SpellForm {
     }
 
     fn casting_properties(&'a self) -> Element<'a, SpellFormMessage> {
-        let title = widgets::text::heading::default("CASTING PROPERTIES");
+        let title = widgets::text::heading("CASTING PROPERTIES");
 
         let casting_time = widgets::select(
             "Casting Time",
@@ -131,20 +113,23 @@ impl<'a> SpellForm {
             .on_toggle(SpellFormMessage::ConcentrationToggled);
 
         let add_materials_button = widget::container(
-            widgets::button::primary("Add Material").on_press(SpellFormMessage::AddMaterial),
+            widget::button("Add Material")
+                .class(ButtonClass::Primary)
+                .on_press(SpellFormMessage::AddMaterial),
         )
         .align_right(Fill);
 
         let mut materials = Column::with_capacity(self.fields.materials.len()).spacing(10);
         for (index, spell_material) in self.fields.materials.iter().enumerate() {
-            let material = widgets::text_input(&spell_material.label, &spell_material.material)
+            let material = widgets::text_input(Some(&spell_material.label), &spell_material.material)
                 .placeholder("A bat wing")
                 .on_input(move |new_material| {
                     SpellFormMessage::MaterialChanged(index, new_material)
                 });
             let consumed = widgets::toggle("Consumed", spell_material.consumed)
                 .on_toggle(SpellFormMessage::MaterialConsumed(index));
-            let remove = widgets::button::danger(widgets::text::display("Remove"))
+            let remove = widget::button(widgets::text::display("Remove"))
+                .class(ButtonClass::Danger)
                 .on_press(SpellFormMessage::RemoveMaterial(index));
 
             let spell_material_input = row![material, consumed, remove]
@@ -171,7 +156,7 @@ impl<'a> SpellForm {
     }
 
     fn effect(&'a self) -> Element<'a, SpellFormMessage> {
-        let title = widgets::text::heading::default("EFFECT");
+        let title = widgets::text::heading("EFFECT");
 
         let description = widgets::text_area(
             "Description",
@@ -194,7 +179,7 @@ impl<'a> SpellForm {
     }
 
     fn quote(&'a self) -> Element<'a, SpellFormMessage> {
-        let title = widgets::text::heading::default("QUOTE");
+        let title = widgets::text::heading("QUOTE");
 
         let text = widgets::text_area(
             "Text",
@@ -204,7 +189,7 @@ impl<'a> SpellForm {
         .placeholder("Something")
         .height(100);
 
-        let source = widgets::text_input("Source", &self.fields.quote_source)
+        let source = widgets::text_input(Some("Source"), &self.fields.quote_source)
             .placeholder("Someone")
             .on_input(SpellFormMessage::QuoteSourceChanged);
 
@@ -299,20 +284,13 @@ impl ViewContent for SpellForm {
     }
 
     fn view(&self) -> Element<'_, Self::ContentMessage> {
-        let art = self.art();
-
         let header = self.header();
-
         let identification = self.identification();
-
         let casting_properties = self.casting_properties();
-
         let effect = self.effect();
-
         let quote = self.quote();
 
         let view = column![
-            art,
             header,
             identification,
             casting_properties,

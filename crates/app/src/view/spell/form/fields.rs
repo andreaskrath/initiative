@@ -1,6 +1,10 @@
 use strum::VariantArray;
 use types::{MagicSchool, SpellCastingTime, SpellDuration, SpellLevel, SpellRange};
-use widgets::{SelectState, TextAreaRule, TextAreaState, TextInputRule, TextInputState};
+use widgets::{
+    select::SelectState,
+    text_area::{TextAreaRule, TextAreaState},
+    text_input::{TextInputRule, TextInputState},
+};
 
 pub struct SpellFormFields {
     pub name: TextInputState,
