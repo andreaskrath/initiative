@@ -1,8 +1,21 @@
 use std::ops::{Index, IndexMut};
 
-use strum::{Display, EnumCount, VariantArray};
+use strum::{AsRefStr, Display, EnumCount, VariantArray};
 
-#[derive(Display, VariantArray, Clone, Copy, EnumCount)]
+/// The list of all spell casting classes.
+pub const SPELLCASTING_CLASSES: [Class; 9] = [
+    Class::Artificer,
+    Class::Bard,
+    Class::Cleric,
+    Class::Druid,
+    Class::Paladin,
+    Class::Ranger,
+    Class::Sorcerer,
+    Class::Warlock,
+    Class::Wizard,
+];
+
+#[derive(Debug, Display, VariantArray, Clone, Copy, EnumCount, PartialEq, AsRefStr)]
 pub enum Class {
     Artificer,
     Barbarian,
