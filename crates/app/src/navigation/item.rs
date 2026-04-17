@@ -1,9 +1,9 @@
 use super::message::NavigationMessage;
 use crate::view::ViewRequest;
+use components::icon::IconName;
 use style::button::ButtonClass;
 use style::svg::SvgClass;
 use widgets::Element;
-use widgets::icon::IconName;
 
 use iced::Alignment;
 use iced::Length::Fill;
@@ -27,7 +27,7 @@ impl NavigationItem {
     }
 
     pub fn view(&self) -> Element<'_, NavigationMessage> {
-        let icon = widgets::icon(self.icon).class(SvgClass::Normal);
+        let icon = components::icon(self.icon).class(SvgClass::Normal);
 
         let space = widget::space::horizontal().width(10);
 

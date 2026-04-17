@@ -2,11 +2,11 @@ use crate::message::Message;
 use crate::tab::Tab;
 use crate::tab::TabAction;
 use crate::tab::TabId;
+use components::icon::IconName;
+use components::text::Text;
 use style::container::ContainerClass;
 use style::svg::SvgClass;
 use widgets::Element;
-use widgets::icon::IconName;
-use widgets::text::Text;
 
 use iced::Alignment;
 use iced::Length::Fill;
@@ -38,7 +38,7 @@ pub fn tab_bar(tabs: &[(TabId, Tab)], active: TabId) -> Element<'_, Message> {
             .align_y(Alignment::Center);
 
         if !matches!(tab, Tab::Dashboard(_)) {
-            let close_icon = widgets::icon(IconName::Close).class(SvgClass::Normal);
+            let close_icon = components::icon(IconName::Close).class(SvgClass::Normal);
             let close_button = widget::button(close_icon)
                 .height(TAB_BAR_HEIGHT)
                 .on_press(Message::TabAction(TabAction::Close(*tab_id)));

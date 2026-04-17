@@ -1,10 +1,10 @@
-use crate::Element;
 use crate::icon::Icon;
 use crate::icon::IconName;
 use crate::text;
 use style::container::ContainerClass;
 use style::svg::SvgClass;
 use style::text::TextClass;
+use widgets::Element;
 
 use iced::Alignment;
 use iced::Length::Fill;

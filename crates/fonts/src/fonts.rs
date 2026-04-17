@@ -140,3 +140,38 @@ pub mod display {
         }
     }
 }
+
+pub mod mono {
+    //! This module defines font utility functions for a `mono` font.
+    //!
+    //! In this context, `mono` means things like markdown editors.
+    use super::*;
+
+    pub const DEFAULT_BODY_TEXT_SIZE: u16 = 18;
+
+    pub fn regular() -> Font {
+        Font::with_name("Fantasque Sans Mono")
+    }
+
+    pub fn bold() -> Font {
+        Font {
+            weight: Weight::Bold,
+            ..regular()
+        }
+    }
+
+    pub fn italic() -> Font {
+        Font {
+            style: Style::Italic,
+            ..regular()
+        }
+    }
+
+    pub fn bold_italic() -> Font {
+        Font {
+            weight: Weight::Bold,
+            style: Style::Italic,
+            ..regular()
+        }
+    }
+}

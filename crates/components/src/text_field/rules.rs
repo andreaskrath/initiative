@@ -1,6 +1,6 @@
 /// Rules used to define requirements to the validation of a [`TextInput`].
 #[derive(Debug, Clone, Copy, PartialEq)]
-pub enum TextInputRule {
+pub enum TextFieldRule {
     /// Set to required.
     ///
     /// This means any length greater than 0.

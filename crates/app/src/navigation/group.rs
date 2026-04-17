@@ -1,9 +1,9 @@
 use crate::navigation::NavigationItem;
 use crate::navigation::NavigationMessage;
+use components::icon::IconName;
 use style::button::ButtonClass;
 use style::svg::SvgClass;
 use widgets::Element;
-use widgets::icon::IconName;
 
 use iced::Alignment;
 use iced::Length::Fill;
@@ -56,14 +56,14 @@ impl NavigationGroup {
     }
 
     pub fn view(&self) -> Element<'_, NavigationMessage> {
-        let label = widgets::text::muted_heading(&self.label);
+        let label = components::text::muted_heading(&self.label);
 
         let space = widget::space::horizontal().width(Fill);
 
         let icon = if self.expanded {
-            widgets::icon(IconName::ChevronDown)
+            components::icon(IconName::ChevronDown)
         } else {
-            widgets::icon(IconName::ChevronRight)
+            components::icon(IconName::ChevronRight)
         }
         .class(SvgClass::Normal);
 

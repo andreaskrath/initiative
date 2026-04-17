@@ -8,14 +8,14 @@ use crate::navigation::Navigation;
 use crate::navigation::NavigationMessage;
 use crate::tab::TabAction;
 use crate::tab::TabManager;
+use components::icon::IconName;
+use components::icon::IconSize;
 use style::button::ButtonClass;
 use style::container::ContainerClass;
 use style::svg::SvgClass;
 use style::theme::Theme;
 use style::theme::variant::ThemeVariant;
 use widgets::Element;
-use widgets::icon::IconName;
-use widgets::icon::IconSize;
 
 use iced::Length::Fill;
 use iced::Subscription;
@@ -57,9 +57,9 @@ impl Initiative {
 
     pub fn view(&self) -> Element<'_, Message> {
         let icon = if self.navigation.collapsed() {
-            widgets::icon(IconName::NavigationOpen).size(IconSize::Large)
+            components::icon(IconName::NavigationOpen).size(IconSize::Large)
         } else {
-            widgets::icon(IconName::NavigationClose).size(IconSize::Large)
+            components::icon(IconName::NavigationClose).size(IconSize::Large)
         }
         .class(SvgClass::Text);
 

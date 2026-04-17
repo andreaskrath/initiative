@@ -1,17 +1,17 @@
-use super::NumberInputRule;
+use super::NumberFieldRule;
 use crate::ValidationError;
 
 use tracing::debug;
 
 #[derive(Debug, Default, Clone)]
-pub struct NumberInputState {
+pub struct NumberFieldState {
     raw: String,
     parsed: Option<i32>,
-    rules: Option<Box<[NumberInputRule]>>,
+    rules: Option<Box<[NumberFieldRule]>>,
     error: Option<String>,
 }
 
-impl NumberInputState {
+impl NumberFieldState {
     pub fn new(value: Option<i32>) -> Self {
         let raw = value.map(|s| s.to_string()).unwrap_or_default();
 
@@ -23,7 +23,7 @@ impl NumberInputState {
         }
     }
 
-    pub fn rules(mut self, rules: impl IntoIterator<Item = NumberInputRule>) -> Self {
+    pub fn rules(mut self, rules: impl IntoIterator<Item = NumberFieldRule>) -> Self {
         let collected_rules = rules.into_iter().collect::<Vec<_>>().into_boxed_slice();
 
         self.rules = Some(collected_rules);
@@ -35,7 +35,7 @@ impl NumberInputState {
             return false;
         };
 
-        rules.iter().any(|rule| rule == &NumberInputRule::Required)
+        rules.iter().any(|rule| rule == &NumberFieldRule::Required)
     }
 
     pub fn value(&self) -> Option<i32> {
@@ -95,33 +95,33 @@ impl NumberInputState {
         true
     }
 
-    fn check_rule(&self, rule: NumberInputRule) -> Result<(), ValidationError> {
+    fn check_rule(&self, rule: NumberFieldRule) -> Result<(), ValidationError> {
         // Always pass if not set and not required.
         if self.parsed.is_none() && !self.is_required() {
             return Ok(());
         }
 
         match rule {
-            NumberInputRule::Required => {
+            NumberFieldRule::Required => {
                 if self.parsed.is_none() {
                     return Err(ValidationError::Required);
                 }
             }
-            NumberInputRule::Min(min) => {
+            NumberFieldRule::Min(min) => {
                 if let Some(value) = self.parsed
                     && value < min
                 {
                     return Err(ValidationError::LessThan(min));
                 }
             }
-            NumberInputRule::Max(max) => {
+            NumberFieldRule::Max(max) => {
                 if let Some(value) = self.parsed
                     && value > max
                 {
                     return Err(ValidationError::GreaterThan(max));
                 }
             }
-            NumberInputRule::Between(min, max) => {
+            NumberFieldRule::Between(min, max) => {
                 if let Some(value) = self.parsed
                     && (value < min || value > max)
                 {

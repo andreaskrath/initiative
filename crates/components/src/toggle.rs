@@ -1,6 +1,6 @@
-use crate::Element;
 use crate::form::INPUT_PADDING;
 use style::button::ButtonClass;
+use widgets::Element;
 
 use iced::Length;
 use iced::widget;

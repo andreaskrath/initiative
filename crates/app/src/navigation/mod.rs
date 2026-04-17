@@ -2,15 +2,16 @@ mod group;
 mod item;
 mod message;
 
+pub use message::NavigationMessage;
+
 use crate::message::Message;
 use crate::navigation::group::NavigationGroup;
 use crate::navigation::item::NavigationItem;
 use crate::tab::TabAction;
 use crate::view::ViewRequest;
-pub use message::NavigationMessage;
+use components::icon::IconName;
 use widgets::Element;
 use widgets::animation::Animation;
-use widgets::icon::IconName;
 
 use iced::Fill;
 use iced::Subscription;

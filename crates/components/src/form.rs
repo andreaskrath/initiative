@@ -1,6 +1,6 @@
-use crate::Element;
 use style::container::ContainerClass;
 use style::text::TextClass;
+use widgets::Element;
 
 use iced::Length;
 use iced::Padding;
@@ -31,7 +31,10 @@ pub const INPUT_PADDING: Padding = Padding {
 };
 
 /// A header for a form section.
-pub fn section_header<'a, M: 'a>(title: &'a str, description: &'a str) -> Element<'a, M> {
+pub fn section_header<'a, Message: 'a>(
+    title: &'a str,
+    description: &'a str,
+) -> Element<'a, Message> {
     let title_text = widget::text(title)
         .size(32)
         .class(TextClass::Primary)
@@ -48,7 +51,9 @@ pub fn section_header<'a, M: 'a>(title: &'a str, description: &'a str) -> Elemen
 }
 
 /// The body of the form section.
-pub fn section_body<'a, M: 'a>(element: impl Into<Element<'a, M>>) -> Element<'a, M> {
+pub fn section_body<'a, Message: 'a>(
+    element: impl Into<Element<'a, Message>>,
+) -> Element<'a, Message> {
     widget::container(element)
         .class(ContainerClass::Surface)
         .width(Length::FillPortion(FORM_PROPORTION))

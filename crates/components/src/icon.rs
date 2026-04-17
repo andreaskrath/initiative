@@ -1,5 +1,5 @@
-use crate::Element;
 use style::svg::SvgClass;
+use widgets::Element;
 
 use tracing::error;
 

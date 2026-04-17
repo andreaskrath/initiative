@@ -8,13 +8,13 @@ use crate::view::ViewContent;
 use crate::view::spell::form::fields::SpellFormFields;
 use crate::view::spell::form::fields::SpellMaterialInput;
 use crate::view::spell::form::fields::SpellShapeInput;
+use components::form::BODY_SPACING;
+use components::form::LABEL_SPACING;
+use components::form::SECTION_SPACING;
+use components::label::Label;
 use types::FormMode;
 use types::SPELLCASTING_CLASSES;
 use widgets::Element;
-use widgets::form::BODY_SPACING;
-use widgets::form::LABEL_SPACING;
-use widgets::form::SECTION_SPACING;
-use widgets::label::Label;
 
 use iced::Alignment;
 use iced::Length;
@@ -41,9 +41,9 @@ impl<'a> SpellForm {
     }
 
     fn title(&'a self) -> Element<'a, SpellFormMessage> {
-        let title = widgets::text::view_title("Spell Forge");
+        let title = components::text::view_title("Spell Forge");
 
-        let sub_title = widgets::text::view_sub_title("Inscribe thy arcane workings");
+        let sub_title = components::text::view_sub_title("Inscribe thy arcane workings");
 
         column![title, sub_title]
             .width(Fill)
@@ -52,26 +52,27 @@ impl<'a> SpellForm {
     }
 
     fn identity_section(&'a self) -> Element<'a, SpellFormMessage> {
-        let header = widgets::form::section_header(
+        let header = components::form::section_header(
             "IDENTITY",
             "Fundamental classification and class availability.",
         );
 
-        let name = widgets::text_input(Some("NAME"), &self.fields.name)
+        let name = components::text_field(Some("NAME"), &self.fields.name)
             .placeholder("Goblin")
             .on_input(SpellFormMessage::NameChanged);
-        let school = widgets::select::select(
+        let school = components::select_field(
             "SCHOOL",
             &self.fields.school,
             SpellFormMessage::SchoolSelected,
         )
         .placeholder("Select a magic school");
-        let level = widgets::select("LEVEL", &self.fields.level, SpellFormMessage::LevelSelected)
-            .placeholder("Select a spell level");
+        let level =
+            components::select_field("LEVEL", &self.fields.level, SpellFormMessage::LevelSelected)
+                .placeholder("Select a spell level");
 
         let classes: Element<_> = {
-            let elements_selected =
-                widgets::text::detail(format!("{} classes selected", self.fields.classes.len()));
+            let elements_selected_text = format!("{} classes selected", self.fields.classes.len());
+            let elements_selected = components::text::detail(elements_selected_text);
             let label = row![
                 Label::new("CLASSES").required(false),
                 widget::space::horizontal().width(Length::Fill),
@@ -82,7 +83,7 @@ impl<'a> SpellForm {
 
             for row_variants in SPELLCASTING_CLASSES.chunks(3) {
                 let row = Row::with_children(row_variants.iter().map(|class| {
-                    widgets::toggle(class.as_ref(), self.fields.classes.contains(class))
+                    components::toggle(class.as_ref(), self.fields.classes.contains(class))
                         .width(Length::Fill)
                         .on_toggle(SpellFormMessage::ClassToggled(*class))
                         .into()
@@ -99,18 +100,18 @@ impl<'a> SpellForm {
 
         let classification = row![school, level].spacing(BODY_SPACING);
         let form = column![name, classification, classes].spacing(BODY_SPACING);
-        let body = widgets::form::section_body(form);
+        let body = components::form::section_body(form);
 
         row![header, body].into()
     }
 
     fn casting_section(&'a self) -> Element<'a, SpellFormMessage> {
-        let header = widgets::form::section_header(
+        let header = components::form::section_header(
             "CASTING",
             "The mechanics and requirements of casting the spell.",
         );
 
-        let casting_time = widgets::select(
+        let casting_time = components::select_field(
             "CASTING TIME",
             &self.fields.casting_time,
             SpellFormMessage::CastingTimeSelected,
@@ -119,10 +120,10 @@ impl<'a> SpellForm {
 
         let properties: Element<_> = {
             let label = Label::new("PROPERTIES");
-            let ritual = widgets::toggle("Ritual", self.fields.ritual)
+            let ritual = components::toggle("Ritual", self.fields.ritual)
                 .width(Fill)
                 .on_toggle(SpellFormMessage::RitualToggled);
-            let concentration = widgets::toggle("Concentration", self.fields.concentration)
+            let concentration = components::toggle("Concentration", self.fields.concentration)
                 .width(Fill)
                 .on_toggle(SpellFormMessage::ConcentrationToggled);
             let toggle_row = row![ritual, concentration].spacing(BODY_SPACING);
@@ -132,13 +133,13 @@ impl<'a> SpellForm {
 
         let components: Element<_> = {
             let label = Label::new("COMPONENTS");
-            let verbal = widgets::toggle("Verbal", self.fields.verbal)
+            let verbal = components::toggle("Verbal", self.fields.verbal)
                 .width(Fill)
                 .on_toggle(SpellFormMessage::VerbalToggled);
-            let somatic = widgets::toggle("Somatic", self.fields.somatic)
+            let somatic = components::toggle("Somatic", self.fields.somatic)
                 .width(Fill)
                 .on_toggle(SpellFormMessage::SomaticToggled);
-            let material = widgets::toggle("Material", self.fields.material)
+            let material = components::toggle("Material", self.fields.material)
                 .width(Fill)
                 .on_toggle(SpellFormMessage::MaterialToggled);
             let components_row = row![verbal, somatic, material].spacing(BODY_SPACING);
@@ -154,17 +155,17 @@ impl<'a> SpellForm {
                 for (index, spell_material) in self.fields.materials.iter().enumerate() {
                     let material_label = if index == 0 { Some("MATERIAL") } else { None };
                     let worth_label = if index == 0 { Some("WORTH") } else { None };
-                    let material = widgets::text_input(material_label, &spell_material.material)
+                    let material = components::text_field(material_label, &spell_material.material)
                         .placeholder("A bat wing")
                         .on_input(move |new_material| {
                             SpellFormMessage::MaterialChanged(index, new_material)
                         });
-                    let worth = widgets::text_input(worth_label, &spell_material.worth)
+                    let worth = components::text_field(worth_label, &spell_material.worth)
                         .placeholder("100 gp")
                         .on_input(move |new_worth| {
                             SpellFormMessage::MaterialWorthChanged(index, new_worth)
                         });
-                    let consumed = widgets::toggle("Consumed", spell_material.consumed)
+                    let consumed = components::toggle("Consumed", spell_material.consumed)
                         .on_toggle(SpellFormMessage::MaterialConsumed(index));
                     let spell_material_input = row![material, worth, consumed]
                         .spacing(BODY_SPACING)
@@ -183,32 +184,34 @@ impl<'a> SpellForm {
         let form = column![casting, components, materials]
             .align_x(Alignment::Center)
             .spacing(BODY_SPACING);
-        let body = widgets::form::section_body(form);
+        let body = components::form::section_body(form);
 
         row![header, body].into()
     }
 
     fn effect_section(&'a self) -> Element<'a, SpellFormMessage> {
-        let header = widgets::form::section_header(
+        let header = components::form::section_header(
             "EFFECT",
             "The distinct physical form the spell assumes as it bends reality, and its power scaling with greater mastery.",
         );
 
-        let duration = widgets::select(
+        let duration = components::select_field(
             "DURATION",
             &self.fields.duration,
             SpellFormMessage::DurationSelected,
         )
         .placeholder("Select a duration");
 
-        let range = widgets::select("RANGE", &self.fields.range, SpellFormMessage::RangeSelected)
-            .placeholder("Select a range");
+        let range =
+            components::select_field("RANGE", &self.fields.range, SpellFormMessage::RangeSelected)
+                .placeholder("Select a range");
 
-        let area = widgets::select("AREA", &self.fields.area, SpellFormMessage::AreaSelected)
-            .placeholder("Select an area");
+        let area =
+            components::select_field("AREA", &self.fields.area, SpellFormMessage::AreaSelected)
+                .placeholder("Select an area");
 
         let shape: Element<_> = {
-            let kind = widgets::select(
+            let kind = components::select_field(
                 "SHAPE",
                 &self.fields.shape_kind,
                 SpellFormMessage::ShapeKindSelected,
@@ -218,41 +221,41 @@ impl<'a> SpellForm {
             let (middle, right) = match &self.fields.shape {
                 SpellShapeInput::NoShape => (fill_space(), fill_space()),
                 SpellShapeInput::Cone { length } => {
-                    let length = widgets::number_input(Some("LENGTH"), length)
+                    let length = components::number_field(Some("LENGTH"), length)
                         .placeholder("Select a length")
                         .on_input(SpellFormMessage::ShapeLengthChanged);
 
                     (length.into(), fill_space())
                 }
                 SpellShapeInput::Cube { length } => {
-                    let length = widgets::number_input(Some("LENGTH"), length)
+                    let length = components::number_field(Some("LENGTH"), length)
                         .placeholder("Select a length")
                         .on_input(SpellFormMessage::ShapeLengthChanged);
 
                     (length.into(), fill_space())
                 }
                 SpellShapeInput::Cylinder { radius, height } => {
-                    let radius = widgets::number_input(Some("RADIUS"), radius)
+                    let radius = components::number_field(Some("RADIUS"), radius)
                         .placeholder("Select a radius")
                         .on_input(SpellFormMessage::ShapeRadiusChanged);
-                    let height = widgets::number_input(Some("HEIGHT"), height)
+                    let height = components::number_field(Some("HEIGHT"), height)
                         .placeholder("Select a height")
                         .on_input(SpellFormMessage::ShapeHeightChanged);
 
                     (radius.into(), height.into())
                 }
                 SpellShapeInput::Line { width, length } => {
-                    let width = widgets::number_input(Some("WIDTH"), width)
+                    let width = components::number_field(Some("WIDTH"), width)
                         .placeholder("Select a width")
                         .on_input(SpellFormMessage::ShapeWidthChanged);
-                    let length = widgets::number_input(Some("LENGTH"), length)
+                    let length = components::number_field(Some("LENGTH"), length)
                         .placeholder("Select a height")
                         .on_input(SpellFormMessage::ShapeLengthChanged);
 
                     (width.into(), length.into())
                 }
                 SpellShapeInput::Sphere { radius } => {
-                    let radius = widgets::number_input(Some("RADIUS"), radius)
+                    let radius = components::number_field(Some("RADIUS"), radius)
                         .placeholder("Select a radius")
                         .width(Length::FillPortion(1))
                         .on_input(SpellFormMessage::ShapeRadiusChanged);
@@ -264,14 +267,14 @@ impl<'a> SpellForm {
             row![kind, middle, right].spacing(BODY_SPACING).into()
         };
 
-        let description = widgets::text_area(
+        let description = components::text_area_field(
             "DESCRIPTION",
             &self.fields.description,
             SpellFormMessage::DescriptionChanged,
         )
         .height(300);
 
-        let at_higher_levels = widgets::text_area(
+        let at_higher_levels = components::text_area_field(
             "AT HIGHER LEVELS",
             &self.fields.at_higher_levels,
             SpellFormMessage::AtHigherLevelsChanged,
@@ -285,7 +288,7 @@ impl<'a> SpellForm {
         let form = column![row1, shape, description, at_higher_levels]
             .align_x(Alignment::Center)
             .spacing(BODY_SPACING);
-        let body = widgets::form::section_body(form);
+        let body = components::form::section_body(form);
 
         row![header, body].into()
     }
@@ -293,7 +296,7 @@ impl<'a> SpellForm {
     fn quote(&'a self) -> Element<'a, SpellFormMessage> {
         let title = iced::widget::text("QUOTE");
 
-        let text = widgets::text_area(
+        let text = components::text_area_field(
             "Text",
             &self.fields.quote_text,
             SpellFormMessage::QuoteTextChanged,
@@ -301,7 +304,7 @@ impl<'a> SpellForm {
         .placeholder("Something")
         .height(100);
 
-        let source = widgets::text_input(Some("SOURCE"), &self.fields.quote_source)
+        let source = components::text_field(Some("SOURCE"), &self.fields.quote_source)
             .placeholder("Someone")
             .on_input(SpellFormMessage::QuoteSourceChanged);
 
@@ -473,6 +476,6 @@ impl ViewContent for SpellForm {
     }
 }
 
-fn fill_space<'a, M: 'a>() -> Element<'a, M> {
+fn fill_space<'a, Message: 'a>() -> Element<'a, Message> {
     widget::space().width(Length::Fill).into()
 }

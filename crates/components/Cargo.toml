@@ -1,23 +1,22 @@
 [package]
-name = "app"
+name = "components"
 version = "0.1.0"
 publish.workspace = true
 edition.workspace = true
 
 [lib]
-path = "src/app.rs"
+path = "src/components.rs"
 
 [dependencies]
 # External crates
 iced.workspace = true
-strum.workspace = true
+thiserror.workspace = true
 tracing.workspace = true
 
 # Internal crates
-components.workspace = true
+assets.workspace = true
 fonts.workspace = true
 style.workspace = true
-types.workspace = true
 widgets.workspace = true
 
 [lints]

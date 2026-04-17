@@ -3,6 +3,7 @@ resolver = "2"
 members = [
   "crates/app",
   "crates/assets",
+  "crates/components",
   "crates/fonts",
   "crates/initiative",
   "crates/logging",
@@ -31,6 +32,7 @@ uuid = "=1.18.1"
 # Internal crates
 app = { path = "crates/app" }
 assets = { path = "crates/assets" }
+components = { path = "crates/components" }
 fonts = { path = "crates/fonts" }
 logging = { path = "crates/logging" }
 style = { path = "crates/style" }

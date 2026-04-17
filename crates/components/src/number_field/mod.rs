@@ -1,36 +1,37 @@
 mod rules;
 mod state;
 
-use crate::Element;
+pub use rules::*;
+pub use state::*;
+
 use crate::form::INPUT_PADDING;
 use crate::form::LABEL_SPACING;
 use crate::label::Label;
-pub use rules::*;
-pub use state::*;
+use style::text_input::TextInputClass;
+use widgets::Element;
 
 use iced::Alignment;
 use iced::Length;
 use iced::widget;
 use iced::widget::Column;
-use style::text_input::TextInputClass;
 
-pub fn number_input<'a, Message>(
+pub fn number_field<'a, Message>(
     label: Option<&'a str>,
-    state: &'a NumberInputState,
-) -> NumberInput<'a, Message> {
-    NumberInput::new(label, state)
+    state: &'a NumberFieldState,
+) -> NumberField<'a, Message> {
+    NumberField::new(label, state)
 }
 
-pub struct NumberInput<'a, Message> {
-    state: &'a NumberInputState,
+pub struct NumberField<'a, Message> {
+    state: &'a NumberFieldState,
     label: Option<&'a str>,
     placeholder: Option<&'a str>,
     on_input: Option<Box<dyn Fn(String) -> Message + 'a>>,
     width: Length,
 }
 
-impl<'a, Message> NumberInput<'a, Message> {
-    pub fn new(label: Option<&'a str>, state: &'a NumberInputState) -> Self {
+impl<'a, Message> NumberField<'a, Message> {
+    pub fn new(label: Option<&'a str>, state: &'a NumberFieldState) -> Self {
         Self {
             state,
             label,
@@ -56,11 +57,11 @@ impl<'a, Message> NumberInput<'a, Message> {
     }
 }
 
-impl<'a, Message> From<NumberInput<'a, Message>> for Element<'a, Message>
+impl<'a, Message> From<NumberField<'a, Message>> for Element<'a, Message>
 where
     Message: Clone + 'a,
 {
-    fn from(widget: NumberInput<'a, Message>) -> Self {
+    fn from(widget: NumberField<'a, Message>) -> Self {
         let label = widget.label.map(|label_text| {
             Label::new(label_text)
                 .required(widget.state.is_required())

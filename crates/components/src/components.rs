@@ -1,9 +1,20 @@
-pub mod animation;
-// pub mod combo_box;
-pub mod markdown;
-pub mod multi_text_input;
+pub mod form;
+pub mod icon;
+pub mod label;
+pub mod multi_text_field;
+pub mod number_field;
+pub mod select_field;
+pub mod text;
+pub mod text_area_field;
+pub mod text_field;
+pub mod toggle;
 
-use style::theme::Theme;
+pub use icon::icon;
+pub use number_field::number_field;
+pub use select_field::select_field;
+pub use text_area_field::text_area_field;
+pub use text_field::text_field;
+pub use toggle::toggle;
 
 use thiserror::Error;
 
@@ -24,6 +35,3 @@ pub(crate) enum ValidationError {
     #[error("Must be between {0} and {1}.")]
     BetweenValue(i32, i32),
 }
-
-/// Type alias for [`iced::Element`] to use custom Theme from the `style` crate.
-pub type Element<'a, Message> = iced::Element<'a, Message, Theme>;

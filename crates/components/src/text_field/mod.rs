@@ -1,33 +1,34 @@
 mod rules;
 mod state;
 
-use crate::Element;
+pub use rules::*;
+pub use state::*;
+
 use crate::form::INPUT_PADDING;
 use crate::form::LABEL_SPACING;
 use crate::label::Label;
-pub use rules::*;
-pub use state::*;
 use style::text_input::TextInputClass;
+use widgets::Element;
 
 use iced::widget;
 use iced::widget::Column;
 
-pub fn text_input<'a, Message>(
+pub fn text_field<'a, Message>(
     label: Option<&'a str>,
-    state: &'a TextInputState,
-) -> TextInput<'a, Message> {
-    TextInput::new(label, state)
+    state: &'a TextFieldState,
+) -> TextField<'a, Message> {
+    TextField::new(label, state)
 }
 
-pub struct TextInput<'a, Message> {
-    state: &'a TextInputState,
+pub struct TextField<'a, Message> {
+    state: &'a TextFieldState,
     label: Option<&'a str>,
     placeholder: Option<&'a str>,
     on_input: Option<Box<dyn Fn(String) -> Message + 'a>>,
 }
 
-impl<'a, Message> TextInput<'a, Message> {
-    pub fn new(label: Option<&'a str>, state: &'a TextInputState) -> Self {
+impl<'a, Message> TextField<'a, Message> {
+    pub fn new(label: Option<&'a str>, state: &'a TextFieldState) -> Self {
         Self {
             state,
             label,
@@ -47,11 +48,11 @@ impl<'a, Message> TextInput<'a, Message> {
     }
 }
 
-impl<'a, Message> From<TextInput<'a, Message>> for Element<'a, Message>
+impl<'a, Message> From<TextField<'a, Message>> for Element<'a, Message>
 where
     Message: Clone + 'a,
 {
-    fn from(widget: TextInput<'a, Message>) -> Self {
+    fn from(widget: TextField<'a, Message>) -> Self {
         let label = widget.label.map(|label_text| {
             Label::new(label_text)
                 .required(widget.state.is_required())

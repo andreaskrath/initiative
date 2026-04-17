@@ -1,49 +1,29 @@
-use super::TextAreaRule;
+use super::TextFieldRule;
 use crate::ValidationError;
-use iced::widget::text_editor::Action;
-use iced::widget::text_editor::Content;
+
 use tracing::debug;
 
 #[derive(Debug, Default)]
-pub struct TextAreaState {
-    content: Content,
-    rules: Option<Box<[TextAreaRule]>>,
+pub struct TextFieldState {
+    value: String,
+    rules: Option<Box<[TextFieldRule]>>,
     error: Option<String>,
 }
 
-impl TextAreaState {
+impl TextFieldState {
     pub fn new(value: String) -> Self {
         Self {
-            content: Content::with_text(&value),
+            value,
             rules: None,
             error: None,
         }
     }
 
-    pub fn rules(mut self, rules: impl IntoIterator<Item = TextAreaRule>) -> Self {
+    pub fn rules(mut self, rules: impl IntoIterator<Item = TextFieldRule>) -> Self {
         let collected_rules = rules.into_iter().collect::<Vec<_>>().into_boxed_slice();
 
         self.rules = Some(collected_rules);
         self
-    }
-
-    /// Perform the specified `action` in the `TextArea`.
-    ///
-    /// Returns true, if the performed action updated the textual state; i.e. if validation makes
-    /// sense to run or not.
-    pub fn perform(&mut self, action: Action) -> bool {
-        let should_validate = matches!(action, Action::Edit(_));
-        self.content.perform(action);
-
-        should_validate
-    }
-
-    pub fn content(&self) -> &Content {
-        &self.content
-    }
-
-    pub fn error(&self) -> Option<&str> {
-        self.error.as_deref()
     }
 
     pub fn is_required(&self) -> bool {
@@ -51,10 +31,22 @@ impl TextAreaState {
             return false;
         };
 
-        rules.iter().any(|rule| rule == &TextAreaRule::Required)
+        rules.iter().any(|rule| rule == &TextFieldRule::Required)
     }
 
-    /// Validate the current content of `Self` against the defined rules.
+    pub fn value(&self) -> &str {
+        &self.value
+    }
+
+    pub fn error(&self) -> Option<&str> {
+        self.error.as_deref()
+    }
+
+    pub fn set(&mut self, value: String) {
+        self.value = value;
+    }
+
+    /// Validate the current value of `Self` against the defined rules.
     ///
     /// This methods short-circuits on the first error, and checks rules in the order they were
     /// defined during the creation of this struct.
@@ -76,32 +68,30 @@ impl TextAreaState {
         true
     }
 
-    fn check_rule(&self, rule: TextAreaRule) -> Result<(), ValidationError> {
+    fn check_rule(&self, rule: TextFieldRule) -> Result<(), ValidationError> {
         // Always pass if a zero length string is not required.
-        if self.content.is_empty() && !self.is_required() {
+        if self.value.is_empty() && !self.is_required() {
             return Ok(());
         }
 
-        let text = self.content.text();
-
         match rule {
-            TextAreaRule::Required => {
-                if text.is_empty() {
+            TextFieldRule::Required => {
+                if self.value.is_empty() {
                     return Err(ValidationError::Required);
                 }
             }
-            TextAreaRule::Min(min) => {
-                if text.len() < min {
+            TextFieldRule::Min(min) => {
+                if self.value.len() < min {
                     return Err(ValidationError::Short(min));
                 }
             }
-            TextAreaRule::Max(max) => {
-                if text.len() > max {
+            TextFieldRule::Max(max) => {
+                if self.value.len() > max {
                     return Err(ValidationError::Long(max));
                 }
             }
-            TextAreaRule::Between(min, max) => {
-                if text.len() < min || text.len() > max {
+            TextFieldRule::Between(min, max) => {
+                if self.value.len() < min || self.value.len() > max {
                     return Err(ValidationError::Between(min, max));
                 }
             }

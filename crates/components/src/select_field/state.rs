@@ -1,13 +1,13 @@
 use crate::ValidationError;
 
-pub struct SelectState<Value> {
+pub struct SelectFieldState<Value> {
     selected: Option<Value>,
     options: Box<[Value]>,
     required: bool,
     error: Option<String>,
 }
 
-impl<Value> SelectState<Value> {
+impl<Value> SelectFieldState<Value> {
     pub fn new(options: impl IntoIterator<Item = Value>, value: Option<Value>) -> Self {
         let collected_options = options.into_iter().collect::<Vec<_>>().into_boxed_slice();
 

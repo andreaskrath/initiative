@@ -4,37 +4,37 @@ mod state;
 pub use rules::*;
 pub use state::*;
 
-use crate::Element;
 use crate::form::INPUT_PADDING;
 use crate::form::LABEL_SPACING;
 use crate::label::Label;
 use style::text_editor::TextEditorClass;
+use widgets::Element;
 
 use iced::Length;
 use iced::widget;
 use iced::widget::text::Wrapping;
 use iced::widget::text_editor::Action;
 
-pub fn text_area<'a, Message>(
+pub fn text_area_field<'a, Message>(
     label: &'a str,
-    state: &'a TextAreaState,
+    state: &'a TextAreaFieldState,
     on_action: impl Fn(Action) -> Message + 'a,
-) -> TextArea<'a, Message> {
-    TextArea::new(label, state, on_action)
+) -> TextAreaField<'a, Message> {
+    TextAreaField::new(label, state, on_action)
 }
 
-pub struct TextArea<'a, Message> {
-    state: &'a TextAreaState,
+pub struct TextAreaField<'a, Message> {
+    state: &'a TextAreaFieldState,
     label: &'a str,
     placeholder: Option<&'a str>,
     on_action: Box<dyn Fn(Action) -> Message + 'a>,
     height: Length,
 }
 
-impl<'a, Message> TextArea<'a, Message> {
+impl<'a, Message> TextAreaField<'a, Message> {
     pub fn new(
         label: &'a str,
-        state: &'a TextAreaState,
+        state: &'a TextAreaFieldState,
         on_action: impl Fn(Action) -> Message + 'a,
     ) -> Self {
         Self {
@@ -57,11 +57,11 @@ impl<'a, Message> TextArea<'a, Message> {
     }
 }
 
-impl<'a, Message> From<TextArea<'a, Message>> for Element<'a, Message>
+impl<'a, Message> From<TextAreaField<'a, Message>> for Element<'a, Message>
 where
     Message: Clone + 'a,
 {
-    fn from(widget: TextArea<'a, Message>) -> Self {
+    fn from(widget: TextAreaField<'a, Message>) -> Self {
         let label = Label::new(widget.label)
             .required(widget.state.is_required())
             .error(widget.state.error());

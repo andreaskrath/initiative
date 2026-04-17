@@ -1,6 +1,6 @@
 /// Rules used to define requirements to the validation of a [`NumberInput`] widget.
 #[derive(Debug, Clone, Copy, PartialEq)]
-pub enum NumberInputRule {
+pub enum NumberFieldRule {
     /// Set to required.
     ///
     /// This means any value.
