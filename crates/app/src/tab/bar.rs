@@ -1,17 +1,18 @@
-use iced::{
-    Alignment, Element,
-    Length::Fill,
-    widget::{
-        self, Row, Text, row,
-        scrollable::{Direction, Scrollbar},
-        text::IntoFragment,
-    },
-};
-use widgets::{Icon, IconName};
-
 use crate::{
     message::Message,
     tab::{Tab, TabAction, TabId},
+};
+use style::{container::ContainerClass, svg::SvgClass};
+use widgets::{Element, icon::IconName, text::Text};
+
+use iced::{
+    Alignment,
+    Length::Fill,
+    widget::{
+        self, Row, row,
+        scrollable::{Direction, Scrollbar},
+        text::IntoFragment,
+    },
 };
 
 /// The height of the tab bar.
@@ -35,10 +36,9 @@ pub fn tab_bar(tabs: &[(TabId, Tab)], active: TabId) -> Element<'_, Message> {
             .align_y(Alignment::Center);
 
         if !matches!(tab, Tab::Dashboard(_)) {
-            let close_icon = Icon::new(IconName::Close).style(style::icon::default);
+            let close_icon = widgets::icon(IconName::Close).class(SvgClass::Normal);
             let close_button = widget::button(close_icon)
                 .height(TAB_BAR_HEIGHT)
-                .style(style::button::danger::ghost::no_border)
                 .on_press(Message::TabAction(TabAction::Close(*tab_id)));
 
             tab_element = tab_element.push(close_button);
@@ -47,9 +47,9 @@ pub fn tab_bar(tabs: &[(TabId, Tab)], active: TabId) -> Element<'_, Message> {
         let mut container = widget::container(tab_element);
 
         if *tab_id == active {
-            container = container.style(style::container::background::strong);
+            container = container.class(ContainerClass::Surface);
         } else {
-            container = container.style(style::container::background::default);
+            container = container.class(ContainerClass::Ghost);
         }
 
         let ma =
@@ -57,8 +57,7 @@ pub fn tab_bar(tabs: &[(TabId, Tab)], active: TabId) -> Element<'_, Message> {
 
         tab_bar = tab_bar.push(ma);
 
-        let divider =
-            widget::container(widget::rule::vertical(1).style(style::rule::default)).center_y(30);
+        let divider = widget::container(widget::rule::vertical(1)).center_y(30);
 
         tab_bar = tab_bar.push(divider);
     }
@@ -70,7 +69,5 @@ pub fn tab_bar(tabs: &[(TabId, Tab)], active: TabId) -> Element<'_, Message> {
 }
 
 fn title<'a>(text: impl IntoFragment<'a>) -> Text<'a> {
-    widget::text(text)
-        .font(fonts::display::bold())
-        .style(style::text::default)
+    widget::text(text).font(fonts::display::bold())
 }

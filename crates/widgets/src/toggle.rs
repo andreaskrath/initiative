@@ -1,4 +1,7 @@
-use iced::{Element, Length, widget};
+use crate::{Element, form::INPUT_PADDING};
+use style::button::ButtonClass;
+
+use iced::{Length, widget};
 
 pub fn toggle<'a, Message>(label: &'a str, value: bool) -> Toggle<'a, Message> {
     Toggle::new(label, value)
@@ -39,15 +42,16 @@ where
     fn from(widget: Toggle<'a, Message>) -> Self {
         let label = crate::text::display(widget.label);
 
-        let style = if widget.value {
-            style::button::background::default
+        let class = if widget.value {
+            ButtonClass::Primary
         } else {
-            style::button::background::ghost::default
+            ButtonClass::Interaction
         };
 
         widget::button(label)
             .width(widget.width)
-            .style(style)
+            .class(class)
+            .padding(INPUT_PADDING)
             .on_press_maybe(widget.on_toggle)
             .into()
     }

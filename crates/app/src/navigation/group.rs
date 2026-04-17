@@ -1,13 +1,13 @@
-use std::sync::atomic::{AtomicU64, Ordering};
+use crate::navigation::{NavigationItem, NavigationMessage};
+use style::{button::ButtonClass, svg::SvgClass};
+use widgets::{Element, icon::IconName};
 
 use iced::{
-    Alignment, Element,
+    Alignment,
     Length::Fill,
     widget::{self, column, row},
 };
-use widgets::{Icon, IconName};
-
-use crate::navigation::{NavigationItem, NavigationMessage};
+use std::sync::atomic::{AtomicU64, Ordering};
 
 static NEXT_ID: AtomicU64 = AtomicU64::new(0);
 
@@ -57,18 +57,18 @@ impl NavigationGroup {
         let space = widget::space::horizontal().width(Fill);
 
         let icon = if self.expanded {
-            Icon::new(IconName::ChevronDown)
+            widgets::icon(IconName::ChevronDown)
         } else {
-            Icon::new(IconName::ChevronRight)
+            widgets::icon(IconName::ChevronRight)
         }
-        .style(style::icon::default);
+        .class(SvgClass::Normal);
 
         let group_label = row![label, space, icon]
             .align_y(Alignment::Center)
             .width(Fill);
 
         let group_header = widget::button(group_label)
-            .style(widget::button::text)
+            .class(ButtonClass::Ghost)
             .on_press(NavigationMessage::ToggleGroup(self.id));
 
         let mut group = column![group_header].spacing(5);

@@ -12,22 +12,25 @@ use uuid::Uuid;
 
 pub use area::SpellArea;
 pub use casting_time::SpellCastingTime;
-pub use class::Class;
+pub use class::{Class, SPELLCASTING_CLASSES};
 pub use duration::SpellDuration;
 pub use level::SpellLevel;
 pub use material::SpellMaterial;
 pub use range::SpellRange;
 pub use school::MagicSchool;
-pub use shape::SpellShape;
+pub use shape::{SpellShape, SpellShapeKind};
 
 pub struct Spell {
     pub id: Option<Uuid>,
     pub name: String,
     pub school: MagicSchool,
     pub level: SpellLevel,
+    // pub source: Source,
+    pub classes: Vec<Class>,
     pub verbal: bool,
     pub somatic: bool,
-    pub material: Vec<SpellMaterial>,
+    pub material: bool,
+    pub materials: Vec<SpellMaterial>,
     pub ritual: bool,
     pub concentration: bool,
     pub casting_time: SpellCastingTime,
@@ -37,5 +40,6 @@ pub struct Spell {
     pub shape: SpellShape,
     pub description: String,
     pub at_higher_levels: Option<String>,
-    pub classes: Vec<Class>,
+    pub quote_text: String,
+    pub quote_source: String,
 }

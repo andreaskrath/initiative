@@ -1,8 +1,11 @@
-use iced::{
-    Theme,
-    widget::svg::{self, Style},
-};
+use crate::Element;
+use style::svg::SvgClass;
+
 use tracing::error;
+
+pub fn icon(name: IconName) -> Icon {
+    Icon::new(name)
+}
 
 #[derive(Debug, Clone)]
 pub enum IconSize {
@@ -62,9 +65,7 @@ impl IconName {
 pub struct Icon {
     name: IconName,
     size: IconSize,
-
-    #[expect(clippy::type_complexity, reason = "this type is just a style function")]
-    style: Option<Box<dyn Fn(&Theme) -> Style>>,
+    class: SvgClass,
 }
 
 impl Icon {
@@ -72,7 +73,7 @@ impl Icon {
         Self {
             name,
             size: IconSize::Medium,
-            style: None,
+            class: SvgClass::Normal,
         }
     }
 
@@ -81,13 +82,13 @@ impl Icon {
         self
     }
 
-    pub fn style(mut self, style: impl Fn(&Theme) -> svg::Style + 'static) -> Self {
-        self.style = Some(Box::new(style));
+    pub fn class(mut self, class: SvgClass) -> Self {
+        self.class = class;
         self
     }
 }
 
-impl<'a, Message: 'a> From<Icon> for iced::Element<'a, Message> {
+impl<'a, Message: 'a> From<Icon> for Element<'a, Message> {
     fn from(icon: Icon) -> Self {
         let handle = match assets::icons::get(icon.name.path()) {
             Ok(handle) => handle,
@@ -99,12 +100,10 @@ impl<'a, Message: 'a> From<Icon> for iced::Element<'a, Message> {
 
         let (width, height) = icon.size.wh();
 
-        let mut svg = iced::widget::svg(handle).width(width).height(height);
-
-        if let Some(style_fn) = icon.style {
-            // TODO: Consider if the "hovered" status is relevant, probably mostly for styling, not funtionality
-            svg = svg.style(move |theme, _status| style_fn(theme));
-        }
+        let svg = iced::widget::svg(handle)
+            .width(width)
+            .height(height)
+            .class(icon.class);
 
         svg.into()
     }

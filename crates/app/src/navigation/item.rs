@@ -1,13 +1,13 @@
+use super::message::NavigationMessage;
+use crate::view::ViewRequest;
+use style::{button::ButtonClass, svg::SvgClass};
+use widgets::{Element, icon::IconName};
+
 use iced::{
-    Alignment, Element,
+    Alignment,
     Length::Fill,
     widget::{self, row, text::Wrapping},
 };
-use widgets::{Icon, IconName};
-
-use crate::view::ViewRequest;
-
-use super::message::NavigationMessage;
 
 pub(super) struct NavigationItem {
     label: String,
@@ -25,7 +25,7 @@ impl NavigationItem {
     }
 
     pub fn view(&self) -> Element<'_, NavigationMessage> {
-        let icon = Icon::new(self.icon).style(style::icon::default);
+        let icon = widgets::icon(self.icon).class(SvgClass::Normal);
 
         let space = widget::space::horizontal().width(10);
 
@@ -36,7 +36,7 @@ impl NavigationItem {
         let item_label = row![icon, space, label].align_y(Alignment::Center);
 
         widget::button(item_label)
-            .style(style::button::background::ghost::no_border)
+            .class(ButtonClass::Ghost)
             .width(Fill)
             .on_press(NavigationMessage::Navigate(self.target.clone()))
             .into()

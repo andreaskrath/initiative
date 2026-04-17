@@ -1,16 +1,17 @@
-use iced::{
-    Alignment, Element,
-    Length::Fill,
-    Padding, Task,
-    widget::{self, Space, column},
-};
-use tracing::{debug, error};
-
 use crate::{
     message::Message,
     tab::{Tab, TabAction, TabId, TabMessage, bar::tab_bar},
     view::{Dashboard, SpellForm, SpellList, ViewContent, ViewRequest},
 };
+use widgets::Element;
+
+use iced::{
+    Alignment,
+    Length::Fill,
+    Padding, Task,
+    widget::{self, Space, column},
+};
+use tracing::{debug, error};
 
 /// The maximum width a view is allowed to take up.
 const VIEW_WIDTH: f32 = 1200.0;
@@ -107,7 +108,7 @@ impl TabManager {
     pub fn view(&self) -> Element<'_, Message> {
         let tab_bar = tab_bar(&self.tabs, self.active);
 
-        let divider = widget::rule::horizontal(1).style(style::rule::default);
+        let divider = widget::rule::horizontal(1);
 
         let Some(tab) = self.get(self.active) else {
             error!("could not find tab '{:?}'", self.active);

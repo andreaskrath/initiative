@@ -1,15 +1,45 @@
-use iced::{
-    Theme,
-    widget::rule::{FillMode, Style},
-};
+use crate::{NO_BORDER, theme::Theme};
 
-pub fn default(theme: &Theme) -> Style {
-    let palette = theme.palette();
+use iced::widget::rule::{Catalog, FillMode, Style};
 
-    Style {
-        color: palette.text,
-        radius: 0.0.into(),
-        snap: true,
-        fill_mode: FillMode::Full,
+#[derive(Debug, PartialEq, Clone, Copy)]
+pub enum RuleClass {
+    Normal,
+    Dimmed,
+    Primary,
+    Secondary,
+    Tertiary,
+    Info,
+    Success,
+    Warning,
+    Danger,
+}
+
+impl Catalog for Theme {
+    type Class<'a> = RuleClass;
+
+    fn default<'a>() -> Self::Class<'a> {
+        RuleClass::Normal
+    }
+
+    fn style(&self, class: &Self::Class<'_>) -> Style {
+        let color = match class {
+            RuleClass::Normal => self.text,
+            RuleClass::Dimmed => self.text_dimmed,
+            RuleClass::Primary => self.primary,
+            RuleClass::Secondary => self.secondary,
+            RuleClass::Tertiary => self.tertiary,
+            RuleClass::Info => self.info,
+            RuleClass::Success => self.success,
+            RuleClass::Warning => self.warning,
+            RuleClass::Danger => self.danger,
+        };
+
+        Style {
+            color,
+            radius: NO_BORDER.radius,
+            fill_mode: FillMode::Full,
+            snap: true,
+        }
     }
 }

@@ -1,40 +1,58 @@
-use iced::{
-    Alignment, Element, Fill,
-    widget::{self, Text, row, text::IntoFragment},
-};
+use style::{text::TextClass, theme::Theme};
+
+use iced::widget::{self, text::IntoFragment};
+
+/// Type alias for [`iced::widget::Text`] to use custom Theme from the `style` crate.
+pub type Text<'a> = iced::widget::Text<'a, Theme>;
+
+/// Used for labels on input fields.
+pub fn label<'a>(text: impl IntoFragment<'a>) -> Text<'a> {
+    widget::text(text)
+        .size(14)
+        .class(TextClass::Secondary)
+        .font(fonts::display::bold())
+}
+
+/// Used for adding small detail descriptions to certain elements.
+pub fn detail<'a>(text: impl IntoFragment<'a>) -> Text<'a> {
+    widget::text(text)
+        .size(14)
+        .class(TextClass::Dimmed)
+        .font(fonts::display::regular())
+}
 
 pub fn body<'a>(text: impl IntoFragment<'a>) -> Text<'a> {
     widget::text(text)
         .font(fonts::body::regular())
-        .style(style::text::default)
+        .class(TextClass::Normal)
 }
 
 pub fn heading<'a>(text: impl IntoFragment<'a>) -> Text<'a> {
     widget::text(text)
         .size(24)
         .font(fonts::heading::regular())
-        .style(style::text::primary::default)
+        .class(TextClass::Primary)
 }
 
 pub fn muted_heading<'a>(text: impl IntoFragment<'a>) -> Text<'a> {
     widget::text(text)
         .size(12)
         .font(fonts::heading::bold())
-        .style(style::text::muted)
+        .class(TextClass::Dimmed)
 }
 
 pub fn view_title<'a>(text: impl IntoFragment<'a>) -> Text<'a> {
     widget::text(text)
         .size(72)
         .font(fonts::heading::regular())
-        .style(style::text::default)
+        .class(TextClass::Normal)
 }
 
 pub fn view_sub_title<'a>(text: impl IntoFragment<'a>) -> Text<'a> {
     widget::text(text)
         .size(24)
         .font(fonts::heading::italic())
-        .style(style::text::muted)
+        .class(TextClass::Dimmed)
 }
 
 pub fn display<'a>(text: impl IntoFragment<'a>) -> Text<'a> {
@@ -42,24 +60,4 @@ pub fn display<'a>(text: impl IntoFragment<'a>) -> Text<'a> {
         .font(fonts::display::regular())
         .size(fonts::display::DEFAULT_DISPLAY_TEXT_SIZE)
         .center()
-}
-
-pub mod heading {
-    use super::*;
-
-    pub fn default<'a, Message: 'a>(text: impl IntoFragment<'a>) -> Element<'a, Message> {
-        let heading = widget::text(text)
-            .size(24)
-            .font(fonts::heading::regular())
-            .style(style::text::primary::default);
-
-        let space = widget::space::horizontal().width(10);
-
-        let line = widget::container(widget::space::horizontal())
-            .height(2)
-            .width(Fill)
-            .style(style::container::primary::gradient_left_to_right);
-
-        row![heading, space, line].align_y(Alignment::Center).into()
-    }
 }

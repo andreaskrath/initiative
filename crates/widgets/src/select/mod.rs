@@ -1,14 +1,13 @@
-use crate::Label;
-use iced::{
-    Element,
-    Length::{self},
-    widget::{self},
-};
-
 mod state;
-mod style;
 
+use crate::{Element, form::INPUT_PADDING, label::Label};
 pub use state::*;
+
+use iced::{
+    Length,
+    widget::{self, text::Shaping},
+};
+use style::pick_list::PickListClass;
 
 pub fn select<'a, Value, Message>(
     label: &'a str,
@@ -37,7 +36,7 @@ impl<'a, Value, Message> Select<'a, Value, Message> {
             state,
             on_select: Box::new(on_select),
             placeholder: None,
-            width: Length::Shrink,
+            width: Length::Fill,
         }
     }
 
@@ -63,23 +62,22 @@ where
             .error(widget.state.error());
 
         let placeholder = widget.placeholder.unwrap_or("");
-        let style = if widget.state.error().is_some() {
-            style::error
-        } else {
-            style::default
-        };
 
-        let select = widget::pick_list(
+        let mut select = widget::pick_list(
             widget.state.options(),
             widget.state.selected(),
             widget.on_select,
         )
         .font(fonts::display::regular())
         .text_size(fonts::display::DEFAULT_DISPLAY_TEXT_SIZE)
+        .text_shaping(Shaping::Advanced)
         .placeholder(placeholder)
-        .style(style)
-        .menu_style(style::menu::default)
+        .padding(INPUT_PADDING)
         .width(widget.width);
+
+        if widget.state.error().is_some() {
+            select = select.class(PickListClass::Error);
+        }
 
         widget::column![label, select].spacing(5).into()
     }

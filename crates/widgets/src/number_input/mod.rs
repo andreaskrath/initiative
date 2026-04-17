@@ -9,30 +9,35 @@ use crate::{
 pub use rules::*;
 pub use state::*;
 
-use iced::widget::{self, Column};
+use iced::{
+    Alignment, Length,
+    widget::{self, Column},
+};
 use style::text_input::TextInputClass;
 
-pub fn text_input<'a, Message>(
+pub fn number_input<'a, Message>(
     label: Option<&'a str>,
-    state: &'a TextInputState,
-) -> TextInput<'a, Message> {
-    TextInput::new(label, state)
+    state: &'a NumberInputState,
+) -> NumberInput<'a, Message> {
+    NumberInput::new(label, state)
 }
 
-pub struct TextInput<'a, Message> {
-    state: &'a TextInputState,
+pub struct NumberInput<'a, Message> {
+    state: &'a NumberInputState,
     label: Option<&'a str>,
     placeholder: Option<&'a str>,
     on_input: Option<Box<dyn Fn(String) -> Message + 'a>>,
+    width: Length,
 }
 
-impl<'a, Message> TextInput<'a, Message> {
-    pub fn new(label: Option<&'a str>, state: &'a TextInputState) -> Self {
+impl<'a, Message> NumberInput<'a, Message> {
+    pub fn new(label: Option<&'a str>, state: &'a NumberInputState) -> Self {
         Self {
             state,
             label,
             placeholder: None,
             on_input: None,
+            width: Length::Fill,
         }
     }
 
@@ -45,13 +50,18 @@ impl<'a, Message> TextInput<'a, Message> {
         self.on_input = Some(Box::new(on_input));
         self
     }
+
+    pub fn width(mut self, width: impl Into<Length>) -> Self {
+        self.width = width.into();
+        self
+    }
 }
 
-impl<'a, Message> From<TextInput<'a, Message>> for Element<'a, Message>
+impl<'a, Message> From<NumberInput<'a, Message>> for Element<'a, Message>
 where
     Message: Clone + 'a,
 {
-    fn from(widget: TextInput<'a, Message>) -> Self {
+    fn from(widget: NumberInput<'a, Message>) -> Self {
         let label = widget.label.map(|label_text| {
             Label::new(label_text)
                 .required(widget.state.is_required())
@@ -60,9 +70,10 @@ where
 
         let placeholder = widget.placeholder.unwrap_or("");
 
-        let mut input = widget::text_input(placeholder, widget.state.value())
+        let mut input = widget::text_input(placeholder, widget.state.raw_value())
             .font(fonts::display::regular())
             .size(fonts::display::DEFAULT_DISPLAY_TEXT_SIZE)
+            .align_x(Alignment::Center)
             .padding(INPUT_PADDING)
             .on_input_maybe(widget.on_input);
 
@@ -70,7 +81,9 @@ where
             input = input.class(TextInputClass::Error);
         }
 
-        let mut column = Column::with_capacity(2).spacing(LABEL_SPACING);
+        let mut column = Column::with_capacity(2)
+            .spacing(LABEL_SPACING)
+            .width(widget.width);
 
         if let Some(label_element) = label {
             column = column.push(label_element);

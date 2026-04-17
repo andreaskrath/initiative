@@ -1,8 +1,7 @@
-use tracing::debug;
-
+use super::TextInputRule;
 use crate::ValidationError;
 
-use super::TextInputRule;
+use tracing::debug;
 
 #[derive(Debug, Default)]
 pub struct TextInputState {
