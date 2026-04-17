@@ -40,6 +40,3 @@ pub(crate) enum ValidationError {
 
 /// Type alias for [`iced::Element`] to use custom Theme from the `style` crate.
 pub type Element<'a, M> = iced::Element<'a, M, Theme>;
-
-/// Type alias for [`iced::widget::Button`] to use custom Theme from the `style` crate.
-pub type Button<'a, M> = iced::widget::Button<'a, M, Theme>;
