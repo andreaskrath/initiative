@@ -1,11 +1,19 @@
-use crate::{
-    NO_BORDER, NO_SHADOW, container::ContainerClass, disabled, hovered, pressed, theme::Theme,
-};
+use crate::NO_BORDER;
+use crate::NO_SHADOW;
+use crate::container::ContainerClass;
+use crate::disabled;
+use crate::hovered;
+use crate::pressed;
+use crate::theme::Theme;
 
-use iced::{
-    Background, Color,
-    widget::scrollable::{AutoScroll, Catalog, Rail, Scroller, Status, Style},
-};
+use iced::Background;
+use iced::Color;
+use iced::widget::scrollable::AutoScroll;
+use iced::widget::scrollable::Catalog;
+use iced::widget::scrollable::Rail;
+use iced::widget::scrollable::Scroller;
+use iced::widget::scrollable::Status;
+use iced::widget::scrollable::Style;
 
 impl Catalog for Theme {
     type Class<'a> = ();

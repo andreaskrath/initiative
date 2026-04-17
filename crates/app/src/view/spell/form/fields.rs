@@ -1,15 +1,21 @@
-use types::{
-    Class, MagicSchool, SPELLCASTING_CLASSES, SpellArea, SpellCastingTime, SpellDuration,
-    SpellLevel, SpellRange, SpellShapeKind,
-};
+use types::Class;
+use types::MagicSchool;
+use types::SPELLCASTING_CLASSES;
+use types::SpellArea;
+use types::SpellCastingTime;
+use types::SpellDuration;
+use types::SpellLevel;
+use types::SpellRange;
+use types::SpellShapeKind;
+use widgets::number_input::NumberInputRule;
+use widgets::number_input::NumberInputState;
+use widgets::select::SelectState;
+use widgets::text_area::TextAreaRule;
+use widgets::text_area::TextAreaState;
+use widgets::text_input::TextInputRule;
+use widgets::text_input::TextInputState;
 
 use strum::VariantArray;
-use widgets::{
-    number_input::{NumberInputRule, NumberInputState},
-    select::SelectState,
-    text_area::{TextAreaRule, TextAreaState},
-    text_input::{TextInputRule, TextInputState},
-};
 
 pub struct SpellFormFields {
     pub name: TextInputState,

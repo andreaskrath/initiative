@@ -1,4 +1,5 @@
-use std::sync::atomic::{AtomicU64, Ordering};
+use std::sync::atomic::AtomicU64;
+use std::sync::atomic::Ordering;
 
 static NEXT_ID: AtomicU64 = AtomicU64::new(0);
 

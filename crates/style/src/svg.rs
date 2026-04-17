@@ -1,6 +1,9 @@
-use crate::{hovered, theme::Theme};
+use crate::hovered;
+use crate::theme::Theme;
 
-use iced::widget::svg::{Catalog, Status, Style};
+use iced::widget::svg::Catalog;
+use iced::widget::svg::Status;
+use iced::widget::svg::Style;
 
 #[derive(Debug, PartialEq, Clone, Copy)]
 pub enum SvgClass {

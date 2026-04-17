@@ -1,9 +1,14 @@
-use crate::{DEFAULT_BORDER, NO_BORDER, NO_BORDER_ROUNDED, NO_SHADOW, theme::Theme};
+use crate::DEFAULT_BORDER;
+use crate::NO_BORDER;
+use crate::NO_BORDER_ROUNDED;
+use crate::NO_SHADOW;
+use crate::theme::Theme;
 
-use iced::{
-    Background, Border, Color,
-    widget::container::{Catalog, Style},
-};
+use iced::Background;
+use iced::Border;
+use iced::Color;
+use iced::widget::container::Catalog;
+use iced::widget::container::Style;
 
 #[derive(Debug, PartialEq, Clone, Copy)]
 pub enum ContainerClass {

@@ -1,8 +1,12 @@
 use iced::widget::text_editor::Action;
-use types::{
-    Class, MagicSchool, SpellArea, SpellCastingTime, SpellDuration, SpellLevel, SpellRange,
-    SpellShapeKind,
-};
+use types::Class;
+use types::MagicSchool;
+use types::SpellArea;
+use types::SpellCastingTime;
+use types::SpellDuration;
+use types::SpellLevel;
+use types::SpellRange;
+use types::SpellShapeKind;
 
 #[derive(Debug, Clone)]
 pub enum SpellFormMessage {

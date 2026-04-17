@@ -1,9 +1,9 @@
-use crate::{NO_SHADOW, theme::Theme};
+use crate::NO_SHADOW;
+use crate::theme::Theme;
 
-use iced::{
-    border::Radius,
-    widget::float::{Catalog, Style},
-};
+use iced::border::Radius;
+use iced::widget::float::Catalog;
+use iced::widget::float::Style;
 
 impl Catalog for Theme {
     type Class<'a> = ();

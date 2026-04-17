@@ -1,9 +1,16 @@
-use crate::{NO_BORDER_ROUNDED, hovered, pressed, theme::Theme};
+use crate::NO_BORDER_ROUNDED;
+use crate::hovered;
+use crate::pressed;
+use crate::theme::Theme;
 
-use iced::{
-    Background, Color,
-    widget::slider::{Catalog, Handle, HandleShape, Rail, Status, Style},
-};
+use iced::Background;
+use iced::Color;
+use iced::widget::slider::Catalog;
+use iced::widget::slider::Handle;
+use iced::widget::slider::HandleShape;
+use iced::widget::slider::Rail;
+use iced::widget::slider::Status;
+use iced::widget::slider::Style;
 
 impl Catalog for Theme {
     type Class<'a> = ();

@@ -1,10 +1,13 @@
-use crate::{disabled, hovered, theme::Theme};
+use crate::disabled;
+use crate::hovered;
+use crate::theme::Theme;
 
-use iced::{
-    Background, Color,
-    border::Radius,
-    widget::toggler::{Catalog, Status, Style},
-};
+use iced::Background;
+use iced::Color;
+use iced::border::Radius;
+use iced::widget::toggler::Catalog;
+use iced::widget::toggler::Status;
+use iced::widget::toggler::Style;
 
 impl Catalog for Theme {
     type Class<'a> = ();

@@ -1,14 +1,15 @@
 mod message;
 
-use crate::{
-    message::Message,
-    view::{ViewContent, ViewRequest},
-};
+use crate::message::Message;
+use crate::view::ViewContent;
+use crate::view::ViewRequest;
 pub use message::SpellListMessage;
 use types::FormMode;
 use widgets::Element;
 
-use iced::{Task, widget, widget::column};
+use iced::Task;
+use iced::widget;
+use iced::widget::column;
 use tracing::debug;
 
 pub struct SpellList {}

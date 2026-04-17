@@ -1,9 +1,8 @@
 use crate::theme::Theme;
 
-use iced::{
-    Background,
-    widget::table::{Catalog, Style},
-};
+use iced::Background;
+use iced::widget::table::Catalog;
+use iced::widget::table::Style;
 
 impl Catalog for Theme {
     type Class<'a> = ();

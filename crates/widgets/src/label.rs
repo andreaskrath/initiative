@@ -1,12 +1,17 @@
-use crate::{Element, icon::Icon, icon::IconName, text};
+use crate::Element;
+use crate::icon::Icon;
+use crate::icon::IconName;
+use crate::text;
+use style::container::ContainerClass;
+use style::svg::SvgClass;
+use style::text::TextClass;
 
-use iced::{
-    Alignment,
-    Length::Fill,
-    widget::{self, row, tooltip::Position},
-};
+use iced::Alignment;
+use iced::Length::Fill;
+use iced::widget;
+use iced::widget::row;
+use iced::widget::tooltip::Position;
 use std::time::Duration;
-use style::{container::ContainerClass, svg::SvgClass, text::TextClass};
 
 pub struct Label<'a> {
     label: &'a str,

@@ -1,9 +1,13 @@
-use crate::{NO_BORDER_ROUNDED, disabled, hovered, theme::Theme};
+use crate::NO_BORDER_ROUNDED;
+use crate::disabled;
+use crate::hovered;
+use crate::theme::Theme;
 
-use iced::{
-    Background, Border,
-    widget::checkbox::{Catalog, Status, Style},
-};
+use iced::Background;
+use iced::Border;
+use iced::widget::checkbox::Catalog;
+use iced::widget::checkbox::Status;
+use iced::widget::checkbox::Style;
 
 impl Catalog for Theme {
     type Class<'a> = ();

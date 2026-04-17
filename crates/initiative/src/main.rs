@@ -1,5 +1,6 @@
 use app::Initiative;
-use iced::{Settings, application};
+use iced::Settings;
+use iced::application;
 use tracing::debug;
 
 fn main() -> iced::Result {

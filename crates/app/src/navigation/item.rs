@@ -1,13 +1,15 @@
 use super::message::NavigationMessage;
 use crate::view::ViewRequest;
-use style::{button::ButtonClass, svg::SvgClass};
-use widgets::{Element, icon::IconName};
+use style::button::ButtonClass;
+use style::svg::SvgClass;
+use widgets::Element;
+use widgets::icon::IconName;
 
-use iced::{
-    Alignment,
-    Length::Fill,
-    widget::{self, row, text::Wrapping},
-};
+use iced::Alignment;
+use iced::Length::Fill;
+use iced::widget;
+use iced::widget::row;
+use iced::widget::text::Wrapping;
 
 pub(super) struct NavigationItem {
     label: String,

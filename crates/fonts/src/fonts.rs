@@ -1,7 +1,6 @@
-use iced::{
-    Font,
-    font::{Style, Weight},
-};
+use iced::Font;
+use iced::font::Style;
+use iced::font::Weight;
 
 pub mod body {
     //! This module defines font utility functions for a `body` font.

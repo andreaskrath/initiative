@@ -12,13 +12,15 @@ use uuid::Uuid;
 
 pub use area::SpellArea;
 pub use casting_time::SpellCastingTime;
-pub use class::{Class, SPELLCASTING_CLASSES};
+pub use class::Class;
+pub use class::SPELLCASTING_CLASSES;
 pub use duration::SpellDuration;
 pub use level::SpellLevel;
 pub use material::SpellMaterial;
 pub use range::SpellRange;
 pub use school::MagicSchool;
-pub use shape::{SpellShape, SpellShapeKind};
+pub use shape::SpellShape;
+pub use shape::SpellShapeKind;
 
 pub struct Spell {
     pub id: Option<Uuid>,

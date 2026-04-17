@@ -1,9 +1,13 @@
-use crate::{NO_BORDER_ROUNDED, hovered, theme::Theme};
+use crate::NO_BORDER_ROUNDED;
+use crate::hovered;
+use crate::theme::Theme;
 
-use iced::{
-    Background, Border, Color,
-    widget::pick_list::{Catalog, Status, Style},
-};
+use iced::Background;
+use iced::Border;
+use iced::Color;
+use iced::widget::pick_list::Catalog;
+use iced::widget::pick_list::Status;
+use iced::widget::pick_list::Style;
 
 #[derive(Debug, PartialEq, Clone, Copy)]
 pub enum PickListClass {

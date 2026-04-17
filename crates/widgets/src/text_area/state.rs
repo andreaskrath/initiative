@@ -1,6 +1,7 @@
 use super::TextAreaRule;
 use crate::ValidationError;
-use iced::widget::text_editor::{Action, Content};
+use iced::widget::text_editor::Action;
+use iced::widget::text_editor::Content;
 use tracing::debug;
 
 #[derive(Debug, Default)]

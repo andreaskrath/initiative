@@ -2,10 +2,11 @@ pub mod variant;
 
 use crate::theme::variant::ThemeVariant;
 
-use iced::{
-    Color,
-    theme::{Base, Mode, Palette, Style},
-};
+use iced::Color;
+use iced::theme::Base;
+use iced::theme::Mode;
+use iced::theme::Palette;
+use iced::theme::Style;
 
 #[derive(Debug, Clone)]
 pub struct Theme {

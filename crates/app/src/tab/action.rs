@@ -1,4 +1,5 @@
-use crate::{tab::TabId, view::ViewRequest};
+use crate::tab::TabId;
+use crate::view::ViewRequest;
 
 #[derive(Debug, Clone)]
 pub enum TabAction {

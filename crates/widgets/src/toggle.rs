@@ -1,7 +1,9 @@
-use crate::{Element, form::INPUT_PADDING};
+use crate::Element;
+use crate::form::INPUT_PADDING;
 use style::button::ButtonClass;
 
-use iced::{Length, widget};
+use iced::Length;
+use iced::widget;
 
 pub fn toggle<'a, Message>(label: &'a str, value: bool) -> Toggle<'a, Message> {
     Toggle::new(label, value)

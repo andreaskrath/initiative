@@ -4,7 +4,10 @@ mod id;
 mod manager;
 mod message;
 
-use crate::view::{Dashboard, SpellForm, SpellList, ViewContent};
+use crate::view::Dashboard;
+use crate::view::SpellForm;
+use crate::view::SpellList;
+use crate::view::ViewContent;
 
 pub use action::*;
 pub use id::*;

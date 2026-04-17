@@ -1,4 +1,5 @@
-use crate::{navigation::group::NavigationGroupId, view::ViewRequest};
+use crate::navigation::group::NavigationGroupId;
+use crate::view::ViewRequest;
 
 #[derive(Debug, Clone)]
 pub enum NavigationMessage {

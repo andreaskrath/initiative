@@ -1,8 +1,7 @@
 use crate::MUTED_SCALE;
-use iced::{
-    Color,
-    theme::{Palette, palette::Extended},
-};
+use iced::Color;
+use iced::theme::Palette;
+use iced::theme::palette::Extended;
 
 pub mod background {
     use super::*;

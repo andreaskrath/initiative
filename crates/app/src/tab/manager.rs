@@ -1,17 +1,25 @@
-use crate::{
-    message::Message,
-    tab::{Tab, TabAction, TabId, TabMessage, bar::tab_bar},
-    view::{Dashboard, SpellForm, SpellList, ViewContent, ViewRequest},
-};
+use crate::message::Message;
+use crate::tab::Tab;
+use crate::tab::TabAction;
+use crate::tab::TabId;
+use crate::tab::TabMessage;
+use crate::tab::bar::tab_bar;
+use crate::view::Dashboard;
+use crate::view::SpellForm;
+use crate::view::SpellList;
+use crate::view::ViewContent;
+use crate::view::ViewRequest;
 use widgets::Element;
 
-use iced::{
-    Alignment,
-    Length::Fill,
-    Padding, Task,
-    widget::{self, Space, column},
-};
-use tracing::{debug, error};
+use iced::Alignment;
+use iced::Length::Fill;
+use iced::Padding;
+use iced::Task;
+use iced::widget;
+use iced::widget::Space;
+use iced::widget::column;
+use tracing::debug;
+use tracing::error;
 
 /// The maximum width a view is allowed to take up.
 const VIEW_WIDTH: f32 = 1200.0;

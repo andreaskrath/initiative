@@ -1,9 +1,15 @@
-use crate::{NO_BORDER_ROUNDED, NO_SHADOW, disabled, hovered, pressed, theme::Theme};
+use crate::NO_BORDER_ROUNDED;
+use crate::NO_SHADOW;
+use crate::disabled;
+use crate::hovered;
+use crate::pressed;
+use crate::theme::Theme;
 
-use iced::{
-    Background, Border,
-    widget::button::{Catalog, Status, Style},
-};
+use iced::Background;
+use iced::Border;
+use iced::widget::button::Catalog;
+use iced::widget::button::Status;
+use iced::widget::button::Style;
 
 #[derive(Debug, PartialEq, Clone, Copy)]
 pub enum ButtonClass {

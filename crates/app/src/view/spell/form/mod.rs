@@ -3,26 +3,28 @@ mod message;
 
 pub use message::SpellFormMessage;
 
-use crate::{
-    message::Message,
-    view::{
-        ViewContent,
-        spell::form::fields::{SpellFormFields, SpellMaterialInput, SpellShapeInput},
-    },
-};
-use types::{FormMode, SPELLCASTING_CLASSES};
-use widgets::{
-    Element,
-    form::{BODY_SPACING, LABEL_SPACING, SECTION_SPACING},
-    label::Label,
-};
+use crate::message::Message;
+use crate::view::ViewContent;
+use crate::view::spell::form::fields::SpellFormFields;
+use crate::view::spell::form::fields::SpellMaterialInput;
+use crate::view::spell::form::fields::SpellShapeInput;
+use types::FormMode;
+use types::SPELLCASTING_CLASSES;
+use widgets::Element;
+use widgets::form::BODY_SPACING;
+use widgets::form::LABEL_SPACING;
+use widgets::form::SECTION_SPACING;
+use widgets::label::Label;
 
-use iced::{
-    Alignment,
-    Length::{self, Fill},
-    Task,
-    widget::{self, Column, Row, column, row},
-};
+use iced::Alignment;
+use iced::Length;
+use iced::Length::Fill;
+use iced::Task;
+use iced::widget;
+use iced::widget::Column;
+use iced::widget::Row;
+use iced::widget::column;
+use iced::widget::row;
 use tracing::debug;
 
 pub struct SpellForm {

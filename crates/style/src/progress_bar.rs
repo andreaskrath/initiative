@@ -1,9 +1,9 @@
-use crate::{NO_BORDER_ROUNDED, theme::Theme};
+use crate::NO_BORDER_ROUNDED;
+use crate::theme::Theme;
 
-use iced::{
-    Background,
-    widget::progress_bar::{Catalog, Style},
-};
+use iced::Background;
+use iced::widget::progress_bar::Catalog;
+use iced::widget::progress_bar::Style;
 
 impl Catalog for Theme {
     type Class<'a> = ();

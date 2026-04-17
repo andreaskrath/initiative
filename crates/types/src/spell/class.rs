@@ -1,6 +1,10 @@
-use std::ops::{Index, IndexMut};
+use std::ops::Index;
+use std::ops::IndexMut;
 
-use strum::{AsRefStr, Display, EnumCount, VariantArray};
+use strum::AsRefStr;
+use strum::Display;
+use strum::EnumCount;
+use strum::VariantArray;
 
 /// The list of all spell casting classes.
 pub const SPELLCASTING_CLASSES: [Class; 9] = [

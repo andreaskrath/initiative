@@ -1,12 +1,13 @@
 mod state;
 
-use crate::{Element, form::INPUT_PADDING, label::Label};
+use crate::Element;
+use crate::form::INPUT_PADDING;
+use crate::label::Label;
 pub use state::*;
 
-use iced::{
-    Length,
-    widget::{self, text::Shaping},
-};
+use iced::Length;
+use iced::widget;
+use iced::widget::text::Shaping;
 use style::pick_list::PickListClass;
 
 pub fn select<'a, Value, Message>(

@@ -4,17 +4,16 @@ mod state;
 pub use rules::*;
 pub use state::*;
 
-use crate::{
-    Element,
-    form::{INPUT_PADDING, LABEL_SPACING},
-    label::Label,
-};
+use crate::Element;
+use crate::form::INPUT_PADDING;
+use crate::form::LABEL_SPACING;
+use crate::label::Label;
 use style::text_editor::TextEditorClass;
 
-use iced::{
-    Length,
-    widget::{self, text::Wrapping, text_editor::Action},
-};
+use iced::Length;
+use iced::widget;
+use iced::widget::text::Wrapping;
+use iced::widget::text_editor::Action;
 
 pub fn text_area<'a, Message>(
     label: &'a str,

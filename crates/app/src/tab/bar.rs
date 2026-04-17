@@ -1,19 +1,21 @@
-use crate::{
-    message::Message,
-    tab::{Tab, TabAction, TabId},
-};
-use style::{container::ContainerClass, svg::SvgClass};
-use widgets::{Element, icon::IconName, text::Text};
+use crate::message::Message;
+use crate::tab::Tab;
+use crate::tab::TabAction;
+use crate::tab::TabId;
+use style::container::ContainerClass;
+use style::svg::SvgClass;
+use widgets::Element;
+use widgets::icon::IconName;
+use widgets::text::Text;
 
-use iced::{
-    Alignment,
-    Length::Fill,
-    widget::{
-        self, Row, row,
-        scrollable::{Direction, Scrollbar},
-        text::IntoFragment,
-    },
-};
+use iced::Alignment;
+use iced::Length::Fill;
+use iced::widget;
+use iced::widget::Row;
+use iced::widget::row;
+use iced::widget::scrollable::Direction;
+use iced::widget::scrollable::Scrollbar;
+use iced::widget::text::IntoFragment;
 
 /// The height of the tab bar.
 const TAB_BAR_HEIGHT: u32 = 30;

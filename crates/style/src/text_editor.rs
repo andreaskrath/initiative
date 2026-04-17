@@ -1,9 +1,15 @@
-use crate::{DEFAULT_BORDER, NO_BORDER_ROUNDED, disabled, hovered, pressed, theme::Theme};
+use crate::DEFAULT_BORDER;
+use crate::NO_BORDER_ROUNDED;
+use crate::disabled;
+use crate::hovered;
+use crate::pressed;
+use crate::theme::Theme;
 
-use iced::{
-    Background, Border,
-    widget::text_editor::{Catalog, Status, Style},
-};
+use iced::Background;
+use iced::Border;
+use iced::widget::text_editor::Catalog;
+use iced::widget::text_editor::Status;
+use iced::widget::text_editor::Style;
 
 #[derive(Debug, PartialEq, Clone, Copy)]
 pub enum TextEditorClass {

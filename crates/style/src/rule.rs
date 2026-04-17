@@ -1,6 +1,9 @@
-use crate::{NO_BORDER, theme::Theme};
+use crate::NO_BORDER;
+use crate::theme::Theme;
 
-use iced::widget::rule::{Catalog, FillMode, Style};
+use iced::widget::rule::Catalog;
+use iced::widget::rule::FillMode;
+use iced::widget::rule::Style;
 
 #[derive(Debug, PartialEq, Clone, Copy)]
 pub enum RuleClass {

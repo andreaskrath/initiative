@@ -1,13 +1,17 @@
-use crate::navigation::{NavigationItem, NavigationMessage};
-use style::{button::ButtonClass, svg::SvgClass};
-use widgets::{Element, icon::IconName};
+use crate::navigation::NavigationItem;
+use crate::navigation::NavigationMessage;
+use style::button::ButtonClass;
+use style::svg::SvgClass;
+use widgets::Element;
+use widgets::icon::IconName;
 
-use iced::{
-    Alignment,
-    Length::Fill,
-    widget::{self, column, row},
-};
-use std::sync::atomic::{AtomicU64, Ordering};
+use iced::Alignment;
+use iced::Length::Fill;
+use iced::widget;
+use iced::widget::column;
+use iced::widget::row;
+use std::sync::atomic::AtomicU64;
+use std::sync::atomic::Ordering;
 
 static NEXT_ID: AtomicU64 = AtomicU64::new(0);
 

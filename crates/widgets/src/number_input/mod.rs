@@ -1,18 +1,17 @@
 mod rules;
 mod state;
 
-use crate::{
-    Element,
-    form::{INPUT_PADDING, LABEL_SPACING},
-    label::Label,
-};
+use crate::Element;
+use crate::form::INPUT_PADDING;
+use crate::form::LABEL_SPACING;
+use crate::label::Label;
 pub use rules::*;
 pub use state::*;
 
-use iced::{
-    Alignment, Length,
-    widget::{self, Column},
-};
+use iced::Alignment;
+use iced::Length;
+use iced::widget;
+use iced::widget::Column;
 use style::text_input::TextInputClass;
 
 pub fn number_input<'a, Message>(

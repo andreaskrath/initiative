@@ -19,7 +19,11 @@ pub mod text_input;
 pub mod theme;
 pub mod toggler;
 
-use iced::{Border, Color, Shadow, Vector, border::Radius};
+use iced::Border;
+use iced::Color;
+use iced::Shadow;
+use iced::Vector;
+use iced::border::Radius;
 
 /// A scale used to adjust alpha for muted styles.
 pub const MUTED_SCALE: f32 = 0.6;

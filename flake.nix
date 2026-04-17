@@ -22,14 +22,20 @@
           extensions = ["rust-src" "rust-analyzer"];
         };
 
+        rustfmtNightly = pkgs.rust-bin.selectLatestNightlyWith (
+          toolchain: toolchain.rustfmt
+        );
+
         iced = with pkgs; [
           # Wayland
           wayland
+
           # X11
           libx11
           libxcursor
           libxi
           libxcb
+
           # Shared
           libxkbcommon
           libGL
@@ -41,6 +47,8 @@
             buildInputs =
               [
                 rustToolchain
+                rustfmtNightly
+
                 vscode-extensions.vadimcn.vscode-lldb.adapter
 
                 # tokio
@@ -50,6 +58,11 @@
               ++ iced;
             RUST_SRC_PATH = "${rustToolchain}/lib/rustlib/src/rust/library";
             LD_LIBRARY_PATH = "${pkgs.lib.makeLibraryPath iced}:$LD_LIBRARY_PATH";
+
+            # Make sure the nightly rustfmt wins over the stable one from rustToolchain
+            shellHook = ''
+              export PATH=${rustfmtNightly}/bin:$PATH
+            '';
           };
       }
     );

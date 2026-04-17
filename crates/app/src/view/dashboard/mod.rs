@@ -1,6 +1,7 @@
 mod message;
 
-use crate::{message::Message, view::ViewContent};
+use crate::message::Message;
+use crate::view::ViewContent;
 pub use message::DashboardMessage;
 use widgets::Element;
 

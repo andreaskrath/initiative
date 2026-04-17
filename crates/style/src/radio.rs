@@ -1,9 +1,11 @@
-use crate::{NO_BORDER_ROUNDED, hovered, theme::Theme};
+use crate::NO_BORDER_ROUNDED;
+use crate::hovered;
+use crate::theme::Theme;
 
-use iced::{
-    Background,
-    widget::radio::{Catalog, Status, Style},
-};
+use iced::Background;
+use iced::widget::radio::Catalog;
+use iced::widget::radio::Status;
+use iced::widget::radio::Style;
 
 impl Catalog for Theme {
     type Class<'a> = ();

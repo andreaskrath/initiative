@@ -2,19 +2,24 @@ mod group;
 mod item;
 mod message;
 
-use crate::{
-    message::Message,
-    navigation::{group::NavigationGroup, item::NavigationItem},
-    tab::TabAction,
-    view::ViewRequest,
-};
+use crate::message::Message;
+use crate::navigation::group::NavigationGroup;
+use crate::navigation::item::NavigationItem;
+use crate::tab::TabAction;
+use crate::view::ViewRequest;
 pub use message::NavigationMessage;
-use widgets::{Element, animation::Animation, icon::IconName};
+use widgets::Element;
+use widgets::animation::Animation;
+use widgets::icon::IconName;
 
-use iced::{
-    Fill, Subscription, Task,
-    widget::{column, container, row, rule, space},
-};
+use iced::Fill;
+use iced::Subscription;
+use iced::Task;
+use iced::widget::column;
+use iced::widget::container;
+use iced::widget::row;
+use iced::widget::rule;
+use iced::widget::space;
 
 /// The width of `Navigation` when its expanded.
 const NAVIGATION_WIDTH_EXPANDED: f32 = 300.0;

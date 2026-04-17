@@ -3,25 +3,31 @@ mod navigation;
 mod tab;
 mod view;
 
-use crate::{
-    message::Message,
-    navigation::{Navigation, NavigationMessage},
-    tab::{TabAction, TabManager},
-};
-use style::{
-    button::ButtonClass,
-    container::ContainerClass,
-    svg::SvgClass,
-    theme::{Theme, variant::ThemeVariant},
-};
-use widgets::{Element, icon::IconName, icon::IconSize};
+use crate::message::Message;
+use crate::navigation::Navigation;
+use crate::navigation::NavigationMessage;
+use crate::tab::TabAction;
+use crate::tab::TabManager;
+use style::button::ButtonClass;
+use style::container::ContainerClass;
+use style::svg::SvgClass;
+use style::theme::Theme;
+use style::theme::variant::ThemeVariant;
+use widgets::Element;
+use widgets::icon::IconName;
+use widgets::icon::IconSize;
 
-use iced::{
-    Length::Fill,
-    Subscription, Task,
-    alignment::Horizontal,
-    widget::{button, column, container, row, rule, space, stack},
-};
+use iced::Length::Fill;
+use iced::Subscription;
+use iced::Task;
+use iced::alignment::Horizontal;
+use iced::widget::button;
+use iced::widget::column;
+use iced::widget::container;
+use iced::widget::row;
+use iced::widget::rule;
+use iced::widget::space;
+use iced::widget::stack;
 
 pub struct Initiative {
     theme: Theme,

@@ -1,6 +1,8 @@
 use rust_embed::RustEmbed;
 use thiserror::Error;
-use tracing::{debug, error, warn};
+use tracing::debug;
+use tracing::error;
+use tracing::warn;
 
 #[derive(Error, Debug)]
 pub enum AssetsError {

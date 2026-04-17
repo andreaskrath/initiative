@@ -1,16 +1,16 @@
 mod rules;
 mod state;
 
-use crate::{
-    Element,
-    form::{INPUT_PADDING, LABEL_SPACING},
-    label::Label,
-};
+use crate::Element;
+use crate::form::INPUT_PADDING;
+use crate::form::LABEL_SPACING;
+use crate::label::Label;
 pub use rules::*;
 pub use state::*;
-
-use iced::widget::{self, Column};
 use style::text_input::TextInputClass;
+
+use iced::widget;
+use iced::widget::Column;
 
 pub fn text_input<'a, Message>(
     label: Option<&'a str>,

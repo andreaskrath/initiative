@@ -1,6 +1,8 @@
-use style::{text::TextClass, theme::Theme};
+use style::text::TextClass;
+use style::theme::Theme;
 
-use iced::widget::{self, text::IntoFragment};
+use iced::widget;
+use iced::widget::text::IntoFragment;
 
 /// Type alias for [`iced::widget::Text`] to use custom Theme from the `style` crate.
 pub type Text<'a> = iced::widget::Text<'a, Theme>;

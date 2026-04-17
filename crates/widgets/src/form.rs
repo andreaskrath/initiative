@@ -1,10 +1,11 @@
 use crate::Element;
-use style::{container::ContainerClass, text::TextClass};
+use style::container::ContainerClass;
+use style::text::TextClass;
 
-use iced::{
-    Length, Padding,
-    widget::{self, column},
-};
+use iced::Length;
+use iced::Padding;
+use iced::widget;
+use iced::widget::column;
 
 /// The proportion the header will fill of the horizontal view.
 pub const HEADER_PROPORTION: u16 = 1;

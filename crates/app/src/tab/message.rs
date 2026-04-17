@@ -1,4 +1,6 @@
-use crate::view::{DashboardMessage, SpellFormMessage, SpellListMessage};
+use crate::view::DashboardMessage;
+use crate::view::SpellFormMessage;
+use crate::view::SpellListMessage;
 
 #[derive(Debug, Clone)]
 pub enum TabMessage {

@@ -1,6 +1,7 @@
 use crate::theme::Theme;
 
-use iced::widget::text::{Catalog, Style};
+use iced::widget::text::Catalog;
+use iced::widget::text::Style;
 
 #[derive(Debug, PartialEq, Clone, Copy)]
 pub enum TextClass {

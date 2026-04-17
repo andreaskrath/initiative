@@ -1,9 +1,11 @@
-use crate::{NO_BORDER_ROUNDED, NO_SHADOW, hovered, theme::Theme};
+use crate::NO_BORDER_ROUNDED;
+use crate::NO_SHADOW;
+use crate::hovered;
+use crate::theme::Theme;
 
-use iced::{
-    Background,
-    widget::overlay::menu::{Catalog, Style},
-};
+use iced::Background;
+use iced::widget::overlay::menu::Catalog;
+use iced::widget::overlay::menu::Style;
 
 impl Catalog for Theme {
     type Class<'a> = ();
