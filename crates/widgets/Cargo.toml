@@ -15,6 +15,7 @@ style.workspace = true
 
 # External crates
 iced.workspace = true
+iced_aw.workspace = true
 thiserror.workspace = true
 tracing.workspace = true
 

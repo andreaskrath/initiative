@@ -2,6 +2,7 @@ pub mod animation;
 pub mod form;
 pub mod icon;
 pub mod label;
+pub mod multi_text_input;
 pub mod number_input;
 pub mod select;
 pub mod text;
