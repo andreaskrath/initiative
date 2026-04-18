@@ -49,7 +49,7 @@ where
     Renderer: text::Renderer<Font = iced::Font> + 'a,
 {
     pub fn new(placeholder: &'a str, value: &'a str, values: &'a [String]) -> Self {
-        let text_input = widget::text_input(placeholder, value);
+        let text_input = crate::text_input(placeholder, value);
         let chips = Self::chips(values, None::<fn(usize) -> Message>);
 
         let value = Value::new(value);

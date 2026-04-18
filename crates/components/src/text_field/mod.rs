@@ -5,12 +5,10 @@ pub use rules::*;
 pub use state::*;
 
 use crate::label::Label;
-use style::layout::INPUT_PADDING;
 use style::layout::LABEL_SPACING;
 use style::text_input::TextInputClass;
 use widgets::Element;
 
-use iced::widget;
 use iced::widget::Column;
 
 pub fn text_field<'a, Message>(
@@ -61,11 +59,8 @@ where
 
         let placeholder = widget.placeholder.unwrap_or("");
 
-        let mut input = widget::text_input(placeholder, widget.state.value())
-            .font(fonts::display::regular())
-            .size(fonts::display::DEFAULT_DISPLAY_TEXT_SIZE)
-            .padding(INPUT_PADDING)
-            .on_input_maybe(widget.on_input);
+        let mut input =
+            widgets::text_input(placeholder, widget.state.value()).on_input_maybe(widget.on_input);
 
         if widget.state.error().is_some() {
             input = input.class(TextInputClass::Error);
