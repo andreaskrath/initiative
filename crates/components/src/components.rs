@@ -10,6 +10,7 @@ pub mod text_field;
 pub mod toggle;
 
 pub use icon::icon;
+pub use multi_text_field::multi_text_field;
 pub use number_field::number_field;
 pub use select_field::select_field;
 pub use text_area_field::text_area_field;
@@ -22,6 +23,8 @@ use thiserror::Error;
 pub(crate) enum ValidationError {
     #[error("Must be specified.")]
     Required,
+    #[error("Must be unique.")]
+    Unique,
     #[error("Must be longer than {0} characters.")]
     Short(usize),
     #[error("Must be shorter than {0} characters.")]
