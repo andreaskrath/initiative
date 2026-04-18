@@ -25,9 +25,6 @@ use iced::Shadow;
 use iced::Vector;
 use iced::border::Radius;
 
-/// A scale used to adjust alpha for muted styles.
-pub const MUTED_SCALE: f32 = 0.6;
-
 /// A `Shadow` instance that is transparent, with no offset and no radius.
 pub const NO_SHADOW: Shadow = Shadow {
     color: Color::TRANSPARENT,
