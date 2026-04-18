@@ -1,3 +1,4 @@
+use style::text_input::TextInputClass;
 use style::theme::Theme;
 
 use iced::Element;
@@ -31,6 +32,18 @@ use iced_aw::direction::Horizontal;
 const WIDGET_SPACING: f32 = 5.0;
 
 const CHIPS_SPACING: f32 = 5.0;
+
+pub fn multi_text_input<'a, Message, Renderer>(
+    placeholder: &'a str,
+    value: &'a str,
+    values: &'a [String],
+) -> MultiTextInput<'a, Message, Renderer>
+where
+    Message: Clone + 'a,
+    Renderer: text::Renderer<Font = iced::Font> + 'a,
+{
+    MultiTextInput::new(placeholder, value, values)
+}
 
 pub struct MultiTextInput<'a, Message, Renderer>
 where
@@ -80,6 +93,11 @@ where
 
     pub fn width(mut self, width: Length) -> Self {
         self.width = width;
+        self
+    }
+
+    pub fn class(mut self, class: TextInputClass) -> Self {
+        self.text_input = self.text_input.class(class);
         self
     }
 
