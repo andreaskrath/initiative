@@ -1,9 +1,9 @@
 pub mod button;
 pub mod checkbox;
-pub mod color;
 pub mod combobox;
 pub mod container;
 pub mod float;
+pub mod layout;
 pub mod menu;
 pub mod pick_list;
 pub mod progress_bar;

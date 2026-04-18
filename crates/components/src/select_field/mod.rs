@@ -2,8 +2,8 @@ mod state;
 
 pub use state::*;
 
-use crate::form::INPUT_PADDING;
 use crate::label::Label;
+use style::layout::INPUT_PADDING;
 use widgets::Element;
 
 use iced::Length;

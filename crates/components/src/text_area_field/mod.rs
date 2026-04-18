@@ -4,9 +4,9 @@ mod state;
 pub use rules::*;
 pub use state::*;
 
-use crate::form::INPUT_PADDING;
-use crate::form::LABEL_SPACING;
 use crate::label::Label;
+use style::layout::INPUT_PADDING;
+use style::layout::LABEL_SPACING;
 use style::text_editor::TextEditorClass;
 use widgets::Element;
 
