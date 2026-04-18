@@ -1,9 +1,10 @@
 mod message;
 
+pub use message::SpellListMessage;
+
 use crate::message::Message;
 use crate::view::ViewContent;
 use crate::view::ViewRequest;
-pub use message::SpellListMessage;
 use types::FormMode;
 use widgets::Element;
 
