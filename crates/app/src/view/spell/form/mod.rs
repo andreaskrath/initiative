@@ -98,8 +98,14 @@ impl<'a> SpellForm {
             column![label, grid].spacing(LABEL_SPACING).into()
         };
 
+        let tags = components::multi_text_field(Some("TAGS"), &self.fields.tags)
+            .placeholder("Write a tag")
+            .on_input(SpellFormMessage::TagChanged)
+            .on_submit(SpellFormMessage::TagSubmitted)
+            .on_remove(SpellFormMessage::TagRemoved);
+
         let classification = row![school, level].spacing(BODY_SPACING);
-        let form = column![name, classification, classes].spacing(BODY_SPACING);
+        let form = column![name, classification, classes, tags].spacing(BODY_SPACING);
         let body = components::form::section_body(form);
 
         row![header, body].into()
@@ -346,6 +352,9 @@ impl ViewContent for SpellForm {
                     self.fields.classes.push(class);
                 }
             }
+            SpellFormMessage::TagChanged(tag) => self.fields.tags.set_value(tag),
+            SpellFormMessage::TagSubmitted => self.fields.tags.add_selection(),
+            SpellFormMessage::TagRemoved(tag_index) => self.fields.tags.remove_selection(tag_index),
             SpellFormMessage::CastingTimeSelected(casting_time) => {
                 self.fields.casting_time.set(casting_time);
             }

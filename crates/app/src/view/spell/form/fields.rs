@@ -1,3 +1,5 @@
+use components::multi_text_field::MultiTextFieldRule;
+use components::multi_text_field::MultiTextFieldState;
 use components::number_field::NumberFieldRule;
 use components::number_field::NumberFieldState;
 use components::select_field::SelectFieldState;
@@ -22,6 +24,7 @@ pub struct SpellFormFields {
     pub school: SelectFieldState<MagicSchool>,
     pub level: SelectFieldState<SpellLevel>,
     pub classes: Vec<Class>,
+    pub tags: MultiTextFieldState,
     pub casting_time: SelectFieldState<SpellCastingTime>,
     pub ritual: bool,
     pub concentration: bool,
@@ -49,6 +52,8 @@ impl Default for SpellFormFields {
                 .required(true),
             level: SelectFieldState::new(SpellLevel::VARIANTS.iter().copied(), None).required(true),
             classes: Vec::with_capacity(SPELLCASTING_CLASSES.len()),
+            tags: MultiTextFieldState::default()
+                .rules([MultiTextFieldRule::Unique, MultiTextFieldRule::Min(1)]),
             casting_time: SelectFieldState::new(SpellCastingTime::VARIANTS.iter().copied(), None)
                 .required(true),
             ritual: false,
