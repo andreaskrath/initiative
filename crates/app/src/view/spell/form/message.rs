@@ -36,6 +36,6 @@ pub enum SpellFormMessage {
     ShapeWidthChanged(String),
     DescriptionChanged(Action),
     AtHigherLevelsChanged(Action),
-    QuoteTextChanged(Action),
-    QuoteSourceChanged(String),
+    FlavorTextChanged(Action),
+    AttributionChanged(String),
 }

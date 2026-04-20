@@ -299,25 +299,30 @@ impl<'a> SpellForm {
         row![header, body].into()
     }
 
-    fn quote(&'a self) -> Element<'a, SpellFormMessage> {
-        let title = iced::widget::text("QUOTE");
+    fn narrative(&'a self) -> Element<'a, SpellFormMessage> {
+        let header = components::form::section_header(
+            "NARRATIVE",
+            "Thematical descriptions and illustrations.",
+        );
 
-        let text = components::text_area_field(
-            "Text",
-            &self.fields.quote_text,
-            SpellFormMessage::QuoteTextChanged,
+        let flavor_text = components::text_area_field(
+            "FLAVOR TEXT",
+            &self.fields.flavor_text,
+            SpellFormMessage::FlavorTextChanged,
         )
-        .placeholder("Something")
-        .height(100);
+        .placeholder("First there is a bead, tiny and bright, soaring toward you. You watch it, mesmerized, almost thinking it beautiful. Then, the sound vanishes, the air turns to glass, and the world simply burns.")
+        .height(200);
 
-        let source = components::text_field(Some("SOURCE"), &self.fields.quote_source)
-            .placeholder("Someone")
-            .on_input(SpellFormMessage::QuoteSourceChanged);
+        let attribution = components::text_field(Some("ATTRIBUTION"), &self.fields.attribution)
+            .placeholder("Sergeant Kaelen, recounting the Siege of Oakhaven")
+            .on_input(SpellFormMessage::AttributionChanged);
 
-        column![title, text, source,]
+        let form = column![flavor_text, attribution]
             .align_x(Alignment::Center)
-            .spacing(10)
-            .into()
+            .spacing(BODY_SPACING);
+        let body = components::form::section_body(form);
+
+        row![header, body].into()
     }
 }
 
@@ -423,13 +428,13 @@ impl ViewContent for SpellForm {
                     spell_material.consumed = !spell_material.consumed;
                 }
             }
-            SpellFormMessage::QuoteTextChanged(action) => {
-                self.fields.quote_text.perform(action);
-                self.fields.quote_text.validate();
+            SpellFormMessage::FlavorTextChanged(action) => {
+                self.fields.flavor_text.perform(action);
+                self.fields.flavor_text.validate();
             }
-            SpellFormMessage::QuoteSourceChanged(quote_source) => {
-                self.fields.quote_source.set(quote_source);
-                self.fields.quote_source.validate();
+            SpellFormMessage::AttributionChanged(quote_source) => {
+                self.fields.attribution.set(quote_source);
+                self.fields.attribution.validate();
             }
             SpellFormMessage::AreaSelected(area) => self.fields.area.set(area),
             SpellFormMessage::ShapeKindSelected(kind) => {
@@ -475,9 +480,9 @@ impl ViewContent for SpellForm {
 
         let effect = self.effect_section();
 
-        let quote = self.quote();
+        let narrative = self.narrative();
 
-        let view = column![title, identity, casting, effect, quote,]
+        let view = column![title, identity, casting, effect, narrative]
             .align_x(Alignment::Center)
             .spacing(SECTION_SPACING);
 

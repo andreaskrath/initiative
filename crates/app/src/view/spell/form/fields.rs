@@ -39,8 +39,8 @@ pub struct SpellFormFields {
     pub shape: SpellShapeInput,
     pub description: TextAreaFieldState,
     pub at_higher_levels: TextAreaFieldState,
-    pub quote_text: TextAreaFieldState,
-    pub quote_source: TextFieldState,
+    pub flavor_text: TextAreaFieldState,
+    pub attribution: TextFieldState,
 }
 
 impl Default for SpellFormFields {
@@ -72,8 +72,8 @@ impl Default for SpellFormFields {
             shape: SpellShapeInput::NoShape,
             description: TextAreaFieldState::default().rules([TextAreaFieldRule::Required]),
             at_higher_levels: TextAreaFieldState::default(),
-            quote_text: TextAreaFieldState::default().rules([TextAreaFieldRule::Max(1000)]),
-            quote_source: TextFieldState::default().rules([TextFieldRule::Max(100)]),
+            flavor_text: TextAreaFieldState::default().rules([TextAreaFieldRule::Max(1000)]),
+            attribution: TextFieldState::default().rules([TextFieldRule::Max(100)]),
         }
     }
 }
