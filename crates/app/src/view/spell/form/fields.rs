@@ -53,6 +53,7 @@ impl Default for SpellFormFields {
             level: SelectFieldState::new(SpellLevel::VARIANTS.iter().copied(), None).required(true),
             classes: Vec::with_capacity(SPELLCASTING_CLASSES.len()),
             tags: MultiTextFieldState::default()
+                .normalize(true)
                 .rules([MultiTextFieldRule::Unique, MultiTextFieldRule::Min(1)]),
             casting_time: SelectFieldState::new(SpellCastingTime::VARIANTS.iter().copied(), None)
                 .required(true),

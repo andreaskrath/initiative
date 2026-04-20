@@ -8,6 +8,7 @@ pub struct MultiTextFieldState {
     value: String,
     selections: Vec<String>,
     rules: Option<Box<[MultiTextFieldRule]>>,
+    pub(super) normalize: bool,
     error: Option<String>,
 }
 
@@ -17,6 +18,7 @@ impl MultiTextFieldState {
             value,
             selections: Vec::new(),
             rules: None,
+            normalize: false,
             error: None,
         }
     }
@@ -25,6 +27,14 @@ impl MultiTextFieldState {
         let collected_rules = rules.into_iter().collect::<Vec<_>>().into_boxed_slice();
 
         self.rules = Some(collected_rules);
+        self
+    }
+
+    /// Whether selections should be normalized when added.
+    ///
+    /// Normalized in this context simply means lowercased.
+    pub fn normalize(mut self, normalize: bool) -> Self {
+        self.normalize = normalize;
         self
     }
 
@@ -58,12 +68,21 @@ impl MultiTextFieldState {
 
     /// Add the current value to the collection of selected values.
     pub fn add_selection(&mut self) {
+        let start = self.value.len() - self.value.trim_start().len();
+        let end = self.value.trim_end().len();
+        let trimmed_value = &self.value[start..end];
+
         // Set error first, to always update error state correctly
-        self.error = self.validate(&self.value);
+        self.error = self.validate(trimmed_value);
 
         // Then check error state if value should be added or not
         if self.error.is_none() {
-            let value = std::mem::take(&mut self.value);
+            let mut value = std::mem::take(&mut self.value);
+
+            // Remove leading and trailing whitespaces, starting with trailing.
+            // Otherwise, the leading indexes are offset incorrectly.
+            value.truncate(end);
+            value.drain(..start);
             self.selections.push(value);
         }
     }
@@ -72,7 +91,7 @@ impl MultiTextFieldState {
         self.selections.remove(index);
     }
 
-    fn validate(&self, value: &String) -> Option<String> {
+    fn validate(&self, value: &str) -> Option<String> {
         let Some(rules) = &self.rules else {
             return None;
         };
@@ -87,7 +106,7 @@ impl MultiTextFieldState {
         None
     }
 
-    fn check_rule(&self, rule: MultiTextFieldRule, value: &String) -> Result<(), ValidationError> {
+    fn check_rule(&self, rule: MultiTextFieldRule, value: &str) -> Result<(), ValidationError> {
         match rule {
             MultiTextFieldRule::Required => {
                 if value.is_empty() {
@@ -95,7 +114,7 @@ impl MultiTextFieldState {
                 }
             }
             MultiTextFieldRule::Unique => {
-                if self.selections.contains(value) {
+                if self.selections.iter().any(|s| s == value) {
                     return Err(ValidationError::Unique);
                 }
             }

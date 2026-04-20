@@ -77,7 +77,11 @@ where
             widgets::multi_text_input(placeholder, widget.state.value(), widget.state.selections());
 
         if let Some(on_input) = widget.on_input {
-            input = input.on_input(on_input);
+            if widget.state.normalize {
+                input = input.on_input(move |s| on_input(s.to_lowercase()));
+            } else {
+                input = input.on_input(on_input);
+            }
         }
 
         if let Some(on_submit) = widget.on_submit {
