@@ -1,7 +1,6 @@
 pub mod message;
 
 use crate::view::content::ViewContent;
-use crate::view::request::ViewRequest;
 use crate::view::spell::list::message::SpellListEffect;
 use crate::view::spell::list::message::SpellListMessage;
 use types::FormMode;
@@ -10,7 +9,6 @@ use widgets::Element;
 use iced::Task;
 use iced::widget;
 use iced::widget::column;
-use tracing::debug;
 
 pub struct SpellList {}
 
@@ -30,14 +28,8 @@ impl ViewContent for SpellList {
     }
 
     fn update(&mut self, message: Self::Message) -> (Task<Self::Message>, Option<Self::Effect>) {
-        debug!("updating spell list with: {:?}", message);
-
         match message {
             SpellListMessage::CreateNewSpell => {
-                let request = ViewRequest::SpellForm {
-                    mode: FormMode::Create,
-                };
-
                 let effect = Some(SpellListEffect::OpenSpellForm {
                     mode: FormMode::Create,
                 });

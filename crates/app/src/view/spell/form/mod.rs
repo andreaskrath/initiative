@@ -24,7 +24,6 @@ use iced::widget::Column;
 use iced::widget::Row;
 use iced::widget::column;
 use iced::widget::row;
-use tracing::debug;
 
 pub struct SpellForm {
     mode: FormMode,
@@ -338,8 +337,6 @@ impl ViewContent for SpellForm {
     }
 
     fn update(&mut self, message: Self::Message) -> (Task<Self::Message>, Option<Self::Effect>) {
-        debug!("updating spell form with: {:?}", message);
-
         match message {
             SpellFormMessage::NameChanged(name) => {
                 self.fields.name.set(name);
