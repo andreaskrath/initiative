@@ -1,3 +1,4 @@
+use components::image_field::ImageFieldState;
 use components::multi_text_field::MultiTextFieldRule;
 use components::multi_text_field::MultiTextFieldState;
 use components::number_field::NumberFieldRule;
@@ -41,6 +42,7 @@ pub struct SpellFormFields {
     pub at_higher_levels: TextAreaFieldState,
     pub flavor_text: TextAreaFieldState,
     pub attribution: TextFieldState,
+    pub images: ImageFieldState,
 }
 
 impl Default for SpellFormFields {
@@ -74,6 +76,7 @@ impl Default for SpellFormFields {
             at_higher_levels: TextAreaFieldState::default(),
             flavor_text: TextAreaFieldState::default().rules([TextAreaFieldRule::Max(1000)]),
             attribution: TextFieldState::default().rules([TextFieldRule::Max(100)]),
+            images: ImageFieldState::default().limit(6),
         }
     }
 }

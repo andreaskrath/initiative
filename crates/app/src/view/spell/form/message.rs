@@ -1,3 +1,4 @@
+use components::image_field::error::ImageError;
 use types::Class;
 use types::MagicSchool;
 use types::SpellArea;
@@ -39,6 +40,9 @@ pub enum SpellFormMessage {
     AtHigherLevelsChanged(Action),
     FlavorTextChanged(Action),
     AttributionChanged(String),
+    ImagePasted,
+    ImageLoaded(Result<Box<[u8]>, ImageError>),
+    ImageRemoved(usize),
 }
 
 #[derive(Debug, Clone)]

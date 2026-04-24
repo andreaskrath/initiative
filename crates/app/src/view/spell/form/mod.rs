@@ -7,6 +7,7 @@ use crate::view::spell::form::fields::SpellMaterialInput;
 use crate::view::spell::form::fields::SpellShapeInput;
 use crate::view::spell::form::message::SpellFormEffect;
 use crate::view::spell::form::message::SpellFormMessage;
+use components::image_field::error::ImageError;
 use components::label::Label;
 use style::layout::BODY_SPACING;
 use style::layout::LABEL_SPACING;
@@ -315,7 +316,11 @@ impl<'a> SpellForm {
             .placeholder("Sergeant Kaelen, recounting the Siege of Oakhaven")
             .on_input(SpellFormMessage::AttributionChanged);
 
-        let form = column![flavor_text, attribution]
+        let images = components::image_field(&self.fields.images)
+            .on_clipboard(SpellFormMessage::ImagePasted)
+            .on_remove(SpellFormMessage::ImageRemoved);
+
+        let form = column![flavor_text, attribution, images]
             .align_x(Alignment::Center)
             .spacing(BODY_SPACING);
         let body = components::form::section_body(form);
@@ -464,6 +469,20 @@ impl ViewContent for SpellForm {
                     width.set(new_width);
                 }
             }
+            SpellFormMessage::ImagePasted => {
+                let clipboard_result = async {
+                    tokio::task::spawn_blocking(components::image_field::clipboard::get_image).await
+                };
+
+                let task = Task::perform(clipboard_result, |result| {
+                    SpellFormMessage::ImageLoaded(result.unwrap_or(Err(ImageError::Unknown)))
+                });
+
+                return (task, None);
+            }
+            SpellFormMessage::ImageLoaded(Ok(bytes)) => self.fields.images.add(bytes),
+            SpellFormMessage::ImageLoaded(Err(err)) => tracing::error!("{err}"),
+            SpellFormMessage::ImageRemoved(image_number) => self.fields.images.remove(image_number),
         }
 
         (Task::none(), None)

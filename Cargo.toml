@@ -27,6 +27,7 @@ rust-embed = { version = "=8.9.0", features = ["include-exclude"] }
 strum = { version = "=0.27.2", features = ["derive"] }
 strum_macros = "=0.27.2"
 thiserror = "=2.0.17"
+tokio = { version = "=1.52.1", features = ["rt"] }
 tracing = "=0.1.41"
 tracing-subscriber = { version = "=0.3.20", features = ["env-filter"] }
 uuid = "=1.18.1"
