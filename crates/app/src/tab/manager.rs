@@ -1,14 +1,15 @@
-use crate::message::Message;
 use crate::tab::Tab;
-use crate::tab::TabAction;
 use crate::tab::TabId;
+use crate::tab::TabManagerEffect;
+use crate::tab::TabManagerMessage;
 use crate::tab::TabMessage;
 use crate::tab::bar::tab_bar;
-use crate::view::Dashboard;
-use crate::view::SpellForm;
-use crate::view::SpellList;
-use crate::view::ViewContent;
-use crate::view::ViewRequest;
+use crate::view::content::ViewContent;
+use crate::view::dashboard::Dashboard;
+use crate::view::request::ViewRequest;
+use crate::view::spell::form::SpellForm;
+use crate::view::spell::list::SpellList;
+use crate::view::spell::list::message::SpellListEffect;
 use widgets::Element;
 
 use iced::Alignment;
@@ -41,12 +42,16 @@ impl Default for TabManager {
 }
 
 impl TabManager {
-    pub fn perform(&mut self, action: TabAction) -> Task<Message> {
-        debug!("performing tab action '{action:?}'");
-
-        match action {
-            TabAction::Open(request) => return self.handle_request(request),
-            TabAction::Close(close_id) => {
+    pub fn update(
+        &mut self,
+        message: TabManagerMessage,
+    ) -> (Task<TabManagerMessage>, Option<TabManagerEffect>) {
+        match message {
+            TabManagerMessage::TabUpdated(tab_id, tab_message) => {
+                return self.update_tab(tab_id, tab_message);
+            }
+            TabManagerMessage::OpenTab(request) => self.handle_request(request),
+            TabManagerMessage::CloseTab(close_id) => {
                 self.tabs.retain(|(tab_id, _)| *tab_id != close_id);
 
                 // TODO: Never redirect to Dashboard (TabId(0)), unless it is the last tab open
@@ -63,57 +68,13 @@ impl TabManager {
                     self.active = *closest_id;
                 }
             }
-            TabAction::Focus(tab_id) => self.active = tab_id,
+            TabManagerMessage::FocusTab(tab_id) => self.active = tab_id,
         }
 
-        Task::none()
+        (Task::none(), None)
     }
 
-    pub fn update(&mut self, tab_id: TabId, message: TabMessage) -> Task<Message> {
-        let Some(tab) = self.get_mut(tab_id) else {
-            error!("could not find tab with id '{tab_id:?}'");
-
-            return Task::none();
-        };
-
-        match message {
-            TabMessage::Dashboard(dashboard_message) => {
-                let Tab::Dashboard(dashboard) = tab else {
-                    error!(
-                        "tab with id '{tab_id:?}' does not match message of type '{dashboard_message:?}'"
-                    );
-
-                    return Task::none();
-                };
-
-                dashboard.update(dashboard_message)
-            }
-            TabMessage::SpellForm(spell_form_message) => {
-                let Tab::SpellForm(spell_form) = tab else {
-                    error!(
-                        "tab with id '{tab_id:?}' does not match message of type '{spell_form_message:?}'"
-                    );
-
-                    return Task::none();
-                };
-
-                spell_form.update(spell_form_message)
-            }
-            TabMessage::SpellList(spell_list_message) => {
-                let Tab::SpellList(spell_list) = tab else {
-                    error!(
-                        "tab with id '{tab_id:?}' does not match message of type '{spell_list_message:?}'"
-                    );
-
-                    return Task::none();
-                };
-
-                spell_list.update(spell_list_message)
-            }
-        }
-    }
-
-    pub fn view(&self) -> Element<'_, Message> {
+    pub fn view(&self) -> Element<'_, TabManagerMessage> {
         let tab_bar = tab_bar(&self.tabs, self.active);
 
         let divider = widget::rule::horizontal(1);
@@ -129,7 +90,7 @@ impl TabManager {
             Tab::SpellForm(spell_form) => spell_form.view().map(TabMessage::SpellForm),
             Tab::SpellList(spell_list) => spell_list.view().map(TabMessage::SpellList),
         }
-        .map(|tm| Message::Tab(self.active, tm));
+        .map(|tab_message| TabManagerMessage::TabUpdated(self.active, tab_message));
 
         let constrained_content = widget::container(view)
             .max_width(VIEW_WIDTH)
@@ -148,6 +109,90 @@ impl TabManager {
             .into()
     }
 
+    fn update_tab(
+        &mut self,
+        tab_id: TabId,
+        message: TabMessage,
+    ) -> (Task<TabManagerMessage>, Option<TabManagerEffect>) {
+        let Some(tab) = self.get_mut(tab_id) else {
+            error!("could not find tab with id '{tab_id:?}'");
+
+            return (Task::none(), None);
+        };
+
+        match message {
+            TabMessage::Dashboard(dashboard_message) => {
+                let Tab::Dashboard(dashboard) = tab else {
+                    error!(
+                        "tab with id '{tab_id:?}' does not match message of type '{dashboard_message:?}'"
+                    );
+
+                    return (Task::none(), None);
+                };
+
+                let (dashboard_task, maybe_effect) = dashboard.update(dashboard_message);
+
+                let task = wrap_message(dashboard_task, tab_id, TabMessage::Dashboard);
+
+                let mut effect = None;
+                if let Some(dashboard_effect) = maybe_effect {
+                    match dashboard_effect {}
+                }
+
+                (task, effect)
+            }
+            TabMessage::SpellForm(spell_form_message) => {
+                let Tab::SpellForm(spell_form) = tab else {
+                    error!(
+                        "tab with id '{tab_id:?}' does not match message of type '{spell_form_message:?}'"
+                    );
+
+                    return (Task::none(), None);
+                };
+
+                let (spell_form_task, maybe_effect) = spell_form.update(spell_form_message);
+
+                let task = wrap_message(spell_form_task, tab_id, TabMessage::SpellForm);
+
+                let mut effect = None;
+                if let Some(spell_form_effect) = maybe_effect {
+                    match spell_form_effect {}
+                }
+
+                (task, effect)
+            }
+            TabMessage::SpellList(spell_list_message) => {
+                let Tab::SpellList(spell_list) = tab else {
+                    error!(
+                        "tab with id '{tab_id:?}' does not match message of type '{spell_list_message:?}'"
+                    );
+
+                    return (Task::none(), None);
+                };
+
+                let (spell_list_task, maybe_effect) = spell_list.update(spell_list_message);
+
+                let mut tasks = Vec::with_capacity(2);
+                tasks.push(wrap_message(spell_list_task, tab_id, TabMessage::SpellList));
+
+                let mut effect = None;
+                if let Some(spell_list_effect) = maybe_effect {
+                    match spell_list_effect {
+                        SpellListEffect::OpenSpellForm { mode } => {
+                            let task =
+                                Task::done(TabManagerMessage::OpenTab(ViewRequest::SpellForm {
+                                    mode,
+                                }));
+                            tasks.push(task);
+                        }
+                    }
+                }
+
+                (Task::batch(tasks), effect)
+            }
+        }
+    }
+
     fn get(&self, id: TabId) -> Option<&Tab> {
         self.tabs
             .iter()
@@ -162,7 +207,7 @@ impl TabManager {
             .map(|(_, tab)| tab)
     }
 
-    fn handle_request(&mut self, request: ViewRequest) -> Task<Message> {
+    fn handle_request(&mut self, request: ViewRequest) {
         debug!("handling tab request: {request:?}");
 
         match request {
@@ -180,14 +225,12 @@ impl TabManager {
                     self.tabs.push((id, new_tab));
                     self.active = id;
 
-                    return Task::none();
+                    return;
                 };
 
                 self.active = tab_id;
             }
         }
-
-        Task::none()
     }
 
     /// Returns a reference to a `Tab` if it exists.
@@ -197,4 +240,15 @@ impl TabManager {
             .find(|(_, tab)| predicate(tab))
             .map(|(tab_id, _)| *tab_id)
     }
+}
+
+fn wrap_message<M>(
+    child_task: Task<M>,
+    tab_id: TabId,
+    wrapper: impl Fn(M) -> TabMessage + Send + Sync + 'static,
+) -> Task<TabManagerMessage>
+where
+    M: Send + Sync + 'static,
+{
+    child_task.map(move |message| TabManagerMessage::TabUpdated(tab_id, wrapper(message)))
 }

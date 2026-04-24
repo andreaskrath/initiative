@@ -1,18 +1,16 @@
-mod action;
 mod bar;
 mod id;
 mod manager;
 mod message;
 
-use crate::view::Dashboard;
-use crate::view::SpellForm;
-use crate::view::SpellList;
-use crate::view::ViewContent;
-
-pub use action::*;
 pub use id::*;
 pub use manager::*;
 pub use message::*;
+
+use crate::view::content::ViewContent;
+use crate::view::dashboard::Dashboard;
+use crate::view::spell::form::SpellForm;
+use crate::view::spell::list::SpellList;
 
 /// The actual elements that can be shown as tabs.
 pub enum Tab {

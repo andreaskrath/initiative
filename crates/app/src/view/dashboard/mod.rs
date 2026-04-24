@@ -1,32 +1,34 @@
-mod message;
+pub mod message;
 
-use crate::message::Message;
-use crate::view::ViewContent;
-pub use message::DashboardMessage;
+use crate::view::content::ViewContent;
+use message::DashboardEffect;
+use message::DashboardMessage;
 use widgets::Element;
 
 use iced::Task;
 
-pub struct Dashboard {}
+pub struct Dashboard;
 
 impl Dashboard {
     pub fn new() -> Self {
-        Self {}
+        Self
     }
 }
 
 impl ViewContent for Dashboard {
-    type ContentMessage = DashboardMessage;
+    type Message = DashboardMessage;
+
+    type Effect = DashboardEffect;
 
     fn title(&self) -> &str {
         "Dashboard"
     }
 
-    fn update(&mut self, message: Self::ContentMessage) -> Task<Message> {
-        Task::none()
+    fn update(&mut self, message: Self::Message) -> (Task<Self::Message>, Option<Self::Effect>) {
+        (Task::none(), None)
     }
 
-    fn view(&self) -> Element<'_, Self::ContentMessage> {
+    fn view(&self) -> Element<'_, Self::Message> {
         components::text::heading("Dashboard").into()
     }
 }

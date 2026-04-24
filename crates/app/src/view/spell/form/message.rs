@@ -1,4 +1,3 @@
-use iced::widget::text_editor::Action;
 use types::Class;
 use types::MagicSchool;
 use types::SpellArea;
@@ -7,6 +6,8 @@ use types::SpellDuration;
 use types::SpellLevel;
 use types::SpellRange;
 use types::SpellShapeKind;
+
+use iced::widget::text_editor::Action;
 
 #[derive(Debug, Clone)]
 pub enum SpellFormMessage {
@@ -39,3 +40,6 @@ pub enum SpellFormMessage {
     FlavorTextChanged(Action),
     AttributionChanged(String),
 }
+
+#[derive(Debug, Clone)]
+pub enum SpellFormEffect {}

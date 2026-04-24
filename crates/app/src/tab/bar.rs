@@ -1,7 +1,6 @@
-use crate::message::Message;
 use crate::tab::Tab;
-use crate::tab::TabAction;
 use crate::tab::TabId;
+use crate::tab::TabManagerMessage;
 use components::icon::IconName;
 use components::text::Text;
 use style::container::ContainerClass;
@@ -25,7 +24,7 @@ const TAB_BAR_HEIGHT: u32 = 30;
 /// The tab bar as a whole will always fill the entire horizontal space.
 const TAB_BAR_WIDTH: u32 = 200;
 
-pub fn tab_bar(tabs: &[(TabId, Tab)], active: TabId) -> Element<'_, Message> {
+pub fn tab_bar(tabs: &[(TabId, Tab)], active: TabId) -> Element<'_, TabManagerMessage> {
     let mut tab_bar = Row::with_capacity(tabs.len());
 
     for (tab_id, tab) in tabs {
@@ -41,7 +40,7 @@ pub fn tab_bar(tabs: &[(TabId, Tab)], active: TabId) -> Element<'_, Message> {
             let close_icon = components::icon(IconName::Close).class(SvgClass::Normal);
             let close_button = widget::button(close_icon)
                 .height(TAB_BAR_HEIGHT)
-                .on_press(Message::TabAction(TabAction::Close(*tab_id)));
+                .on_press(TabManagerMessage::CloseTab(*tab_id));
 
             tab_element = tab_element.push(close_button);
         }
@@ -54,8 +53,7 @@ pub fn tab_bar(tabs: &[(TabId, Tab)], active: TabId) -> Element<'_, Message> {
             container = container.class(ContainerClass::Ghost);
         }
 
-        let ma =
-            widget::mouse_area(container).on_press(Message::TabAction(TabAction::Focus(*tab_id)));
+        let ma = widget::mouse_area(container).on_press(TabManagerMessage::FocusTab(*tab_id));
 
         tab_bar = tab_bar.push(ma);
 

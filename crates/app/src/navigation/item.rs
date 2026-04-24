@@ -1,5 +1,5 @@
 use super::message::NavigationMessage;
-use crate::view::ViewRequest;
+use crate::view::request::ViewRequest;
 use components::icon::IconName;
 use style::button::ButtonClass;
 use style::svg::SvgClass;

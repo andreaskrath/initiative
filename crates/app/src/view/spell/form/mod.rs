@@ -1,13 +1,12 @@
 mod fields;
-mod message;
+pub mod message;
 
-pub use message::SpellFormMessage;
-
-use crate::message::Message;
-use crate::view::ViewContent;
+use crate::view::content::ViewContent;
 use crate::view::spell::form::fields::SpellFormFields;
 use crate::view::spell::form::fields::SpellMaterialInput;
 use crate::view::spell::form::fields::SpellShapeInput;
+use crate::view::spell::form::message::SpellFormEffect;
+use crate::view::spell::form::message::SpellFormMessage;
 use components::label::Label;
 use style::layout::BODY_SPACING;
 use style::layout::LABEL_SPACING;
@@ -327,7 +326,9 @@ impl<'a> SpellForm {
 }
 
 impl ViewContent for SpellForm {
-    type ContentMessage = SpellFormMessage;
+    type Message = SpellFormMessage;
+
+    type Effect = SpellFormEffect;
 
     fn title(&self) -> &str {
         match self.mode {
@@ -336,7 +337,7 @@ impl ViewContent for SpellForm {
         }
     }
 
-    fn update(&mut self, message: Self::ContentMessage) -> Task<Message> {
+    fn update(&mut self, message: Self::Message) -> (Task<Self::Message>, Option<Self::Effect>) {
         debug!("updating spell form with: {:?}", message);
 
         match message {
@@ -468,10 +469,10 @@ impl ViewContent for SpellForm {
             }
         }
 
-        Task::none()
+        (Task::none(), None)
     }
 
-    fn view(&self) -> Element<'_, Self::ContentMessage> {
+    fn view(&self) -> Element<'_, Self::Message> {
         let title = self.title();
 
         let identity = self.identity_section();

@@ -1,16 +1,9 @@
-use crate::navigation::NavigationMessage;
-use crate::tab::TabAction;
-use crate::tab::TabId;
-use crate::tab::TabMessage;
-use crate::view::ViewRequest;
+use crate::navigation::message::NavigationMessage;
+use crate::tab::TabManagerMessage;
 
 #[derive(Debug, Clone)]
 pub enum Message {
     Navigation(NavigationMessage),
 
-    Tab(TabId, TabMessage),
-
-    TabAction(TabAction),
-
-    Navigate(ViewRequest),
+    TabManager(TabManagerMessage),
 }

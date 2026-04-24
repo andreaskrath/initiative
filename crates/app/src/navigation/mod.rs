@@ -1,14 +1,12 @@
 mod group;
 mod item;
-mod message;
+pub mod message;
 
-pub use message::NavigationMessage;
-
-use crate::message::Message;
 use crate::navigation::group::NavigationGroup;
 use crate::navigation::item::NavigationItem;
-use crate::tab::TabAction;
-use crate::view::ViewRequest;
+use crate::navigation::message::NavigationEffect;
+use crate::navigation::message::NavigationMessage;
+use crate::view::request::ViewRequest;
 use components::icon::IconName;
 use widgets::Element;
 use widgets::animation::Animation;
@@ -49,12 +47,10 @@ impl Default for Navigation {
 }
 
 impl Navigation {
-    /// Whether the sidebar is currently collapsed.
-    pub fn collapsed(&self) -> bool {
-        self.collapsed
-    }
-
-    pub fn update(&mut self, message: NavigationMessage) -> Task<Message> {
+    pub fn update(
+        &mut self,
+        message: NavigationMessage,
+    ) -> (Task<NavigationMessage>, Option<NavigationEffect>) {
         match message {
             NavigationMessage::ToggleCollapse => {
                 self.collapsed = !self.collapsed;
@@ -67,22 +63,22 @@ impl Navigation {
 
                 self.collapse_animation.retarget(target);
 
-                Task::none()
+                (Task::none(), None)
             }
             NavigationMessage::AnimationTick => {
                 self.collapse_animation.tick();
 
-                Task::none()
+                (Task::none(), None)
             }
             NavigationMessage::ToggleGroup(id) => {
                 if let Some(group) = self.groups.iter_mut().find(|g| g.id() == id) {
                     group.toggle_expansion();
                 }
 
-                Task::none()
+                (Task::none(), None)
             }
             NavigationMessage::Navigate(view) => {
-                Task::done(Message::TabAction(TabAction::Open(view)))
+                (Task::none(), Some(NavigationEffect::Navigate(view)))
             }
         }
     }
@@ -103,6 +99,11 @@ impl Navigation {
 
             row![groups_container, divider].into()
         }
+    }
+
+    /// Whether the sidebar is currently collapsed.
+    pub fn collapsed(&self) -> bool {
+        self.collapsed
     }
 
     pub fn subscription(&self) -> Subscription<NavigationMessage> {

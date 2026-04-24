@@ -1,10 +1,9 @@
-mod message;
+pub mod message;
 
-pub use message::SpellListMessage;
-
-use crate::message::Message;
-use crate::view::ViewContent;
-use crate::view::ViewRequest;
+use crate::view::content::ViewContent;
+use crate::view::request::ViewRequest;
+use crate::view::spell::list::message::SpellListEffect;
+use crate::view::spell::list::message::SpellListMessage;
 use types::FormMode;
 use widgets::Element;
 
@@ -22,13 +21,15 @@ impl SpellList {
 }
 
 impl ViewContent for SpellList {
-    type ContentMessage = SpellListMessage;
+    type Message = SpellListMessage;
+
+    type Effect = SpellListEffect;
 
     fn title(&self) -> &str {
         "Spell List"
     }
 
-    fn update(&mut self, message: Self::ContentMessage) -> Task<Message> {
+    fn update(&mut self, message: Self::Message) -> (Task<Self::Message>, Option<Self::Effect>) {
         debug!("updating spell list with: {:?}", message);
 
         match message {
@@ -37,12 +38,16 @@ impl ViewContent for SpellList {
                     mode: FormMode::Create,
                 };
 
-                Task::done(Message::Navigate(request))
+                let effect = Some(SpellListEffect::OpenSpellForm {
+                    mode: FormMode::Create,
+                });
+
+                (Task::none(), effect)
             }
         }
     }
 
-    fn view(&self) -> Element<'_, Self::ContentMessage> {
+    fn view(&self) -> Element<'_, Self::Message> {
         let title = components::text::view_title("Spell List");
 
         let create_spell_button =

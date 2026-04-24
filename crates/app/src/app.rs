@@ -5,9 +5,10 @@ mod view;
 
 use crate::message::Message;
 use crate::navigation::Navigation;
-use crate::navigation::NavigationMessage;
-use crate::tab::TabAction;
+use crate::navigation::message::NavigationEffect;
+use crate::navigation::message::NavigationMessage;
 use crate::tab::TabManager;
+use crate::tab::TabManagerMessage;
 use components::icon::IconName;
 use components::icon::IconSize;
 use style::button::ButtonClass;
@@ -32,7 +33,7 @@ use iced::widget::stack;
 pub struct Initiative {
     theme: Theme,
     navigation: Navigation,
-    tabs: TabManager,
+    tab_manager: TabManager,
 }
 
 impl Default for Initiative {
@@ -40,7 +41,7 @@ impl Default for Initiative {
         Self {
             theme: ThemeVariant::default().into(),
             navigation: Navigation::default(),
-            tabs: TabManager::default(),
+            tab_manager: TabManager::default(),
         }
     }
 }
@@ -48,10 +49,36 @@ impl Default for Initiative {
 impl Initiative {
     pub fn update(&mut self, message: Message) -> Task<Message> {
         match message {
-            Message::Navigation(navigation_message) => self.navigation.update(navigation_message),
-            Message::Tab(tab_id, tab_message) => self.tabs.update(tab_id, tab_message),
-            Message::TabAction(tab_action) => self.tabs.perform(tab_action),
-            Message::Navigate(view_request) => self.tabs.perform(TabAction::Open(view_request)),
+            Message::Navigation(navigation_message) => {
+                let (navigation_task, maybe_effect) = self.navigation.update(navigation_message);
+
+                let mut tasks = Vec::with_capacity(2);
+                tasks.push(navigation_task.map(|message| Message::Navigation(message)));
+
+                if let Some(navigation_effect) = maybe_effect {
+                    match navigation_effect {
+                        NavigationEffect::Navigate(view_request) => {
+                            let effect =
+                                Message::TabManager(TabManagerMessage::OpenTab(view_request));
+                            tasks.push(Task::done(effect));
+                        }
+                    }
+                }
+
+                Task::batch(tasks)
+            }
+            Message::TabManager(tab_manager_message) => {
+                let (tab_manager_task, maybe_effect) = self.tab_manager.update(tab_manager_message);
+
+                let mut tasks = Vec::with_capacity(2);
+                tasks.push(tab_manager_task.map(|message| Message::TabManager(message)));
+
+                if let Some(tab_manager_effect) = maybe_effect {
+                    match tab_manager_effect {}
+                }
+
+                Task::batch(tasks)
+            }
         }
     }
 
@@ -73,7 +100,8 @@ impl Initiative {
 
         let navigation = self.navigation.view().map(Message::Navigation);
 
-        let current_view = container(self.tabs.view())
+        let tab_manager_view = self.tab_manager.view().map(Message::TabManager);
+        let current_view = container(tab_manager_view)
             .class(ContainerClass::Background)
             .align_x(Horizontal::Center)
             .width(Fill)
