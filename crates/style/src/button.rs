@@ -7,6 +7,7 @@ use crate::theme::Theme;
 
 use iced::Background;
 use iced::Border;
+use iced::Color;
 use iced::widget::button::Catalog;
 use iced::widget::button::Status;
 use iced::widget::button::Style;
@@ -22,6 +23,7 @@ pub enum ButtonClass {
     Danger,
     Ghost,
     Outlined,
+    Overlay,
 }
 
 impl Catalog for Theme {
@@ -41,8 +43,25 @@ impl Catalog for Theme {
             };
 
             return Style {
-                background: None,
+                background: Some(Background::Color(Color::TRANSPARENT)),
                 text_color: text,
+                border: NO_BORDER_ROUNDED,
+                shadow: NO_SHADOW,
+                snap: true,
+            };
+        }
+
+        if *class == ButtonClass::Overlay {
+            let background = match status {
+                Status::Active => self.interaction,
+                Status::Hovered => hovered(self.interaction),
+                Status::Pressed => pressed(self.interaction),
+                Status::Disabled => disabled(self.interaction),
+            };
+
+            return Style {
+                background: Some(Background::Color(background)),
+                text_color: self.text,
                 border: NO_BORDER_ROUNDED,
                 shadow: NO_SHADOW,
                 snap: true,
@@ -78,8 +97,10 @@ impl Catalog for Theme {
             ButtonClass::Warning => self.warning,
             ButtonClass::Danger => self.danger,
             ButtonClass::Interaction => self.interaction,
-            ButtonClass::Ghost | ButtonClass::Outlined => {
-                unreachable!("both ghost and outlined are handled in guard cases before this match")
+            ButtonClass::Ghost | ButtonClass::Outlined | ButtonClass::Overlay => {
+                unreachable!(
+                    "ghost, outlined, and overlay are handled in guard cases before this match"
+                )
             }
         };
 

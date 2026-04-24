@@ -36,7 +36,7 @@ impl Catalog for Theme {
         if *class == ContainerClass::Ghost {
             return Style {
                 text_color: None,
-                background: None,
+                background: Some(Background::Color(Color::TRANSPARENT)),
                 border: NO_BORDER,
                 shadow: NO_SHADOW,
                 snap: true,

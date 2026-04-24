@@ -9,7 +9,9 @@ path = "src/components.rs"
 
 [dependencies]
 # External crates
+arboard.workspace = true
 iced.workspace = true
+image.workspace = true
 thiserror.workspace = true
 tracing.workspace = true
 
