@@ -7,7 +7,6 @@ use crate::view::spell::form::fields::SpellMaterialInput;
 use crate::view::spell::form::fields::SpellShapeInput;
 use crate::view::spell::form::message::SpellFormEffect;
 use crate::view::spell::form::message::SpellFormMessage;
-use components::image_field::error::ImageError;
 use components::label::Label;
 use style::layout::BODY_SPACING;
 use style::layout::LABEL_SPACING;
@@ -318,6 +317,7 @@ impl<'a> SpellForm {
 
         let images = components::image_field(&self.fields.images)
             .on_clipboard(SpellFormMessage::ImagePasted)
+            .on_file_picker(SpellFormMessage::ImagePickerOpened)
             .on_remove(SpellFormMessage::ImageRemoved);
 
         let form = column![flavor_text, attribution, images]
@@ -480,6 +480,27 @@ impl ViewContent for SpellForm {
             SpellFormMessage::ImageLoaded(Ok(bytes)) => self.fields.images.add(bytes),
             SpellFormMessage::ImageLoaded(Err(err)) => tracing::error!("{err}"),
             SpellFormMessage::ImageRemoved(image_number) => self.fields.images.remove(image_number),
+            SpellFormMessage::ImagePickerOpened => {
+                let task = Task::perform(
+                    components::image_field::file::open_image_picker(),
+                    SpellFormMessage::ImageFileSelected,
+                );
+
+                return (task, None);
+            }
+            SpellFormMessage::ImageFileSelected(maybe_path) => {
+                if let Some(path) = maybe_path {
+                    let task = Task::perform(
+                        components::image_field::file::load_image(path),
+                        SpellFormMessage::ImageFileLoaded,
+                    );
+
+                    return (task, None);
+                }
+            }
+
+            SpellFormMessage::ImageFileLoaded(Ok(bytes)) => self.fields.images.add(bytes),
+            SpellFormMessage::ImageFileLoaded(Err(err)) => tracing::error!("{err}"),
         }
 
         (Task::none(), None)

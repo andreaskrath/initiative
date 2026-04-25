@@ -1,17 +1,17 @@
 pub mod clipboard;
 pub mod error;
-mod state;
-
-pub use state::ImageFieldState;
-use style::svg::SvgClass;
+pub mod file;
+pub mod state;
 
 use crate::icon::IconName;
 use crate::icon::IconSize;
+use crate::image_field::state::ImageFieldState;
 use crate::label::Label;
 use style::button::ButtonClass;
 use style::container::ContainerClass;
 use style::layout::BODY_SPACING;
 use style::layout::INPUT_PADDING;
+use style::svg::SvgClass;
 use widgets::Element;
 
 use iced::Alignment;
@@ -20,6 +20,7 @@ use iced::Length;
 use iced::widget::Column;
 use iced::widget::Row;
 use iced::widget::column;
+use iced::widget::row;
 use iced::widget::stack;
 
 const ITEMS_PER_ROW: usize = 3;
@@ -113,10 +114,43 @@ where
 
         // Add button for new images.
         if !widget.state.at_limit() {
-            let add_button = iced::widget::button("Clipboard")
-                .on_press_maybe(widget.on_clipboard)
-                .width(Length::FillPortion(1));
-            items.push(add_button.into());
+            let browse_files_button = {
+                let icon = crate::icon(IconName::Directory).class(SvgClass::Text);
+                let text = crate::text::display("Browse files");
+                let label = row![icon, text]
+                    .spacing(BODY_SPACING)
+                    .width(Length::Fill)
+                    .align_y(Alignment::Center);
+                iced::widget::button(label)
+                    .on_press_maybe(widget.on_file_picker)
+                    .width(Length::Shrink)
+            };
+
+            let divider = crate::text::display("or");
+
+            let clipboard_button = {
+                let icon = crate::icon(IconName::Clipboard).class(SvgClass::Text);
+                let text = crate::text::display("Paste from Clipboard");
+                let label = row![icon, text]
+                    .spacing(BODY_SPACING)
+                    .width(Length::Fill)
+                    .align_y(Alignment::Center);
+                iced::widget::button(label)
+                    .on_press_maybe(widget.on_clipboard)
+                    .width(Length::Shrink)
+            };
+
+            let content = column![browse_files_button, divider, clipboard_button]
+                .align_x(Alignment::Center)
+                .spacing(BODY_SPACING);
+
+            let container = iced::widget::container(content)
+                .class(ContainerClass::Interaction)
+                .align_y(Alignment::Center)
+                .align_x(Alignment::Center)
+                .width(Length::FillPortion(1))
+                .height(IMAGE_HEIGHT);
+            items.push(container.into());
         }
 
         // Add padding.

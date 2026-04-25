@@ -19,4 +19,10 @@ pub enum ImageError {
 
     #[error("Failed to encode clipboard image as PNG.")]
     EncodingFailed,
+
+    #[error("Failed to load {0}.")]
+    LoadImageFailed(String),
+
+    #[error("{0} is not a valid image file.")]
+    FileIsNotImage(String),
 }

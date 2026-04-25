@@ -1,3 +1,5 @@
+use std::path::PathBuf;
+
 use components::image_field::error::ImageError;
 use types::Class;
 use types::MagicSchool;
@@ -43,6 +45,9 @@ pub enum SpellFormMessage {
     ImagePasted,
     ImageLoaded(Result<Box<[u8]>, ImageError>),
     ImageRemoved(usize),
+    ImagePickerOpened,
+    ImageFileSelected(Option<PathBuf>),
+    ImageFileLoaded(Result<Box<[u8]>, ImageError>),
 }
 
 #[derive(Debug, Clone)]

@@ -23,11 +23,12 @@ arboard = "=3.6.1"
 iced_aw = "=0.13.1"
 image = "=0.25.10"
 parking_lot = "=0.12.5"
+rfd = "=0.17.2"
 rust-embed = { version = "=8.9.0", features = ["include-exclude"] }
 strum = { version = "=0.27.2", features = ["derive"] }
 strum_macros = "=0.27.2"
 thiserror = "=2.0.17"
-tokio = { version = "=1.52.1", features = ["rt"] }
+tokio = { version = "=1.52.1", features = ["rt", "fs"] }
 tracing = "=0.1.41"
 tracing-subscriber = { version = "=0.3.20", features = ["env-filter"] }
 uuid = "=1.18.1"

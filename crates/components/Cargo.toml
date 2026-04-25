@@ -12,7 +12,9 @@ path = "src/components.rs"
 arboard.workspace = true
 iced.workspace = true
 image.workspace = true
+rfd.workspace = true
 thiserror.workspace = true
+tokio.workspace = true
 tracing.workspace = true
 
 # Internal crates

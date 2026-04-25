@@ -1,4 +1,4 @@
-use components::image_field::ImageFieldState;
+use components::image_field::state::ImageFieldState;
 use components::multi_text_field::MultiTextFieldRule;
 use components::multi_text_field::MultiTextFieldState;
 use components::number_field::NumberFieldRule;
