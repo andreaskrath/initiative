@@ -33,7 +33,9 @@ impl IconSize {
 pub enum IconName {
     ChevronDown,
     ChevronRight,
+    Clipboard,
     Close,
+    Directory,
     Error,
     Info,
     Monster,
@@ -49,7 +51,9 @@ impl IconName {
         match self {
             IconName::ChevronDown => "icons/chevron-down.svg",
             IconName::ChevronRight => "icons/chevron-right.svg",
+            IconName::Clipboard => "icons/clipboard.svg",
             IconName::Close => "icons/close.svg",
+            IconName::Directory => "icons/directory.svg",
             IconName::Error => "icons/error.svg",
             IconName::Info => "icons/info.svg",
             IconName::Monster => "icons/monster.svg",
