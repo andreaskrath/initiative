@@ -20,7 +20,7 @@ pub enum IconSize {
 }
 
 impl IconSize {
-    fn wh(self) -> (u32, u32) {
+    fn dimensions(self) -> (u32, u32) {
         match self {
             IconSize::Small => (12, 12),
             IconSize::Medium => (16, 16),
@@ -98,7 +98,7 @@ impl<'a, Message: 'a> From<Icon> for Element<'a, Message> {
             }
         };
 
-        let (width, height) = icon.size.wh();
+        let (width, height) = icon.size.dimensions();
 
         let svg = iced::widget::svg(handle)
             .width(width)
