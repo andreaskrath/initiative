@@ -18,6 +18,7 @@ pub enum ContainerClass {
     Ghost,
     Surface,
     Outlined,
+    Interaction,
 
     /// Used for info tooltips.
     Info,
@@ -73,6 +74,7 @@ impl Catalog for Theme {
             ContainerClass::Background => (Some(self.background), None),
             ContainerClass::Surface => (Some(self.surface), None),
             ContainerClass::Outlined => (None, Some(self.primary)),
+            ContainerClass::Interaction => (Some(self.interaction), None),
             ContainerClass::Ghost | ContainerClass::Info | ContainerClass::Error => unreachable!(
                 "the normal, info, and error case are handled in guard clauses before the match"
             ),
