@@ -470,13 +470,10 @@ impl ViewContent for SpellForm {
                 }
             }
             SpellFormMessage::ImagePasted => {
-                let clipboard_result = async {
-                    tokio::task::spawn_blocking(components::image_field::clipboard::get_image).await
-                };
-
-                let task = Task::perform(clipboard_result, |result| {
-                    SpellFormMessage::ImageLoaded(result.unwrap_or(Err(ImageError::Unknown)))
-                });
+                let task = Task::perform(
+                    components::image_field::clipboard::get_image(),
+                    SpellFormMessage::ImageLoaded,
+                );
 
                 return (task, None);
             }
