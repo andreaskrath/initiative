@@ -1,3 +1,4 @@
+use crate::context::Context;
 use crate::tab::Tab;
 use crate::tab::TabId;
 use crate::tab::TabManagerEffect;
@@ -11,7 +12,6 @@ use crate::view::spell::form::SpellForm;
 use crate::view::spell::form::message::Effect as SpellFormEffect;
 use crate::view::spell::list::SpellList;
 use crate::view::spell::list::message::SpellListEffect;
-use storage::repositories::Repository;
 use widgets::Element;
 
 use iced::Alignment;
@@ -21,7 +21,6 @@ use iced::Task;
 use iced::widget;
 use iced::widget::Space;
 use iced::widget::column;
-use std::sync::Arc;
 use tracing::debug;
 use tracing::error;
 
@@ -48,14 +47,14 @@ impl TabManager {
     pub fn update(
         &mut self,
         message: TabManagerMessage,
-        repository: &Arc<dyn Repository>,
+        context: Context,
     ) -> (Task<TabManagerMessage>, Option<TabManagerEffect>) {
         match message {
             TabManagerMessage::TabUpdated(tab_id, tab_message) => {
                 return self.update_tab(tab_id, tab_message);
             }
             TabManagerMessage::OpenTab(request) => {
-                return self.handle_request(request, repository);
+                return self.handle_request(request, context);
             }
             TabManagerMessage::CloseTab(close_id) => {
                 self.tabs.retain(|(tab_id, _)| *tab_id != close_id);
@@ -224,14 +223,14 @@ impl TabManager {
     fn handle_request(
         &mut self,
         request: Request,
-        repository: &Arc<dyn Repository>,
+        context: Context,
     ) -> (Task<TabManagerMessage>, Option<TabManagerEffect>) {
         debug!("handling tab request: {request:?}");
 
         match request {
             Request::SpellForm { mode } => {
                 let id = TabId::unique();
-                let (spell_form, task) = SpellForm::new(mode, repository.clone());
+                let (spell_form, task) = SpellForm::new(mode, context);
                 let tab = Tab::SpellForm(Box::new(spell_form));
                 self.tabs.push((id, tab));
                 self.active = id;

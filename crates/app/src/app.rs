@@ -1,9 +1,11 @@
+mod context;
 mod message;
 mod navigation;
 mod state;
 mod tab;
 mod view;
 
+use crate::context::Context;
 use crate::message::LoadMessage;
 use crate::message::Message;
 use crate::navigation::Navigation;
@@ -36,10 +38,8 @@ use iced::widget::rule;
 use iced::widget::space;
 use iced::widget::stack;
 use std::path::PathBuf;
-use std::sync::Arc;
 
 pub struct Application {
-    theme: Theme,
     state: State<Loader, Initiative>,
 }
 
@@ -48,15 +48,17 @@ struct Loader {}
 struct Initiative {
     navigation: Navigation,
     tab_manager: TabManager,
-    repository: Arc<dyn Repository>,
+    context: Context,
 }
 
 impl Initiative {
-    fn new(repository: Arc<dyn Repository>) -> Self {
+    fn new(repository: impl Repository) -> Self {
+        let context = Context::new(repository);
+
         Self {
             navigation: Navigation::default(),
             tab_manager: TabManager::default(),
-            repository,
+            context,
         }
     }
 }
@@ -78,7 +80,6 @@ impl Application {
         let task = Task::batch(messages).map(Message::Load);
 
         let app = Self {
-            theme: ThemeVariant::default().into(),
             state: State::Loading(Box::new(Loader {})),
         };
 
@@ -89,7 +90,7 @@ impl Application {
         match (&mut self.state, message) {
             (State::Loading(loader), Message::Load(load_message)) => match load_message {
                 LoadMessage::DatabaseConnected(Ok(pool)) => {
-                    let repository = Arc::new(Local::new(pool));
+                    let repository = Local::new(pool);
                     let initiative = Initiative::new(repository);
                     self.state = State::Active(Box::new(initiative));
 
@@ -121,7 +122,7 @@ impl Application {
             (State::Active(initiative), Message::TabManager(tab_manager_message)) => {
                 let (tab_manager_task, maybe_effect) = initiative
                     .tab_manager
-                    .update(tab_manager_message, &initiative.repository);
+                    .update(tab_manager_message, initiative.context.clone());
 
                 let mut tasks = Vec::with_capacity(2);
                 tasks.push(tab_manager_task.map(Message::TabManager));
@@ -190,6 +191,10 @@ impl Application {
     }
 
     pub fn theme(&self) -> Option<Theme> {
-        Some(self.theme.clone())
+        if let State::Active(state) = &self.state {
+            Some(state.context.theme())
+        } else {
+            Some(ThemeVariant::default().into())
+        }
     }
 }

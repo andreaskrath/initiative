@@ -14,6 +14,10 @@ pub enum Variant {
 }
 
 #[async_trait::async_trait]
-pub trait OptionsRepository {
+pub trait Options {
     async fn list_options(&self, variant: Variant) -> Result<Box<[String]>, Error>;
+}
+
+pub trait OptionsRepository {
+    fn options(&self) -> &dyn Options;
 }

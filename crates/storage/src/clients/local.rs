@@ -1,5 +1,6 @@
 use crate::Error;
 use crate::repositories::Repository;
+use crate::repositories::options::Options;
 use crate::repositories::options::OptionsRepository;
 use crate::repositories::options::Variant;
 
@@ -43,6 +44,7 @@ pub async fn connect(path: PathBuf) -> Result<SqlitePool, Error> {
     }
 }
 
+#[derive(Debug, Clone)]
 pub struct Local {
     pool: SqlitePool,
 }
@@ -56,7 +58,7 @@ impl Local {
 impl Repository for Local {}
 
 #[async_trait::async_trait]
-impl OptionsRepository for Local {
+impl Options for Local {
     async fn list_options(&self, variant: Variant) -> Result<Box<[String]>, Error> {
         let query = r#"
             SELECT value
@@ -73,5 +75,11 @@ impl OptionsRepository for Local {
         tracing::debug!("fetched {} '{:?}' options", options.len(), variant);
 
         Ok(options.into_boxed_slice())
+    }
+}
+
+impl OptionsRepository for Local {
+    fn options(&self) -> &dyn Options {
+        self
     }
 }

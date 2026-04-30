@@ -1,9 +1,9 @@
+use crate::context::Context;
 use storage::Error;
-use storage::repositories::Repository;
+use storage::repositories::options::OptionsRepository;
 use storage::repositories::options::Variant;
 
 use iced::Task;
-use std::sync::Arc;
 
 #[derive(Debug, Clone)]
 pub enum LoadMessage {
@@ -28,7 +28,7 @@ pub struct Loader {
 }
 
 impl Loader {
-    pub fn new(repository: Arc<dyn Repository>) -> (Self, Task<LoadMessage>) {
+    pub fn new(context: Context) -> (Self, Task<LoadMessage>) {
         let variants = &[
             Variant::School,
             Variant::Level,
@@ -40,7 +40,7 @@ impl Loader {
 
         let mut tasks = Vec::with_capacity(variants.len());
         for variant in variants {
-            let task = Task::perform(load_options(repository.clone(), *variant), |result| {
+            let task = Task::perform(load_options(context.clone(), *variant), |result| {
                 LoadMessage::OptionsLoaded(*variant, result)
             });
 
@@ -86,9 +86,10 @@ impl Loader {
     }
 }
 
-async fn load_options(
-    repository: Arc<dyn Repository>,
+async fn load_options<C: OptionsRepository>(
+    ctx: C,
     variant: Variant,
 ) -> Result<Box<[String]>, Error> {
-    repository.list_options(variant).await
+    let repo = ctx.options();
+    repo.list_options(variant).await
 }

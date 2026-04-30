@@ -2,6 +2,7 @@ mod fields;
 mod loader;
 pub mod message;
 
+use crate::context::Context;
 use crate::state::State;
 use crate::view::View;
 use crate::view::spell::form::fields::Fields;
@@ -11,7 +12,6 @@ use crate::view::spell::form::loader::Loader;
 use crate::view::spell::form::message::Effect;
 use crate::view::spell::form::message::Message;
 use components::label::Label;
-use storage::repositories::Repository;
 use style::layout::BODY_SPACING;
 use style::layout::LABEL_SPACING;
 use style::layout::SECTION_SPACING;
@@ -28,7 +28,6 @@ use iced::widget::Column;
 use iced::widget::Row;
 use iced::widget::column;
 use iced::widget::row;
-use std::sync::Arc;
 
 pub struct SpellForm {
     mode: FormMode,
@@ -36,8 +35,8 @@ pub struct SpellForm {
 }
 
 impl<'a> SpellForm {
-    pub fn new(mode: FormMode, repository: Arc<dyn Repository>) -> (Self, Task<Message>) {
-        let (loader, tasks) = Loader::new(repository);
+    pub fn new(mode: FormMode, context: Context) -> (Self, Task<Message>) {
+        let (loader, tasks) = Loader::new(context);
         let mapped_tasks = tasks.map(Message::LoadMessage);
 
         let spell_form = Self {
