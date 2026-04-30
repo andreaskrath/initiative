@@ -3,7 +3,7 @@ mod loader;
 pub mod message;
 
 use crate::context::Context;
-use crate::state::State;
+use crate::status::Status;
 use crate::view::View;
 use crate::view::spell::form::fields::Fields;
 use crate::view::spell::form::fields::SpellMaterialInput;
@@ -31,7 +31,7 @@ use iced::widget::row;
 
 pub struct SpellForm {
     mode: FormMode,
-    state: State<Loader, Fields>,
+    status: Status<Loader, Fields>,
 }
 
 impl<'a> SpellForm {
@@ -41,7 +41,7 @@ impl<'a> SpellForm {
 
         let spell_form = Self {
             mode,
-            state: State::Loading(Box::new(loader)),
+            status: Status::Loading(Box::new(loader)),
         };
 
         (spell_form, mapped_tasks)
@@ -335,8 +335,8 @@ impl View for SpellForm {
     }
 
     fn update(&mut self, message: Self::Message) -> (Task<Self::Message>, Option<Self::Effect>) {
-        match (&mut self.state, message) {
-            (State::Loading(loader), Message::LoadMessage(load_message)) => {
+        match (&mut self.status, message) {
+            (Status::Loading(loader), Message::LoadMessage(load_message)) => {
                 loader.update(load_message);
 
                 if let Some(err) = loader.error.take() {
@@ -348,7 +348,7 @@ impl View for SpellForm {
                 // If the loader is done, we construct fields from fetched data (in the current loader state).
                 if loader.is_done() {
                     match Fields::from_loader(loader) {
-                        Some(fields) => self.state = State::Active(Box::new(fields)),
+                        Some(fields) => self.status = Status::Ready(Box::new(fields)),
                         None => {
                             tracing::error!("failed to convert loader to fields");
                         }
@@ -357,45 +357,45 @@ impl View for SpellForm {
 
                 return (Task::none(), None);
             }
-            (State::Active(fields), Message::NameChanged(name)) => {
+            (Status::Ready(fields), Message::NameChanged(name)) => {
                 fields.name.set(name);
                 fields.name.validate();
             }
-            (State::Active(fields), Message::SchoolSelected(school)) => {
+            (Status::Ready(fields), Message::SchoolSelected(school)) => {
                 fields.school.set(school);
             }
-            (State::Active(fields), Message::LevelSelected(level)) => {
+            (Status::Ready(fields), Message::LevelSelected(level)) => {
                 fields.level.set(level);
             }
-            (State::Active(fields), Message::ClassToggled(class)) => {
+            (Status::Ready(fields), Message::ClassToggled(class)) => {
                 if let Some(index) = fields.classes.iter().position(|c| *c == class) {
                     fields.classes.swap_remove(index);
                 } else {
                     fields.classes.push(class);
                 }
             }
-            (State::Active(fields), Message::TagChanged(tag)) => fields.tags.set_value(tag),
-            (State::Active(fields), Message::TagSubmitted) => fields.tags.add_selection(),
-            (State::Active(fields), Message::TagRemoved(tag_index)) => {
+            (Status::Ready(fields), Message::TagChanged(tag)) => fields.tags.set_value(tag),
+            (Status::Ready(fields), Message::TagSubmitted) => fields.tags.add_selection(),
+            (Status::Ready(fields), Message::TagRemoved(tag_index)) => {
                 fields.tags.remove_selection(tag_index)
             }
-            (State::Active(fields), Message::CastingTimeSelected(casting_time)) => {
+            (Status::Ready(fields), Message::CastingTimeSelected(casting_time)) => {
                 fields.casting_time.set(casting_time);
             }
-            (State::Active(fields), Message::RitualToggled) => fields.ritual = !fields.ritual,
-            (State::Active(fields), Message::ConcentrationToggled) => {
+            (Status::Ready(fields), Message::RitualToggled) => fields.ritual = !fields.ritual,
+            (Status::Ready(fields), Message::ConcentrationToggled) => {
                 fields.concentration = !fields.concentration;
             }
-            (State::Active(fields), Message::VerbalToggled) => fields.verbal = !fields.verbal,
-            (State::Active(fields), Message::SomaticToggled) => fields.somatic = !fields.somatic,
-            (State::Active(fields), Message::MaterialToggled) => {
+            (Status::Ready(fields), Message::VerbalToggled) => fields.verbal = !fields.verbal,
+            (Status::Ready(fields), Message::SomaticToggled) => fields.somatic = !fields.somatic,
+            (Status::Ready(fields), Message::MaterialToggled) => {
                 fields.material = !fields.material;
 
                 if fields.materials.is_empty() {
                     fields.materials.push(SpellMaterialInput::default());
                 }
             }
-            (State::Active(fields), Message::MaterialChanged(index, material)) => {
+            (Status::Ready(fields), Message::MaterialChanged(index, material)) => {
                 if let Some(spell_material) = fields.materials.get_mut(index) {
                     spell_material.material.set(material);
                 }
@@ -423,28 +423,28 @@ impl View for SpellForm {
 
                 fields.materials.truncate(new_len);
             }
-            (State::Active(fields), Message::MaterialWorthChanged(index, worth)) => {
+            (Status::Ready(fields), Message::MaterialWorthChanged(index, worth)) => {
                 if let Some(spell_material) = fields.materials.get_mut(index) {
                     spell_material.worth.set(worth);
                 }
             }
-            (State::Active(fields), Message::MaterialConsumed(index)) => {
+            (Status::Ready(fields), Message::MaterialConsumed(index)) => {
                 if let Some(spell_material) = fields.materials.get_mut(index) {
                     spell_material.consumed = !spell_material.consumed;
                 }
             }
-            (State::Active(fields), Message::DurationSelected(duration)) => {
+            (Status::Ready(fields), Message::DurationSelected(duration)) => {
                 fields.duration.set(duration);
             }
-            (State::Active(fields), Message::RangeSelected(range)) => {
+            (Status::Ready(fields), Message::RangeSelected(range)) => {
                 fields.range.set(range);
             }
-            (State::Active(fields), Message::AreaSelected(area)) => fields.area.set(area),
-            (State::Active(fields), Message::ShapeKindSelected(kind)) => {
+            (Status::Ready(fields), Message::AreaSelected(area)) => fields.area.set(area),
+            (Status::Ready(fields), Message::ShapeKindSelected(kind)) => {
                 fields.shape_kind.set(kind);
                 fields.shape = SpellShapeInput::from(kind);
             }
-            (State::Active(fields), Message::ShapeLengthChanged(new_length)) => {
+            (Status::Ready(fields), Message::ShapeLengthChanged(new_length)) => {
                 if let SpellShapeInput::Cone { length }
                 | SpellShapeInput::Cube { length }
                 | SpellShapeInput::Line { length, .. } = &mut fields.shape
@@ -452,40 +452,40 @@ impl View for SpellForm {
                     length.set(new_length);
                 }
             }
-            (State::Active(fields), Message::ShapeRadiusChanged(new_radius)) => {
+            (Status::Ready(fields), Message::ShapeRadiusChanged(new_radius)) => {
                 if let SpellShapeInput::Cylinder { radius, .. }
                 | SpellShapeInput::Sphere { radius } = &mut fields.shape
                 {
                     radius.set(new_radius);
                 }
             }
-            (State::Active(fields), Message::ShapeHeightChanged(new_height)) => {
+            (Status::Ready(fields), Message::ShapeHeightChanged(new_height)) => {
                 if let SpellShapeInput::Cylinder { height, .. } = &mut fields.shape {
                     height.set(new_height);
                 }
             }
-            (State::Active(fields), Message::ShapeWidthChanged(new_width)) => {
+            (Status::Ready(fields), Message::ShapeWidthChanged(new_width)) => {
                 if let SpellShapeInput::Line { width, .. } = &mut fields.shape {
                     width.set(new_width);
                 }
             }
-            (State::Active(fields), Message::DescriptionChanged(action)) => {
+            (Status::Ready(fields), Message::DescriptionChanged(action)) => {
                 if fields.description.perform(action) {
                     fields.description.validate();
                 }
             }
-            (State::Active(fields), Message::AtHigherLevelsChanged(action)) => {
+            (Status::Ready(fields), Message::AtHigherLevelsChanged(action)) => {
                 fields.at_higher_levels.perform(action);
             }
-            (State::Active(fields), Message::FlavorTextChanged(action)) => {
+            (Status::Ready(fields), Message::FlavorTextChanged(action)) => {
                 fields.flavor_text.perform(action);
                 fields.flavor_text.validate();
             }
-            (State::Active(fields), Message::AttributionChanged(quote_source)) => {
+            (Status::Ready(fields), Message::AttributionChanged(quote_source)) => {
                 fields.attribution.set(quote_source);
                 fields.attribution.validate();
             }
-            (State::Active(_), Message::ImagePasted) => {
+            (Status::Ready(_), Message::ImagePasted) => {
                 let task = Task::perform(
                     components::image_field::clipboard::get_image(),
                     Message::ImageLoaded,
@@ -493,14 +493,14 @@ impl View for SpellForm {
 
                 return (task, None);
             }
-            (State::Active(fields), Message::ImageLoaded(Ok(bytes))) => fields.images.add(bytes),
-            (State::Active(_), Message::ImageLoaded(Err(err))) => {
+            (Status::Ready(fields), Message::ImageLoaded(Ok(bytes))) => fields.images.add(bytes),
+            (Status::Ready(_), Message::ImageLoaded(Err(err))) => {
                 tracing::error!("{err}")
             }
-            (State::Active(fields), Message::ImageRemoved(image_number)) => {
+            (Status::Ready(fields), Message::ImageRemoved(image_number)) => {
                 fields.images.remove(image_number)
             }
-            (State::Active(_), Message::ImagePickerOpened) => {
+            (Status::Ready(_), Message::ImagePickerOpened) => {
                 let task = Task::perform(
                     components::image_field::file::open_image_picker(),
                     Message::ImageFileSelected,
@@ -508,7 +508,7 @@ impl View for SpellForm {
 
                 return (task, None);
             }
-            (State::Active(_), Message::ImageFileSelected(Some(path))) => {
+            (Status::Ready(_), Message::ImageFileSelected(Some(path))) => {
                 let task = Task::perform(
                     components::image_field::file::load_image(path),
                     Message::ImageFileLoaded,
@@ -516,13 +516,13 @@ impl View for SpellForm {
 
                 return (task, None);
             }
-            (State::Active(_), Message::ImageFileSelected(None)) => {
+            (Status::Ready(_), Message::ImageFileSelected(None)) => {
                 tracing::error!("selected image file has no path");
             }
-            (State::Active(fields), Message::ImageFileLoaded(Ok(bytes))) => {
+            (Status::Ready(fields), Message::ImageFileLoaded(Ok(bytes))) => {
                 fields.images.add(bytes)
             }
-            (State::Active(_), Message::ImageFileLoaded(Err(err))) => {
+            (Status::Ready(_), Message::ImageFileLoaded(Err(err))) => {
                 tracing::error!("{err}")
             }
             (_invalid_state, invalid_message) => {
@@ -534,15 +534,15 @@ impl View for SpellForm {
     }
 
     fn view(&self) -> Element<'_, Self::Message> {
-        match &self.state {
-            State::Loading(loader) => {
+        match &self.status {
+            Status::Loading(loader) => {
                 let start = 0.0;
                 let end = loader.total as f32;
                 let current = loader.progress as f32;
 
                 widget::progress_bar(start..=end, current).into()
             }
-            State::Active(fields) => {
+            Status::Ready(fields) => {
                 let heading = Self::heading(fields);
 
                 let identity = Self::identity_section(fields);

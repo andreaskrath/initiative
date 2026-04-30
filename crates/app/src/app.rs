@@ -1,7 +1,7 @@
 mod context;
 mod message;
 mod navigation;
-mod state;
+mod status;
 mod tab;
 mod view;
 
@@ -11,7 +11,7 @@ use crate::message::Message;
 use crate::navigation::Navigation;
 use crate::navigation::message::NavigationEffect;
 use crate::navigation::message::NavigationMessage;
-use crate::state::State;
+use crate::status::Status;
 use crate::tab::TabManager;
 use crate::tab::TabManagerEffect;
 use crate::tab::TabManagerMessage;
@@ -40,7 +40,7 @@ use iced::widget::stack;
 use std::path::PathBuf;
 
 pub struct Application {
-    state: State<Loader, Initiative>,
+    status: Status<Loader, Initiative>,
 }
 
 struct Loader {}
@@ -80,19 +80,19 @@ impl Application {
         let task = Task::batch(messages).map(Message::Load);
 
         let app = Self {
-            state: State::Loading(Box::new(Loader {})),
+            status: Status::Loading(Box::new(Loader {})),
         };
 
         (app, task)
     }
 
     pub fn update(&mut self, message: Message) -> Task<Message> {
-        match (&mut self.state, message) {
-            (State::Loading(loader), Message::Load(load_message)) => match load_message {
+        match (&mut self.status, message) {
+            (Status::Loading(loader), Message::Load(load_message)) => match load_message {
                 LoadMessage::DatabaseConnected(Ok(pool)) => {
                     let repository = Local::new(pool);
                     let initiative = Initiative::new(repository);
-                    self.state = State::Active(Box::new(initiative));
+                    self.status = Status::Ready(Box::new(initiative));
 
                     Task::none()
                 }
@@ -100,7 +100,7 @@ impl Application {
                     panic!("{err:?}");
                 }
             },
-            (State::Active(initiative), Message::Navigation(navigation_message)) => {
+            (Status::Ready(initiative), Message::Navigation(navigation_message)) => {
                 let (navigation_task, maybe_effect) =
                     initiative.navigation.update(navigation_message);
 
@@ -119,7 +119,7 @@ impl Application {
 
                 Task::batch(tasks)
             }
-            (State::Active(initiative), Message::TabManager(tab_manager_message)) => {
+            (Status::Ready(initiative), Message::TabManager(tab_manager_message)) => {
                 let (tab_manager_task, maybe_effect) = initiative
                     .tab_manager
                     .update(tab_manager_message, initiative.context.clone());
@@ -146,9 +146,9 @@ impl Application {
     }
 
     pub fn view(&self) -> Element<'_, Message> {
-        match &self.state {
-            State::Loading(loader) => components::text::heading("Loading").into(),
-            State::Active(initiative) => {
+        match &self.status {
+            Status::Loading(loader) => components::text::heading("Loading").into(),
+            Status::Ready(initiative) => {
                 let icon = if initiative.navigation.collapsed() {
                     components::icon(IconName::NavigationOpen).size(IconSize::Large)
                 } else {
@@ -183,7 +183,7 @@ impl Application {
     }
 
     pub fn subscription(&self) -> Subscription<Message> {
-        if let State::Active(state) = &self.state {
+        if let Status::Ready(state) = &self.status {
             state.navigation.subscription().map(Message::Navigation)
         } else {
             Subscription::none()
@@ -191,7 +191,7 @@ impl Application {
     }
 
     pub fn theme(&self) -> Option<Theme> {
-        if let State::Active(state) = &self.state {
+        if let Status::Ready(state) = &self.status {
             Some(state.context.theme())
         } else {
             Some(ThemeVariant::default().into())
