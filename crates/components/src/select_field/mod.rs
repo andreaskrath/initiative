@@ -55,7 +55,7 @@ impl<'a, Value, Message> SelectField<'a, Value, Message> {
 
 impl<'a, Value, Message> From<SelectField<'a, Value, Message>> for Element<'a, Message>
 where
-    Value: PartialEq + Copy + Clone + ToString,
+    Value: PartialEq + Clone + ToString,
     Message: Clone + 'a,
 {
     fn from(widget: SelectField<'a, Value, Message>) -> Self {
