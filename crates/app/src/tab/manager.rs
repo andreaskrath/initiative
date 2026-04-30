@@ -4,7 +4,7 @@ use crate::tab::TabManagerEffect;
 use crate::tab::TabManagerMessage;
 use crate::tab::TabMessage;
 use crate::tab::bar::tab_bar;
-use crate::view::content::ViewContent;
+use crate::view::View;
 use crate::view::dashboard::Dashboard;
 use crate::view::request::ViewRequest;
 use crate::view::spell::form::SpellForm;

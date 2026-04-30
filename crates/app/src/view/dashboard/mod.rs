@@ -1,6 +1,6 @@
 pub mod message;
 
-use crate::view::content::ViewContent;
+use crate::view::View;
 use message::DashboardEffect;
 use message::DashboardMessage;
 use widgets::Element;
@@ -15,7 +15,7 @@ impl Dashboard {
     }
 }
 
-impl ViewContent for Dashboard {
+impl View for Dashboard {
     type Message = DashboardMessage;
 
     type Effect = DashboardEffect;

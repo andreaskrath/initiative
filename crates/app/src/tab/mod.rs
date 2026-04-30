@@ -7,7 +7,7 @@ pub use id::*;
 pub use manager::*;
 pub use message::*;
 
-use crate::view::content::ViewContent;
+use crate::view::View;
 use crate::view::dashboard::Dashboard;
 use crate::view::spell::form::SpellForm;
 use crate::view::spell::list::SpellList;

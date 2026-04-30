@@ -1,6 +1,6 @@
 pub mod message;
 
-use crate::view::content::ViewContent;
+use crate::view::View;
 use crate::view::spell::list::message::SpellListEffect;
 use crate::view::spell::list::message::SpellListMessage;
 use types::FormMode;
@@ -18,7 +18,7 @@ impl SpellList {
     }
 }
 
-impl ViewContent for SpellList {
+impl View for SpellList {
     type Message = SpellListMessage;
 
     type Effect = SpellListEffect;
