@@ -54,6 +54,9 @@
                 # tokio
                 pkg-config
                 openssl
+
+                # sqlx
+                sqlx-cli
               ]
               ++ iced;
             RUST_SRC_PATH = "${rustToolchain}/lib/rustlib/src/rust/library";

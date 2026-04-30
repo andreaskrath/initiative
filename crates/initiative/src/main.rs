@@ -1,4 +1,5 @@
-use app::Initiative;
+use app::Application;
+
 use iced::Settings;
 use iced::application;
 use tracing::debug;
@@ -24,9 +25,9 @@ fn main() -> iced::Result {
     debug!("default text size: {} pixels", settings.default_text_size.0);
     debug!("     loaded fonts: {}", settings.fonts.len());
 
-    application(Initiative::default, Initiative::update, Initiative::view)
+    application(Application::new, Application::update, Application::view)
         .settings(settings)
-        .subscription(Initiative::subscription)
-        .theme(Initiative::theme)
+        .subscription(Application::subscription)
+        .theme(Application::theme)
         .run()
 }

@@ -3,9 +3,7 @@ use crate::view::dashboard::message::DashboardMessage;
 use crate::view::request::Request;
 use crate::view::spell::form::message::Message as SpellFormMessage;
 use crate::view::spell::list::message::SpellListMessage;
-
-#[derive(Debug, Clone)]
-pub enum TabManagerEffect {}
+use storage::Error;
 
 #[derive(Debug, Clone)]
 pub enum TabManagerMessage {
@@ -22,4 +20,9 @@ pub enum TabMessage {
     Dashboard(DashboardMessage),
     SpellForm(SpellFormMessage),
     SpellList(SpellListMessage),
+}
+
+#[derive(Debug, Clone)]
+pub enum TabManagerEffect {
+    LoadFailed(Error),
 }

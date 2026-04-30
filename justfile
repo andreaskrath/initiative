@@ -19,3 +19,11 @@ run log_level='debug':
     done
     # echo "RUST_LOG=${rust_log}"
     RUST_LOG="${rust_log}" cargo run
+
+# Generate a UUID v4 formatted as a SQLite hex BLOB literal
+uuid:
+    @echo "x'$(uuidgen | tr -d '-' | tr '[:upper:]' '[:lower:]')'"
+
+# Generate n UUIDs at once (usage: just uuids 5)
+uuids count:
+    @for i in $(seq 1 {{count}}); do echo "x'$(uuidgen | tr -d '-' | tr '[:upper:]' '[:lower:]')'"; done

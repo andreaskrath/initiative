@@ -1,16 +1,22 @@
 mod message;
 mod navigation;
+mod state;
 mod tab;
 mod view;
 
+use crate::message::LoadMessage;
 use crate::message::Message;
 use crate::navigation::Navigation;
 use crate::navigation::message::NavigationEffect;
 use crate::navigation::message::NavigationMessage;
+use crate::state::State;
 use crate::tab::TabManager;
+use crate::tab::TabManagerEffect;
 use crate::tab::TabManagerMessage;
 use components::icon::IconName;
 use components::icon::IconSize;
+use storage::clients::local::Local;
+use storage::repositories::Repository;
 use style::button::ButtonClass;
 use style::container::ContainerClass;
 use style::svg::SvgClass;
@@ -29,31 +35,76 @@ use iced::widget::row;
 use iced::widget::rule;
 use iced::widget::space;
 use iced::widget::stack;
+use std::path::PathBuf;
+use std::sync::Arc;
 
-pub struct Initiative {
+pub struct Application {
     theme: Theme,
-    navigation: Navigation,
-    tab_manager: TabManager,
+    state: State<Loader, Initiative>,
 }
 
-impl Default for Initiative {
-    fn default() -> Self {
+struct Loader {}
+
+struct Initiative {
+    navigation: Navigation,
+    tab_manager: TabManager,
+    repository: Arc<dyn Repository>,
+}
+
+impl Initiative {
+    fn new(repository: Arc<dyn Repository>) -> Self {
         Self {
-            theme: ThemeVariant::default().into(),
             navigation: Navigation::default(),
             tab_manager: TabManager::default(),
+            repository,
         }
     }
 }
 
-impl Initiative {
+fn db_path() -> Option<PathBuf> {
+    let dir = dirs::data_dir()?.join("initiative");
+    std::fs::create_dir_all(&dir).ok()?;
+    Some(dir.join("initiative.db"))
+}
+
+impl Application {
+    pub fn new() -> (Self, Task<Message>) {
+        let db_path = db_path().expect("failed");
+        let messages = vec![Task::perform(
+            storage::clients::local::connect(db_path),
+            LoadMessage::DatabaseConnected,
+        )];
+
+        let task = Task::batch(messages).map(Message::Load);
+
+        let app = Self {
+            theme: ThemeVariant::default().into(),
+            state: State::Loading(Box::new(Loader {})),
+        };
+
+        (app, task)
+    }
+
     pub fn update(&mut self, message: Message) -> Task<Message> {
-        match message {
-            Message::Navigation(navigation_message) => {
-                let (navigation_task, maybe_effect) = self.navigation.update(navigation_message);
+        match (&mut self.state, message) {
+            (State::Loading(loader), Message::Load(load_message)) => match load_message {
+                LoadMessage::DatabaseConnected(Ok(pool)) => {
+                    let repository = Arc::new(Local::new(pool));
+                    let initiative = Initiative::new(repository);
+                    self.state = State::Active(Box::new(initiative));
+
+                    Task::none()
+                }
+                LoadMessage::DatabaseConnected(Err(err)) => {
+                    panic!("{err:?}");
+                }
+            },
+            (State::Active(initiative), Message::Navigation(navigation_message)) => {
+                let (navigation_task, maybe_effect) =
+                    initiative.navigation.update(navigation_message);
 
                 let mut tasks = Vec::with_capacity(2);
-                tasks.push(navigation_task.map(|message| Message::Navigation(message)));
+                tasks.push(navigation_task.map(Message::Navigation));
 
                 if let Some(navigation_effect) = maybe_effect {
                     match navigation_effect {
@@ -67,55 +118,75 @@ impl Initiative {
 
                 Task::batch(tasks)
             }
-            Message::TabManager(tab_manager_message) => {
-                let (tab_manager_task, maybe_effect) = self.tab_manager.update(tab_manager_message);
+            (State::Active(initiative), Message::TabManager(tab_manager_message)) => {
+                let (tab_manager_task, maybe_effect) = initiative
+                    .tab_manager
+                    .update(tab_manager_message, &initiative.repository);
 
                 let mut tasks = Vec::with_capacity(2);
-                tasks.push(tab_manager_task.map(|message| Message::TabManager(message)));
+                tasks.push(tab_manager_task.map(Message::TabManager));
 
                 if let Some(tab_manager_effect) = maybe_effect {
-                    match tab_manager_effect {}
+                    match tab_manager_effect {
+                        TabManagerEffect::LoadFailed(error) => {
+                            panic!("{error:?}");
+                        }
+                    }
                 }
 
                 Task::batch(tasks)
+            }
+            (_invalid_state, invalid_message) => {
+                tracing::error!("invalid message {invalid_message:?} for state");
+
+                Task::none()
             }
         }
     }
 
     pub fn view(&self) -> Element<'_, Message> {
-        let icon = if self.navigation.collapsed() {
-            components::icon(IconName::NavigationOpen).size(IconSize::Large)
-        } else {
-            components::icon(IconName::NavigationClose).size(IconSize::Large)
+        match &self.state {
+            State::Loading(loader) => components::text::heading("Loading").into(),
+            State::Active(initiative) => {
+                let icon = if initiative.navigation.collapsed() {
+                    components::icon(IconName::NavigationOpen).size(IconSize::Large)
+                } else {
+                    components::icon(IconName::NavigationClose).size(IconSize::Large)
+                }
+                .class(SvgClass::Text);
+
+                let topbar = row![
+                    button(icon)
+                        .class(ButtonClass::Ghost)
+                        .on_press(Message::Navigation(NavigationMessage::ToggleCollapse)),
+                    space::horizontal().width(Fill),
+                ]
+                .padding(5);
+
+                let navigation = initiative.navigation.view().map(Message::Navigation);
+
+                let tab_manager_view = initiative.tab_manager.view().map(Message::TabManager);
+                let current_view = container(tab_manager_view)
+                    .class(ContainerClass::Background)
+                    .align_x(Horizontal::Center)
+                    .width(Fill)
+                    .height(Fill);
+
+                let topbar = column![topbar, rule::horizontal(1)];
+
+                let main = stack![current_view, navigation];
+
+                column![topbar, main].into()
+            }
         }
-        .class(SvgClass::Text);
-
-        let topbar = row![
-            button(icon)
-                .class(ButtonClass::Ghost)
-                .on_press(Message::Navigation(NavigationMessage::ToggleCollapse)),
-            space::horizontal().width(Fill),
-        ]
-        .padding(5);
-
-        let navigation = self.navigation.view().map(Message::Navigation);
-
-        let tab_manager_view = self.tab_manager.view().map(Message::TabManager);
-        let current_view = container(tab_manager_view)
-            .class(ContainerClass::Background)
-            .align_x(Horizontal::Center)
-            .width(Fill)
-            .height(Fill);
-
-        let topbar = column![topbar, rule::horizontal(1)];
-
-        let main = stack![current_view, navigation];
-
-        column![topbar, main].into()
     }
 
     pub fn subscription(&self) -> Subscription<Message> {
-        self.navigation.subscription().map(Message::Navigation)
+        if let State::Active(state) = &self.state {
+            state.navigation.subscription().map(Message::Navigation)
+        } else {
+            Subscription::none()
+        }
     }
 
     pub fn theme(&self) -> Option<Theme> {

@@ -1,0 +1,15 @@
+[package]
+name = "storage"
+version = "0.1.0"
+publish.workspace = true
+edition.workspace = true
+
+[dependencies]
+# External
+async-trait.workspace = true
+sqlx.workspace = true
+thiserror.workspace = true
+tracing.workspace = true
+
+[lints]
+workspace = true

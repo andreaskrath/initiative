@@ -28,8 +28,3 @@ pub trait View {
     /// Generate the view of `Self`.
     fn view(&self) -> Element<'_, Self::Message>;
 }
-
-enum State<Loader, Data> {
-    Loading(Box<Loader>),
-    Active(Box<Data>),
-}

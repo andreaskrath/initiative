@@ -1,5 +1,6 @@
 use crate::view::spell::form::loader::LoadMessage;
 use components::image_field::error::ImageError;
+use storage::Error;
 use types::Class;
 use types::ShapeKind;
 
@@ -46,4 +47,6 @@ pub enum Message {
 }
 
 #[derive(Debug, Clone)]
-pub enum Effect {}
+pub enum Effect {
+    LoadFailed(Error),
+}

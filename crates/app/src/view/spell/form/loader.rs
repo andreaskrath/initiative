@@ -1,23 +1,13 @@
-use types::Area;
-use types::CastingTime;
-use types::Duration;
-use types::Level;
-use types::Range;
-use types::SPELLCASTING_CLASSES;
-use types::School;
+use storage::Error;
+use storage::repositories::Repository;
+use storage::repositories::options::Variant;
 
 use iced::Task;
-use strum::VariantArray;
+use std::sync::Arc;
 
 #[derive(Debug, Clone)]
 pub enum LoadMessage {
-    Schools(Box<[String]>),
-    Levels(Box<[String]>),
-    Classes(Box<[String]>),
-    CastingTimes(Box<[String]>),
-    Durations(Box<[String]>),
-    Ranges(Box<[String]>),
-    Areas(Box<[String]>),
+    OptionsLoaded(Variant, Result<Box<[String]>, Error>),
 }
 
 pub struct Loader {
@@ -27,9 +17,10 @@ pub struct Loader {
     /// The number of tasks that have been completed.
     pub progress: usize,
 
+    pub error: Option<Error>,
+
     pub schools: Option<Box<[String]>>,
     pub levels: Option<Box<[String]>>,
-    pub classes: Option<Box<[String]>>,
     pub casting_times: Option<Box<[String]>>,
     pub durations: Option<Box<[String]>>,
     pub ranges: Option<Box<[String]>>,
@@ -37,23 +28,31 @@ pub struct Loader {
 }
 
 impl Loader {
-    pub fn new() -> (Self, Task<LoadMessage>) {
-        let tasks = vec![
-            Task::perform(load_schools(), LoadMessage::Schools),
-            Task::perform(load_levels(), LoadMessage::Levels),
-            Task::perform(load_classes(), LoadMessage::Classes),
-            Task::perform(load_casting_times(), LoadMessage::CastingTimes),
-            Task::perform(load_durations(), LoadMessage::Durations),
-            Task::perform(load_ranges(), LoadMessage::Ranges),
-            Task::perform(load_areas(), LoadMessage::Areas),
+    pub fn new(repository: Arc<dyn Repository>) -> (Self, Task<LoadMessage>) {
+        let variants = &[
+            Variant::School,
+            Variant::Level,
+            Variant::CastingTime,
+            Variant::Duration,
+            Variant::Range,
+            Variant::Area,
         ];
+
+        let mut tasks = Vec::with_capacity(variants.len());
+        for variant in variants {
+            let task = Task::perform(load_options(repository.clone(), *variant), |result| {
+                LoadMessage::OptionsLoaded(*variant, result)
+            });
+
+            tasks.push(task);
+        }
 
         let loader = Self {
             total: tasks.len(),
             progress: 0,
+            error: None,
             schools: None,
             levels: None,
-            classes: None,
             casting_times: None,
             durations: None,
             ranges: None,
@@ -65,13 +64,18 @@ impl Loader {
 
     pub fn update(&mut self, message: LoadMessage) {
         match message {
-            LoadMessage::Schools(schools) => self.schools = Some(schools),
-            LoadMessage::Levels(levels) => self.levels = Some(levels),
-            LoadMessage::Classes(classes) => self.classes = Some(classes),
-            LoadMessage::CastingTimes(casting_times) => self.casting_times = Some(casting_times),
-            LoadMessage::Durations(durations) => self.durations = Some(durations),
-            LoadMessage::Ranges(ranges) => self.ranges = Some(ranges),
-            LoadMessage::Areas(areas) => self.areas = Some(areas),
+            LoadMessage::OptionsLoaded(variant, Ok(options)) => match variant {
+                Variant::School => self.schools = Some(options),
+                Variant::Level => self.levels = Some(options),
+                Variant::CastingTime => self.casting_times = Some(options),
+                Variant::Duration => self.durations = Some(options),
+                Variant::Range => self.ranges = Some(options),
+                Variant::Area => self.areas = Some(options),
+            },
+            LoadMessage::OptionsLoaded(variant, Err(err)) => {
+                tracing::error!("failed to load options for '{:?}': {:?}", variant, err);
+                self.error = Some(err);
+            }
         }
 
         self.progress += 1;
@@ -82,55 +86,9 @@ impl Loader {
     }
 }
 
-async fn load_schools() -> Box<[String]> {
-    tokio::time::sleep(std::time::Duration::from_secs(1)).await;
-
-    let strings: Vec<_> = School::VARIANTS.iter().map(|s| s.to_string()).collect();
-
-    strings.into_boxed_slice()
-}
-
-async fn load_levels() -> Box<[String]> {
-    tokio::time::sleep(std::time::Duration::from_secs(2)).await;
-    let strings: Vec<_> = Level::VARIANTS.iter().map(|s| s.to_string()).collect();
-
-    strings.into_boxed_slice()
-}
-
-async fn load_classes() -> Box<[String]> {
-    tokio::time::sleep(std::time::Duration::from_secs(3)).await;
-    let strings: Vec<_> = SPELLCASTING_CLASSES.iter().map(|s| s.to_string()).collect();
-
-    strings.into_boxed_slice()
-}
-
-async fn load_casting_times() -> Box<[String]> {
-    tokio::time::sleep(std::time::Duration::from_secs(4)).await;
-    let strings: Vec<_> = CastingTime::VARIANTS
-        .iter()
-        .map(|s| s.to_string())
-        .collect();
-
-    strings.into_boxed_slice()
-}
-
-async fn load_durations() -> Box<[String]> {
-    tokio::time::sleep(std::time::Duration::from_secs(5)).await;
-    let strings: Vec<_> = Duration::VARIANTS.iter().map(|s| s.to_string()).collect();
-
-    strings.into_boxed_slice()
-}
-
-async fn load_ranges() -> Box<[String]> {
-    tokio::time::sleep(std::time::Duration::from_secs(6)).await;
-    let strings: Vec<_> = Range::VARIANTS.iter().map(|s| s.to_string()).collect();
-
-    strings.into_boxed_slice()
-}
-
-async fn load_areas() -> Box<[String]> {
-    tokio::time::sleep(std::time::Duration::from_secs(7)).await;
-    let strings: Vec<_> = Area::VARIANTS.iter().map(|s| s.to_string()).collect();
-
-    strings.into_boxed_slice()
+async fn load_options(
+    repository: Arc<dyn Repository>,
+    variant: Variant,
+) -> Result<Box<[String]>, Error> {
+    repository.list_options(variant).await
 }

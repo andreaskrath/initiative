@@ -7,6 +7,7 @@ members = [
   "crates/fonts",
   "crates/initiative",
   "crates/logging",
+  "crates/storage",
   "crates/style",
   "crates/types",
   "crates/widgets",
@@ -20,6 +21,8 @@ edition = "2024"
 # External crates
 iced = { version = "=0.14.0", features = ["advanced", "image", "svg", "tokio"] }
 arboard = "=3.6.1"
+async-trait = "=0.1.89"
+dirs = "=6.0.0"
 iced_aw = "=0.13.1"
 image = "=0.25.10"
 parking_lot = "=0.12.5"
@@ -27,6 +30,11 @@ rfd = "=0.17.2"
 rust-embed = { version = "=8.9.0", features = ["include-exclude"] }
 strum = { version = "=0.27.2", features = ["derive"] }
 strum_macros = "=0.27.2"
+sqlx = { version = "=0.8.6", features = [
+  "sqlite",
+  "runtime-tokio",
+  "tls-native-tls",
+] }
 thiserror = "=2.0.17"
 tokio = { version = "=1.52.1", features = ["rt", "fs"] }
 tracing = "=0.1.41"
@@ -39,6 +47,7 @@ assets = { path = "crates/assets" }
 components = { path = "crates/components" }
 fonts = { path = "crates/fonts" }
 logging = { path = "crates/logging" }
+storage = { path = "crates/storage" }
 style = { path = "crates/style" }
 types = { path = "crates/types" }
 widgets = { path = "crates/widgets" }

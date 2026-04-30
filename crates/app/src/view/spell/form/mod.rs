@@ -2,7 +2,7 @@ mod fields;
 mod loader;
 pub mod message;
 
-use crate::view::State;
+use crate::state::State;
 use crate::view::View;
 use crate::view::spell::form::fields::Fields;
 use crate::view::spell::form::fields::SpellMaterialInput;
@@ -11,6 +11,7 @@ use crate::view::spell::form::loader::Loader;
 use crate::view::spell::form::message::Effect;
 use crate::view::spell::form::message::Message;
 use components::label::Label;
+use storage::repositories::Repository;
 use style::layout::BODY_SPACING;
 use style::layout::LABEL_SPACING;
 use style::layout::SECTION_SPACING;
@@ -27,6 +28,7 @@ use iced::widget::Column;
 use iced::widget::Row;
 use iced::widget::column;
 use iced::widget::row;
+use std::sync::Arc;
 
 pub struct SpellForm {
     mode: FormMode,
@@ -34,8 +36,8 @@ pub struct SpellForm {
 }
 
 impl<'a> SpellForm {
-    pub fn new(mode: FormMode) -> (Self, Task<Message>) {
-        let (loader, tasks) = Loader::new();
+    pub fn new(mode: FormMode, repository: Arc<dyn Repository>) -> (Self, Task<Message>) {
+        let (loader, tasks) = Loader::new(repository);
         let mapped_tasks = tasks.map(Message::LoadMessage);
 
         let spell_form = Self {
@@ -337,6 +339,12 @@ impl View for SpellForm {
         match (&mut self.state, message) {
             (State::Loading(loader), Message::LoadMessage(load_message)) => {
                 loader.update(load_message);
+
+                if let Some(err) = loader.error.take() {
+                    tracing::error!("failed to load spell form: {:?}", err);
+
+                    return (Task::none(), Some(Effect::LoadFailed(err)));
+                }
 
                 // If the loader is done, we construct fields from fetched data (in the current loader state).
                 if loader.is_done() {

@@ -9,6 +9,7 @@ path = "src/app.rs"
 
 [dependencies]
 # External crates
+dirs.workspace = true
 iced.workspace = true
 strum.workspace = true
 tokio.workspace = true
@@ -17,6 +18,7 @@ tracing.workspace = true
 # Internal crates
 components.workspace = true
 fonts.workspace = true
+storage.workspace = true
 style.workspace = true
 types.workspace = true
 widgets.workspace = true

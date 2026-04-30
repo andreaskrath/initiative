@@ -8,8 +8,10 @@ use crate::view::View;
 use crate::view::dashboard::Dashboard;
 use crate::view::request::Request;
 use crate::view::spell::form::SpellForm;
+use crate::view::spell::form::message::Effect as SpellFormEffect;
 use crate::view::spell::list::SpellList;
 use crate::view::spell::list::message::SpellListEffect;
+use storage::repositories::Repository;
 use widgets::Element;
 
 use iced::Alignment;
@@ -19,6 +21,7 @@ use iced::Task;
 use iced::widget;
 use iced::widget::Space;
 use iced::widget::column;
+use std::sync::Arc;
 use tracing::debug;
 use tracing::error;
 
@@ -45,13 +48,14 @@ impl TabManager {
     pub fn update(
         &mut self,
         message: TabManagerMessage,
+        repository: &Arc<dyn Repository>,
     ) -> (Task<TabManagerMessage>, Option<TabManagerEffect>) {
         match message {
             TabManagerMessage::TabUpdated(tab_id, tab_message) => {
                 return self.update_tab(tab_id, tab_message);
             }
             TabManagerMessage::OpenTab(request) => {
-                return self.handle_request(request);
+                return self.handle_request(request, repository);
             }
             TabManagerMessage::CloseTab(close_id) => {
                 self.tabs.retain(|(tab_id, _)| *tab_id != close_id);
@@ -158,7 +162,13 @@ impl TabManager {
 
                 let mut effect = None;
                 if let Some(spell_form_effect) = maybe_effect {
-                    match spell_form_effect {}
+                    match spell_form_effect {
+                        SpellFormEffect::LoadFailed(error) => {
+                            self.remove(tab_id);
+
+                            effect = Some(TabManagerEffect::LoadFailed(error));
+                        }
+                    }
                 }
 
                 (task, effect)
@@ -193,6 +203,10 @@ impl TabManager {
         }
     }
 
+    fn remove(&mut self, id_to_remove: TabId) {
+        self.tabs.retain(|(id, _)| *id != id_to_remove);
+    }
+
     fn get(&self, id: TabId) -> Option<&Tab> {
         self.tabs
             .iter()
@@ -210,13 +224,14 @@ impl TabManager {
     fn handle_request(
         &mut self,
         request: Request,
+        repository: &Arc<dyn Repository>,
     ) -> (Task<TabManagerMessage>, Option<TabManagerEffect>) {
         debug!("handling tab request: {request:?}");
 
         match request {
             Request::SpellForm { mode } => {
                 let id = TabId::unique();
-                let (spell_form, task) = SpellForm::new(mode);
+                let (spell_form, task) = SpellForm::new(mode, repository.clone());
                 let tab = Tab::SpellForm(Box::new(spell_form));
                 self.tabs.push((id, tab));
                 self.active = id;
