@@ -6,7 +6,7 @@ use crate::tab::TabMessage;
 use crate::tab::bar::tab_bar;
 use crate::view::View;
 use crate::view::dashboard::Dashboard;
-use crate::view::request::ViewRequest;
+use crate::view::request::Request;
 use crate::view::spell::form::SpellForm;
 use crate::view::spell::list::SpellList;
 use crate::view::spell::list::message::SpellListEffect;
@@ -182,9 +182,7 @@ impl TabManager {
                     match spell_list_effect {
                         SpellListEffect::OpenSpellForm { mode } => {
                             let task =
-                                Task::done(TabManagerMessage::OpenTab(ViewRequest::SpellForm {
-                                    mode,
-                                }));
+                                Task::done(TabManagerMessage::OpenTab(Request::SpellForm { mode }));
                             tasks.push(task);
                         }
                     }
@@ -211,12 +209,12 @@ impl TabManager {
 
     fn handle_request(
         &mut self,
-        request: ViewRequest,
+        request: Request,
     ) -> (Task<TabManagerMessage>, Option<TabManagerEffect>) {
         debug!("handling tab request: {request:?}");
 
         match request {
-            ViewRequest::SpellForm { mode } => {
+            Request::SpellForm { mode } => {
                 let id = TabId::unique();
                 let (spell_form, task) = SpellForm::new(mode);
                 let tab = Tab::SpellForm(Box::new(spell_form));
@@ -228,7 +226,7 @@ impl TabManager {
 
                 return (mapped_task, None);
             }
-            ViewRequest::SpellList => {
+            Request::SpellList => {
                 // Check if index already exists
                 let Some(tab_id) = self.tab_exists(|tab| matches!(tab, Tab::SpellList(_))) else {
                     let id = TabId::unique();

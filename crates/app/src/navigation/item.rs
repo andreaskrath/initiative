@@ -1,5 +1,5 @@
 use super::message::NavigationMessage;
-use crate::view::request::ViewRequest;
+use crate::view::request::Request;
 use components::icon::IconName;
 use style::button::ButtonClass;
 use style::svg::SvgClass;
@@ -14,11 +14,11 @@ use iced::widget::text::Wrapping;
 pub(super) struct NavigationItem {
     label: String,
     icon: IconName,
-    target: ViewRequest,
+    target: Request,
 }
 
 impl NavigationItem {
-    pub fn new(label: impl Into<String>, icon: IconName, target: ViewRequest) -> Self {
+    pub fn new(label: impl Into<String>, icon: IconName, target: Request) -> Self {
         Self {
             label: label.into(),
             icon,

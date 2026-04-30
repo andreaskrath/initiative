@@ -4,7 +4,7 @@ use types::FormMode;
 ///
 /// This allows the application to intercept and redirect to existing non-unique tabs.
 #[derive(Debug, Clone, PartialEq)]
-pub enum ViewRequest {
+pub enum Request {
     SpellForm { mode: FormMode },
     SpellList,
 }

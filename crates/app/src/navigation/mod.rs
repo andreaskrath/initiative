@@ -6,7 +6,7 @@ use crate::navigation::group::NavigationGroup;
 use crate::navigation::item::NavigationItem;
 use crate::navigation::message::NavigationEffect;
 use crate::navigation::message::NavigationMessage;
-use crate::view::request::ViewRequest;
+use crate::view::request::Request;
 use components::icon::IconName;
 use widgets::Element;
 use widgets::animation::Animation;
@@ -120,7 +120,7 @@ fn groups() -> Box<[NavigationGroup]> {
     let reference_items = [NavigationItem::new(
         "Spells",
         IconName::Spell,
-        ViewRequest::SpellList,
+        Request::SpellList,
     )];
 
     let reference_group = NavigationGroup::new("reference", reference_items);
