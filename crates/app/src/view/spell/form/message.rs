@@ -1,27 +1,22 @@
-use std::path::PathBuf;
-
+use crate::view::spell::form::loader::LoadMessage;
 use components::image_field::error::ImageError;
 use types::Class;
-use types::MagicSchool;
-use types::SpellArea;
-use types::SpellCastingTime;
-use types::SpellDuration;
-use types::SpellLevel;
-use types::SpellRange;
 use types::SpellShapeKind;
 
 use iced::widget::text_editor::Action;
+use std::path::PathBuf;
 
 #[derive(Debug, Clone)]
-pub enum SpellFormMessage {
+pub enum Message {
+    LoadMessage(LoadMessage),
     NameChanged(String),
-    SchoolSelected(MagicSchool),
-    LevelSelected(SpellLevel),
+    SchoolSelected(String),
+    LevelSelected(String),
     ClassToggled(Class),
     TagChanged(String),
     TagSubmitted,
     TagRemoved(usize),
-    CastingTimeSelected(SpellCastingTime),
+    CastingTimeSelected(String),
     RitualToggled,
     ConcentrationToggled,
     VerbalToggled,
@@ -30,9 +25,9 @@ pub enum SpellFormMessage {
     MaterialChanged(usize, String),
     MaterialWorthChanged(usize, String),
     MaterialConsumed(usize),
-    DurationSelected(SpellDuration),
-    RangeSelected(SpellRange),
-    AreaSelected(SpellArea),
+    DurationSelected(String),
+    RangeSelected(String),
+    AreaSelected(String),
     ShapeKindSelected(SpellShapeKind),
     ShapeLengthChanged(String),
     ShapeRadiusChanged(String),
@@ -51,4 +46,4 @@ pub enum SpellFormMessage {
 }
 
 #[derive(Debug, Clone)]
-pub enum SpellFormEffect {}
+pub enum Effect {}

@@ -1,3 +1,4 @@
+use crate::view::spell::form::Loader;
 use components::image_field::state::ImageFieldState;
 use components::multi_text_field::MultiTextFieldRule;
 use components::multi_text_field::MultiTextFieldState;
@@ -9,33 +10,27 @@ use components::text_area_field::TextAreaFieldState;
 use components::text_field::TextFieldRule;
 use components::text_field::TextFieldState;
 use types::Class;
-use types::MagicSchool;
 use types::SPELLCASTING_CLASSES;
-use types::SpellArea;
-use types::SpellCastingTime;
-use types::SpellDuration;
-use types::SpellLevel;
-use types::SpellRange;
 use types::SpellShapeKind;
 
 use strum::VariantArray;
 
-pub struct SpellFormFields {
+pub struct Fields {
     pub name: TextFieldState,
-    pub school: SelectFieldState<MagicSchool>,
-    pub level: SelectFieldState<SpellLevel>,
+    pub school: SelectFieldState<String>,
+    pub level: SelectFieldState<String>,
     pub classes: Vec<Class>,
     pub tags: MultiTextFieldState,
-    pub casting_time: SelectFieldState<SpellCastingTime>,
+    pub casting_time: SelectFieldState<String>,
     pub ritual: bool,
     pub concentration: bool,
     pub verbal: bool,
     pub somatic: bool,
     pub material: bool,
     pub materials: Vec<SpellMaterialInput>,
-    pub duration: SelectFieldState<SpellDuration>,
-    pub range: SelectFieldState<SpellRange>,
-    pub area: SelectFieldState<SpellArea>,
+    pub duration: SelectFieldState<String>,
+    pub range: SelectFieldState<String>,
+    pub area: SelectFieldState<String>,
     pub shape_kind: SelectFieldState<SpellShapeKind>,
     pub shape: SpellShapeInput,
     pub description: TextAreaFieldState,
@@ -45,30 +40,34 @@ pub struct SpellFormFields {
     pub images: ImageFieldState,
 }
 
-impl Default for SpellFormFields {
-    fn default() -> Self {
-        Self {
+impl Fields {
+    pub fn from_loader(loader: &mut Loader) -> Option<Self> {
+        let schools = loader.schools.take()?;
+        let levels = loader.levels.take()?;
+        let casting_times = loader.casting_times.take()?;
+        let durations = loader.durations.take()?;
+        let ranges = loader.ranges.take()?;
+        let areas = loader.areas.take()?;
+
+        let fields = Self {
             name: TextFieldState::default()
                 .rules([TextFieldRule::Required, TextFieldRule::Max(50)]),
-            school: SelectFieldState::new(MagicSchool::VARIANTS.iter().copied(), None)
-                .required(true),
-            level: SelectFieldState::new(SpellLevel::VARIANTS.iter().copied(), None).required(true),
+            school: SelectFieldState::new(schools, None).required(true),
+            level: SelectFieldState::new(levels, None).required(true),
             classes: Vec::with_capacity(SPELLCASTING_CLASSES.len()),
             tags: MultiTextFieldState::default()
                 .normalize(true)
                 .rules([MultiTextFieldRule::Unique, MultiTextFieldRule::Min(1)]),
-            casting_time: SelectFieldState::new(SpellCastingTime::VARIANTS.iter().copied(), None)
-                .required(true),
+            casting_time: SelectFieldState::new(casting_times, None).required(true),
             ritual: false,
             concentration: false,
             verbal: false,
             somatic: false,
             material: false,
             materials: Vec::new(),
-            duration: SelectFieldState::new(SpellDuration::VARIANTS.iter().copied(), None)
-                .required(true),
-            range: SelectFieldState::new(SpellRange::VARIANTS.iter().copied(), None).required(true),
-            area: SelectFieldState::new(SpellArea::VARIANTS.iter().copied(), None).required(true),
+            duration: SelectFieldState::new(durations, None).required(true),
+            range: SelectFieldState::new(ranges, None).required(true),
+            area: SelectFieldState::new(areas, None).required(true),
             shape_kind: SelectFieldState::new(SpellShapeKind::VARIANTS.iter().copied(), None)
                 .required(true),
             shape: SpellShapeInput::NoShape,
@@ -77,7 +76,9 @@ impl Default for SpellFormFields {
             flavor_text: TextAreaFieldState::default().rules([TextAreaFieldRule::Max(1000)]),
             attribution: TextFieldState::default().rules([TextFieldRule::Max(100)]),
             images: ImageFieldState::default().limit(6),
-        }
+        };
+
+        Some(fields)
     }
 }
 
@@ -122,23 +123,17 @@ impl From<SpellShapeKind> for SpellShapeInput {
             NumberFieldState::new(None).rules([NumberFieldRule::Required, NumberFieldRule::Min(0)]);
         match kind {
             SpellShapeKind::NoShape => Self::NoShape,
-            SpellShapeKind::Cone => Self::Cone {
-                length: input.clone(),
-            },
-            SpellShapeKind::Cube => Self::Cube {
-                length: input.clone(),
-            },
+            SpellShapeKind::Cone => Self::Cone { length: input },
+            SpellShapeKind::Cube => Self::Cube { length: input },
             SpellShapeKind::Cylinder => Self::Cylinder {
                 radius: input.clone(),
-                height: input.clone(),
+                height: input,
             },
             SpellShapeKind::Line => Self::Line {
                 width: input.clone(),
-                length: input.clone(),
+                length: input,
             },
-            SpellShapeKind::Sphere => Self::Sphere {
-                radius: input.clone(),
-            },
+            SpellShapeKind::Sphere => Self::Sphere { radius: input },
         }
     }
 }

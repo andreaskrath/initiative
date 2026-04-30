@@ -50,7 +50,9 @@ impl TabManager {
             TabManagerMessage::TabUpdated(tab_id, tab_message) => {
                 return self.update_tab(tab_id, tab_message);
             }
-            TabManagerMessage::OpenTab(request) => self.handle_request(request),
+            TabManagerMessage::OpenTab(request) => {
+                return self.handle_request(request);
+            }
             TabManagerMessage::CloseTab(close_id) => {
                 self.tabs.retain(|(tab_id, _)| *tab_id != close_id);
 
@@ -207,15 +209,24 @@ impl TabManager {
             .map(|(_, tab)| tab)
     }
 
-    fn handle_request(&mut self, request: ViewRequest) {
+    fn handle_request(
+        &mut self,
+        request: ViewRequest,
+    ) -> (Task<TabManagerMessage>, Option<TabManagerEffect>) {
         debug!("handling tab request: {request:?}");
 
         match request {
             ViewRequest::SpellForm { mode } => {
                 let id = TabId::unique();
-                let tab = Tab::SpellForm(Box::new(SpellForm::new(mode)));
+                let (spell_form, task) = SpellForm::new(mode);
+                let tab = Tab::SpellForm(Box::new(spell_form));
                 self.tabs.push((id, tab));
                 self.active = id;
+
+                let mapped_task =
+                    task.map(move |m| TabManagerMessage::TabUpdated(id, TabMessage::SpellForm(m)));
+
+                return (mapped_task, None);
             }
             ViewRequest::SpellList => {
                 // Check if index already exists
@@ -225,12 +236,14 @@ impl TabManager {
                     self.tabs.push((id, new_tab));
                     self.active = id;
 
-                    return;
+                    return (Task::none(), None);
                 };
 
                 self.active = tab_id;
             }
         }
+
+        (Task::none(), None)
     }
 
     /// Returns a reference to a `Tab` if it exists.

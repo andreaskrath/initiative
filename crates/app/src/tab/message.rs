@@ -1,7 +1,7 @@
 use crate::tab::TabId;
 use crate::view::dashboard::message::DashboardMessage;
 use crate::view::request::ViewRequest;
-use crate::view::spell::form::message::SpellFormMessage;
+use crate::view::spell::form::message::Message as SpellFormMessage;
 use crate::view::spell::list::message::SpellListMessage;
 
 #[derive(Debug, Clone)]
