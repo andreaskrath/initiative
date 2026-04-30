@@ -2,7 +2,7 @@ use strum::Display;
 use strum::VariantArray;
 
 #[derive(Debug, Display, VariantArray, Clone, Copy, PartialEq)]
-pub enum SpellArea {
+pub enum Area {
     #[strum(to_string = "Single target")]
     SingleTarget,
     #[strum(to_string = "Multiple target")]

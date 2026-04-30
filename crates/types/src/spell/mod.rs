@@ -10,36 +10,36 @@ mod shape;
 
 use uuid::Uuid;
 
-pub use area::SpellArea;
-pub use casting_time::SpellCastingTime;
+pub use area::Area;
+pub use casting_time::CastingTime;
 pub use class::Class;
 pub use class::SPELLCASTING_CLASSES;
-pub use duration::SpellDuration;
-pub use level::SpellLevel;
-pub use material::SpellMaterial;
-pub use range::SpellRange;
-pub use school::MagicSchool;
-pub use shape::SpellShape;
-pub use shape::SpellShapeKind;
+pub use duration::Duration;
+pub use level::Level;
+pub use material::Material;
+pub use range::Range;
+pub use school::School;
+pub use shape::Shape;
+pub use shape::ShapeKind;
 
 pub struct Spell {
     pub id: Option<Uuid>,
     pub name: String,
-    pub school: MagicSchool,
-    pub level: SpellLevel,
+    pub school: School,
+    pub level: Level,
     // pub source: Source,
     pub classes: Vec<Class>,
     pub verbal: bool,
     pub somatic: bool,
     pub material: bool,
-    pub materials: Vec<SpellMaterial>,
+    pub materials: Vec<Material>,
     pub ritual: bool,
     pub concentration: bool,
-    pub casting_time: SpellCastingTime,
-    pub duration: SpellDuration,
-    pub range: SpellRange,
-    pub area: SpellArea,
-    pub shape: SpellShape,
+    pub casting_time: CastingTime,
+    pub duration: Duration,
+    pub range: Range,
+    pub area: Area,
+    pub shape: Shape,
     pub description: String,
     pub at_higher_levels: Option<String>,
     pub quote_text: String,

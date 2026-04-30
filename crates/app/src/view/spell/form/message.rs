@@ -1,7 +1,7 @@
 use crate::view::spell::form::loader::LoadMessage;
 use components::image_field::error::ImageError;
 use types::Class;
-use types::SpellShapeKind;
+use types::ShapeKind;
 
 use iced::widget::text_editor::Action;
 use std::path::PathBuf;
@@ -28,7 +28,7 @@ pub enum Message {
     DurationSelected(String),
     RangeSelected(String),
     AreaSelected(String),
-    ShapeKindSelected(SpellShapeKind),
+    ShapeKindSelected(ShapeKind),
     ShapeLengthChanged(String),
     ShapeRadiusChanged(String),
     ShapeHeightChanged(String),

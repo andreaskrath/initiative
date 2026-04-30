@@ -1,5 +1,5 @@
 #[derive(Debug, Default)]
-pub struct SpellMaterial {
+pub struct Material {
     pub material: String,
     pub consumed: bool,
 }

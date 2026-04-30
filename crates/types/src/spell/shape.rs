@@ -2,7 +2,7 @@ use strum::Display;
 use strum::VariantArray;
 
 #[derive(Debug, Display, VariantArray, Clone, Copy, PartialEq)]
-pub enum SpellShapeKind {
+pub enum ShapeKind {
     #[strum(to_string = "No shape")]
     NoShape,
     Cone,
@@ -13,7 +13,7 @@ pub enum SpellShapeKind {
 }
 
 #[derive(Debug, Clone, Copy, PartialEq)]
-pub enum SpellShape {
+pub enum Shape {
     NoShape,
     Cone { length: u16 },
     Cube { length: u16 },

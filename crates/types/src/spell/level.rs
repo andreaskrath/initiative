@@ -2,7 +2,7 @@ use strum::Display;
 use strum::VariantArray;
 
 #[derive(Debug, Display, VariantArray, Clone, Copy, PartialEq)]
-pub enum SpellLevel {
+pub enum Level {
     Cantrip,
     First,
     Second,

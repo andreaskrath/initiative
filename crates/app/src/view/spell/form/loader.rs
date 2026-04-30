@@ -1,13 +1,12 @@
-use types::MagicSchool;
+use types::Area;
+use types::CastingTime;
+use types::Duration;
+use types::Level;
+use types::Range;
 use types::SPELLCASTING_CLASSES;
-use types::SpellArea;
-use types::SpellCastingTime;
-use types::SpellDuration;
-use types::SpellLevel;
-use types::SpellRange;
+use types::School;
 
 use iced::Task;
-use std::time::Duration;
 use strum::VariantArray;
 
 #[derive(Debug, Clone)]
@@ -84,33 +83,30 @@ impl Loader {
 }
 
 async fn load_schools() -> Box<[String]> {
-    tokio::time::sleep(Duration::from_secs(1)).await;
+    tokio::time::sleep(std::time::Duration::from_secs(1)).await;
 
-    let strings: Vec<_> = MagicSchool::VARIANTS
-        .iter()
-        .map(|s| s.to_string())
-        .collect();
+    let strings: Vec<_> = School::VARIANTS.iter().map(|s| s.to_string()).collect();
 
     strings.into_boxed_slice()
 }
 
 async fn load_levels() -> Box<[String]> {
-    tokio::time::sleep(Duration::from_secs(2)).await;
-    let strings: Vec<_> = SpellLevel::VARIANTS.iter().map(|s| s.to_string()).collect();
+    tokio::time::sleep(std::time::Duration::from_secs(2)).await;
+    let strings: Vec<_> = Level::VARIANTS.iter().map(|s| s.to_string()).collect();
 
     strings.into_boxed_slice()
 }
 
 async fn load_classes() -> Box<[String]> {
-    tokio::time::sleep(Duration::from_secs(3)).await;
+    tokio::time::sleep(std::time::Duration::from_secs(3)).await;
     let strings: Vec<_> = SPELLCASTING_CLASSES.iter().map(|s| s.to_string()).collect();
 
     strings.into_boxed_slice()
 }
 
 async fn load_casting_times() -> Box<[String]> {
-    tokio::time::sleep(Duration::from_secs(4)).await;
-    let strings: Vec<_> = SpellCastingTime::VARIANTS
+    tokio::time::sleep(std::time::Duration::from_secs(4)).await;
+    let strings: Vec<_> = CastingTime::VARIANTS
         .iter()
         .map(|s| s.to_string())
         .collect();
@@ -119,25 +115,22 @@ async fn load_casting_times() -> Box<[String]> {
 }
 
 async fn load_durations() -> Box<[String]> {
-    tokio::time::sleep(Duration::from_secs(5)).await;
-    let strings: Vec<_> = SpellDuration::VARIANTS
-        .iter()
-        .map(|s| s.to_string())
-        .collect();
+    tokio::time::sleep(std::time::Duration::from_secs(5)).await;
+    let strings: Vec<_> = Duration::VARIANTS.iter().map(|s| s.to_string()).collect();
 
     strings.into_boxed_slice()
 }
 
 async fn load_ranges() -> Box<[String]> {
-    tokio::time::sleep(Duration::from_secs(6)).await;
-    let strings: Vec<_> = SpellRange::VARIANTS.iter().map(|s| s.to_string()).collect();
+    tokio::time::sleep(std::time::Duration::from_secs(6)).await;
+    let strings: Vec<_> = Range::VARIANTS.iter().map(|s| s.to_string()).collect();
 
     strings.into_boxed_slice()
 }
 
 async fn load_areas() -> Box<[String]> {
-    tokio::time::sleep(Duration::from_secs(7)).await;
-    let strings: Vec<_> = SpellArea::VARIANTS.iter().map(|s| s.to_string()).collect();
+    tokio::time::sleep(std::time::Duration::from_secs(7)).await;
+    let strings: Vec<_> = Area::VARIANTS.iter().map(|s| s.to_string()).collect();
 
     strings.into_boxed_slice()
 }

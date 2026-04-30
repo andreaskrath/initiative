@@ -11,7 +11,7 @@ use components::text_field::TextFieldRule;
 use components::text_field::TextFieldState;
 use types::Class;
 use types::SPELLCASTING_CLASSES;
-use types::SpellShapeKind;
+use types::ShapeKind;
 
 use strum::VariantArray;
 
@@ -31,7 +31,7 @@ pub struct Fields {
     pub duration: SelectFieldState<String>,
     pub range: SelectFieldState<String>,
     pub area: SelectFieldState<String>,
-    pub shape_kind: SelectFieldState<SpellShapeKind>,
+    pub shape_kind: SelectFieldState<ShapeKind>,
     pub shape: SpellShapeInput,
     pub description: TextAreaFieldState,
     pub at_higher_levels: TextAreaFieldState,
@@ -68,7 +68,7 @@ impl Fields {
             duration: SelectFieldState::new(durations, None).required(true),
             range: SelectFieldState::new(ranges, None).required(true),
             area: SelectFieldState::new(areas, None).required(true),
-            shape_kind: SelectFieldState::new(SpellShapeKind::VARIANTS.iter().copied(), None)
+            shape_kind: SelectFieldState::new(ShapeKind::VARIANTS.iter().copied(), None)
                 .required(true),
             shape: SpellShapeInput::NoShape,
             description: TextAreaFieldState::default().rules([TextAreaFieldRule::Required]),
@@ -117,23 +117,23 @@ pub enum SpellShapeInput {
     },
 }
 
-impl From<SpellShapeKind> for SpellShapeInput {
-    fn from(kind: SpellShapeKind) -> Self {
+impl From<ShapeKind> for SpellShapeInput {
+    fn from(kind: ShapeKind) -> Self {
         let input =
             NumberFieldState::new(None).rules([NumberFieldRule::Required, NumberFieldRule::Min(0)]);
         match kind {
-            SpellShapeKind::NoShape => Self::NoShape,
-            SpellShapeKind::Cone => Self::Cone { length: input },
-            SpellShapeKind::Cube => Self::Cube { length: input },
-            SpellShapeKind::Cylinder => Self::Cylinder {
+            ShapeKind::NoShape => Self::NoShape,
+            ShapeKind::Cone => Self::Cone { length: input },
+            ShapeKind::Cube => Self::Cube { length: input },
+            ShapeKind::Cylinder => Self::Cylinder {
                 radius: input.clone(),
                 height: input,
             },
-            SpellShapeKind::Line => Self::Line {
+            ShapeKind::Line => Self::Line {
                 width: input.clone(),
                 length: input,
             },
-            SpellShapeKind::Sphere => Self::Sphere { radius: input },
+            ShapeKind::Sphere => Self::Sphere { radius: input },
         }
     }
 }

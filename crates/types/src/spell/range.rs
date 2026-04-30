@@ -2,7 +2,7 @@ use strum::Display;
 use strum::VariantArray;
 
 #[derive(Debug, Display, VariantArray, Clone, Copy, PartialEq)]
-pub enum SpellRange {
+pub enum Range {
     #[strum(to_string = "Self")]
     Caster,
     Touch,

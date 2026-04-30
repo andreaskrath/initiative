@@ -2,7 +2,7 @@ use strum::Display;
 use strum::VariantArray;
 
 #[derive(Debug, Display, VariantArray, Clone, Copy, PartialEq)]
-pub enum SpellDuration {
+pub enum Duration {
     Instantaneous,
     #[strum(to_string = "1 round")]
     OneRound,

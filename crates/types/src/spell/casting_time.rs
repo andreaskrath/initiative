@@ -2,7 +2,7 @@ use strum::Display;
 use strum::VariantArray;
 
 #[derive(Debug, Display, VariantArray, Clone, Copy, PartialEq)]
-pub enum SpellCastingTime {
+pub enum CastingTime {
     #[strum(to_string = "1 action")]
     Action,
     #[strum(to_string = "1 bonus action")]
