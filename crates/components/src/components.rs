@@ -4,6 +4,7 @@ pub mod image_field;
 pub mod label;
 pub mod multi_text_field;
 pub mod number_field;
+pub mod row;
 pub mod select_field;
 pub mod text;
 pub mod text_area_field;

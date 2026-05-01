@@ -17,8 +17,6 @@ use widgets::Element;
 use iced::Alignment;
 use iced::ContentFit;
 use iced::Length;
-use iced::widget::Column;
-use iced::widget::Row;
 use iced::widget::column;
 use iced::widget::row;
 use iced::widget::stack;
@@ -76,10 +74,8 @@ where
             number_of_items += 1
         }
 
-        let padding = calculate_padding(number_of_items, ITEMS_PER_ROW);
-        number_of_items += padding;
-
-        let mut items: Vec<Element<_>> = Vec::with_capacity(number_of_items);
+        // Reserving a bit too much, but it doesn't really matter.
+        let mut items: Vec<Element<_>> = Vec::with_capacity(number_of_items + ITEMS_PER_ROW);
 
         // Add all images.
         for (index, image) in widget.state.images.iter().enumerate() {
@@ -153,46 +149,8 @@ where
             items.push(container.into());
         }
 
-        // Add padding.
-        for _ in 0..padding {
-            let space = iced::widget::space()
-                .width(Length::FillPortion(1))
-                .height(IMAGE_HEIGHT)
-                .into();
-            items.push(space);
-        }
+        let images = crate::row::chunked(items, ITEMS_PER_ROW);
 
-        let mut column =
-            Column::with_capacity(number_of_items % ITEMS_PER_ROW).spacing(BODY_SPACING);
-        while !items.is_empty() {
-            let row_items = items.drain(..ITEMS_PER_ROW);
-            let mut row = Row::with_capacity(ITEMS_PER_ROW).spacing(BODY_SPACING);
-            for row_item in row_items {
-                row = row.push(row_item);
-            }
-
-            column = column.push(row);
-        }
-
-        column![Label::new("IMAGES"), column].into()
-    }
-}
-
-/// Calculate the number of padding elements necessary for `current` to become a multiple of `target`.
-fn calculate_padding(current: usize, target: usize) -> usize {
-    let remainder = current % target;
-
-    // This branch exists for when `current` is already a multiple of `target`.
-    //
-    // For example:
-    // - `current` = 10
-    // - `target` = 5
-    // - `remainder` = 0
-    //
-    // Now `target` - `remainder` ends up just being `target` and over-padding.
-    if remainder == 0 {
-        0
-    } else {
-        target - remainder
+        column![Label::new("IMAGES"), images].into()
     }
 }
