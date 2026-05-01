@@ -1,3 +1,4 @@
+use iced::Length;
 use style::svg::SvgClass;
 use widgets::Element;
 
@@ -17,14 +18,22 @@ pub enum IconSize {
 
     /// 20 px.
     Large,
+
+    /// Fill the available space.
+    Fill,
+
+    /// Custom icon size.
+    Custom(u32),
 }
 
 impl IconSize {
-    fn dimensions(self) -> (u32, u32) {
+    fn dimensions(self) -> (Length, Length) {
         match self {
-            IconSize::Small => (12, 12),
-            IconSize::Medium => (16, 16),
-            IconSize::Large => (20, 20),
+            IconSize::Small => (12.into(), 12.into()),
+            IconSize::Medium => (16.into(), 16.into()),
+            IconSize::Large => (20.into(), 20.into()),
+            IconSize::Fill => (Length::Fill, Length::Fill),
+            IconSize::Custom(custom) => (custom.into(), custom.into()),
         }
     }
 }
