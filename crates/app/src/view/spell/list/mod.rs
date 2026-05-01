@@ -1,8 +1,9 @@
 pub mod message;
 
-use crate::view::View;
-use crate::view::spell::list::message::SpellListEffect;
-use crate::view::spell::list::message::SpellListMessage;
+use crate::view::Viewable;
+use crate::view::request::Request;
+use crate::view::spell::list::message::Effect;
+use crate::view::spell::list::message::Message;
 use types::FormMode;
 use widgets::Element;
 
@@ -18,10 +19,10 @@ impl SpellList {
     }
 }
 
-impl View for SpellList {
-    type Message = SpellListMessage;
+impl Viewable for SpellList {
+    type Message = Message;
 
-    type Effect = SpellListEffect;
+    type Effect = Effect;
 
     fn title(&self) -> &str {
         "Spell List"
@@ -29,12 +30,13 @@ impl View for SpellList {
 
     fn update(&mut self, message: Self::Message) -> (Task<Self::Message>, Option<Self::Effect>) {
         match message {
-            SpellListMessage::CreateNewSpell => {
-                let effect = Some(SpellListEffect::OpenSpellForm {
+            Message::OpenNewSpell => {
+                let request = Request::SpellForm {
                     mode: FormMode::Create,
-                });
+                };
+                let effect = Effect::OpenView(request);
 
-                (Task::none(), effect)
+                (Task::none(), Some(effect))
             }
         }
     }
@@ -43,7 +45,7 @@ impl View for SpellList {
         let title = components::text::view_title("Spell List");
 
         let create_spell_button =
-            widget::button("Create New Spell").on_press(SpellListMessage::CreateNewSpell);
+            widget::button("Create New Spell").on_press(Message::OpenNewSpell);
 
         column![title, create_spell_button].into()
     }

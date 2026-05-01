@@ -27,7 +27,6 @@ fn main() -> iced::Result {
 
     application(Application::new, Application::update, Application::view)
         .settings(settings)
-        .subscription(Application::subscription)
         .theme(Application::theme)
         .run()
 }

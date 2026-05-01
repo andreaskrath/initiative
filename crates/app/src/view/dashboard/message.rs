@@ -1,5 +1,12 @@
-#[derive(Debug, Clone)]
-pub enum DashboardMessage {}
+use crate::view::request::Request;
 
 #[derive(Debug, Clone)]
-pub enum DashboardEffect {}
+pub enum Message {
+    OpenSpells,
+    OpenNewSpell,
+}
+
+#[derive(Debug, Clone)]
+pub enum Effect {
+    OpenView(Request),
+}

@@ -1,11 +1,11 @@
-use types::FormMode;
+use crate::view::request::Request;
 
 #[derive(Debug, Clone)]
-pub enum SpellListMessage {
-    CreateNewSpell,
+pub enum Message {
+    OpenNewSpell,
 }
 
 #[derive(Debug, Clone)]
-pub enum SpellListEffect {
-    OpenSpellForm { mode: FormMode },
+pub enum Effect {
+    OpenView(Request),
 }

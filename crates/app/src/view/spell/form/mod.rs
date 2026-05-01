@@ -4,7 +4,7 @@ pub mod message;
 
 use crate::context::Context;
 use crate::status::Status;
-use crate::view::View;
+use crate::view::Viewable;
 use crate::view::spell::form::fields::Fields;
 use crate::view::spell::form::fields::SpellMaterialInput;
 use crate::view::spell::form::fields::SpellShapeInput;
@@ -322,7 +322,7 @@ impl<'a> SpellForm {
     }
 }
 
-impl View for SpellForm {
+impl Viewable for SpellForm {
     type Message = Message;
 
     type Effect = Effect;
