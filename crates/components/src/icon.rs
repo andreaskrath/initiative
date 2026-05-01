@@ -38,12 +38,14 @@ pub enum IconName {
     Directory,
     Error,
     Info,
+    Library,
     Monster,
     NavigationClose,
     NavigationOpen,
     Plus,
     Sparkle,
     Spell,
+    WandSparkles,
 }
 
 impl IconName {
@@ -56,12 +58,14 @@ impl IconName {
             IconName::Directory => "icons/directory.svg",
             IconName::Error => "icons/error.svg",
             IconName::Info => "icons/info.svg",
+            IconName::Library => "icons/library.svg",
             IconName::Monster => "icons/monster.svg",
             IconName::NavigationClose => "icons/navigation-close.svg",
             IconName::NavigationOpen => "icons/navigation-open.svg",
             IconName::Plus => "icons/plus.svg",
             IconName::Sparkle => "icons/sparkle.svg",
             IconName::Spell => "icons/spell.svg",
+            IconName::WandSparkles => "icons/wand-sparkles.svg",
         }
     }
 }
