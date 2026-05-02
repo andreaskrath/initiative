@@ -72,4 +72,12 @@ VALUES
     (x'8e8f6123f674468481465e4e4a401a8d', 'area', '30 ft.',                 8, 1),
     (x'aa008fbab1af4ba5ac6ca1a895c9891e', 'area', '35 ft.',                 9, 1),
     (x'f34114db7e2b4a17965df8f430e079a4', 'area', '40 ft.',                 10, 1),
-    (x'e756aa15a9194d3695d4f08d32b4d376', 'area', 'Unlimited',              11, 1);
+    (x'e756aa15a9194d3695d4f08d32b4d376', 'area', 'Unlimited',              11, 1),
+
+    -- Variant: source
+    (x'3db2c5debd754e84a2a8c1144f7a31e7', 'source', 'Player''s Handbook',              0, 1),
+    (x'0dee673504c845a68ac1d63a35cf0916', 'source', 'Dungeon Master''s Guide',         1, 1),
+    (x'69c7b1359967448cbe6ce6e4fc38be41', 'source', 'Monster Manual',                  2, 1),
+    (x'fad874f7c6e54cd188aeaa48b315a28c', 'source', 'Xanathar''s Guide to Everything', 3, 1),
+    (x'411ca88eb0b64772a5967c94e43cf58c', 'source', 'Tasha''s Cauldron of Everything', 4, 1),
+    (x'9c8144e73e414cc2b79ecae18fb35ab5', 'source', 'Homebrew',                        5, 1);

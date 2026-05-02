@@ -11,6 +11,7 @@ pub enum Variant {
     Duration,
     Range,
     Area,
+    Source,
 }
 
 #[async_trait::async_trait]
