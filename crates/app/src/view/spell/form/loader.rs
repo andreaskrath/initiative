@@ -25,6 +25,7 @@ pub struct Loader {
     pub durations: Option<Box<[String]>>,
     pub ranges: Option<Box<[String]>>,
     pub areas: Option<Box<[String]>>,
+    pub sources: Option<Box<[String]>>,
 }
 
 impl Loader {
@@ -36,6 +37,7 @@ impl Loader {
             Variant::Duration,
             Variant::Range,
             Variant::Area,
+            Variant::Source,
         ];
 
         let mut tasks = Vec::with_capacity(variants.len());
@@ -57,6 +59,7 @@ impl Loader {
             durations: None,
             ranges: None,
             areas: None,
+            sources: None,
         };
 
         (loader, Task::batch(tasks))
@@ -71,6 +74,7 @@ impl Loader {
                 Variant::Duration => self.durations = Some(options),
                 Variant::Range => self.ranges = Some(options),
                 Variant::Area => self.areas = Some(options),
+                Variant::Source => self.sources = Some(options),
             },
             LoadMessage::OptionsLoaded(variant, Err(err)) => {
                 tracing::error!("failed to load options for '{:?}': {:?}", variant, err);

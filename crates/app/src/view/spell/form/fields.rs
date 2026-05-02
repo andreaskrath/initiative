@@ -19,6 +19,7 @@ pub struct Fields {
     pub name: TextFieldState,
     pub school: SelectFieldState<String>,
     pub level: SelectFieldState<String>,
+    pub source: SelectFieldState<String>,
     pub classes: Vec<Class>,
     pub tags: MultiTextFieldState,
     pub casting_time: SelectFieldState<String>,
@@ -48,12 +49,14 @@ impl Fields {
         let durations = loader.durations.take()?;
         let ranges = loader.ranges.take()?;
         let areas = loader.areas.take()?;
+        let sources = loader.sources.take()?;
 
         let fields = Self {
             name: TextFieldState::default()
                 .rules([TextFieldRule::Required, TextFieldRule::Max(50)]),
             school: SelectFieldState::new(schools, None).required(true),
             level: SelectFieldState::new(levels, None).required(true),
+            source: SelectFieldState::new(sources, None).required(true),
             classes: Vec::with_capacity(SPELLCASTING_CLASSES.len()),
             tags: MultiTextFieldState::default()
                 .normalize(true)

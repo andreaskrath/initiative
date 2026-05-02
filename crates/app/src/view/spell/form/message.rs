@@ -13,6 +13,7 @@ pub enum Message {
     NameChanged(String),
     SchoolSelected(String),
     LevelSelected(String),
+    SourceSelected(String),
     ClassToggled(Class),
     TagChanged(String),
     TagSubmitted,

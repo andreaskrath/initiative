@@ -71,6 +71,8 @@ impl<'a> SpellForm {
             .placeholder("Select a magic school");
         let level = components::select_field("LEVEL", &fields.level, Message::LevelSelected)
             .placeholder("Select a spell level");
+        let source = components::select_field("SOURCE", &fields.source, Message::SourceSelected)
+            .placeholder("Select a source");
 
         let classes: Element<_> = {
             let elements_selected_text = format!("{} classes selected", fields.classes.len());
@@ -106,7 +108,7 @@ impl<'a> SpellForm {
             .on_submit(Message::TagSubmitted)
             .on_remove(Message::TagRemoved);
 
-        let classification = row![school, level].spacing(BODY_SPACING);
+        let classification = row![school, level, source].spacing(BODY_SPACING);
         let form = column![name, classification, classes, tags].spacing(BODY_SPACING);
         let body = components::form::section_body(form);
 
@@ -361,12 +363,9 @@ impl Viewable for SpellForm {
                 fields.name.set(name);
                 fields.name.validate();
             }
-            (Status::Ready(fields), Message::SchoolSelected(school)) => {
-                fields.school.set(school);
-            }
-            (Status::Ready(fields), Message::LevelSelected(level)) => {
-                fields.level.set(level);
-            }
+            (Status::Ready(fields), Message::SchoolSelected(school)) => fields.school.set(school),
+            (Status::Ready(fields), Message::LevelSelected(level)) => fields.level.set(level),
+            (Status::Ready(fields), Message::SourceSelected(source)) => fields.source.set(source),
             (Status::Ready(fields), Message::ClassToggled(class)) => {
                 if let Some(index) = fields.classes.iter().position(|c| *c == class) {
                     fields.classes.swap_remove(index);
@@ -377,7 +376,7 @@ impl Viewable for SpellForm {
             (Status::Ready(fields), Message::TagChanged(tag)) => fields.tags.set_value(tag),
             (Status::Ready(fields), Message::TagSubmitted) => fields.tags.add_selection(),
             (Status::Ready(fields), Message::TagRemoved(tag_index)) => {
-                fields.tags.remove_selection(tag_index)
+                fields.tags.remove_selection(tag_index);
             }
             (Status::Ready(fields), Message::CastingTimeSelected(casting_time)) => {
                 fields.casting_time.set(casting_time);
