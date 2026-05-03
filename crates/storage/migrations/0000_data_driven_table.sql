@@ -30,3 +30,7 @@ CREATE TABLE options (
     -- However, within the same variant, the entries should be unique.
     UNIQUE(variant, value)
 );
+
+-- Most queries will be 'WHERE variant = ?' to get the options for a given variant.
+-- So as a precauting for the table growing over time, it makes sense to add an index.
+CREATE INDEX idx_options_variant ON options(variant);
