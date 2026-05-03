@@ -69,6 +69,11 @@ impl<'a> SpellForm {
         let name = components::text_field(Some("NAME"), &fields.name)
             .placeholder("Goblin")
             .on_input(Message::NameChanged);
+        let aliases = components::multi_text_field(Some("ALIASES"), &fields.aliases)
+            .placeholder("Write an alias")
+            .on_input(Message::AliasChanged)
+            .on_submit(Message::AliasSubmitted)
+            .on_remove(Message::AliasRemoved);
         let school = components::select_field("SCHOOL", &fields.school, Message::SchoolSelected)
             .placeholder("Select a magic school");
         let level = components::select_field("LEVEL", &fields.level, Message::LevelSelected)
@@ -111,7 +116,7 @@ impl<'a> SpellForm {
             .on_remove(Message::TagRemoved);
 
         let classification = row![school, level, source].spacing(BODY_SPACING);
-        let form = column![name, classification, classes, tags].spacing(BODY_SPACING);
+        let form = column![name, aliases, classification, classes, tags].spacing(BODY_SPACING);
         let body = components::form::section_body(form);
 
         row![header, body].into()
@@ -367,6 +372,21 @@ impl Viewable for SpellForm {
                 fields.name.set(name);
                 fields.name.validate();
             }
+            Message::AliasChanged(tag) => {
+                let fields = ready!(self.status);
+
+                fields.aliases.set_value(tag);
+            }
+            Message::AliasSubmitted => {
+                let fields = ready!(self.status);
+
+                fields.aliases.add_selection();
+            }
+            Message::AliasRemoved(tag_index) => {
+                let fields = ready!(self.status);
+
+                fields.aliases.remove_selection(tag_index);
+            }
             Message::SchoolSelected(school) => {
                 let fields = ready!(self.status);
 
@@ -566,8 +586,6 @@ impl Viewable for SpellForm {
             }
 
             Message::ImagePasted => {
-                let fields = ready!(self.status);
-
                 let task = Task::perform(
                     components::image_field::clipboard::get_image(),
                     Message::ImageLoaded,
@@ -589,8 +607,6 @@ impl Viewable for SpellForm {
                 fields.images.remove(index);
             }
             Message::ImagePickerOpened => {
-                let fields = ready!(self.status);
-
                 let task = Task::perform(
                     components::image_field::file::open_image_picker(),
                     Message::ImageFileSelected,
@@ -599,8 +615,6 @@ impl Viewable for SpellForm {
                 return (task, None);
             }
             Message::ImageFileSelected(Some(path)) => {
-                let fields = ready!(self.status);
-
                 let task = Task::perform(
                     components::image_field::file::load_image(path),
                     Message::ImageFileLoaded,

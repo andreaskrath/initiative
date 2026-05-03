@@ -17,6 +17,7 @@ use strum::VariantArray;
 
 pub struct Fields {
     pub name: TextFieldState,
+    pub aliases: MultiTextFieldState,
     pub school: SelectFieldState<String>,
     pub level: SelectFieldState<String>,
     pub source: SelectFieldState<String>,
@@ -54,6 +55,9 @@ impl Fields {
         let fields = Self {
             name: TextFieldState::default()
                 .rules([TextFieldRule::Required, TextFieldRule::Max(50)]),
+            aliases: MultiTextFieldState::default()
+                .normalize(false)
+                .rules([MultiTextFieldRule::Unique, MultiTextFieldRule::Min(1)]),
             school: SelectFieldState::new(schools, None).required(true),
             level: SelectFieldState::new(levels, None).required(true),
             source: SelectFieldState::new(sources, None).required(true),

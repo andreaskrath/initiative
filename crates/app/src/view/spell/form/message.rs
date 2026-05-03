@@ -11,6 +11,9 @@ use std::path::PathBuf;
 pub enum Message {
     LoadMessage(LoadMessage),
     NameChanged(String),
+    AliasChanged(String),
+    AliasSubmitted,
+    AliasRemoved(usize),
     SchoolSelected(String),
     LevelSelected(String),
     SourceSelected(String),
