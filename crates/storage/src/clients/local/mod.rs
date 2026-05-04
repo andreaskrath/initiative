@@ -1,8 +1,7 @@
+mod options;
+
 use crate::Error;
 use crate::repositories::Repository;
-use crate::repositories::options::Options;
-use crate::repositories::options::OptionsRepository;
-use crate::repositories::options::Variant;
 
 use sqlx::SqlitePool;
 use sqlx::sqlite::SqliteConnectOptions;
@@ -13,7 +12,31 @@ use std::path::PathBuf;
 
 pub type Pool = SqlitePool;
 
-pub async fn connect(path: PathBuf) -> Result<SqlitePool, Error> {
+#[derive(Debug, Clone)]
+pub struct Local {
+    pool: SqlitePool,
+    images_dir: PathBuf,
+}
+
+impl Local {
+    pub async fn new(path: PathBuf) -> Result<Self, Error> {
+        let pool = connect(path).await?;
+        let images_dir = dirs::data_local_dir()
+            .expect("failed to get data dir")
+            .join("images");
+
+        // Create the images dir, to ensure it exists for when images are inserted.
+        //
+        // TODO: Maybe move this to some async stuff, but it might not matter.
+        std::fs::create_dir_all(&images_dir).expect("failed to create images directory");
+
+        Ok(Self { pool, images_dir })
+    }
+}
+
+impl Repository for Local {}
+
+async fn connect(path: PathBuf) -> Result<SqlitePool, Error> {
     let options = SqliteConnectOptions::new()
         .filename(&path)
         .journal_mode(SqliteJournalMode::Wal)
@@ -41,45 +64,5 @@ pub async fn connect(path: PathBuf) -> Result<SqlitePool, Error> {
 
             Err(Error::Connection)
         }
-    }
-}
-
-#[derive(Debug, Clone)]
-pub struct Local {
-    pool: SqlitePool,
-}
-
-impl Local {
-    pub fn new(pool: SqlitePool) -> Self {
-        Self { pool }
-    }
-}
-
-impl Repository for Local {}
-
-#[async_trait::async_trait]
-impl Options for Local {
-    async fn list_options(&self, variant: Variant) -> Result<Box<[String]>, Error> {
-        let query = r#"
-            SELECT value
-            FROM options
-            WHERE variant = $1
-            ORDER BY sort_order;
-        "#;
-
-        let options = sqlx::query_scalar(query)
-            .bind(variant)
-            .fetch_all(&self.pool)
-            .await?;
-
-        tracing::debug!("fetched {} '{:?}' options", options.len(), variant);
-
-        Ok(options.into_boxed_slice())
-    }
-}
-
-impl OptionsRepository for Local {
-    fn options(&self) -> &dyn Options {
-        self
     }
 }

@@ -25,6 +25,40 @@ use iced::widget::space;
 use iced::widget::stack;
 use std::path::PathBuf;
 
+/// Unwraps a [`Status`] as [`Status::Ready`], returning a mutable reference to the inner state.
+///
+/// If the status is not [`Status::Ready`], logs an error and early-returns
+/// `Task::none()` from the enclosing function.
+macro_rules! ready {
+    ($self:expr) => {
+        match $self.as_ready_mut() {
+            Some(state) => state,
+            None => {
+                tracing::error!("received in non-ready state");
+
+                return Task::none();
+            }
+        }
+    };
+}
+
+/// Unwraps a [`Status`] as [`Status::Loading`], returning a mutable reference to the inner loader.
+///
+/// If the status is not [`Status::Loading`], logs an error and early-returns
+/// `Task::none()` from the enclosing function.
+macro_rules! loading {
+    ($self:expr) => {
+        match $self.as_loading_mut() {
+            Some(loader) => loader,
+            None => {
+                tracing::error!("received in non-loader state");
+
+                return Task::none();
+            }
+        }
+    };
+}
+
 pub struct Application {
     status: Status<Loader, Session>,
 }
@@ -40,12 +74,12 @@ fn db_path() -> Option<PathBuf> {
 impl Application {
     pub fn new() -> (Self, Task<Message>) {
         let db_path = db_path().expect("failed");
-        let messages = vec![Task::perform(
-            storage::clients::local::connect(db_path),
-            LoadMessage::DatabaseConnected,
+        let tasks = vec![Task::perform(
+            Local::new(db_path),
+            LoadMessage::LocalConnected,
         )];
 
-        let task = Task::batch(messages).map(Message::Load);
+        let task = Task::batch(tasks).map(Message::Load);
 
         let app = Self {
             status: Status::Loading(Box::new(Loader {})),
@@ -55,29 +89,41 @@ impl Application {
     }
 
     pub fn update(&mut self, message: Message) -> Task<Message> {
-        match (&mut self.status, message) {
-            (Status::Loading(loader), Message::Load(load_message)) => match load_message {
-                LoadMessage::DatabaseConnected(Ok(pool)) => {
-                    let repository = Local::new(pool);
-                    let session = Session::new(repository);
-                    self.status = Status::Ready(Box::new(session));
+        match message {
+            Message::Load(load_message) => {
+                let _ = loading!(self.status);
 
-                    Task::none()
+                match load_message {
+                    LoadMessage::LocalConnected(Ok(local)) => {
+                        let session = Session::new(local);
+                        self.status = Status::Ready(Box::new(session));
+
+                        Task::none()
+                    }
+                    LoadMessage::LocalConnected(Err(err)) => {
+                        panic!("{err:?}");
+                    }
                 }
-                LoadMessage::DatabaseConnected(Err(err)) => {
-                    panic!("{err:?}");
-                }
-            },
-            (Status::Ready(session), Message::OpenView(request)) => session.open_view(request),
-            (Status::Ready(session), Message::CloseView(view_id)) => session.close_view(view_id),
-            (Status::Ready(session), Message::FocusView(view_id)) => session.focus_view(view_id),
-            (Status::Ready(session), Message::ViewUpdated(view_id, view_message)) => {
-                session.update_view(view_id, view_message)
             }
-            (_invalid_state, invalid_message) => {
-                tracing::error!("invalid message {invalid_message:?} for state");
+            Message::OpenView(request) => {
+                let session = ready!(self.status);
 
-                Task::none()
+                session.open_view(request)
+            }
+            Message::CloseView(view_id) => {
+                let session = ready!(self.status);
+
+                session.close_view(view_id)
+            }
+            Message::FocusView(view_id) => {
+                let session = ready!(self.status);
+
+                session.focus_view(view_id)
+            }
+            Message::ViewUpdated(view_id, view_message) => {
+                let session = ready!(self.status);
+
+                session.update_view(view_id, view_message)
             }
         }
     }

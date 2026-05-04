@@ -2,7 +2,7 @@ use crate::view::ViewId;
 use crate::view::ViewMessage;
 use crate::view::request::Request;
 use storage::Error;
-use storage::clients::local::Pool;
+use storage::clients::local::Local;
 
 #[derive(Debug, Clone)]
 pub enum Message {
@@ -15,5 +15,5 @@ pub enum Message {
 
 #[derive(Debug, Clone)]
 pub enum LoadMessage {
-    DatabaseConnected(Result<Pool, Error>),
+    LocalConnected(Result<Local, Error>),
 }
