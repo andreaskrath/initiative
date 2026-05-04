@@ -1,5 +1,6 @@
 pub mod clients;
 pub mod records;
+pub mod models;
 pub mod repositories;
 
 use thiserror::Error;

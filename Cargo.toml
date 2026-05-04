@@ -28,6 +28,7 @@ image = "=0.25.10"
 parking_lot = "=0.12.5"
 rfd = "=0.17.2"
 rust-embed = { version = "=8.9.0", features = ["include-exclude"] }
+serde = "=1.0.228"
 strum = { version = "=0.27.2", features = ["derive"] }
 strum_macros = "=0.27.2"
 sqlx = { version = "=0.8.6", features = [

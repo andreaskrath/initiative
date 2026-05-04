@@ -1,6 +1,8 @@
 pub mod options;
+pub mod spells;
 
 use options::OptionsRepository;
+use spells::SpellsRepository;
 
 use std::fmt::Debug;
 
