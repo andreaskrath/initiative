@@ -1,4 +1,5 @@
 mod options;
+mod spells;
 
 use crate::Error;
 use crate::repositories::Repository;
