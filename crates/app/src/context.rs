@@ -1,6 +1,8 @@
 use storage::repositories::Repository;
 use storage::repositories::options::Options;
 use storage::repositories::options::OptionsRepository;
+use storage::repositories::spells::Spells;
+use storage::repositories::spells::SpellsRepository;
 use style::theme::Theme;
 use style::theme::variant::ThemeVariant;
 
@@ -37,5 +39,11 @@ impl Context {
 impl OptionsRepository for Context {
     fn options(&self) -> &dyn Options {
         self.inner.repository.options()
+    }
+}
+
+impl SpellsRepository for Context {
+    fn spells(&self) -> &dyn Spells {
+        self.inner.repository.spells()
     }
 }
