@@ -1,13 +1,9 @@
 use crate::view::spell::form::Loader;
 use components::image_field::state::ImageFieldState;
-use components::multi_text_field::MultiTextFieldRule;
 use components::multi_text_field::MultiTextFieldState;
-use components::number_field::NumberFieldRule;
 use components::number_field::NumberFieldState;
 use components::select_field::SelectFieldState;
-use components::text_area_field::TextAreaFieldRule;
 use components::text_area_field::TextAreaFieldState;
-use components::text_field::TextFieldRule;
 use components::text_field::TextFieldState;
 use types::Class;
 use types::SPELLCASTING_CLASSES;
@@ -53,18 +49,13 @@ impl Fields {
         let sources = loader.sources.take()?;
 
         let fields = Self {
-            name: TextFieldState::default()
-                .rules([TextFieldRule::Required, TextFieldRule::Max(50)]),
-            aliases: MultiTextFieldState::default()
-                .normalize(false)
-                .rules([MultiTextFieldRule::Unique, MultiTextFieldRule::Min(1)]),
+            name: TextFieldState::default().required(true),
+            aliases: MultiTextFieldState::default().normalize(false),
             school: SelectFieldState::new(schools, None).required(true),
             level: SelectFieldState::new(levels, None).required(true),
-            source: SelectFieldState::new(sources, None).required(true),
+            source: SelectFieldState::new(sources, None).required(false),
             classes: Vec::with_capacity(SPELLCASTING_CLASSES.len()),
-            tags: MultiTextFieldState::default()
-                .normalize(true)
-                .rules([MultiTextFieldRule::Unique, MultiTextFieldRule::Min(1)]),
+            tags: MultiTextFieldState::default().normalize(true),
             casting_time: SelectFieldState::new(casting_times, None).required(true),
             ritual: false,
             concentration: false,
@@ -78,11 +69,11 @@ impl Fields {
             shape_kind: SelectFieldState::new(ShapeKind::VARIANTS.iter().copied(), None)
                 .required(true),
             shape: SpellShapeInput::NoShape,
-            description: TextAreaFieldState::default().rules([TextAreaFieldRule::Required]),
+            description: TextAreaFieldState::default().required(true),
             at_higher_levels: TextAreaFieldState::default(),
-            flavor_text: TextAreaFieldState::default().rules([TextAreaFieldRule::Max(1000)]),
-            attribution: TextFieldState::default().rules([TextFieldRule::Max(100)]),
-            images: ImageFieldState::default().limit(6),
+            flavor_text: TextAreaFieldState::default(),
+            attribution: TextFieldState::default(),
+            images: ImageFieldState::default(),
         };
 
         Some(fields)
@@ -126,8 +117,7 @@ pub enum SpellShapeInput {
 
 impl From<ShapeKind> for SpellShapeInput {
     fn from(kind: ShapeKind) -> Self {
-        let input =
-            NumberFieldState::new(None).rules([NumberFieldRule::Required, NumberFieldRule::Min(0)]);
+        let input = NumberFieldState::new(None).required(true);
         match kind {
             ShapeKind::NoShape => Self::NoShape,
             ShapeKind::Cone => Self::Cone { length: input },

@@ -1,14 +1,11 @@
-use super::NumberFieldRule;
-use crate::ValidationError;
-
-use tracing::debug;
+use crate::REQUIRED_ERROR_STR;
 
 #[derive(Debug, Default, Clone)]
 pub struct NumberFieldState {
     raw: String,
     parsed: Option<i32>,
-    rules: Option<Box<[NumberFieldRule]>>,
-    error: Option<String>,
+    required: bool,
+    error: Option<&'static str>,
 }
 
 impl NumberFieldState {
@@ -18,39 +15,19 @@ impl NumberFieldState {
         Self {
             raw,
             parsed: value,
-            rules: None,
+            required: false,
             error: None,
         }
     }
 
-    pub fn rules(mut self, rules: impl IntoIterator<Item = NumberFieldRule>) -> Self {
-        let collected_rules = rules.into_iter().collect::<Vec<_>>().into_boxed_slice();
-
-        self.rules = Some(collected_rules);
+    pub fn required(mut self, required: bool) -> Self {
+        self.required = required;
         self
     }
 
-    pub fn is_required(&self) -> bool {
-        let Some(ref rules) = self.rules else {
-            return false;
-        };
-
-        rules.iter().any(|rule| rule == &NumberFieldRule::Required)
-    }
-
-    pub fn value(&self) -> Option<i32> {
-        self.parsed
-    }
-
-    pub fn raw_value(&self) -> &str {
-        &self.raw
-    }
-
-    pub fn error(&self) -> Option<&str> {
-        self.error.as_deref()
-    }
-
     pub fn set(&mut self, value: String) {
+        self.error = None;
+
         // Allow negative characters.
         if &value == "-" {
             self.raw = value;
@@ -73,63 +50,30 @@ impl NumberFieldState {
         }
     }
 
-    /// Validate the current value of `Self` against the defined rules.
+    /// Get the value of the state, if validation succeds, otherwise None.
     ///
-    /// This methods short-circuits on the first error, and checks rules in the order they were
-    /// defined during the creation of this struct.
-    pub fn validate(&mut self) -> bool {
-        self.error = None;
+    /// This method is most useful for "final" extraction on form submit.
+    pub fn try_value(&mut self) -> Option<i32> {
+        if self.required && self.parsed.is_none() {
+            tracing::error!("required field is empty");
+            self.error = Some(REQUIRED_ERROR_STR);
 
-        let Some(rules) = &self.rules else {
-            return true;
-        };
-
-        for rule in rules {
-            if let Err(err) = self.check_rule(*rule) {
-                debug!("setting validation error: {:?}", err);
-                self.error = Some(err.to_string());
-                return false;
-            }
+            return None;
         }
 
-        true
+        self.error = None;
+        self.parsed
     }
 
-    fn check_rule(&self, rule: NumberFieldRule) -> Result<(), ValidationError> {
-        // Always pass if not set and not required.
-        if self.parsed.is_none() && !self.is_required() {
-            return Ok(());
-        }
+    pub(super) fn is_required(&self) -> bool {
+        self.required
+    }
 
-        match rule {
-            NumberFieldRule::Required => {
-                if self.parsed.is_none() {
-                    return Err(ValidationError::Required);
-                }
-            }
-            NumberFieldRule::Min(min) => {
-                if let Some(value) = self.parsed
-                    && value < min
-                {
-                    return Err(ValidationError::LessThan(min));
-                }
-            }
-            NumberFieldRule::Max(max) => {
-                if let Some(value) = self.parsed
-                    && value > max
-                {
-                    return Err(ValidationError::GreaterThan(max));
-                }
-            }
-            NumberFieldRule::Between(min, max) => {
-                if let Some(value) = self.parsed
-                    && (value < min || value > max)
-                {
-                    return Err(ValidationError::BetweenValue(min, max));
-                }
-            }
-        }
+    pub(super) fn raw_value(&self) -> &str {
+        &self.raw
+    }
 
-        Ok(())
+    pub(super) fn error(&self) -> Option<&str> {
+        self.error
     }
 }

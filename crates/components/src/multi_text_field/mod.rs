@@ -1,7 +1,5 @@
-mod rules;
 mod state;
 
-pub use rules::*;
 pub use state::*;
 
 use crate::label::Label;

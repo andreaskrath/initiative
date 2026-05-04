@@ -11,6 +11,7 @@ use style::button::ButtonClass;
 use style::container::ContainerClass;
 use style::layout::BODY_SPACING;
 use style::layout::INPUT_PADDING;
+use style::layout::LABEL_SPACING;
 use style::svg::SvgClass;
 use widgets::Element;
 
@@ -67,12 +68,8 @@ where
     Message: Clone + 'a,
 {
     fn from(widget: ImageField<Message>) -> Self {
-        let mut number_of_items = widget.state.images.len();
-
-        // Add place for button to add more if not at limit.
-        if !widget.state.at_limit() {
-            number_of_items += 1
-        }
+        // Add place for button to add more.
+        let number_of_items = widget.state.images.len() + 1;
 
         // Reserving a bit too much, but it doesn't really matter.
         let mut items: Vec<Element<_>> = Vec::with_capacity(number_of_items + ITEMS_PER_ROW);
@@ -109,7 +106,7 @@ where
         }
 
         // Add button for new images.
-        if !widget.state.at_limit() {
+        let add_button = {
             let browse_files_button = {
                 let icon = crate::icon(IconName::Directory).class(SvgClass::Text);
                 let text = crate::text::display("Browse files");
@@ -140,17 +137,19 @@ where
                 .align_x(Alignment::Center)
                 .spacing(BODY_SPACING);
 
-            let container = iced::widget::container(content)
+            iced::widget::container(content)
                 .class(ContainerClass::Interaction)
                 .align_y(Alignment::Center)
                 .align_x(Alignment::Center)
                 .width(Length::FillPortion(1))
-                .height(IMAGE_HEIGHT);
-            items.push(container.into());
-        }
+                .height(IMAGE_HEIGHT)
+        };
+        items.push(add_button.into());
 
         let images = crate::row::chunked(items, ITEMS_PER_ROW);
 
-        column![Label::new("IMAGES"), images].into()
+        column![Label::new("IMAGES"), images]
+            .spacing(LABEL_SPACING)
+            .into()
     }
 }

@@ -1,15 +1,12 @@
-use super::MultiTextFieldRule;
-use crate::ValidationError;
-
-use tracing::debug;
+use crate::REQUIRED_ERROR_STR;
 
 #[derive(Debug, Default)]
 pub struct MultiTextFieldState {
     value: String,
     selections: Vec<String>,
-    rules: Option<Box<[MultiTextFieldRule]>>,
+    required: bool,
     pub(super) normalize: bool,
-    error: Option<String>,
+    error: Option<&'static str>,
 }
 
 impl MultiTextFieldState {
@@ -17,17 +14,10 @@ impl MultiTextFieldState {
         Self {
             value,
             selections: Vec::new(),
-            rules: None,
+            required: false,
             normalize: false,
             error: None,
         }
-    }
-
-    pub fn rules(mut self, rules: impl IntoIterator<Item = MultiTextFieldRule>) -> Self {
-        let collected_rules = rules.into_iter().collect::<Vec<_>>().into_boxed_slice();
-
-        self.rules = Some(collected_rules);
-        self
     }
 
     /// Whether selections should be normalized when added.
@@ -38,26 +28,9 @@ impl MultiTextFieldState {
         self
     }
 
-    pub fn is_required(&self) -> bool {
-        let Some(ref rules) = self.rules else {
-            return false;
-        };
-
-        rules
-            .iter()
-            .any(|rule| rule == &MultiTextFieldRule::Required)
-    }
-
-    pub fn value(&self) -> &str {
-        &self.value
-    }
-
-    pub fn selections(&self) -> &[String] {
-        &self.selections
-    }
-
-    pub fn error(&self) -> Option<&str> {
-        self.error.as_deref()
+    pub fn required(mut self, required: bool) -> Self {
+        self.required = required;
+        self
     }
 
     /// Set the value of the current input.
@@ -72,11 +45,8 @@ impl MultiTextFieldState {
         let end = self.value.trim_end().len();
         let trimmed_value = &self.value[start..end];
 
-        // Set error first, to always update error state correctly
-        self.error = self.validate(trimmed_value);
-
-        // Then check error state if value should be added or not
-        if self.error.is_none() {
+        // Only add non-empty values.
+        if !trimmed_value.is_empty() {
             let mut value = std::mem::take(&mut self.value);
 
             // Remove leading and trailing whitespaces, starting with trailing.
@@ -91,50 +61,34 @@ impl MultiTextFieldState {
         self.selections.remove(index);
     }
 
-    fn validate(&self, value: &str) -> Option<String> {
-        let Some(rules) = &self.rules else {
-            return None;
-        };
+    /// Get the value of the state, if it is valid, otherwise None.
+    ///
+    /// This method is most useful for "final" extraction on form submit.
+    pub fn try_value(&mut self) -> Option<Box<[String]>> {
+        if self.required && self.selections.is_empty() {
+            tracing::debug!("required field is empty");
+            self.error = Some(REQUIRED_ERROR_STR);
 
-        for rule in rules {
-            if let Err(err) = self.check_rule(*rule, value) {
-                debug!("setting validation error: {:?}", err);
-                return Some(err.to_string());
-            }
+            return None;
         }
 
-        None
+        self.error = None;
+        Some(self.selections.clone().into_boxed_slice())
     }
 
-    fn check_rule(&self, rule: MultiTextFieldRule, value: &str) -> Result<(), ValidationError> {
-        match rule {
-            MultiTextFieldRule::Required => {
-                if value.is_empty() {
-                    return Err(ValidationError::Required);
-                }
-            }
-            MultiTextFieldRule::Unique => {
-                if self.selections.iter().any(|s| s == value) {
-                    return Err(ValidationError::Unique);
-                }
-            }
-            MultiTextFieldRule::Min(min) => {
-                if value.len() < min {
-                    return Err(ValidationError::Short(min));
-                }
-            }
-            MultiTextFieldRule::Max(max) => {
-                if value.len() > max {
-                    return Err(ValidationError::Long(max));
-                }
-            }
-            MultiTextFieldRule::Between(min, max) => {
-                if value.len() < min || value.len() > max {
-                    return Err(ValidationError::Between(min, max));
-                }
-            }
-        }
+    pub(super) fn is_required(&self) -> bool {
+        self.required
+    }
 
-        Ok(())
+    pub(super) fn value(&self) -> &str {
+        &self.value
+    }
+
+    pub(super) fn selections(&self) -> &[String] {
+        &self.selections
+    }
+
+    pub(super) fn error(&self) -> Option<&str> {
+        self.error
     }
 }

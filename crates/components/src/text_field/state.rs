@@ -1,102 +1,61 @@
-use super::TextFieldRule;
-use crate::ValidationError;
-
-use tracing::debug;
+use crate::REQUIRED_ERROR_STR;
 
 #[derive(Debug, Default)]
 pub struct TextFieldState {
     value: String,
-    rules: Option<Box<[TextFieldRule]>>,
-    error: Option<String>,
+    required: bool,
+    error: Option<&'static str>,
 }
 
 impl TextFieldState {
     pub fn new(value: String) -> Self {
         Self {
             value,
-            rules: None,
+            required: false,
             error: None,
         }
     }
 
-    pub fn rules(mut self, rules: impl IntoIterator<Item = TextFieldRule>) -> Self {
-        let collected_rules = rules.into_iter().collect::<Vec<_>>().into_boxed_slice();
-
-        self.rules = Some(collected_rules);
+    pub fn required(mut self, required: bool) -> Self {
+        self.required = required;
         self
     }
 
-    pub fn is_required(&self) -> bool {
-        let Some(ref rules) = self.rules else {
-            return false;
-        };
-
-        rules.iter().any(|rule| rule == &TextFieldRule::Required)
+    pub fn set(&mut self, value: String) {
+        self.error = None;
+        self.value = value;
     }
 
     pub fn value(&self) -> &str {
         &self.value
     }
 
-    pub fn error(&self) -> Option<&str> {
-        self.error.as_deref()
-    }
-
-    pub fn set(&mut self, value: String) {
-        self.value = value;
-    }
-
-    /// Validate the current value of `Self` against the defined rules.
+    /// Get the value of the state, if it is valid, otherwise None.
     ///
-    /// This methods short-circuits on the first error, and checks rules in the order they were
-    /// defined during the creation of this struct.
-    pub fn validate(&mut self) -> bool {
-        self.error = None;
+    /// This method is most useful for "final" extraction on form submit.
+    pub fn try_value(&mut self) -> Option<String> {
+        let start = self.value.len() - self.value.trim_start().len();
+        let end = self.value.trim_end().len();
+        let trimmed = &self.value[start..end];
 
-        let Some(rules) = &self.rules else {
-            return true;
-        };
-
-        for rule in rules {
-            if let Err(err) = self.check_rule(*rule) {
-                debug!("setting validation error: {:?}", err);
-                self.error = Some(err.to_string());
-                return false;
+        if trimmed.is_empty() {
+            if self.required {
+                tracing::debug!("required field is empty");
+                self.error = Some(REQUIRED_ERROR_STR);
             }
+
+            return None;
         }
 
-        true
+        self.error = None;
+        Some(String::from(trimmed))
     }
 
-    fn check_rule(&self, rule: TextFieldRule) -> Result<(), ValidationError> {
-        // Always pass if a zero length string is not required.
-        if self.value.is_empty() && !self.is_required() {
-            return Ok(());
-        }
+    pub(super) fn is_required(&self) -> bool {
+        self.required
+    }
 
-        match rule {
-            TextFieldRule::Required => {
-                if self.value.is_empty() {
-                    return Err(ValidationError::Required);
-                }
-            }
-            TextFieldRule::Min(min) => {
-                if self.value.len() < min {
-                    return Err(ValidationError::Short(min));
-                }
-            }
-            TextFieldRule::Max(max) => {
-                if self.value.len() > max {
-                    return Err(ValidationError::Long(max));
-                }
-            }
-            TextFieldRule::Between(min, max) => {
-                if self.value.len() < min || self.value.len() > max {
-                    return Err(ValidationError::Between(min, max));
-                }
-            }
-        }
-
-        Ok(())
+    pub(super) fn error(&self) -> Option<&str> {
+        self.error
     }
 }
