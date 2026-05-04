@@ -74,6 +74,7 @@ fn db_path() -> Option<PathBuf> {
 impl Application {
     pub fn new() -> (Self, Task<Message>) {
         let db_path = db_path().expect("failed");
+        tracing::info!("initializing database at {db_path:?}");
         let tasks = vec![Task::perform(
             Local::new(db_path),
             LoadMessage::LocalConnected,
@@ -95,12 +96,14 @@ impl Application {
 
                 match load_message {
                     LoadMessage::LocalConnected(Ok(local)) => {
+                        tracing::info!("database connection established, app ready");
                         let session = Session::new(local);
                         self.status = Status::Ready(Box::new(session));
 
                         Task::none()
                     }
                     LoadMessage::LocalConnected(Err(err)) => {
+                        tracing::error!("app startup failed: {err:?}");
                         panic!("{err:?}");
                     }
                 }

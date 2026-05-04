@@ -58,6 +58,8 @@ async fn connect(path: PathBuf) -> Result<SqlitePool, Error> {
                 return Err(Error::Connection);
             }
 
+            tracing::info!("database migrations completed, pool ready at {path:?}");
+
             Ok(pool)
         }
         Err(err) => {

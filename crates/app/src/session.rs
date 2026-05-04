@@ -53,6 +53,8 @@ impl Session {
         let active_view = id;
         let context = Context::new(repository);
 
+        tracing::info!("session initialized");
+
         Self {
             context,
             active_view,
