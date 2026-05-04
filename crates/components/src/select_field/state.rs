@@ -1,13 +1,17 @@
-use crate::ValidationError;
+use crate::REQUIRED_ERROR_STR;
 
+#[derive(Debug)]
 pub struct SelectFieldState<Value> {
     selected: Option<Value>,
     options: Box<[Value]>,
     required: bool,
-    error: Option<String>,
+    error: Option<&'static str>,
 }
 
-impl<Value> SelectFieldState<Value> {
+impl<Value> SelectFieldState<Value>
+where
+    Value: Clone,
+{
     pub fn new(options: impl IntoIterator<Item = Value>, value: Option<Value>) -> Self {
         let collected_options = options.into_iter().collect::<Vec<_>>().into_boxed_slice();
 
@@ -25,35 +29,38 @@ impl<Value> SelectFieldState<Value> {
     }
 
     pub fn set(&mut self, value: Value) {
+        self.error = None;
         self.selected = Some(value);
     }
 
-    pub fn clear(&mut self) {
-        self.selected = None;
+    /// Get the value of the state, if it is valid, otherwise None.
+    ///
+    /// This method is most useful for "final" extraction on form submit.
+    pub fn try_value(&mut self) -> Option<Value> {
+        if self.required && self.selected.is_none() {
+            tracing::error!("required field has no value selected");
+            self.error = Some(REQUIRED_ERROR_STR);
+
+            return None;
+        }
+
+        self.error = None;
+        self.selected.clone()
     }
 
-    pub fn selected(&self) -> Option<&Value> {
+    pub(super) fn selected(&self) -> Option<&Value> {
         self.selected.as_ref()
     }
 
-    pub fn error(&self) -> Option<&str> {
-        self.error.as_deref()
+    pub(super) fn error(&self) -> Option<&str> {
+        self.error
     }
 
-    pub fn options(&self) -> &[Value] {
+    pub(super) fn options(&self) -> &[Value] {
         &self.options
     }
 
-    pub fn is_required(&self) -> bool {
+    pub(super) fn is_required(&self) -> bool {
         self.required
-    }
-
-    pub fn validate(&mut self) -> bool {
-        if !self.required || self.selected.is_some() {
-            true
-        } else {
-            self.error = Some(ValidationError::Required.to_string());
-            false
-        }
     }
 }

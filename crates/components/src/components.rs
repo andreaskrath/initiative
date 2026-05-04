@@ -20,24 +20,4 @@ pub use text_area_field::text_area_field;
 pub use text_field::text_field;
 pub use toggle::toggle;
 
-use thiserror::Error;
-
-#[derive(Debug, Error)]
-pub(crate) enum ValidationError {
-    #[error("Must be specified.")]
-    Required,
-    #[error("Must be unique.")]
-    Unique,
-    #[error("Must be longer than {0} characters.")]
-    Short(usize),
-    #[error("Must be shorter than {0} characters.")]
-    Long(usize),
-    #[error("Must be between {0} and {1} characters.")]
-    Between(usize, usize),
-    #[error("Must be less than {0}.")]
-    LessThan(i32),
-    #[error("Must be greater than {0}.")]
-    GreaterThan(i32),
-    #[error("Must be between {0} and {1}.")]
-    BetweenValue(i32, i32),
-}
+const REQUIRED_ERROR_STR: &str = "Must be specified.";

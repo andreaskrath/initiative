@@ -370,7 +370,6 @@ impl Viewable for SpellForm {
                 let fields = ready!(self.status);
 
                 fields.name.set(name);
-                fields.name.validate();
             }
             Message::AliasChanged(tag) => {
                 let fields = ready!(self.status);
@@ -560,29 +559,22 @@ impl Viewable for SpellForm {
             Message::DescriptionChanged(action) => {
                 let fields = ready!(self.status);
 
-                if fields.description.perform(action) {
-                    fields.description.validate();
-                }
+                fields.description.perform(action);
             }
             Message::AtHigherLevelsChanged(action) => {
                 let fields = ready!(self.status);
 
-                if fields.at_higher_levels.perform(action) {
-                    fields.description.validate();
-                }
+                fields.at_higher_levels.perform(action);
             }
             Message::FlavorTextChanged(action) => {
                 let fields = ready!(self.status);
 
-                if fields.flavor_text.perform(action) {
-                    fields.flavor_text.validate();
-                }
+                fields.flavor_text.perform(action);
             }
             Message::AttributionChanged(attribution) => {
                 let fields = ready!(self.status);
 
                 fields.attribution.set(attribution);
-                fields.attribution.validate();
             }
 
             Message::ImagePasted => {
