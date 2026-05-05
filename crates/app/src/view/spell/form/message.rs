@@ -10,6 +10,8 @@ use std::path::PathBuf;
 #[derive(Debug, Clone)]
 pub enum Message {
     LoadMessage(LoadMessage),
+    Submitted,
+    SpellSaved(Result<(), Error>),
     NameChanged(String),
     AliasChanged(String),
     AliasSubmitted,

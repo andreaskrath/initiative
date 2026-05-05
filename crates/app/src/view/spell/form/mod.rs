@@ -14,6 +14,9 @@ use crate::view::spell::form::loader::Loader;
 use crate::view::spell::form::message::Effect;
 use crate::view::spell::form::message::Message;
 use components::label::Label;
+use storage::Error;
+use storage::models::spell::NewSpell;
+use storage::repositories::spells::SpellsRepository;
 use style::layout::BODY_SPACING;
 use style::layout::LABEL_SPACING;
 use style::layout::SECTION_SPACING;
@@ -32,16 +35,18 @@ use iced::widget::column;
 use iced::widget::row;
 
 pub struct SpellForm {
+    context: Context,
     mode: FormMode,
     status: Status<Loader, Fields>,
 }
 
 impl<'a> SpellForm {
     pub fn new(mode: FormMode, context: Context) -> (Self, Task<Message>) {
-        let (loader, tasks) = Loader::new(context);
+        let (loader, tasks) = Loader::new(context.clone());
         let mapped_tasks = tasks.map(Message::LoadMessage);
 
         let spell_form = Self {
+            context,
             mode,
             status: Status::Loading(Box::new(loader)),
         };
@@ -115,7 +120,9 @@ impl<'a> SpellForm {
             .on_submit(Message::TagSubmitted)
             .on_remove(Message::TagRemoved);
 
-        let classification = row![school, level, source].spacing(BODY_SPACING);
+        let classification = row![school, level, source]
+            .align_y(Alignment::End)
+            .spacing(BODY_SPACING);
         let form = column![name, aliases, classification, classes, tags].spacing(BODY_SPACING);
         let body = components::form::section_body(form);
 
@@ -366,6 +373,28 @@ impl Viewable for SpellForm {
                     }
                 }
             }
+            Message::Submitted => {
+                let fields = ready!(self.status);
+
+                if let Some(new_spell) = fields.try_build() {
+                    tracing::debug!("spell form submitted, saving spell");
+                    let task = Task::perform(
+                        create_spell(self.context.clone(), new_spell),
+                        Message::SpellSaved,
+                    );
+
+                    return (task, None);
+                }
+            }
+
+            Message::SpellSaved(Ok(())) => {
+                tracing::info!("spell saved successfully");
+                // effect
+            }
+            Message::SpellSaved(Err(err)) => {
+                tracing::error!("failed to save spell: {err}");
+                // effect
+            }
             Message::NameChanged(name) => {
                 let fields = ready!(self.status);
 
@@ -522,6 +551,7 @@ impl Viewable for SpellForm {
                 let fields = ready!(self.status);
 
                 fields.shape_kind.set(shape_kind);
+                fields.shape = SpellShapeInput::from(shape_kind);
             }
             Message::ShapeLengthChanged(new_length) => {
                 let fields = ready!(self.status);
@@ -650,7 +680,9 @@ impl Viewable for SpellForm {
 
                 let narrative = Self::narrative(fields);
 
-                let view = column![heading, identity, casting, effect, narrative]
+                let submit = widget::button("Submit").on_press(Message::Submitted);
+
+                let view = column![heading, identity, casting, effect, narrative, submit]
                     .align_x(Alignment::Center)
                     .spacing(SECTION_SPACING);
 
@@ -662,4 +694,10 @@ impl Viewable for SpellForm {
 
 fn fill_space<'a, Message: 'a>() -> Element<'a, Message> {
     widget::space().width(Length::Fill).into()
+}
+
+async fn create_spell<C: SpellsRepository>(ctx: C, new_spell: NewSpell) -> Result<(), Error> {
+    let repo = ctx.spells();
+
+    repo.create(new_spell).await
 }

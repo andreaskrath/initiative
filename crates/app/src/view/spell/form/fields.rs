@@ -5,11 +5,16 @@ use components::number_field::NumberFieldState;
 use components::select_field::SelectFieldState;
 use components::text_area_field::TextAreaFieldState;
 use components::text_field::TextFieldState;
+use storage::models::NewImage;
+use storage::models::spell::NewSpell;
+use storage::models::spell::NewSpellMaterial;
+use storage::models::spell::NewSpellShape;
 use types::Class;
 use types::SPELLCASTING_CLASSES;
 use types::ShapeKind;
 
 use strum::VariantArray;
+use uuid::Uuid;
 
 pub struct Fields {
     pub name: TextFieldState,
@@ -78,6 +83,63 @@ impl Fields {
 
         Some(fields)
     }
+
+    pub fn try_build(&mut self) -> Option<NewSpell> {
+        let name = self.name.try_value();
+        let aliases = self.aliases.try_value();
+        let school = self.school.try_value();
+        let level = self.level.try_value();
+        let source = self.source.try_value();
+        let classes = self.classes.clone().into_boxed_slice();
+        let tags = self.tags.try_value();
+        let casting_time = self.casting_time.try_value();
+        let materials = extract_materials(&mut self.materials);
+        let material = !materials.is_empty();
+        let duration = self.duration.try_value();
+        let range = self.range.try_value();
+        let area = self.area.try_value();
+        let shape = extract_shape(&mut self.shape);
+        let description = self.description.try_value();
+        let at_higher_levels = self.at_higher_levels.try_value();
+        let flavor_text = self.flavor_text.try_value();
+        let attribution = self.attribution.try_value();
+        let images = self
+            .images
+            .images()
+            .into_iter()
+            .map(|(id, bytes)| NewImage { id, bytes })
+            .collect::<Vec<_>>()
+            .into_boxed_slice();
+
+        let new_spell = NewSpell {
+            id: Uuid::new_v4(),
+            name: name?,
+            aliases: aliases?,
+            school: school?,
+            level: level?,
+            source,
+            classes,
+            tags: tags?,
+            casting_time: casting_time?,
+            ritual: self.ritual,
+            concentration: self.concentration,
+            verbal: self.verbal,
+            somatic: self.somatic,
+            material,
+            materials,
+            duration: duration?,
+            range: range?,
+            area: area?,
+            shape: shape?,
+            description: description?,
+            at_higher_levels,
+            flavor_text,
+            attribution,
+            images,
+        };
+
+        Some(new_spell)
+    }
 }
 
 #[derive(Debug, Default)]
@@ -131,6 +193,67 @@ impl From<ShapeKind> for SpellShapeInput {
                 length: input,
             },
             ShapeKind::Sphere => Self::Sphere { radius: input },
+        }
+    }
+}
+
+fn extract_materials(materials: &mut [SpellMaterialInput]) -> Box<[NewSpellMaterial]> {
+    // There is always at least one entry (the last) that is not valid,
+    // so length - 1 instead of just length.
+    //
+    // Utilizing saturating subtraction in-case `materials` is empty, to avoid underflow.
+    let mut new_materials = Vec::with_capacity(materials.len().saturating_sub(1));
+    for material in materials {
+        // Only utilize materials that have a material value defined.
+        if let Some(material_value) = material.material.try_value() {
+            let new_material = NewSpellMaterial {
+                material: material_value,
+                worth: material.worth.try_value(),
+                consumed: material.consumed,
+            };
+
+            new_materials.push(new_material);
+        }
+    }
+
+    new_materials.into_boxed_slice()
+}
+
+fn extract_shape(shape: &mut SpellShapeInput) -> Option<NewSpellShape> {
+    match shape {
+        SpellShapeInput::NoShape => Some(NewSpellShape::NoShape),
+        SpellShapeInput::Cone { length } => {
+            let length = length.try_value();
+
+            length.map(|l| NewSpellShape::Cone { length: l })
+        }
+        SpellShapeInput::Cylinder { radius, height } => {
+            let radius = radius.try_value();
+            let height = height.try_value();
+
+            radius.zip(height).map(|(r, h)| NewSpellShape::Cylinder {
+                radius: r,
+                height: h,
+            })
+        }
+        SpellShapeInput::Line { width, length } => {
+            let width = width.try_value();
+            let length = length.try_value();
+
+            width.zip(length).map(|(w, l)| NewSpellShape::Line {
+                width: w,
+                length: l,
+            })
+        }
+        SpellShapeInput::Cube { length } => {
+            let length = length.try_value();
+
+            length.map(|l| NewSpellShape::Cube { length: l })
+        }
+        SpellShapeInput::Sphere { radius } => {
+            let radius = radius.try_value();
+
+            radius.map(|r| NewSpellShape::Sphere { radius: r })
         }
     }
 }
