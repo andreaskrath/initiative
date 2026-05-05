@@ -68,7 +68,7 @@ impl Session {
     }
 
     pub fn active_view(&self) -> Element<'_, Message> {
-        let overview = self.overview(&self.views, self.active_view);
+        let overview = self.overview();
 
         let divider = iced::widget::rule::horizontal(1);
 
@@ -159,8 +159,6 @@ impl Session {
                         SpellFormEffect::LoadFailed(err) => {
                             panic!("{err:?}");
                             // self.remove(tab_id);
-                            //
-                            // effect = Some(TabManagerEffect::LoadFailed(error));
                         }
                     }
                 }
@@ -271,35 +269,32 @@ impl Session {
         Task::none()
     }
 
-    fn overview<'a>(&'a self, views: &'a [(ViewId, View)], active: ViewId) -> Element<'a, Message> {
-        let mut bar = Row::with_capacity(views.len());
+    fn overview<'a>(&'a self) -> Element<'a, Message> {
+        let mut bar = Row::with_capacity(self.views.len());
 
-        for (id, view) in views {
+        for (id, view) in &self.views {
             let text = {
                 let text = components::text::display(view.title());
                 widget::container(text).clip(true).padding(5)
             };
-
             let space = widget::space::horizontal().width(Length::Fill);
-
-            let button: Element<'_, Message> = if *id != self.dashboard_id {
-                let icon = components::icon(IconName::Close).class(SvgClass::Normal);
-                widget::button(icon)
-                    .height(OVERVIEW_BAR_HEIGHT)
-                    .on_press(Message::CloseView(*id))
-                    .into()
-            } else {
-                widget::space().into()
-            };
-
-            let bar_element = row![text, space, button]
+            let mut bar_element = row![text, space]
                 .height(OVERVIEW_BAR_HEIGHT)
                 .width(OVERVIEW_ELEMENT_WIDTH)
                 .align_y(Alignment::Center);
 
+            if *id != self.dashboard_id {
+                let icon = components::icon(IconName::Close).class(SvgClass::Normal);
+                let button = widget::button(icon)
+                    .height(OVERVIEW_BAR_HEIGHT)
+                    .on_press(Message::CloseView(*id));
+
+                bar_element = bar_element.push(button);
+            }
+
             let mut container = widget::container(bar_element);
 
-            if *id == active {
+            if *id == self.active_view {
                 container = container.class(ContainerClass::Surface);
             } else {
                 container = container.class(ContainerClass::Ghost);
