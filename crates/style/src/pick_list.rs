@@ -1,10 +1,10 @@
+use crate::DEFAULT_BORDER;
 use crate::NO_BORDER_ROUNDED;
 use crate::hovered;
 use crate::theme::Theme;
 
 use iced::Background;
 use iced::Border;
-use iced::Color;
 use iced::widget::pick_list::Catalog;
 use iced::widget::pick_list::Status;
 use iced::widget::pick_list::Style;
@@ -42,15 +42,20 @@ impl Catalog for Theme {
             }
         }
 
+        let border = match border_color {
+            Some(color) => Border {
+                color,
+                ..DEFAULT_BORDER
+            },
+            None => NO_BORDER_ROUNDED,
+        };
+
         Style {
             text_color: self.text,
             placeholder_color: self.text_dimmed,
             handle_color: self.primary,
             background: Background::Color(background),
-            border: Border {
-                color: border_color.unwrap_or(Color::TRANSPARENT),
-                ..NO_BORDER_ROUNDED
-            },
+            border,
         }
     }
 }
