@@ -166,7 +166,8 @@ impl Session {
                 if let Some(effect) = maybe_effect {
                     match effect {
                         SpellListEffect::OpenView(request) => {
-                            let task = Task::done(Message::OpenView(request));
+                            let task = self.open_view(request);
+
                             tasks.push(task);
                         }
                     }
