@@ -38,7 +38,7 @@ where
     /// This method is most useful for "final" extraction on form submit.
     pub fn try_value(&mut self) -> Option<Value> {
         if self.required && self.selected.is_none() {
-            tracing::error!("required field has no value selected");
+            tracing::debug!("required field has no value selected");
             self.error = Some(REQUIRED_ERROR_STR);
 
             return None;
