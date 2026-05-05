@@ -108,6 +108,16 @@ impl Application {
                     }
                 }
             }
+            Message::FocusDashboard => {
+                let session = ready!(self.status);
+
+                session.focus_dashboard()
+            }
+            Message::DashboardUpdated(dashboard_message) => {
+                let session = ready!(self.status);
+
+                session.update_dashboard(dashboard_message)
+            }
             Message::OpenView(request) => {
                 let session = ready!(self.status);
 

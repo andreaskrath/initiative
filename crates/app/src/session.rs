@@ -6,6 +6,7 @@ use crate::view::ViewMessage;
 use crate::view::Viewable;
 use crate::view::dashboard::Dashboard;
 use crate::view::dashboard::message::Effect as DashboardEffect;
+use crate::view::dashboard::message::Message as DashboardMessage;
 use crate::view::request::Request;
 use crate::view::spell::form::SpellForm;
 use crate::view::spell::form::message::Effect as SpellFormEffect;
@@ -38,28 +39,32 @@ const OVERVIEW_BAR_HEIGHT: u32 = 30;
 /// The width of each element in the overview bar.
 const OVERVIEW_ELEMENT_WIDTH: u32 = 200;
 
+#[derive(Debug, Clone, Copy, PartialEq)]
+enum ActiveView {
+    Dashboard,
+    View(ViewId),
+}
+
 pub struct Session {
     context: Context,
-    active_view: ViewId,
-    dashboard_id: ViewId,
+    dashboard: Dashboard,
     views: Vec<(ViewId, View)>,
+    active_view: ActiveView,
 }
 
 impl Session {
     pub fn new(repository: impl Repository) -> Self {
-        let id = ViewId::unique();
-        let dashboard = View::Dashboard(Dashboard::new());
-        let views = vec![(id, dashboard)];
-        let active_view = id;
         let context = Context::new(repository);
+        let dashboard = Dashboard::new();
+        let active_view = ActiveView::Dashboard;
 
         tracing::info!("session initialized");
 
         Self {
             context,
+            dashboard,
+            views: Vec::new(),
             active_view,
-            dashboard_id: id,
-            views,
         }
     }
 
@@ -72,18 +77,22 @@ impl Session {
 
         let divider = iced::widget::rule::horizontal(1);
 
-        let Some(active_view) = self.view(self.active_view) else {
-            tracing::error!("could not find view '{:?}'", self.active_view);
+        let view = match &self.active_view {
+            ActiveView::Dashboard => self.dashboard.view().map(Message::DashboardUpdated),
+            ActiveView::View(view_id) => {
+                let Some(active_view) = self.view(*view_id) else {
+                    tracing::error!("could not find view with id: '{:?}'", view_id);
 
-            return Space::new().into();
+                    return Space::new().into();
+                };
+
+                match active_view {
+                    View::SpellForm(spell_form) => spell_form.view().map(ViewMessage::SpellForm),
+                    View::SpellList(spell_list) => spell_list.view().map(ViewMessage::SpellList),
+                }
+                .map(move |message| Message::ViewUpdated(*view_id, message))
+            }
         };
-
-        let view = match active_view {
-            View::Dashboard(dashboard) => dashboard.view().map(ViewMessage::Dashboard),
-            View::SpellForm(spell_form) => spell_form.view().map(ViewMessage::SpellForm),
-            View::SpellList(spell_list) => spell_list.view().map(ViewMessage::SpellList),
-        }
-        .map(move |message| Message::ViewUpdated(self.active_view, message));
 
         let constrained_content = widget::container(view)
             .max_width(VIEW_WIDTH)
@@ -116,31 +125,6 @@ impl Session {
         };
 
         match message {
-            ViewMessage::Dashboard(dashboard_message) => {
-                let View::Dashboard(dashboard) = view else {
-                    tracing::error!(
-                        "view with id '{id:?}' does not match message of type '{dashboard_message:?}'"
-                    );
-
-                    return Task::none();
-                };
-
-                let (child_task, maybe_effect) = dashboard.update(dashboard_message);
-
-                let mut tasks = Vec::with_capacity(2);
-                tasks.push(map_task(child_task, id, ViewMessage::Dashboard));
-
-                if let Some(effect) = maybe_effect {
-                    match effect {
-                        DashboardEffect::OpenView(request) => {
-                            let task = Task::done(Message::OpenView(request));
-                            tasks.push(task);
-                        }
-                    }
-                }
-
-                Task::batch(tasks)
-            }
             ViewMessage::SpellForm(spell_form_message) => {
                 let View::SpellForm(spell_form) = view else {
                     tracing::error!(
@@ -206,7 +190,7 @@ impl Session {
                 let (spell_form, task) = SpellForm::new(mode, self.context.clone());
                 let tab = View::SpellForm(Box::new(spell_form));
                 self.views.push((id, tab));
-                self.active_view = id;
+                self.active_view = ActiveView::View(id);
 
                 let mapped_task = map_task(task, id, ViewMessage::SpellForm);
 
@@ -214,16 +198,17 @@ impl Session {
             }
             Request::SpellList => {
                 // Check if view already exists
+                // TODO: Change this to a single path to set ID.
                 let Some(id) = self.view_exists(|view| matches!(view, View::SpellList(_))) else {
                     let id = ViewId::unique();
                     let new_tab = View::SpellList(Box::new(SpellList::new()));
                     self.views.push((id, new_tab));
-                    self.active_view = id;
+                    self.active_view = ActiveView::View(id);
 
                     return Task::none();
                 };
 
-                self.active_view = id;
+                self.active_view = ActiveView::View(id);
             }
         }
 
@@ -235,10 +220,9 @@ impl Session {
         tracing::debug!("closing view: {close_id:?}");
 
         // Only recalculate the active view if we are closing the focused one
-        if self.active_view == close_id {
-            tracing::debug!("closed active view");
+        if self.active_view == ActiveView::View(close_id) {
+            tracing::debug!("closing active view");
 
-            // If any step fails, this just defaults to Dashboard view.
             self.active_view = self
                 .views
                 .iter()
@@ -253,8 +237,10 @@ impl Session {
                         self.views.get(index + 1)
                     }
                 })
-                .map(|(id, _)| *id)
-                .unwrap_or(self.dashboard_id);
+                // If we found another view, redirect to it.
+                .map(|(id, _)| ActiveView::View(*id))
+                // If no other views exist, redirect to Dashboard.
+                .unwrap_or(ActiveView::Dashboard);
         }
 
         // Close the view.
@@ -264,13 +250,49 @@ impl Session {
     }
 
     pub fn focus_view(&mut self, view_id: ViewId) -> Task<Message> {
-        self.active_view = view_id;
+        self.active_view = ActiveView::View(view_id);
+
+        Task::none()
+    }
+
+    pub fn update_dashboard(&mut self, dashboard_message: DashboardMessage) -> Task<Message> {
+        let (child_task, maybe_effect) = self.dashboard.update(dashboard_message);
+
+        let mut tasks = vec![child_task.map(Message::DashboardUpdated)];
+
+        if let Some(effect) = maybe_effect {
+            match effect {
+                DashboardEffect::OpenView(request) => {
+                    let task = self.open_view(request);
+
+                    tasks.push(task);
+                }
+            }
+        }
+
+        Task::batch(tasks)
+    }
+
+    pub fn focus_dashboard(&mut self) -> Task<Message> {
+        self.active_view = ActiveView::Dashboard;
 
         Task::none()
     }
 
     fn overview<'a>(&'a self) -> Element<'a, Message> {
-        let mut bar = Row::with_capacity(self.views.len());
+        // +2 for Dashboard and divider
+        let mut bar = Row::with_capacity(self.views.len() + 2);
+
+        let dashboard = {
+            let icon = components::icon(IconName::Dashboard);
+            widget::button(icon)
+                .height(OVERVIEW_BAR_HEIGHT)
+                .on_press(Message::FocusDashboard)
+        };
+        bar = bar.push(dashboard);
+
+        let divider = widget::container(widget::rule::vertical(1)).center_y(30);
+        bar = bar.push(divider);
 
         for (id, view) in &self.views {
             let text = {
@@ -283,18 +305,16 @@ impl Session {
                 .width(OVERVIEW_ELEMENT_WIDTH)
                 .align_y(Alignment::Center);
 
-            if *id != self.dashboard_id {
-                let icon = components::icon(IconName::Close).class(SvgClass::Normal);
-                let button = widget::button(icon)
-                    .height(OVERVIEW_BAR_HEIGHT)
-                    .on_press(Message::CloseView(*id));
+            let icon = components::icon(IconName::Close).class(SvgClass::Normal);
+            let button = widget::button(icon)
+                .height(OVERVIEW_BAR_HEIGHT)
+                .on_press(Message::CloseView(*id));
 
-                bar_element = bar_element.push(button);
-            }
+            bar_element = bar_element.push(button);
 
             let mut container = widget::container(bar_element);
 
-            if *id == self.active_view {
+            if self.active_view == ActiveView::View(*id) {
                 container = container.class(ContainerClass::Surface);
             } else {
                 container = container.class(ContainerClass::Ghost);

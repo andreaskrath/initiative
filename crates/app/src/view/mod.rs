@@ -2,10 +2,8 @@ pub mod dashboard;
 pub mod request;
 pub mod spell;
 
-use crate::view::dashboard::Dashboard;
 use crate::view::spell::form::SpellForm;
 use crate::view::spell::list::SpellList;
-use dashboard::message::Message as DashboardMessage;
 use spell::form::message::Message as SpellFormMessage;
 use spell::list::message::Message as SpellListMessage;
 use widgets::Element;
@@ -17,7 +15,6 @@ use std::sync::atomic::Ordering;
 
 #[derive(Debug, Clone)]
 pub enum ViewMessage {
-    Dashboard(DashboardMessage),
     SpellForm(SpellFormMessage),
     SpellList(SpellListMessage),
 }
@@ -58,7 +55,6 @@ pub trait Viewable {
 
 /// The views of the application.
 pub enum View {
-    Dashboard(Dashboard),
     SpellForm(Box<SpellForm>),
     SpellList(Box<SpellList>),
 }
@@ -66,7 +62,6 @@ pub enum View {
 impl View {
     pub fn title(&self) -> &str {
         match self {
-            View::Dashboard(dashboard) => dashboard.title(),
             View::SpellForm(spell_form) => spell_form.title(),
             View::SpellList(spell_list) => spell_list.title(),
         }
