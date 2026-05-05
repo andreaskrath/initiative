@@ -26,6 +26,11 @@ impl TextAreaFieldState {
 
     /// Perform the specified `action` in the `TextArea`.
     pub fn perform(&mut self, action: Action) {
+        // Only reset error if the `action` actually modifies the text.
+        if matches!(action, Action::Edit(_)) {
+            self.error = None;
+        }
+
         self.content.perform(action);
     }
 
