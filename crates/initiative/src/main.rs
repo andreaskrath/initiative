@@ -26,6 +26,7 @@ fn main() -> iced::Result {
     debug!("     loaded fonts: {}", settings.fonts.len());
 
     application(Application::new, Application::update, Application::view)
+        .subscription(Application::subscription)
         .settings(settings)
         .theme(Application::theme)
         .run()

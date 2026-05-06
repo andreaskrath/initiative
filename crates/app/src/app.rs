@@ -15,6 +15,7 @@ use style::theme::variant::ThemeVariant;
 use widgets::Element;
 
 use iced::Length::Fill;
+use iced::Subscription;
 use iced::Task;
 use iced::alignment::Horizontal;
 use iced::widget::column;
@@ -168,6 +169,14 @@ impl Application {
             Some(session.context().theme())
         } else {
             Some(ThemeVariant::default().into())
+        }
+    }
+
+    pub fn subscription(&self) -> Subscription<Message> {
+        if let Status::Ready(session) = &self.status {
+            session.subscription()
+        } else {
+            Subscription::none()
         }
     }
 }

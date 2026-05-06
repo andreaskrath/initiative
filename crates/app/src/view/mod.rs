@@ -8,6 +8,7 @@ use spell::form::message::Message as SpellFormMessage;
 use spell::list::message::Message as SpellListMessage;
 use widgets::Element;
 
+use iced::Subscription;
 use iced::Task;
 use std::fmt::Debug;
 use std::sync::atomic::AtomicU64;
@@ -51,6 +52,12 @@ pub trait Viewable {
 
     /// Generate the view of `Self`.
     fn view(&self) -> Element<'_, Self::Message>;
+
+    fn subscription(&self) -> Subscription<Self::Message> {
+        // The default implementation allows only a `Self` that wants to deal with subscriptions to
+        // override this implementation, rather than every `Self` having to implement this.
+        Subscription::none()
+    }
 }
 
 /// The views of the application.
@@ -64,6 +71,13 @@ impl View {
         match self {
             View::SpellForm(spell_form) => spell_form.title(),
             View::SpellList(spell_list) => spell_list.title(),
+        }
+    }
+
+    pub fn subscription(&self) -> Subscription<ViewMessage> {
+        match self {
+            View::SpellForm(f) => f.subscription().map(ViewMessage::SpellForm),
+            View::SpellList(l) => l.subscription().map(ViewMessage::SpellList),
         }
     }
 }

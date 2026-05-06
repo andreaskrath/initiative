@@ -13,9 +13,6 @@ use crate::view::spell::form::message::Effect as SpellFormEffect;
 use crate::view::spell::list::SpellList;
 use crate::view::spell::list::message::Effect as SpellListEffect;
 use components::icon::IconName;
-use iced::widget::Row;
-use iced::widget::scrollable::Direction;
-use iced::widget::scrollable::Scrollbar;
 use storage::repositories::Repository;
 use style::container::ContainerClass;
 use style::svg::SvgClass;
@@ -24,11 +21,15 @@ use widgets::Element;
 use iced::Alignment;
 use iced::Length;
 use iced::Padding;
+use iced::Subscription;
 use iced::Task;
 use iced::widget;
+use iced::widget::Row;
 use iced::widget::Space;
 use iced::widget::column;
 use iced::widget::row;
+use iced::widget::scrollable::Direction;
+use iced::widget::scrollable::Scrollbar;
 
 /// The width a view takes up.
 const VIEW_WIDTH: f32 = 1200.0;
@@ -278,6 +279,17 @@ impl Session {
         self.active_view = ActiveView::Dashboard;
 
         Task::none()
+    }
+
+    pub fn subscription(&self) -> Subscription<Message> {
+        match self.active_view {
+            ActiveView::Dashboard => self.dashboard.subscription().map(Message::DashboardUpdated),
+            ActiveView::View(view_id) => self
+                .view(view_id)
+                .map(|v| v.subscription())
+                .map(|s| s.map(move |m| Message::ViewUpdated(view_id, m)))
+                .unwrap_or_else(Subscription::none),
+        }
     }
 
     fn overview<'a>(&'a self) -> Element<'a, Message> {
