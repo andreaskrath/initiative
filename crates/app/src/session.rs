@@ -286,8 +286,12 @@ impl Session {
             ActiveView::Dashboard => self.dashboard.subscription().map(Message::DashboardUpdated),
             ActiveView::View(view_id) => self
                 .view(view_id)
-                .map(|v| v.subscription())
-                .map(|s| s.map(move |m| Message::ViewUpdated(view_id, m)))
+                // The subscription has to capture the id using `with`, otherwise
+                // a compile time const block check internally in iced fails.
+                // Unfortunately, this check is lazily evaluated by rust-analyzer
+                // meaning no LSP error is produced, and only compilation produces an error.
+                .map(|v| v.subscription().with(view_id))
+                .map(|s| s.map(|(id, m)| Message::ViewUpdated(id, m)))
                 .unwrap_or_else(Subscription::none),
         }
     }
